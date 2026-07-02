@@ -1787,10 +1787,18 @@ mod tests {
 
     #[test]
     fn module_with_def_hoists_def_to_top_level() {
-        // Method defs inside a module hoist to top-level Functions
-        // (unchanged contract); the ModuleDef body stays empty.
+        // MX1 (mixins) — method defs inside a module still hoist to top-level
+        // Functions, but now under a MODULE-QUALIFIED name (`M__helper`, not the
+        // bare `helper`), exactly like class methods.  This is what lets a later
+        // `include M` reference `M`'s methods without top-level name collisions.
+        // The ModuleDef body itself stays empty (defs hoist out); the
+        // registration follows the ModuleDef (asserted separately below).
         let m = lower("module M\n  def helper\n  end\nend\n");
-        assert!(m.functions.iter().any(|f| f.name == "helper"));
+        assert!(
+            m.functions.iter().any(|f| f.name == "M__helper"),
+            "expected module-qualified `M__helper`; got {:?}",
+            m.functions.iter().map(|f| &f.name).collect::<Vec<_>>()
+        );
         let main = main_body(&m);
         match &main.stmts[0] {
             Stmt::ModuleDef { name, body, .. } => {
@@ -1836,6 +1844,122 @@ mod tests {
             "validator rejected our output: {:?}",
             result
         );
+    }
+
+    // -----------------------------------------------------------------
+    // MX1 (mixins) — module methods register keyed by the module name
+    // (`__def_method__("M", …)`), and `include`/`extend` in a class or
+    // module body lower to `__include__`/`__extend__("Owner", "Module")`.
+    // NO core-IR change: everything rides the existing `BuiltinCall` node,
+    // the same slots classes use.  Execution is proven later (MX2–MX6);
+    // these tests assert the lowered IR SHAPE only.
+    // -----------------------------------------------------------------
+
+    #[test]
+    fn module_method_registers_def_method_keyed_by_module() {
+        // `module M; def greet; "hi"; end; end` must emit
+        // `__def_method__("M", "greet", MakeClosure(M__greet))` right after the
+        // `ModuleDef` — the SAME builtin classes use, keyed by the module name.
+        let m = lower("module M\n  def greet\n    \"hi\"\n  end\nend\n");
+        let args = find_builtin_stmt(&m, "__def_method__");
+        assert_eq!(args.len(), 3, "__def_method__ takes (class, method, closure)");
+        assert!(
+            matches!(&args[0], Expr::StrLit { value, .. } if value == "M"),
+            "first arg is the module name \"M\"; got {:?}",
+            args[0]
+        );
+        assert!(
+            matches!(&args[1], Expr::StrLit { value, .. } if value == "greet"),
+            "second arg is the bare method name \"greet\"; got {:?}",
+            args[1]
+        );
+        assert!(
+            matches!(&args[2], Expr::MakeClosure { fn_name, .. } if fn_name == "M__greet"),
+            "third arg closes over the module-qualified hoisted fn `M__greet`; got {:?}",
+            args[2]
+        );
+        // The registration is keyed on the bare name but the hoisted fn is
+        // module-qualified, so it never collides with a same-named top-level def.
+        assert!(m.functions.iter().any(|f| f.name == "M__greet"));
+    }
+
+    #[test]
+    fn class_include_lowers_to_include_builtin() {
+        // `class C; include M; end` → `__include__("C", "M")` — keyed by the
+        // enclosing class (the include target) and the included module name.
+        let m = lower("class C\n  include M\nend\n");
+        let args = find_builtin_stmt(&m, "__include__");
+        assert_eq!(args.len(), 2, "__include__ takes (owner, module)");
+        assert!(
+            matches!(&args[0], Expr::StrLit { value, .. } if value == "C"),
+            "owner is the enclosing class \"C\"; got {:?}",
+            args[0]
+        );
+        assert!(
+            matches!(&args[1], Expr::StrLit { value, .. } if value == "M"),
+            "module is the included constant \"M\"; got {:?}",
+            args[1]
+        );
+    }
+
+    #[test]
+    fn class_extend_lowers_to_extend_builtin() {
+        // `class C; extend M; end` → `__extend__("C", "M")`.
+        let m = lower("class C\n  extend M\nend\n");
+        let args = find_builtin_stmt(&m, "__extend__");
+        assert_eq!(args.len(), 2, "__extend__ takes (owner, module)");
+        assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "C"));
+        assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "M"));
+    }
+
+    #[test]
+    fn module_include_lowers_to_include_builtin_keyed_by_module() {
+        // `include`/`extend` also work inside a MODULE body (module composition):
+        // `module Outer; include Inner; end` → `__include__("Outer", "Inner")`.
+        let m = lower("module Outer\n  include Inner\nend\n");
+        let args = find_builtin_stmt(&m, "__include__");
+        assert!(matches!(&args[0], Expr::StrLit { value, .. } if value == "Outer"));
+        assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "Inner"));
+    }
+
+    #[test]
+    fn module_and_include_program_passes_sir_validator() {
+        // E2E lower → validate: a module defining a method plus a class that
+        // includes it is a well-formed SIR module (all builtins ride the
+        // existing `BuiltinCall`, so the validator accepts them as it does the
+        // OOP `__def_method__`/`__new__` family).
+        let m = lower(concat!(
+            "module Greet\n",
+            "  def greet\n",
+            "    \"hi\"\n",
+            "  end\n",
+            "end\n",
+            "class C\n",
+            "  include Greet\n",
+            "end\n",
+        ));
+        let result = semantic_ir::validate(&m);
+        assert!(
+            result.is_ok(),
+            "validator rejected module+include program: {:?}",
+            result
+        );
+        // Sanity: both directives are present in the lowered output.
+        let _ = find_builtin_stmt(&m, "__def_method__");
+        let _ = find_builtin_stmt(&m, "__include__");
+    }
+
+    #[test]
+    fn non_mixin_call_in_class_body_stays_ordinary() {
+        // A call that is NOT `include`/`extend`/`attr_*` in a class body must be
+        // left untouched — no `__include__`/`__extend__` emitted for it.
+        let m = lower("class C\n  puts \"hi\"\nend\n");
+        let has_mixin = main_body(&m).stmts.iter().any(|s| matches!(
+            s,
+            Stmt::ExprStmt { expr: Expr::BuiltinCall { name, .. }, .. }
+                if name == "__include__" || name == "__extend__"
+        ));
+        assert!(!has_mixin, "ordinary class-body call must not become a mixin directive");
     }
 
     // -----------------------------------------------------------------

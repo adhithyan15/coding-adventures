@@ -848,6 +848,16 @@ impl Lowerer {
             // finds the instance methods.  Routing `class_statement` through the
             // multi-statement path lets the arm return that whole sequence.
             "class_statement" => self.lower_class_statement_multi(node),
+            // MX1 (mixins) — a `module M … end` now lowers to MORE than one
+            // statement, exactly like a class: the `ModuleDef` itself PLUS a
+            // `__def_method__` registration for every method it defines, and an
+            // `__include__` / `__extend__` for every mixin directive in its
+            // body.  Those registrations must run at program start, right after
+            // the `ModuleDef`, so that a later `include M` (or a class that
+            // includes `M`) finds `M`'s methods in the runtime method table.
+            // Routing `module_statement` through the multi-statement path lets
+            // the arm return that whole sequence (mirrors `class_statement`).
+            "module_statement" => self.lower_module_statement_multi(node),
             _ => Ok(vec![self.lower_statement_inner(node)?]),
         }
     }
@@ -932,32 +942,16 @@ impl Lowerer {
                 Ok(stmts.remove(0))
             }
             "module_statement" => {
-                // Phase 14d (FC): `module M … end` now lowers to a
-                // first-class `Stmt::ModuleDef { name, body, span }`,
-                // structurally a `ClassDef` without inheritance
-                // (replacing the Phase 6f NilLit no-op).
-                //
-                // Body handling is identical to a class
-                // (`lower_decl_body_statements`): method `def`s are
-                // hoisted to top-level `Function`s — SIR v0 has no
-                // method-as-statement node — while every non-`def`
-                // statement is preserved in `body` in source order.
-                //
-                // Caveat (documented for backends, unchanged from 6f):
-                // the hoisted methods land at top-level, not nested
-                // under the module name.  In real Ruby, `module M; def
-                // bar` makes `bar` a module-level method of `M`.  v0 SIR
-                // collapses the namespace; the validator still accepts
-                // the result because every function has a unique name
-                // and `main` is the only export.
-                let name = self.extract_module_name(node)?;
-                self.features_used.insert(Feature::Modules);
-                let body = self.lower_decl_body_statements(node)?;
-                Ok(Stmt::ModuleDef {
-                    name,
-                    body,
-                    span: self.span_of(node),
-                })
+                // MX1 (mixins) — the module-production path returns the
+                // `ModuleDef` PLUS its method registrations and mixin directives
+                // (see `lower_module_statement_multi`).  A single-`Stmt` caller
+                // (only the multi-assignment LHS path, which is never a module)
+                // takes just the first statement — the `ModuleDef` — dropping any
+                // registrations.  That is safe because a module never appears as a
+                // multi-assign target; the real body/program paths all go through
+                // `lower_statement_inner_multi`, which keeps the registrations.
+                let mut stmts = self.lower_module_statement_multi(node)?;
+                Ok(stmts.remove(0))
             }
             "if_statement" | "unless_statement" => {
                 // Phase 6b: SIR's `Expr::If` is an *expression* — it
@@ -2965,6 +2959,50 @@ impl Lowerer {
         Ok(out)
     }
 
+    /// MX1 (mixins) — lower a `module_statement` into the `ModuleDef` FOLLOWED
+    /// BY its method registrations and mixin directives.  This mirrors
+    /// [`Self::lower_class_statement_multi`] one-for-one, differing only in the
+    /// declaration node emitted (`ModuleDef`, which has no superclass) and the
+    /// feature it observes (`Feature::Modules`).
+    ///
+    /// Before MX1, a module body was lowered by `lower_decl_body_statements`,
+    /// which hoisted each `def` to a *detached* top-level `Function` and
+    /// recorded nothing — so `module M; def greet; …; end; end` produced a
+    /// `greet` function that no `include M` could ever find.  MX1 routes the
+    /// body through [`Self::lower_class_body`] instead (the SAME builtin path
+    /// classes use, keyed by the module name), so each module method now emits
+    /// `__def_method__("M", "greet", MakeClosure{…})` into the runtime method
+    /// table.  That table is what a later `__include__("C", "M")` copies from,
+    /// making the mixin's methods reachable on including classes (MX2+).
+    ///
+    /// A module's `def self.m` still registers as a class method
+    /// (`__def_class_method__`) via the shared body lowerer — a module's
+    /// "module function" surface.  `super` inside a module method has no
+    /// class to anchor and remains out of the v0 mixin scope (documented in
+    /// the OOP spec), so we do NOT set `current_class` here.
+    fn lower_module_statement_multi(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let name = self.extract_module_name(node)?;
+        self.features_used.insert(Feature::Modules);
+
+        // Lower the body through the SAME registration-collecting path classes
+        // use, keyed by the module name: method `def`s → `__def_method__` /
+        // `__def_class_method__`, `include`/`extend` directives → their mixin
+        // builtins, everything else preserved in `ModuleDef.body`.
+        let (body, registrations) = self.lower_class_body(&name, node)?;
+
+        let mut out: Vec<Stmt> = Vec::with_capacity(1 + registrations.len());
+        out.push(Stmt::ModuleDef {
+            name,
+            body,
+            span: self.span_of(node),
+        });
+        out.extend(registrations);
+        Ok(out)
+    }
+
     /// O2 — lower a class body's statements.  Returns `(body, registrations)`:
     /// `body` is the executable non-`def` statements kept in `ClassDef.body`
     /// (constants, nested classes, …, exactly as before); `registrations` is
@@ -3038,8 +3076,19 @@ impl Lowerer {
                     // class body.  Intercept those three and expand into
                     // synthesized accessor methods + registrations; anything
                     // else (an ordinary call at class scope) stays in `body`.
+                    //
+                    // MX1 (mixins) — `include M` / `extend M` parse the same way
+                    // (a call whose callee is `include`/`extend` and whose sole
+                    // argument is the module constant `M`).  Intercept those and
+                    // emit the mixin directive `__include__("Owner", "M")` /
+                    // `__extend__("Owner", "M")`, keyed by the enclosing
+                    // class/module name — the same registration slot the method
+                    // `__def_*__` calls use, so directives run in source order
+                    // right after the declaration.
                     if let Some(regs) = self.try_expand_attr_call(class_name, inner)? {
                         registrations.extend(regs);
+                    } else if let Some(reg) = self.try_expand_mixin_call(class_name, inner)? {
+                        registrations.push(reg);
                     } else {
                         body.extend(self.lower_statement_inner_multi(inner)?);
                     }
@@ -3280,6 +3329,85 @@ impl Lowerer {
             }
         }
         Ok(Some(registrations))
+    }
+
+    /// MX1 (mixins) — if `call_node` is an `include M` / `extend M` directive
+    /// inside a class or module body, emit the corresponding mixin builtin
+    /// keyed by the enclosing declaration `owner`:
+    ///
+    ///   • `include M` → `__include__("Owner", "M")`
+    ///   • `extend  M` → `__extend__("Owner", "M")`
+    ///
+    /// Returns `None` when the call is NOT a mixin directive (so the caller
+    /// lowers it as an ordinary body statement).  Multiple modules
+    /// (`include A, B`) are handled by emitting one directive per module
+    /// argument — but that returns a *sequence*; to keep the caller simple we
+    /// only special-case the single-module form here (`include M`), which is
+    /// the overwhelmingly common shape and all MX1 needs.  A multi-arg
+    /// `include A, B` therefore falls through to the ordinary-call path in v0
+    /// (documented limitation; MX-later can lift it).
+    ///
+    /// The module argument `M` is a bare constant, which lowers to
+    /// `Expr::VarRef { scope: Scope::Const, name }`.  We mirror how `Foo.new`
+    /// and class-method dispatch extract the constant NAME as a `StrLit`
+    /// (`lower_dot_call`): the runtime keys its method table on module NAMES,
+    /// so the directive must carry the name as a string, not a live value
+    /// reference.  This also keeps dispatch table-driven — never reflection on
+    /// a source-derived name (the C3 RCE lesson).
+    fn try_expand_mixin_call(
+        &mut self,
+        owner: &str,
+        call_node: &GrammarASTNode,
+    ) -> Result<Option<Stmt>, RubyLowerError> {
+        // The callee is the first Name token directly under the call node.
+        let callee = call_node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.as_str()),
+            _ => None,
+        });
+        let builtin = match callee {
+            Some("include") => "__include__",
+            Some("extend") => "__extend__",
+            _ => return Ok(None),
+        };
+
+        // The module operand is the first `expression` argument.  We lower it
+        // and require it to be a bare constant ref so we can read its name.
+        // Anything else (`include some_expr`, `include A, B`) is left to the
+        // ordinary-call path rather than mis-lowering it.
+        let arg_node = call_node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expression" => Some(n),
+            _ => None,
+        });
+        let arg_node = match arg_node {
+            Some(n) => n,
+            None => return Ok(None),
+        };
+        let lowered = self.lower_expression(arg_node)?;
+        let module_name = match lowered {
+            Expr::VarRef { name, scope: Scope::Const, .. } => name,
+            // Not a bare constant — fall through to the ordinary-call path.
+            _ => return Ok(None),
+        };
+
+        // Emit `__include__/__extend__(StrLit("Owner"), StrLit("M"))`.  The two
+        // string args make the directive fully self-describing at the table
+        // level; the runtime (MX2+) copies `M`'s registered methods onto
+        // `Owner` (include) or `Owner`'s singleton (extend).
+        self.features_used.insert(Feature::Modules);
+        self.features_used.insert(Feature::Strings);
+        let span = Span::point(&self.file_name, 0, 0);
+        Ok(Some(Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: builtin.to_string(),
+                args: vec![
+                    Expr::StrLit { value: owner.to_string(), span: span.clone() },
+                    Expr::StrLit { value: module_name, span: span.clone() },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            },
+            span,
+        }))
     }
 
     /// O2 — find the first `symbol_literal`'s bare name anywhere under `node`
