@@ -31,6 +31,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INDEX_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPTS_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_SUMMARY_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_RESULTS_SCHEMA_VERSION,
@@ -2738,6 +2739,12 @@ fn berkeley_app_facade_exports_package_manifest_json() {
         .iter()
         .any(|capability| capability
             == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json"));
+    assert!(payload["artifactCapabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability
+            == "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json"));
 }
 
 #[test]
@@ -6502,6 +6509,96 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummaryCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json"
     );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification =
+        app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+            "queued dispatch",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued".to_string()),
+        )
+        .expect(
+            "shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification should execute",
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_SCHEMA_VERSION
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .notification_kind,
+        "dispatch-accepted"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .notification_level,
+        "success"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .notification_action_label
+            .as_deref(),
+        Some("Open command")
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .notification_action_target
+            .as_deref(),
+        Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group.queued")
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .should_announce
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_capability_id,
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_payload:
+        serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+            "queued dispatch",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued".to_string()),
+        )
+        .unwrap(),
+    )
+    .expect(
+        "shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification JSON should parse",
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_payload
+            ["notificationKind"],
+        "dispatch-accepted"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_payload
+            ["notificationActionLabel"],
+        "Open command"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_payload
+            ["shouldAnnounce"],
+        true
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_payload
+            ["announcement"],
+        "Command accepted: Accepted command \"Queued dispatches\" for dispatch."
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json"
+    );
 }
 
 #[test]
@@ -9837,6 +9934,86 @@ R1 in out
         shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_summary_payload
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptSummaryCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-summary-json"
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification =
+        app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+            "blocked",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.blocked".to_string()),
+        );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification
+            .notification_kind,
+        "dispatch-blocked"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification
+            .notification_level,
+        "error"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification
+            .notification_action_label
+            .as_deref(),
+        Some("Review command")
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification
+            .dispatch_blocked
+    );
+    assert!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification
+            .attention
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_disabled_search_invocation_receipt_notification
+            .blocked_reason
+            .as_deref(),
+        Some("No blocked dispatches")
+    );
+
+    let shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_notification_payload:
+        serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+            "missing",
+            None,
+        ),
+    )
+    .expect(
+        "blocked shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette empty search invocation receipt notification JSON should parse",
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_notification_payload
+            ["notificationKind"],
+        "dispatch-empty"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_notification_payload
+            ["notificationLevel"],
+        "info"
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_notification_payload
+            ["notificationActionLabel"],
+        serde_json::Value::Null
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_notification_payload
+            ["shouldAnnounce"],
+        false
+    );
+    assert_eq!(
+        shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_empty_search_invocation_receipt_notification_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-json"
     );
 }
 
