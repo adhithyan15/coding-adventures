@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_closeout_archive` tool descriptor for read-only Chief archive
+  packets over existing D23 closeout audit trail primitives.
 - `smart_home.get_closeout_audit_trail` tool descriptor for read-only Chief
   audit trails over existing D23 closeout receipt primitives.
 - `smart_home.get_closeout_receipt` tool descriptor for read-only Chief
