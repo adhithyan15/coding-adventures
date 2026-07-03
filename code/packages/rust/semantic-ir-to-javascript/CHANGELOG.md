@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.11.2
+
+### Fixed — `or`/`and` builtins (Ruby `||`/`&&`) were unimplemented
+
+Ruby `&&`/`and` and `||`/`or` lower (in the frontend) to
+`BuiltinCall("and"/"or", [lhs, rhs])` — the fold covers BOTH the 2-operand
+`a || b` form and a multi-value `when 1, 2, 3` chain. Only the Python backend's
+emitter handled them; this backend fell through to the eager runtime dispatcher,
+which has no `or`/`and` entry, so ANY `||`/`&&` (and every multi-value `when`)
+crashed at runtime with `unknown builtin: or` / `and`. A case_eq-style gap: no
+compile-time gate catches a frontend-emitted builtin the backend never handled.
+
+- The emitter now special-cases `BuiltinCall("or"/"and", [a, b])`, emitting the
+  SAME truthy-guarded short-circuit form as `Expr::LogicalOr`/`LogicalAnd`: rhs
+  is not evaluated once lhs decides, SIR truthiness is used, and the deciding
+  OPERAND is returned (Ruby semantics — `nil || "b"` is `"b"`, `"a" || "b"` is
+  `"a"`), never a bare bool.
+- Emit-shape regression test; verified end-to-end via the sir-conformance
+  `logical_ops` + `multi_when` programs (13 corpus x 4 backends, all agree).
+
+
 ## 0.11.1
 
 ### Fixed — `case_eq` builtin (Ruby case-equality `===`) was unimplemented

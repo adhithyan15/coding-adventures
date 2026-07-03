@@ -65,6 +65,8 @@ across backends, a separate formatting concern). Current programs:
 | `string_length` | `String#length` | `5` |
 | `counter_state` | `@ivar` state across method calls | `2` |
 | `mixin_include` | `module` mixed into a class via `include` | `hi` |
+| `logical_ops` | short-circuit `||`/`&&` returning the operand | `a\nb\ny` |
+| `multi_when` | multi-value `when 1, 2, 3` (folds through `or`) | `small\nbig` |
 
 Adding a program is one `Program { name, ruby, expected }` entry in
 `tests/conformance.rs`.
@@ -81,8 +83,10 @@ visible. Currently tracked:
   validation).
 - **`String#upcase`/`#downcase` on JavaScript** — the JS backend's emit-time
   Ruby→native method rename is missing the case pair.
-- **`or`/`and` builtin on JavaScript** — a multi-value `when 1, 2, 3` lowers to
-  a `BuiltinCall("or", …)` the JS runtime doesn't implement.
+
+Fixed since (now IN the suite): the `or`/`and` builtin gap — `||`/`&&` and
+multi-value `when` threw `unknown builtin` on Go/Rust/JS; the emitters now emit
+the short-circuit form. Covered by `logical_ops` + `multi_when`.
 
 ## Usage
 
