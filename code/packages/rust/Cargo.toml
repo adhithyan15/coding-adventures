@@ -348,6 +348,8 @@ members = [
     "xml-lexer",
     "xml-parser",
     "opc",
+    "opc-writer",
+    "xlsx-writer",
     "spreadsheetml",
     "wordprocessingml",
     "presentationml",

@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-opc-writer"
+version = "0.1.0"
+edition = "2021"
+description = "Open Packaging Conventions (OPC) package writer — assembles OOXML parts, content types, and relationships into a ZIP-based .xlsx/.docx/.pptx package. Format-agnostic mirror of the read-side opc crate (OOXML milestone C1)"
+license = "MIT"
+
+[dependencies]
+zip = { path = "../zip" }
+
+[dev-dependencies]
+# Round-trip verification: re-open our output with the read-side OPC reader.
+coding-adventures-opc = { path = "../opc" }
