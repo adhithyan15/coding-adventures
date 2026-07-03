@@ -601,6 +601,11 @@ runtime phase/strategy, runtime entrypoints, hydration scheduler hints,
 deterministic runtime steps, nested `embedLoaderPlan`, and runtime-plan
 capability metadata so WebAssembly-backed product shells can start, publish, or
 defer the post-dispatch handoff runtime without recomputing the loader plan.
+Embed runtime session plans add stable session IDs, lifecycle state,
+activation, ownership, publish-channel metadata, deterministic session steps,
+nested `embedRuntimePlan`, and runtime-session-plan capability metadata so
+WebAssembly-backed product shells can open, activate, publish, or defer a
+post-dispatch runtime session without recomputing the runtime plan.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
