@@ -33,38 +33,40 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt journal summary handoff receipt acknowledgement.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt journal summary handoff receipt acknowledgement record.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
      receipt-notification-stack-summary-product-handoff-delivery-package-embed-
      runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement surfaces and JSON helpers that wrap runtime activation
-     receipt journal summary handoff receipts into deterministic WebAssembly
-     product-shell acknowledgement payloads, acknowledge/defer dispositions,
-     acknowledgement actions, acknowledgement messages, acknowledgement steps,
-     nested runtime-activation-receipt-journal-summary-handoff-receipt
-     metadata, and runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement capability IDs for first-render product-shell
-     bootstrapping.
+     acknowledgement-record surfaces and JSON helpers that wrap runtime
+     activation receipt journal summary handoff receipt acknowledgements into
+     deterministic WebAssembly product-shell replay payloads,
+     recorded/deferred dispositions, record actions, record messages, record
+     steps, nested runtime-activation-receipt-journal-summary-handoff-receipt-
+     acknowledgement metadata, and runtime-activation-receipt-journal-summary-
+     handoff-receipt-acknowledgement-record capability IDs for first-render
+     product-shell bootstrapping.
    - Preserve package name, source fingerprint, route/status metadata,
      runtime-activation-receipt-journal-summary-handoff-receipt-
-     acknowledgement ID/kind/status/outcome/message, runtime-activation-
-     receipt-journal-summary-handoff-receipt ID/kind/status/outcome/
-     disposition, runtime-activation-receipt-journal-summary-handoff ID/kind/
-     status/outcome/disposition, runtime-activation-receipt-journal-summary
-     ID/kind/status/outcome, latest runtime-activation-receipt ID/status/
-     outcome, delivery package ID/route, product surface/region routing,
-     product-shell action, deterministic acknowledgement/receipt steps,
-     committed/deferred entry counts, acknowledge/defer flags, visible/
-     announce/attention/success/error/info counts, nested embed runtime
-     activation receipt journal summary handoff receipt, runtime-activation-
-     receipt-journal-summary-handoff-receipt capability ID, runtime-activation-
-     receipt-journal-summary-handoff-receipt-acknowledgement capability ID, and
-     advertised capability count so Mosaic, WebAssembly, and product shells can
-     close out compact post-invocation product handoff runtime activation
-     receipt journal summary handoff receipts without recomputing receipt
-     payloads.
+     acknowledgement-record ID/kind/status/outcome/message, runtime-
+     activation-receipt-journal-summary-handoff-receipt acknowledgement
+     ID/kind/status/outcome/disposition, runtime-activation-receipt-journal-
+     summary-handoff-receipt ID/status/outcome/disposition, runtime-
+     activation-receipt-journal-summary-handoff ID/status/outcome, runtime-
+     activation-receipt-journal-summary ID/status, latest runtime-activation-
+     receipt ID/status/outcome, delivery package ID/route, product surface/
+     region routing, product-shell action, deterministic record/
+     acknowledgement steps, committed/deferred entry counts, record/defer and
+     acknowledgement/defer flags, visible/announce/attention/success/error/
+     info counts, nested embed runtime activation receipt journal summary
+     handoff receipt acknowledgement, runtime-activation-receipt-journal-
+     summary-handoff-receipt-acknowledgement capability ID, runtime-
+     activation-receipt-journal-summary-handoff-receipt-acknowledgement-record
+     capability ID, and advertised capability count so Mosaic, WebAssembly, and
+     product shells can replay compact post-invocation product handoff runtime
+     activation receipt journal summary handoff receipt acknowledgements
+     without recomputing acknowledgement payloads.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2767,6 +2769,40 @@ the Rust, Python, and TypeScript surfaces together.
      acknowledge or defer compact post-invocation product handoff runtime
      activation receipt journal summary handoffs without recomputing handoff
      payloads.
+
+202. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt journal summary handoff receipt acknowledgement.
+   - Status: completed in PR 7509.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-invocation receipt-notification-stack-
+     summary-product-handoff-delivery-package-embed-runtime-activation-receipt-
+     journal-summary-handoff-receipt-acknowledgement surfaces plus JSON helpers
+     that wrap runtime activation receipt journal summary handoff receipts into
+     deterministic WebAssembly product-shell acknowledgement payloads,
+     acknowledge/defer dispositions, acknowledgement actions, acknowledgement
+     messages, acknowledgement steps, nested runtime-activation-receipt-journal-
+     summary-handoff-receipt metadata, and runtime-activation-receipt-journal-
+     summary-handoff-receipt-acknowledgement capability IDs for first-render
+     product-shell bootstrapping.
+   - The product handoff delivery package embed runtime activation receipt
+     journal summary handoff receipt acknowledgement payload preserves package
+     name, source fingerprint, route/status metadata, runtime-activation-
+     receipt-journal-summary-handoff-receipt-acknowledgement ID/kind/status/
+     outcome/message, runtime-activation-receipt-journal-summary-handoff-
+     receipt ID/kind/status/outcome/disposition, runtime-activation-receipt-
+     journal-summary-handoff ID/kind/status/outcome/disposition, runtime-
+     activation-receipt-journal-summary ID/kind/status/outcome, latest runtime-
+     activation-receipt ID/status/outcome, delivery package ID/route, product
+     surface/region routing, product-shell action, deterministic
+     acknowledgement/receipt steps, committed/deferred entry counts,
+     acknowledge/defer flags, visible/announce/attention/success/error/info
+     counts, nested embed runtime activation receipt journal summary handoff
+     receipt, runtime-activation-receipt-journal-summary-handoff-receipt
+     capability ID, runtime-activation-receipt-journal-summary-handoff-receipt-
+     acknowledgement capability ID, and advertised capability count so Mosaic,
+     WebAssembly, and product shells can close out compact post-invocation
+     product handoff runtime activation receipt journal summary handoff receipts
+     without recomputing receipt payloads.
 
 ## Backlog
 
