@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:ffi/ffi.dart';
 
 final class EgSession extends Opaque {}
@@ -44,6 +46,18 @@ typedef _EgHandleEngramAppEventDart = Pointer<Utf8> Function(
   Pointer<Utf8>,
   int,
 );
+typedef _EgExportAnkiApkgNative = Pointer<Utf8> Function(Pointer<EgSession>);
+typedef _EgExportAnkiApkgDart = Pointer<Utf8> Function(Pointer<EgSession>);
+typedef _EgMergeAnkiApkgNative = Pointer<Utf8> Function(
+  Pointer<EgSession>,
+  Pointer<Uint8>,
+  Uint64,
+);
+typedef _EgMergeAnkiApkgDart = Pointer<Utf8> Function(
+  Pointer<EgSession>,
+  Pointer<Uint8>,
+  int,
+);
 
 class MosaicHost {
   MosaicHost._(this._api, this._session);
@@ -76,7 +90,7 @@ class MosaicHost {
     });
   }
 
-  Map<String, Object?>? handleEvent(Map<String, Object?> event) {
+  Future<Map<String, Object?>?> handleEvent(Map<String, Object?> event) async {
     if (_disposed) {
       return const <String, Object?>{'error': 'Engram Flutter MosaicHost disposed'};
     }
@@ -91,12 +105,182 @@ class MosaicHost {
           ),
         );
         final response = _hostResponseFromJson(json);
-        if (response?['error'] == null) {
-          _persistSnapshot();
-        }
-        return response;
+        return _handleHostIntent(response).then((handled) {
+          if (handled?['error'] == null) {
+            _persistSnapshot();
+          }
+          return handled;
+        });
       });
     });
+  }
+
+  Future<Map<String, Object?>?> _handleHostIntent(
+    Map<String, Object?>? response,
+  ) async {
+    if (response == null || response['error'] != null) {
+      return response;
+    }
+
+    final hostIntent = _mosaicMap(response['hostIntent']);
+    switch (hostIntent['type']) {
+      case 'importAnki':
+        return _importAnkiPackage(response, hostIntent);
+      case 'exportAnki':
+        return _exportAnkiPackage(response, hostIntent);
+      default:
+        return response;
+    }
+  }
+
+  Future<Map<String, Object?>?> _importAnkiPackage(
+    Map<String, Object?> response,
+    Map<String, Object?> hostIntent,
+  ) async {
+    final XFile? file;
+    try {
+      file = await openFile(
+        acceptedTypeGroups: _ankiTypeGroups(
+          hostIntentExtensions(hostIntent, 'accept', const <String>[
+            '.apkg',
+            '.colpkg',
+          ]),
+        ),
+        confirmButtonText: 'Import',
+      );
+    } catch (error) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'unsupported',
+        error: error,
+      );
+    }
+
+    if (file == null) {
+      return _hostResultResponse(response, hostIntent, 'cancelled');
+    }
+
+    final path = _xFilePath(file);
+    final Uint8List bytes;
+    try {
+      bytes = await file.readAsBytes();
+    } catch (error) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'read-error',
+        path: path,
+        error: error,
+      );
+    }
+
+    if (bytes.isEmpty) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'import-error',
+        path: path,
+        error: 'Anki package was empty',
+      );
+    }
+
+    final json = _mergeAnkiApkg(bytes);
+    if (!_jsonOk(json)) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'import-error',
+        path: path,
+        error: _jsonError(json),
+      );
+    }
+
+    _persistSnapshot();
+    final refreshed = props() ?? const <String, Object?>{};
+    return <String, Object?>{
+      ...refreshed,
+      'hostIntent': hostIntent,
+      'hostResult': <String, Object?>{
+        'status': 'imported',
+        'path': path,
+      },
+    };
+  }
+
+  Future<Map<String, Object?>?> _exportAnkiPackage(
+    Map<String, Object?> response,
+    Map<String, Object?> hostIntent,
+  ) async {
+    final FileSaveLocation? location;
+    try {
+      location = await getSaveLocation(
+        acceptedTypeGroups: _ankiTypeGroups(
+          hostIntentExtensions(hostIntent, 'extensions', const <String>[
+            '.apkg',
+          ]),
+        ),
+        suggestedName: suggestedAnkiFileName(hostIntent),
+        confirmButtonText: 'Export',
+      );
+    } catch (error) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'unsupported',
+        error: error,
+      );
+    }
+
+    if (location == null) {
+      return _hostResultResponse(response, hostIntent, 'cancelled');
+    }
+
+    final outputPath = _ensureApkgExtension(location.path);
+    final json = _takeCString(_api.egExportAnkiApkg(_session));
+    if (!_jsonOk(json)) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'export-error',
+        path: outputPath,
+        error: _jsonError(json),
+      );
+    }
+
+    final bytes = _jsonByteArray(json, 'apkg');
+    if (bytes.isEmpty) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'export-error',
+        path: outputPath,
+        error: 'Engram native host returned an empty APKG',
+      );
+    }
+
+    try {
+      await XFile.fromData(
+        bytes,
+        mimeType: 'application/octet-stream',
+        name: _baseName(outputPath),
+      ).saveTo(outputPath);
+    } catch (error) {
+      return _hostResultResponse(
+        response,
+        hostIntent,
+        'write-error',
+        path: outputPath,
+        error: error,
+      );
+    }
+
+    return _hostResultResponse(
+      response,
+      hostIntent,
+      'exported',
+      path: outputPath,
+    );
   }
 
   void dispose() {
@@ -115,6 +299,16 @@ class MosaicHost {
       return pointer.toDartString();
     } finally {
       _api.egStringFree(pointer);
+    }
+  }
+
+  String _mergeAnkiApkg(Uint8List bytes) {
+    final data = calloc<Uint8>(bytes.length);
+    try {
+      data.asTypedList(bytes.length).setAll(0, bytes);
+      return _takeCString(_api.egMergeAnkiApkg(_session, data, bytes.length));
+    } finally {
+      calloc.free(data);
     }
   }
 
@@ -186,7 +380,15 @@ class _EngramCapi {
         ),
         egHandleEngramAppEvent = library.lookupFunction<
             _EgHandleEngramAppEventNative,
-            _EgHandleEngramAppEventDart>('eg_handle_engram_app_event');
+            _EgHandleEngramAppEventDart>('eg_handle_engram_app_event'),
+        egExportAnkiApkg = library
+            .lookupFunction<_EgExportAnkiApkgNative, _EgExportAnkiApkgDart>(
+          'eg_export_anki_apkg',
+        ),
+        egMergeAnkiApkg = library
+            .lookupFunction<_EgMergeAnkiApkgNative, _EgMergeAnkiApkgDart>(
+          'eg_merge_anki_apkg',
+        );
 
   final _EgSessionNewDart egSessionNewDemo;
   final _EgSessionFreeDart egSessionFree;
@@ -195,6 +397,8 @@ class _EngramCapi {
   final _EgLoadSnapshotDart egLoadSnapshot;
   final _EgEngramAppPropsDart egEngramAppProps;
   final _EgHandleEngramAppEventDart egHandleEngramAppEvent;
+  final _EgExportAnkiApkgDart egExportAnkiApkg;
+  final _EgMergeAnkiApkgDart egMergeAnkiApkg;
 
   static _EngramCapi? load() {
     if (Platform.isIOS) {
@@ -257,6 +461,104 @@ Map<String, Object?> _mosaicMap(Object? value) {
     }
   }
   return out;
+}
+
+Map<String, Object?> _hostResultResponse(
+  Map<String, Object?> response,
+  Map<String, Object?> hostIntent,
+  String status, {
+  String? path,
+  Object? error,
+}) {
+  final out = <String, Object?>{
+    ...response,
+    'hostIntent': hostIntent,
+  };
+  final hostResult = <String, Object?>{'status': status};
+  if (path != null && path.isNotEmpty) {
+    hostResult['path'] = path;
+  }
+  if (error != null) {
+    hostResult['error'] = error.toString();
+  }
+  out['hostResult'] = hostResult;
+  return out;
+}
+
+List<String> hostIntentExtensions(
+  Map<String, Object?> hostIntent,
+  String property,
+  List<String> fallback,
+) {
+  final raw = hostIntent[property];
+  if (raw is! List) {
+    return fallback;
+  }
+
+  final extensions = raw
+      .map((value) => value.toString().trim())
+      .where((value) => value.isNotEmpty)
+      .map((value) => value.startsWith('.') ? value : '.$value')
+      .toList(growable: false);
+  return extensions.isEmpty ? fallback : extensions;
+}
+
+List<XTypeGroup> _ankiTypeGroups(List<String> extensions) {
+  return <XTypeGroup>[
+    XTypeGroup(
+      label: 'Anki packages',
+      extensions: extensions
+          .map((extension) => extension.startsWith('.') ? extension.substring(1) : extension)
+          .toList(growable: false),
+    ),
+  ];
+}
+
+String suggestedAnkiFileName(Map<String, Object?> hostIntent) {
+  final raw = hostIntent['deckId']?.toString().trim();
+  final name = raw == null || raw.isEmpty ? 'engram-collection' : raw;
+  final safe = name.replaceAll(RegExp(r'''[\/\\:*?"<>|]'''), '-');
+  return safe.toLowerCase().endsWith('.apkg') ? safe : '$safe.apkg';
+}
+
+String _xFilePath(XFile file) => file.path.isEmpty ? file.name : file.path;
+
+String _ensureApkgExtension(String path) =>
+    path.toLowerCase().endsWith('.apkg') ? path : '$path.apkg';
+
+String _baseName(String path) {
+  final normalized = path.replaceAll('\\', '/');
+  final index = normalized.lastIndexOf('/');
+  return index < 0 ? normalized : normalized.substring(index + 1);
+}
+
+Uint8List _jsonByteArray(String json, String property) {
+  final Object? decoded;
+  try {
+    decoded = jsonDecode(json);
+  } catch (_) {
+    return Uint8List(0);
+  }
+  if (decoded is! Map || decoded[property] is! List) {
+    return Uint8List(0);
+  }
+  final values = decoded[property] as List;
+  return Uint8List.fromList(
+    values
+        .whereType<num>()
+        .map((value) => value.toInt() & 0xff)
+        .toList(growable: false),
+  );
+}
+
+String _jsonError(String json) {
+  try {
+    final decoded = jsonDecode(json);
+    if (decoded is Map && decoded['error'] != null) {
+      return decoded['error'].toString();
+    }
+  } catch (_) {}
+  return 'Engram native host failed';
 }
 
 T _withNativeUtf8<T>(String value, T Function(Pointer<Utf8>) body) {

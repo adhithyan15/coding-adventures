@@ -1043,7 +1043,7 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&flutter_app, "EngramApp(");
     assert_contains(&flutter_app, "import 'mosaic_host.dart';");
     assert_contains(&flutter_app, "MosaicHost.load()");
-    assert_contains(&flutter_app, "_applyMosaicResponse(_mosaicHost?.props())");
+    assert_contains(&flutter_app, "_queueMosaicResponse(_mosaicHost?.props())");
     assert_contains(
         &flutter_app,
         "appTitle: mosaicString(_hostProps, \"app-title\", \"Sample AppTitle\"),",
@@ -1168,7 +1168,7 @@ fn native_project_shells_expose_engram_host_contract() {
         &flutter_app,
         "debugPrint(\"event: ${event.mosaicEnvelope}\");",
     );
-    assert_contains(&flutter_app, "_applyMosaicResponse(response);");
+    assert_contains(&flutter_app, "_queueMosaicResponse(response);");
 
     let flutter_host = fs::read_to_string(
         tmp.path()
@@ -1179,9 +1179,14 @@ fn native_project_shells_expose_engram_host_contract() {
     .expect("flutter/lib/mosaic_host.dart");
     assert_contains(&flutter_host, "class MosaicHost");
     assert_contains(&flutter_host, "DynamicLibrary.open");
+    assert_contains(&flutter_host, "package:file_selector/file_selector.dart");
     assert_contains(&flutter_host, "eg_engram_app_props");
     assert_contains(&flutter_host, "eg_handle_engram_app_event");
+    assert_contains(&flutter_host, "eg_export_anki_apkg");
+    assert_contains(&flutter_host, "eg_merge_anki_apkg");
     assert_contains(&flutter_host, "jsonEncode(event)");
+    assert_contains(&flutter_host, "openFile");
+    assert_contains(&flutter_host, "getSaveLocation");
     assert_contains(&flutter_host, "'props': _mosaicMap(decoded['props'])");
 
     let compose_app =
@@ -2620,8 +2625,13 @@ fn source_tree_has_expected_shape() {
     assert_contains(&flutter_host, "DynamicLibrary.open");
     assert_contains(&flutter_host, "eg_engram_app_props");
     assert_contains(&flutter_host, "eg_handle_engram_app_event");
+    assert_contains(&flutter_host, "eg_export_anki_apkg");
+    assert_contains(&flutter_host, "eg_merge_anki_apkg");
     assert_contains(&flutter_host, "jsonEncode(event)");
+    assert_contains(&flutter_host, "openFile");
+    assert_contains(&flutter_host, "getSaveLocation");
     assert_contains(&flutter_host, "'hostIntent'");
+    assert_contains(&flutter_host, "'hostResult'");
     assert_contains(&flutter_host, "'props'");
     assert_contains(&flutter_host, "ENGRAM_SNAPSHOT_PATH");
     assert_contains(&flutter_host, "mosaic-snapshot.v1.json");
@@ -2640,6 +2650,7 @@ fn source_tree_has_expected_shape() {
     assert_contains(&build_script, "Install-EngramFlutterHost");
     assert_contains(&build_script, "Install-EngramComposeHost");
     assert_contains(&build_script, "ffi: ^2.1.3");
+    assert_contains(&build_script, "file_selector: ^1.0.3");
     assert_contains(&build_script, "net.java.dev.jna:jna:5.19.1");
     assert_contains(&build_script, "org.json:json:20260522");
     assert_contains(&build_script, "module CEngram");

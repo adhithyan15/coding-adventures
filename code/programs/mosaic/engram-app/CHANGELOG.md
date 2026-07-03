@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wired the generated Flutter Engram shell to handle Anki import/export
+  `hostIntent` payloads with `file_selector` dialogs and the shared
+  `engram-capi` APKG import/export functions.
 - Wired the generated Compose Desktop Engram shell to handle Anki import/export
   `hostIntent` payloads with desktop file choosers and the shared `engram-capi`
   APKG import/export functions.
