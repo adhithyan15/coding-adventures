@@ -671,6 +671,12 @@ backend immediately) come before the enabler-dependent items.
   proves the lowering is genuinely N-dimensional (stride product `stride[0]=size[1]*size[2]=4`,
   `stride[1]=2`, `stride[2]=1`); no compiler change (the right-to-left stride loop just walks one
   more iteration); `algol-iir-compiler` 0.25.0 / `lang-aot` 0.167.0.
+  **AL-multidim-bounds ✅**: `integer array M[-1:1, 2:3]` (arbitrary, incl. negative, per-dimension
+  lower bounds) runs on **all 7 backends** — proves the per-dim `sub−lower` subtraction composes
+  with the row-major strides (`flat = Σ_d (sub[d]−lower[d])*stride[d]`); no compiler change (the
+  `ArrayDim.lower_slot` subtraction already existed); `algol-iir-compiler` 0.26.0 / `lang-aot` 0.169.0.
+  Array **value parameters** (passing an array to a procedure) remain a follow-up — they need
+  managed-backend (JVM/CLR) call-signature work, not just the frontend.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a
