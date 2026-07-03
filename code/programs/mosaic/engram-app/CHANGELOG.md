@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Wired the generated HTML, WebComponent, and React Engram web hosts to handle
+  Anki import/export `hostIntent` payloads with browser file input/download
+  helpers and the `engram-wasm` APKG byte API, surfacing `hostResult` errors
+  when the current browser WASM build delegates package parsing to native hosts.
 - Wired the generated Flutter Engram shell to handle Anki import/export
   `hostIntent` payloads with `file_selector` dialogs and the shared
   `engram-capi` APKG import/export functions.

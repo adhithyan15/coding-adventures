@@ -12,10 +12,15 @@ export type EngramEngine = {
   getState: () => unknown;
   loadSnapshot: (snapshot: unknown) => { ok?: boolean; error?: unknown };
   dispatch: (command: unknown) => unknown;
+  exportAnkiApkg: () => { ok?: boolean; apkg?: unknown; error?: unknown };
+  mergeAnkiApkg: (bytes: Uint8Array) => { ok?: boolean; state?: unknown; error?: unknown };
   createMosaicHost: (options?: {
     deckId?: string | (() => string);
     now?: number | (() => number);
-    onHostIntent?: (intent: Record<string, unknown>, result: Record<string, unknown>) => unknown;
+    onHostIntent?: (
+      intent: Record<string, unknown>,
+      result: Record<string, unknown>,
+    ) => unknown | Promise<unknown>;
   }) => EngramMosaicHost;
 };
 
@@ -35,6 +40,9 @@ export function installEngramMosaicHost(
     demo?: boolean;
     deckId?: string | (() => string);
     now?: number | (() => number);
-    onHostIntent?: (intent: Record<string, unknown>, result: Record<string, unknown>) => unknown;
+    onHostIntent?: (
+      intent: Record<string, unknown>,
+      result: Record<string, unknown>,
+    ) => unknown | Promise<unknown>;
   },
 ): EngramMosaicHost;
