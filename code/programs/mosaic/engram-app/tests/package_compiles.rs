@@ -1026,6 +1026,17 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&electron_host, "hydrateEngine(engine);");
     assert_contains(&electron_host, "withSnapshotPersistence(host, engine)");
     assert_contains(&electron_host, "persistSnapshot(engine);");
+    assert_contains(&electron_host, "spawnSync");
+    assert_contains(&electron_host, "dialog");
+    assert_contains(&electron_host, "ENGRAM_HOST_CLI");
+    assert_contains(&electron_host, "engram-host-cli.exe");
+    assert_contains(&electron_host, "handleHostIntent");
+    assert_contains(&electron_host, "importAnkiPackage");
+    assert_contains(&electron_host, "exportAnkiPackage");
+    assert_contains(&electron_host, "runSidecar");
+    assert_contains(&electron_host, "merge-apkg");
+    assert_contains(&electron_host, "export-apkg");
+    assert_contains(&electron_host, "loadPersistedSnapshot");
 
     let flutter_app = fs::read_to_string(tmp.path().join("flutter").join("lib").join("main.dart"))
         .expect("flutter/lib/main.dart");
@@ -2518,6 +2529,21 @@ fn source_tree_has_expected_shape() {
         "xaml host template must not load the native library from a static field initializer"
     );
 
+    let electron_host = fs::read_to_string(package_root().join("host/electron/host.js"))
+        .expect("electron host template");
+    assert_contains(&electron_host, "dialog");
+    assert_contains(&electron_host, "spawnSync");
+    assert_contains(&electron_host, "ENGRAM_HOST_CLI");
+    assert_contains(&electron_host, "engram-host-cli.exe");
+    assert_contains(&electron_host, "handleHostIntent");
+    assert_contains(&electron_host, "importAnkiPackage");
+    assert_contains(&electron_host, "exportAnkiPackage");
+    assert_contains(&electron_host, "runSidecar");
+    assert_contains(&electron_host, "merge-apkg");
+    assert_contains(&electron_host, "export-apkg");
+    assert_contains(&electron_host, "loadPersistedSnapshot");
+    assert_contains(&electron_host, "persistSnapshot(engine)");
+
     let swiftui_host = fs::read_to_string(package_root().join("host/swiftui/MosaicHost.swift"))
         .expect("swiftui host template");
     assert_contains(&swiftui_host, "MosaicHostBridgeObject");
@@ -2612,6 +2638,9 @@ fn source_tree_has_expected_shape() {
     assert_contains(&build_script, "module CEngram");
     assert_contains(&build_script, "libengram_capi.a");
     assert_contains(&build_script, "engram_capi.dll");
+    assert_contains(&build_script, "hostCliName");
+    assert_contains(&build_script, "engram-host-cli.exe");
+    assert_contains(&build_script, "engramHostCli");
     assert!(
         !build_script.contains("Add-EngramXamlNativeContent"),
         "XAML native library copying should be owned by the generated project"

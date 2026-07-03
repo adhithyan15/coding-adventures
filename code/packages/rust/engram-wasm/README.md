@@ -33,9 +33,12 @@ buffers:
 ## Exports
 
 Core session exports include `reset`, `snapshot`, `get_state`, `load_snapshot`,
-`dispatch`, `build_queue`, `get_deck_stats`, `session_progress`,
-`review_history`, `search_cards`, `engram_app_props`,
-`engram_browser_props`, and `handle_engram_app_event`.
+`dispatch`, `export_anki_apkg`, `merge_anki_apkg`, `build_queue`,
+`get_deck_stats`, `session_progress`, `review_history`, `search_cards`,
+`engram_app_props`, `engram_browser_props`, and `handle_engram_app_event`.
+In browser WASM builds, APKG import/export returns an explicit native-host
+delegation error because real package I/O is handled by platform bridges such
+as Electron's `engram-host-cli` sidecar.
 
 The JS loader in `js/engram-mosaic-host-wasm.mjs` adapts those JSON responses to
 the generated Mosaic React/Electron host contract by converting Mosaic

@@ -17,6 +17,11 @@ $nativeLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::Is
 } else {
     "libengram_capi.so"
 }
+$hostCliName = if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
+    "engram-host-cli.exe"
+} else {
+    "engram-host-cli"
+}
 $staticLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)) {
     "engram_capi.lib"
 } else {
@@ -24,6 +29,7 @@ $staticLibraryName = if ([System.Runtime.InteropServices.RuntimeInformation]::Is
 }
 $engramCapiLibrary = Join-Path $rustWorkspace "target\$nativeProfile\$nativeLibraryName"
 $engramCapiStaticLibrary = Join-Path $rustWorkspace "target\$nativeProfile\$staticLibraryName"
+$engramHostCli = Join-Path $rustWorkspace "target\$nativeProfile\$hostCliName"
 
 if ([System.IO.Path]::IsPathRooted($Output)) {
     $outputRoot = [System.IO.Path]::GetFullPath($Output)
@@ -114,6 +120,7 @@ function Install-EngramElectronHost {
     New-Item -ItemType Directory -Force -Path $electronDir | Out-Null
     Copy-Item -LiteralPath $engramWasmFile -Destination (Join-Path $electronDir "engram_engine.wasm") -Force
     Copy-Item -LiteralPath $engramWasmLoader -Destination (Join-Path $electronDir "engram-mosaic-host-wasm.mjs") -Force
+    Copy-Item -LiteralPath $engramHostCli -Destination (Join-Path $electronDir $hostCliName) -Force
 }
 
 function Install-EngramQtHost {

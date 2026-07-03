@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wired the generated Electron Engram shell to handle Anki import/export
+  `hostIntent` payloads with native Electron dialogs, snapshot persistence,
+  and a native `engram-host-cli` sidecar for APKG import/export.
 - Wired the generated SwiftUI macOS Engram shell to handle Anki import/export
   `hostIntent` payloads with AppKit file panels and the shared `engram-capi`
   APKG import/export functions, with an explicit unsupported result on

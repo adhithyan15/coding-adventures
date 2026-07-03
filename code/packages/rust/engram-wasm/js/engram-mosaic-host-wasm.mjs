@@ -27,6 +27,24 @@ export function createEngramEngine(wasmBytes, options = {}) {
     return [ptr, bytes.length];
   }
 
+  function writeBytes(value) {
+    const bytes =
+      value instanceof Uint8Array
+        ? value
+        : value instanceof ArrayBuffer
+          ? new Uint8Array(value)
+          : ArrayBuffer.isView(value)
+            ? new Uint8Array(value.buffer, value.byteOffset, value.byteLength)
+            : new Uint8Array(value ?? []);
+    if (bytes.length === 0) return [0, 0];
+    const ptr = ex.alloc(bytes.length);
+    if (ptr === 0) {
+      throw new Error("engram-wasm alloc returned null");
+    }
+    mem().set(bytes, ptr);
+    return [ptr, bytes.length];
+  }
+
   function freeInput(ptr, len) {
     if (len) ex.dealloc(ptr, len);
   }
@@ -54,6 +72,13 @@ export function createEngramEngine(wasmBytes, options = {}) {
 
   function call1(fn, value) {
     const [ptr, len] = writeStr(value);
+    const result = ex[fn](ptr, len);
+    freeInput(ptr, len);
+    return readResult(result);
+  }
+
+  function callBytes(fn, value) {
+    const [ptr, len] = writeBytes(value);
     const result = ex[fn](ptr, len);
     freeInput(ptr, len);
     return readResult(result);
@@ -103,6 +128,8 @@ export function createEngramEngine(wasmBytes, options = {}) {
     getState: () => jsonResult(call0("get_state")),
     loadSnapshot: (snapshot) => jsonResult(call1("load_snapshot", stringifyInput(snapshot))),
     dispatch: (command) => jsonResult(call1("dispatch", stringifyInput(command))),
+    exportAnkiApkg: () => jsonResult(call0("export_anki_apkg")),
+    mergeAnkiApkg: (bytes) => jsonResult(callBytes("merge_anki_apkg", bytes)),
     buildQueue: (deckId = currentDeckId(), now = currentNow()) =>
       jsonResult(callStrU64("build_queue", deckId, now)),
     getDeckStats: (deckId = currentDeckId(), now = currentNow()) =>

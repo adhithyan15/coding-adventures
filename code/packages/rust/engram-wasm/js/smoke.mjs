@@ -89,6 +89,14 @@ check("demo host deck names", demo.props.deckNames, [
   "Spanish::Latin Roots",
 ]);
 
+const exportedApkg = demoEngine.exportAnkiApkg();
+check("apkg export delegated", exportedApkg.ok, false);
+check("apkg export delegated error", exportedApkg.error.includes("native hosts"), true);
+const mergeEngine = createEngramEngine(wasm, { now: () => 1700000000000 });
+const mergedApkg = mergeEngine.mergeAnkiApkg(new Uint8Array([1, 2, 3]));
+check("apkg merge delegated", mergedApkg.ok, false);
+check("apkg merge delegated error", mergedApkg.error.includes("native hosts"), true);
+
 let readyEvent = null;
 const fakeWindow = {
   CustomEvent: class CustomEvent {

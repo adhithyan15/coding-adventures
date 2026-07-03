@@ -49,6 +49,13 @@ unsafe fn read_input(ptr: *const u8, len: usize) -> String {
     String::from_utf8_lossy(slice).into_owned()
 }
 
+unsafe fn read_bytes(ptr: *const u8, len: usize) -> Vec<u8> {
+    if ptr.is_null() || len == 0 {
+        return Vec::new();
+    }
+    unsafe { std::slice::from_raw_parts(ptr, len) }.to_vec()
+}
+
 fn pack(value: String) -> *mut u8 {
     let bytes = value.into_bytes();
     let payload_len = bytes.len();
@@ -243,6 +250,20 @@ pub unsafe extern "C" fn handle_engram_app_event(
     }))
 }
 
+#[no_mangle]
+pub extern "C" fn export_anki_apkg() -> *mut u8 {
+    pack(SESSION.with(|session| session.borrow().export_anki_apkg()))
+}
+
+/// # Safety
+/// `data_ptr` must point to `data_len` readable bytes, or be null with a zero
+/// length.
+#[no_mangle]
+pub unsafe extern "C" fn merge_anki_apkg(data_ptr: *const u8, data_len: usize) -> *mut u8 {
+    let bytes = unsafe { read_bytes(data_ptr, data_len) };
+    pack(SESSION.with(|session| session.borrow_mut().merge_anki_apkg(&bytes)))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -263,6 +284,17 @@ mod tests {
             dealloc(ptr, 4 + len);
             String::from_utf8(bytes).unwrap()
         }
+    }
+
+    fn apkg_bytes(raw: &str) -> Vec<u8> {
+        let prefix = r#""apkg":["#;
+        let start = raw.find(prefix).unwrap() + prefix.len();
+        let end = raw[start..].find(']').unwrap() + start;
+        raw[start..end]
+            .split(',')
+            .filter(|part| !part.is_empty())
+            .map(|part| part.parse::<u8>().unwrap())
+            .collect()
     }
 
     fn call_str1(f: unsafe extern "C" fn(*const u8, usize) -> *mut u8, value: &str) -> String {
@@ -465,6 +497,24 @@ mod tests {
             "{imported}"
         );
         assert!(imported.contains(r#""type":"importAnki""#), "{imported}");
+    }
+
+    #[test]
+    fn apkg_exports_round_trip_through_wasm_abi() {
+        reset_demo();
+        let exported = take(export_anki_apkg());
+        assert!(exported.contains(r#""ok":true"#), "{exported}");
+        assert!(exported.contains(r#""apkg":["#), "{exported}");
+        let bytes = apkg_bytes(&exported);
+
+        reset();
+        let ptr = alloc(bytes.len());
+        unsafe { std::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr, bytes.len()) };
+        let merged = unsafe { merge_anki_apkg(ptr, bytes.len()) };
+        unsafe { dealloc(ptr, bytes.len()) };
+        let merged = take(merged);
+        assert!(merged.contains(r#""ok":true"#), "{merged}");
+        assert!(merged.contains(r#""source":"anki-v11""#), "{merged}");
     }
 
     #[test]

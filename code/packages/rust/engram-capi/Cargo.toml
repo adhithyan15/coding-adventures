@@ -8,6 +8,10 @@ license = "MIT"
 [lib]
 crate-type = ["cdylib", "staticlib", "rlib"]
 
+[[bin]]
+name = "engram-host-cli"
+path = "src/bin/engram_host_cli.rs"
+
 [dependencies]
 engram-anki-package = { path = "../engram-anki-package" }
 engram-core = { path = "../engram-core", features = ["serde"] }

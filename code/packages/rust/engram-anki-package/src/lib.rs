@@ -8,6 +8,7 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fmt;
 use std::io::Cursor;
+use std::ptr::NonNull;
 
 use coding_adventures_sha1::sum1;
 pub use engram_core::EngramMediaReferenceAnalysis;
@@ -21,7 +22,8 @@ use engram_core::{
     SessionStatus, TemplateRequirementMode, INITIAL_EASE_FACTOR, ONE_DAY_MS,
 };
 use prost::Message;
-use rusqlite::{Connection, OpenFlags};
+use rusqlite::{ffi as sqlite_ffi, serialize::OwnedData};
+use rusqlite::{Connection, DatabaseName};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use zip::{ZipReader, ZipWriter};
@@ -464,24 +466,17 @@ pub fn write_v11_collection_bytes_from_engram_state(
     state: &AppState,
 ) -> Result<Vec<u8>, ApkgError> {
     let export = ExportModel::from_state(state)?;
-    let sqlite_file = tempfile::NamedTempFile::new()
-        .map_err(|err| apkg_error(format!("failed to create temporary SQLite file: {err}")))?;
-
-    {
-        let connection = Connection::open(sqlite_file.path()).map_err(|err| {
-            apkg_error(format!(
-                "failed to open temporary Anki V11 SQLite collection: {err}"
-            ))
-        })?;
-        create_v11_export_schema(&connection)?;
-        write_v11_export_rows(&connection, &export)?;
-    }
-
-    std::fs::read(sqlite_file.path()).map_err(|err| {
+    let connection = Connection::open_in_memory().map_err(|err| {
         apkg_error(format!(
-            "failed to read exported Anki V11 collection: {err}"
+            "failed to open in-memory Anki V11 SQLite collection: {err}"
         ))
-    })
+    })?;
+    create_v11_export_schema(&connection)?;
+    write_v11_export_rows(&connection, &export)?;
+    connection
+        .serialize(DatabaseName::Main)
+        .map(|data| data.to_vec())
+        .map_err(|err| apkg_error(format!("failed to serialize Anki V11 collection: {err}")))
 }
 
 pub fn write_legacy_apkg_from_engram_state(
@@ -524,15 +519,7 @@ pub fn read_v11_collection(data: &[u8]) -> Result<AnkiV11Collection, ApkgError> 
 }
 
 pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, ApkgError> {
-    let sqlite_file = tempfile::NamedTempFile::new()
-        .map_err(|err| apkg_error(format!("failed to create temporary SQLite file: {err}")))?;
-    std::fs::write(sqlite_file.path(), bytes)
-        .map_err(|err| apkg_error(format!("failed to write temporary SQLite file: {err}")))?;
-    let connection = Connection::open_with_flags(
-        sqlite_file.path(),
-        OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX,
-    )
-    .map_err(|err| apkg_error(format!("failed to open Anki V11 SQLite collection: {err}")))?;
+    let connection = open_serialized_v11_collection(bytes)?;
 
     let raw_col = read_v11_col_row(&connection)?;
     let metadata = AnkiV11CollectionMetadata {
@@ -558,6 +545,32 @@ pub fn parse_v11_collection_bytes(bytes: &[u8]) -> Result<AnkiV11Collection, Apk
         graves: read_v11_graves(&connection)?,
         metadata,
     })
+}
+
+fn open_serialized_v11_collection(bytes: &[u8]) -> Result<Connection, ApkgError> {
+    let mut connection = Connection::open_in_memory()
+        .map_err(|err| apkg_error(format!("failed to open in-memory SQLite collection: {err}")))?;
+    if bytes.is_empty() {
+        return Err(apkg_error("Anki V11 SQLite collection is empty"));
+    }
+    let ptr = unsafe { sqlite_ffi::sqlite3_malloc64(bytes.len() as sqlite_ffi::sqlite3_uint64) };
+    let ptr = NonNull::new(ptr.cast::<u8>()).ok_or_else(|| {
+        apkg_error(format!(
+            "failed to allocate {} bytes for Anki V11 SQLite collection",
+            bytes.len()
+        ))
+    })?;
+    unsafe {
+        std::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr.as_ptr(), bytes.len());
+        connection
+            .deserialize(
+                DatabaseName::Main,
+                OwnedData::from_raw_nonnull(ptr, bytes.len()),
+                true,
+            )
+            .map_err(|err| apkg_error(format!("failed to deserialize Anki V11 collection: {err}")))
+    }?;
+    Ok(connection)
 }
 
 pub fn read_v11_collection_as_engram_state(data: &[u8]) -> Result<AppState, ApkgError> {

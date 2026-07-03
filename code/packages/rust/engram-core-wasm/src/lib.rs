@@ -9,6 +9,10 @@
 use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
+#[cfg(not(target_arch = "wasm32"))]
+use engram_anki_package::{
+    read_v11_collection_as_engram_state, write_legacy_apkg_from_engram_state,
+};
 use engram_core::{
     analyze_media_references, build_session_queue_for_state_with_options,
     build_session_queue_with_daily_limits, cards_in_deck_scope, create_engram_snapshot,
@@ -1877,6 +1881,43 @@ impl EngramSession {
                 }
                 Err(error) => Ok(error_json_with_row(&error.message, error.row)),
             }
+        })
+    }
+
+    pub fn export_anki_apkg(&self) -> String {
+        #[cfg(target_arch = "wasm32")]
+        {
+            let _ = self;
+            return error_json("Anki APKG export is handled by native hosts for WASM shells");
+        }
+
+        #[cfg(not(target_arch = "wasm32"))]
+        catch_json(
+            || match write_legacy_apkg_from_engram_state(&self.state, &[]) {
+                Ok(apkg) => Ok(ok_with("apkg", &apkg)),
+                Err(error) => Ok(error_json(&error.message)),
+            },
+        )
+    }
+
+    pub fn merge_anki_apkg(&mut self, bytes: &[u8]) -> String {
+        #[cfg(target_arch = "wasm32")]
+        {
+            let _ = bytes;
+            return error_json("Anki APKG import is handled by native hosts for WASM shells");
+        }
+
+        #[cfg(not(target_arch = "wasm32"))]
+        catch_json(|| match read_v11_collection_as_engram_state(bytes) {
+            Ok(imported_state) => {
+                self.state = merge_app_states(&self.state, imported_state);
+                self.browser = BrowserSessionState::default();
+                self.review = ReviewSessionState::default();
+                self.editor = NoteEditorSessionState::default();
+                self.note_type_editor = NoteTypeEditorSessionState::default();
+                Ok(ok_with("state", &self.state))
+            }
+            Err(error) => Ok(error_json(&error.message)),
         })
     }
 }
@@ -10990,6 +11031,31 @@ mod tests {
                     && source["source"] == "anki-text"
                     && source["originalId"] == "guid-123"
             }));
+    }
+
+    #[test]
+    fn export_and_merge_anki_apkg_round_trip_through_json_facade() {
+        let source = EngramSession::new_demo();
+        let exported: Value = serde_json::from_str(&source.export_anki_apkg()).unwrap();
+        assert_eq!(exported["ok"], true);
+        let apkg = exported["apkg"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|value| value.as_u64().unwrap() as u8)
+            .collect::<Vec<_>>();
+        assert!(!apkg.is_empty());
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&apkg)).unwrap();
+        assert_eq!(merged["ok"], true);
+        assert!(merged["state"]["decks"].as_array().unwrap().len() >= 4);
+        assert!(merged["state"]["cards"].as_array().unwrap().len() >= 5);
+        assert!(merged["state"]["externalSources"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|source| source["source"] == "anki-v11"));
     }
 
     #[test]
