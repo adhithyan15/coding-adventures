@@ -1987,7 +1987,13 @@ fn default_package_search_paths(package_root: &Path) -> Vec<PathBuf> {
         push_existing_unique(&mut roots, parent.to_path_buf());
     }
     for ancestor in package_root.ancestors() {
-        push_existing_unique(&mut roots, ancestor.join("packages"));
+        let packages = ancestor.join("packages");
+        push_existing_unique(&mut roots, packages.clone());
+        // The mosaic-pkg-* component-package family lives grouped under
+        // code/packages/mosaic/ rather than directly under code/packages/ --
+        // search there too so dependencies on it resolve without every
+        // caller needing to know about the extra directory level.
+        push_existing_unique(&mut roots, packages.join("mosaic"));
     }
     roots
 }

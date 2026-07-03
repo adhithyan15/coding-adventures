@@ -31,7 +31,9 @@ fn package_search_root() -> PathBuf {
 }
 
 fn dependency_resolver() -> Resolver {
-    mosaic_package_resolver::build(&package_root(), &[package_search_root()])
+    let packages_root = package_search_root();
+    let mosaic_root = packages_root.join("mosaic");
+    mosaic_package_resolver::build(&package_root(), &[packages_root, mosaic_root])
         .expect("Engram app dependencies should resolve")
 }
 
