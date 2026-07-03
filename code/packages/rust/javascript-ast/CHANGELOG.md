@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.18.0] - 2026-07-02
+
+### Added — CLOC12.159: `Expression::NewExpression` (`new X(args)`)
+
+New `NewExpression { cv, callee, arguments }` variant of `Expression` for the
+`new` operator. Structurally a `CallExpression` (callee + arguments) but a
+distinct node because its evaluation semantics (object construction) and its
+grammar precedence differ — a pass must never rewrite one into the other.
+Re-exported from the crate root. This is the atomic node PR (PR1); the bridge
+conversion (PR2) and the CodePrinter conformance port (PR3) follow.
+
+
 ## [0.17.0] - 2026-07-02
 
 ### Added — CLOC12.158: `UpdateExpression` (`++` / `--`)

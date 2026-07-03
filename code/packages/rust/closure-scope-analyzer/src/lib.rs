@@ -893,6 +893,12 @@ fn walk_expression(
                 walk_expression(arg, ctx, analysis, pending);
             }
         }
+        Expression::NewExpression(ne) => {
+            walk_expression(&ne.callee, ctx, analysis, pending);
+            for arg in &ne.arguments {
+                walk_expression(arg, ctx, analysis, pending);
+            }
+        }
         Expression::MemberExpression(me) => {
             walk_member_expression_inner(&me.object, &me.property, me.computed, ctx, analysis, pending);
         }

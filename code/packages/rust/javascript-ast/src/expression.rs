@@ -58,6 +58,7 @@ pub enum Expression {
     ArrowFunctionExpression(ArrowFunctionExpression),
     TemplateLiteral(TemplateLiteral),
     UpdateExpression(UpdateExpression),
+    NewExpression(NewExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -356,6 +357,62 @@ pub struct ConditionalExpression {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CallExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub callee: Box<Expression>,
+    pub arguments: Vec<Expression>,
+}
+
+/// `new Ctor(a, b)` — construction via the `new` operator. Structurally a
+/// [`CallExpression`] with a `new` keyword, but a **distinct** node because
+/// its evaluation semantics and its precedence rules differ:
+///
+/// # Semantics
+///
+/// `new Ctor(args)` allocates a fresh object, runs `Ctor` with `this` bound to
+/// it, and yields the object (unless the constructor returns its own object).
+/// A [`CallExpression`] `Ctor(args)` merely calls the function. A pass may not
+/// rewrite one into the other.
+///
+/// # `arguments` may be empty
+///
+/// `new Ctor` (no parens) and `new Ctor()` (empty parens) are the **same**
+/// program — both carry `arguments: vec![]`. The two source spellings collapse
+/// to one node; the emitter chooses a canonical spelling.
+///
+/// # Precedence
+///
+/// Per the ECMAScript grammar the *argumented* form is a `MemberExpression`
+/// (`new MemberExpression Arguments`) while the *bare* form is a lower
+/// `NewExpression` (`new NewExpression`), so in source they bind differently:
+///
+/// ```text
+///   new X().y     parses as   (new X()).y     ← argumented: member binds after
+///   new X.y       parses as   new (X.y)       ← bare: the whole member is the target
+/// ```
+///
+/// The emitter sidesteps the split by **always printing the argument parens** —
+/// a no-argument node is emitted canonically as `new X()`, never bare `new X`.
+/// Every emitted `new` is therefore the argumented form and binds at
+/// member/call strength, so `new X().y` needs no extra parens. (Dropping the
+/// empty parens as a size win is a possible future optimization; it would
+/// reintroduce the looser bare-form precedence.)
+///
+/// # The callee (`callee`) excludes a trailing call
+///
+/// The `new` target is a `MemberExpression`, which by grammar cannot *be* a
+/// call. So if the callee's member spine bottoms out in a call, the target
+/// must be parenthesised or the `(args)` we emit would bind to the *inner*
+/// call instead:
+///
+/// ```text
+///   new (f())()   NOT   new f()()   (which is (new f())() — a different program)
+/// ```
+///
+/// The emitter's `emit_new` parenthesises exactly this case.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NewExpression {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub callee: Box<Expression>,
