@@ -199,6 +199,13 @@ function TokenGrammar.new()
     self.error_definitions = {}
     self.reserved_keywords = {}
     self.groups = {}
+    -- F10: declarative lexer mode transitions. start_mode names the mode the
+    -- lexer begins in ("" means "default"). transitions is an ordered list of
+    -- ModeTransition tables: { on_tokens, on_value, in_mode, actions, line_number }
+    -- where each action is { kind = "set_mode"|"push"|"pop"|"enable_skip"|"disable_skip", target = ... }.
+    -- Empty transitions => lexer behavior identical to pre-F10 (F04) grammars.
+    self.start_mode = ""
+    self.transitions = {}
     return self
 end
 
@@ -413,7 +420,137 @@ local RESERVED_GROUP_NAMES = {
     context_keywords = true,
     layout_keywords = true,
     soft_keywords = true,
+    transitions = true,
+    start_mode = true,
 }
+
+-- ============================================================================
+-- MAX_TRANSITIONS — DoS guard against a malformed .tokens file blowing up
+-- generated-code size or lexer memory (mirrors the Go/Python/Ruby/TS ports).
+-- ============================================================================
+local MAX_TRANSITIONS = 4096
+
+-- ============================================================================
+-- parse_transition_line — parse one `transitions:` line into a ModeTransition (F10)
+-- ============================================================================
+--
+-- Grammar: `on TOKENS [in MODE] -> ACTION [, ACTION ...]` where TOKENS is a
+-- bare name, a parenthesised set `(A | B | C)`, or a keyword-value guard
+-- `KEYWORD="value"`, and each ACTION is one of set-mode/push/pop/enable-skip/
+-- disable-skip.
+--
+-- @param stripped     The line, already trimmed of leading/trailing whitespace
+-- @param line_number  Source line number (for error messages)
+-- @return table ModeTransition, nil on success; nil, error_string on failure
+local function parse_transition_line(stripped, line_number)
+    local arrow_pos = stripped:find("->", 1, true)
+    if not arrow_pos then
+        return nil, string.format(
+            "Line %d: Transition rule missing '->': %q", line_number, stripped
+        )
+    end
+    local head = stripped:sub(1, arrow_pos - 1):match("^%s*(.-)%s*$")
+    local action_str = stripped:sub(arrow_pos + 2):match("^%s*(.-)%s*$")
+    if action_str == "" then
+        return nil, string.format(
+            "Line %d: Transition rule has no actions after '->': %q", line_number, stripped
+        )
+    end
+
+    if head:sub(1, 3) ~= "on " then
+        return nil, string.format(
+            "Line %d: Transition rule must start with 'on ': %q", line_number, stripped
+        )
+    end
+    head = head:sub(4):match("^%s*(.-)%s*$")
+
+    -- Split on a top-level " in MODE" guard, ignoring " in " inside a
+    -- parenthesised token set.
+    local tokens_part, in_mode = head, nil
+    do
+        local depth = 0
+        local i = 1
+        while i <= #head do
+            local ch = head:sub(i, i)
+            if ch == "(" then
+                depth = depth + 1
+            elseif ch == ")" then
+                depth = depth - 1
+            elseif ch == " " and depth == 0 and head:sub(i, i + 3) == " in " then
+                tokens_part = head:sub(1, i - 1)
+                in_mode = head:sub(i + 4):match("^%s*(.-)%s*$")
+                break
+            end
+            i = i + 1
+        end
+    end
+    tokens_part = tokens_part:match("^%s*(.-)%s*$")
+
+    local inner = tokens_part
+    if inner:sub(1, 1) == "(" and inner:sub(-1) == ")" then
+        inner = inner:sub(2, -2)
+    end
+    local on_tokens = {}
+    local on_value = nil
+    for item in (inner .. "|"):gmatch("([^|]*)|") do
+        local trimmed = item:match("^%s*(.-)%s*$")
+        if trimmed ~= "" then
+            local eq_pos = trimmed:find("=", 1, true)
+            if eq_pos then
+                local name_p = trimmed:sub(1, eq_pos - 1):match("^%s*(.-)%s*$")
+                local value_p = trimmed:sub(eq_pos + 1):match("^%s*(.-)%s*$")
+                if value_p:sub(1, 1) == '"' and value_p:sub(-1) == '"' then
+                    value_p = value_p:sub(2, -2)
+                end
+                on_tokens[#on_tokens + 1] = name_p
+                on_value = value_p
+            else
+                on_tokens[#on_tokens + 1] = trimmed
+            end
+        end
+    end
+    if #on_tokens == 0 then
+        return nil, string.format(
+            "Line %d: Transition rule has no trigger tokens: %q", line_number, stripped
+        )
+    end
+
+    local actions = {}
+    for raw in (action_str .. ","):gmatch("([^,]*),") do
+        local act = raw:match("^%s*(.-)%s*$")
+        if act ~= "" then
+            if act:sub(1, 9) == "set-mode " then
+                actions[#actions + 1] = { kind = "set_mode", target = act:sub(10):match("^%s*(.-)%s*$") }
+            elseif act:sub(1, 5) == "push " then
+                actions[#actions + 1] = { kind = "push", target = act:sub(6):match("^%s*(.-)%s*$") }
+            elseif act == "pop" then
+                actions[#actions + 1] = { kind = "pop" }
+            elseif act == "enable-skip" then
+                actions[#actions + 1] = { kind = "enable_skip" }
+            elseif act == "disable-skip" then
+                actions[#actions + 1] = { kind = "disable_skip" }
+            else
+                return nil, string.format(
+                    "Line %d: Unknown transition action %q (expected set-mode/push/pop/enable-skip/disable-skip)",
+                    line_number, act
+                )
+            end
+        end
+    end
+    if #actions == 0 then
+        return nil, string.format(
+            "Line %d: Transition rule has no valid actions: %q", line_number, stripped
+        )
+    end
+
+    return {
+        on_tokens = on_tokens,
+        on_value = on_value,
+        in_mode = in_mode,
+        actions = actions,
+        line_number = line_number,
+    }, nil
+end
 
 -- ============================================================================
 -- parse_token_grammar — parse a .tokens file into a TokenGrammar
@@ -461,6 +598,19 @@ function grammar_tools.parse_token_grammar(source)
                 )
             end
             grammar.mode = mode_value
+            current_section = ""
+            goto continue
+        end
+
+        -- start_mode: directive (F10) — the mode the lexer begins in.
+        if stripped:sub(1, 11) == "start_mode:" then
+            local start_mode_value = stripped:sub(12):match("^%s*(.-)%s*$")
+            if start_mode_value == "" then
+                return nil, string.format(
+                    "Line %d: Missing mode name after 'start_mode:'", line_number
+                )
+            end
+            grammar.start_mode = start_mode_value
             current_section = ""
             goto continue
         end
@@ -561,6 +711,10 @@ function grammar_tools.parse_token_grammar(source)
             current_section = "soft_keywords"
             goto continue
         end
+        if stripped == "transitions:" or stripped == "transitions :" then
+            current_section = "transitions"
+            goto continue
+        end
 
         -- Inside a section: lines must be indented (start with space or tab)
         if current_section ~= "" then
@@ -585,6 +739,19 @@ function grammar_tools.parse_token_grammar(source)
                 elseif current_section == "soft_keywords" then
                     if stripped ~= "" then
                         grammar.soft_keywords[#grammar.soft_keywords + 1] = stripped
+                    end
+
+                elseif current_section == "transitions" then
+                    if stripped ~= "" then
+                        local transition, t_err = parse_transition_line(stripped, line_number)
+                        if t_err then return nil, t_err end
+                        if #grammar.transitions >= MAX_TRANSITIONS then
+                            return nil, string.format(
+                                "Line %d: Too many transition rules (max %d)",
+                                line_number, MAX_TRANSITIONS
+                            )
+                        end
+                        grammar.transitions[#grammar.transitions + 1] = transition
                     end
 
                 elseif current_section == "reserved" then
@@ -847,6 +1014,48 @@ function grammar_tools.validate_token_grammar(grammar)
         local group_label = string.format("group '%s' token", group_name)
         for _, issue in ipairs(validate_definitions(group.definitions, group_label)) do
             issues[#issues + 1] = issue
+        end
+    end
+
+    -- Validate F10 declarative lexer mode transitions.
+    --
+    -- start_mode, and every in_mode/set-mode/push target, must name "default"
+    -- or a declared group -- an undefined target is a silent-fallback trap
+    -- (the lexer would otherwise fall back to "default" without warning).
+    local function is_known_mode(name)
+        return name == "default" or grammar.groups[name] ~= nil
+    end
+
+    if grammar.start_mode ~= "" and not is_known_mode(grammar.start_mode) then
+        issues[#issues + 1] = string.format(
+            "start_mode '%s' is not 'default' or a declared group",
+            grammar.start_mode
+        )
+    end
+
+    if #grammar.transitions > MAX_TRANSITIONS then
+        issues[#issues + 1] = string.format(
+            "Too many transition rules (%d, max %d)",
+            #grammar.transitions, MAX_TRANSITIONS
+        )
+    end
+
+    for _, rule in ipairs(grammar.transitions) do
+        if rule.in_mode ~= nil and not is_known_mode(rule.in_mode) then
+            issues[#issues + 1] = string.format(
+                "Line %d: Transition 'in %s' guard is not 'default' or a declared group",
+                rule.line_number, rule.in_mode
+            )
+        end
+        for _, action in ipairs(rule.actions) do
+            if (action.kind == "set_mode" or action.kind == "push")
+                and not is_known_mode(action.target)
+            then
+                issues[#issues + 1] = string.format(
+                    "Line %d: Transition target '%s' is not 'default' or a declared group",
+                    rule.line_number, action.target
+                )
+            end
         end
     end
 

@@ -58,7 +58,7 @@ defmodule CodingAdventures.TomlParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "toml", "toml.grammar")
+    grammar_path = Path.join([@grammars_dir, "toml", "toml.grammar"])
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end

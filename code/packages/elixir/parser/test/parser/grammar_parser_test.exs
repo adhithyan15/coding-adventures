@@ -30,7 +30,7 @@ defmodule CodingAdventures.Parser.GrammarParserTest do
       Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
       |> Path.expand()
 
-    {:ok, g} = TokenGrammar.parse(File.read!(Path.join(grammar_dir, "json", "json.tokens")))
+    {:ok, g} = TokenGrammar.parse(File.read!(Path.join([grammar_dir, "json", "json.tokens"])))
     g
   end
 
@@ -39,7 +39,7 @@ defmodule CodingAdventures.Parser.GrammarParserTest do
       Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
       |> Path.expand()
 
-    {:ok, g} = ParserGrammar.parse(File.read!(Path.join(grammar_dir, "json", "json.grammar")))
+    {:ok, g} = ParserGrammar.parse(File.read!(Path.join([grammar_dir, "json", "json.grammar"])))
     g
   end
 

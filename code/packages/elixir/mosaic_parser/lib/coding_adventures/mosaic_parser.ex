@@ -114,7 +114,7 @@ defmodule CodingAdventures.MosaicParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "mosaic", "mosaic.grammar")
+    grammar_path = Path.join([@grammars_dir, "mosaic", "mosaic.grammar"])
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     fix_grammar_for_packrat(grammar)
   end

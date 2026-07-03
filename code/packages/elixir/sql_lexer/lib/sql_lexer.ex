@@ -73,7 +73,7 @@ defmodule CodingAdventures.SqlLexer do
           {:ok, TokenGrammar.t()} | {:error, String.t()}
   def create_sql_lexer(grammars_dir \\ nil) do
     dir = grammars_dir || @default_grammars_dir
-    tokens_path = Path.join(dir, "sql", "sql.tokens")
+    tokens_path = Path.join([dir, "sql", "sql.tokens"])
 
     case File.read(tokens_path) do
       {:ok, text} ->

@@ -54,7 +54,7 @@ test("materializePackage creates a standalone typescript-lexer artifact", () => 
     assert.ok(existsSync(path.join(packageRoot, "README.md")));
     assert.ok(existsSync(path.join(packageRoot, "src", "index.ts")));
     assert.ok(existsSync(path.join(packageRoot, "src", "tokenizer.ts")));
-    assert.ok(existsSync(path.join(packageRoot, "src", "tokens", "typescript", "typescript.tokens")));
+    assert.ok(existsSync(path.join(packageRoot, "src", "tokens", "typescript.tokens")));
     assert.ok(existsSync(path.join(packageRoot, "src", "typescript", "lexer", "index.ts")));
     assert.ok(existsSync(path.join(packageRoot, "src", "typescript", "typescript-lexer", "tokenizer.ts")));
 

@@ -164,7 +164,7 @@ defmodule CodingAdventures.GrammarTools.TokenGrammarTest do
         Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
         |> Path.expand()
 
-      json_tokens = File.read!(Path.join(grammar_dir, "json", "json.tokens"))
+      json_tokens = File.read!(Path.join([grammar_dir, "json", "json.tokens"]))
       {:ok, grammar} = TokenGrammar.parse(json_tokens)
 
       names = Enum.map(grammar.definitions, & &1.name)

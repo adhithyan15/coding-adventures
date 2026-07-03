@@ -24,7 +24,7 @@ defmodule CodingAdventures.NibParser do
           {:ok, ParserGrammar.t()} | {:error, String.t()}
   def create_nib_parser(grammars_dir \\ nil) do
     dir = grammars_dir || @default_grammars_dir
-    grammar_path = Path.join(dir, "nib", "nib.grammar")
+    grammar_path = Path.join([dir, "nib", "nib.grammar"])
 
     case File.read(grammar_path) do
       {:ok, text} ->

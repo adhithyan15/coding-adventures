@@ -32,7 +32,7 @@ defmodule CodingAdventures.LispParser do
   def create_parser do
     case :persistent_term.get({__MODULE__, :grammar}, nil) do
       nil ->
-        grammar_path = Path.join(@grammars_dir, "lisp", "lisp.grammar")
+        grammar_path = Path.join([@grammars_dir, "lisp", "lisp.grammar"])
         {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
         :persistent_term.put({__MODULE__, :grammar}, grammar)
         grammar

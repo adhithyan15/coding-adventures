@@ -148,7 +148,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
 const DARTMOUTH_BASIC_GRAMMAR_PATH = join(
   GRAMMARS_DIR,
-  "dartmouth_basic.grammar"
+  "dartmouth_basic", "dartmouth_basic.grammar"
 );
 
 /**
