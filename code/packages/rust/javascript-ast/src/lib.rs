@@ -140,7 +140,7 @@ pub use expression::{
     NewExpression,
     NullLiteral, NumericLiteral, ObjectExpression, Property, PropertyKey, PropertyKind,
     SequenceExpression,
-    StringLiteral, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
+    StringLiteral, TaggedTemplateExpression, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
     UndefinedLiteral, UpdateExpression, UpdateOperator,
 };
 pub use statement::{

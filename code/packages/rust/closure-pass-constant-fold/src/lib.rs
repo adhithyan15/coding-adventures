@@ -94,7 +94,7 @@ use coding_adventures_javascript_ast::{
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
-    ArrowBody, ArrowFunctionExpression, TemplateLiteral,
+    ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, Identifier,
     IfStatement, LogicalExpression, LogicalOperator, MemberExpression, NullLiteral, NumericLiteral,
     ObjectExpression, Program, ProgramItem, Property, PropertyKey, PropertyKind, ReturnStatement, Statement,
@@ -543,6 +543,24 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             cv: s.cv.clone(),
             expressions: s.expressions.iter().map(|e| fold_expression(e, st)).collect(),
         }),
+        // `` tag`a${x}b` `` — fold within the tag callee and each `${…}`
+        // substitution; the raw quasi strings are opaque text, left untouched.
+        Expression::TaggedTemplateExpression(t) => {
+            Expression::TaggedTemplateExpression(TaggedTemplateExpression {
+                cv: t.cv.clone(),
+                tag: Box::new(fold_expression(&t.tag, st)),
+                quasi: TemplateLiteral {
+                    cv: t.quasi.cv.clone(),
+                    quasis: t.quasi.quasis.clone(),
+                    expressions: t
+                        .quasi
+                        .expressions
+                        .iter()
+                        .map(|e| fold_expression(e, st))
+                        .collect(),
+                },
+            })
+        }
         Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),

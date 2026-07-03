@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.25.0] - 2026-07-02
+
+### Added — CLOC12.161: emit `Expression::TaggedTemplateExpression`
+
+New `emit_tagged_template` method wired into the expression dispatch. A tagged
+template `` tag`abc${x}` `` emits the `tag` callee at `PREC_PRIMARY` (so a
+looser tag such as a sequence wraps — `` (a,b)`x` ``) followed directly by the
+template literal via the existing `emit_template_literal` (no separator seam).
+`expr_prec` classifies the node as `PREC_PRIMARY`, so a member access on a
+tagged template stays paren-free (`` a`x`.length ``). 5 new inline
+`emit_tagged_template` tests. Handles the new `javascript-ast` 0.20.0 variant.
+
+
 ## [0.24.1] - 2026-07-02
 
 ### Added — CLOC12.160 PR3: CodePrinter comma-operator conformance port

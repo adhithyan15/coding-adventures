@@ -1246,6 +1246,14 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
                 classify_expr(e, cls);
             }
         }
+        // A member access touching the property namespace can hide in the tag
+        // callee or a `${…}` insert. Quasis are leaf strings — nothing to walk.
+        Expression::TaggedTemplateExpression(t) => {
+            classify_expr(&t.tag, cls);
+            for e in &t.quasi.expressions {
+                classify_expr(e, cls);
+            }
+        }
     }
 }
 
@@ -1500,6 +1508,14 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // classifying them above. Quasis are leaf strings — nothing to walk.
         Expression::TemplateLiteral(t) => {
             for e in &mut t.expressions {
+                rewrite_expr(e, map);
+            }
+        }
+        // Rewrite property accesses in the tag callee and each `${…}` insert,
+        // the mirror of classifying them above.
+        Expression::TaggedTemplateExpression(t) => {
+            rewrite_expr(&mut t.tag, map);
+            for e in &mut t.quasi.expressions {
                 rewrite_expr(e, map);
             }
         }

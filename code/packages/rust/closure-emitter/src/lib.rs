@@ -78,6 +78,7 @@ use coding_adventures_javascript_ast::{
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
+    TaggedTemplateExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1016,6 +1017,22 @@ impl<'a> Emitter<'a> {
         self.write_str("`");
     }
 
+    /// Emit a **tagged** template — `` tag`a${x}b` ``.
+    ///
+    /// The tag is emitted at `PREC_PRIMARY` (member/call strength): a plain
+    /// identifier or member-chain tag prints bare (`` a.b`x` ``), while any
+    /// looser tag is parenthesised (`` (a,b)`x` ``, `` (a=b)`x` `` — unusual but
+    /// handled defensively; a bare `` a,b`x` `` would tag only `b`). The
+    /// template literal follows the tag directly — the `tag`↔`` ` `` boundary
+    /// never token-fuses, so no separator is spent — reusing
+    /// [`Self::emit_template_literal`] verbatim (so the quasi's `raw` segments
+    /// and `${…}` substitutions round-trip exactly as an untagged template).
+    fn emit_tagged_template(&mut self, t: &TaggedTemplateExpression) {
+        self.maybe_map(&t.cv);
+        self.emit_expression_inner(&t.tag, PREC_PRIMARY);
+        self.emit_template_literal(&t.quasi);
+    }
+
     /// Emit one [`TemplateElement`] — its verbatim `raw` text.
     ///
     /// A template quasi is the one *primary* token whose `raw` text may legally
@@ -1118,6 +1135,7 @@ impl<'a> Emitter<'a> {
             Expression::FunctionExpression(f) => self.emit_function_expression(f),
             Expression::ArrowFunctionExpression(a) => self.emit_arrow_function_expression(a),
             Expression::TemplateLiteral(t) => self.emit_template_literal(t),
+            Expression::TaggedTemplateExpression(t) => self.emit_tagged_template(t),
         }
         if needs_parens {
             self.write_str(")");
@@ -1944,6 +1962,10 @@ fn expr_prec(e: &Expression) -> u8 {
         // (`` `x`.length ``, `` f`x` `` as a member/call base are all valid),
         // so it tags at `PREC_PRIMARY` like the array/object literals.
         Expression::TemplateLiteral(_) => PREC_PRIMARY,
+        // A tagged template `` tag`x` `` binds at member/call strength — it is
+        // left-associative like a call and can be a member/call base
+        // (`` a`x`.length ``, `` a`x`() ``), so it tags at `PREC_PRIMARY`.
+        Expression::TaggedTemplateExpression(_) => PREC_PRIMARY,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -4642,5 +4664,66 @@ mod tests {
             argument: Box::new(seq(vec![ident("a"), ident("b")])),
         });
         assert_eq!(emit_expr(e), "!(a,b);");
+    }
+
+    // ---- TaggedTemplateExpression (CLOC12.161) -------------------------
+
+    /// Build a raw `TemplateLiteral` struct (not wrapped in `Expression`) for
+    /// use as a tagged-template quasi.
+    fn raw_template(quasis: Vec<TemplateElement>, expressions: Vec<Expression>) -> TemplateLiteral {
+        TemplateLiteral { cv: None, quasis, expressions }
+    }
+
+    fn tagged(tag: Expression, quasi: TemplateLiteral) -> Expression {
+        Expression::TaggedTemplateExpression(TaggedTemplateExpression {
+            cv: None,
+            tag: Box::new(tag),
+            quasi,
+        })
+    }
+
+    /// `` tag`abc` `` — an identifier tag directly precedes a no-substitution
+    /// template; no separator between the tag and the backtick.
+    #[test]
+    fn tagged_identifier_no_sub() {
+        let e = tagged(ident("tag"), raw_template(vec![tquasi("abc", true)], vec![]));
+        assert_eq!(emit_expr(e), "tag`abc`;");
+    }
+
+    /// `` a.b`x` `` — a member-chain tag stays paren-free (member binds at
+    /// `PREC_PRIMARY`, same as the tagged-template node).
+    #[test]
+    fn tagged_member_tag_not_wrapped() {
+        let tag = member(ident("a"), "b", false);
+        let e = tagged(tag, raw_template(vec![tquasi("x", true)], vec![]));
+        assert_eq!(emit_expr(e), "a.b`x`;");
+    }
+
+    /// `` String.raw`a${x}b` `` — a substitution template as the quasi: the
+    /// `${…}` parts round-trip through the reused template emitter.
+    #[test]
+    fn tagged_with_substitution() {
+        let tag = member(ident("String"), "raw", false);
+        let quasi = raw_template(vec![tquasi("a", false), tquasi("b", true)], vec![ident("x")]);
+        let e = tagged(tag, quasi);
+        assert_eq!(emit_expr(e), "String.raw`a${x}b`;");
+    }
+
+    /// A member access on a tagged template needs no parens — the tagged
+    /// template is `PREC_PRIMARY`: `` a`x`.length ``.
+    #[test]
+    fn member_on_tagged_is_paren_free() {
+        let inner = tagged(ident("a"), raw_template(vec![tquasi("x", true)], vec![]));
+        let e = member(inner, "length", false);
+        assert_eq!(emit_expr(e), "a`x`.length;");
+    }
+
+    /// A looser tag is parenthesised — a sequence tag would otherwise tag only
+    /// its last operand: `` (a,b)`x` ``.
+    #[test]
+    fn sequence_tag_is_wrapped() {
+        let tag = seq(vec![ident("a"), ident("b")]);
+        let e = tagged(tag, raw_template(vec![tquasi("x", true)], vec![]));
+        assert_eq!(emit_expr(e), "(a,b)`x`;");
     }
 }

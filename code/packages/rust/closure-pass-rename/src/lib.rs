@@ -1018,6 +1018,14 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_expr(e, out);
             }
         }
+        // A tagged template carries identifiers in its tag callee and each
+        // `${…}` insert. Quasis are leaf strings with nothing to record.
+        Expression::TaggedTemplateExpression(t) => {
+            collect_all_idents_expr(&t.tag, out);
+            for e in &t.quasi.expressions {
+                collect_all_idents_expr(e, out);
+            }
+        }
     }
 }
 
@@ -1319,6 +1327,13 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // strings and hold no renamable use.
         Expression::TemplateLiteral(t) => {
             for e in &mut t.expressions {
+                rewrite_uses_expr(e, map);
+            }
+        }
+        // Rewrite renamed uses in the tag callee and each `${…}` insert.
+        Expression::TaggedTemplateExpression(t) => {
+            rewrite_uses_expr(&mut t.tag, map);
+            for e in &mut t.quasi.expressions {
                 rewrite_uses_expr(e, map);
             }
         }

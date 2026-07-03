@@ -60,6 +60,7 @@ pub enum Expression {
     UpdateExpression(UpdateExpression),
     NewExpression(NewExpression),
     SequenceExpression(SequenceExpression),
+    TaggedTemplateExpression(TaggedTemplateExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -742,6 +743,40 @@ pub struct TemplateElement {
     pub cooked: Option<String>,
     /// `true` for the final segment (before the closing backtick).
     pub tail: bool,
+}
+
+/// `` tag`a${x}b` `` — a **tagged** template. The `tag` expression is called
+/// with the template's cooked/raw string parts and its `${…}` substitution
+/// values, rather than the template producing a plain string. Common tags:
+/// `String.raw`, `gql`, `css`, `html`.
+///
+/// # Structure
+///
+/// ```text
+///   String.raw`a${x}b`
+///   └── tag ──┘└─ quasi ─┘
+/// ```
+///
+/// `tag` is any expression that evaluates to a function (typically an
+/// identifier or a member access — `String.raw`, `styled.div`). `quasi` is the
+/// [`TemplateLiteral`] being tagged (same node as an untagged template; the
+/// `raw` segments are the ones handed to the tag, and a segment may have
+/// `cooked = None` for an escape that is illegal in an untagged template but
+/// legal here).
+///
+/// # Precedence and the seam
+///
+/// A tagged template binds at member/call strength (`PREC_PRIMARY`): the
+/// backtick follows the tag directly with no separator (`` a.b`x` ``), and a
+/// looser tag is parenthesised (`` (a,b)`x` `` — though such a tag is unusual).
+/// The `tag`↔`` ` `` boundary never fuses, so no seam space is needed.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TaggedTemplateExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub tag: Box<Expression>,
+    pub quasi: TemplateLiteral,
 }
 
 #[cfg(test)]

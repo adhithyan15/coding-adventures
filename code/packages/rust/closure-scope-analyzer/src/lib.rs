@@ -933,6 +933,14 @@ fn walk_expression(
                 walk_expression(e, ctx, analysis, pending);
             }
         }
+        // A tagged template resolves references in its tag callee and in each
+        // `${…}` insert. Quasis are leaf strings with nothing to resolve.
+        Expression::TaggedTemplateExpression(t) => {
+            walk_expression(&t.tag, ctx, analysis, pending);
+            for e in &t.quasi.expressions {
+                walk_expression(e, ctx, analysis, pending);
+            }
+        }
     }
 }
 

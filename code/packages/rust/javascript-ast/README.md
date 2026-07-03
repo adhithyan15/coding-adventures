@@ -52,7 +52,7 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   `quasis.len() == expressions.len() + 1`. `TemplateElement` keeps `raw` /
   `cooked` / `tail`. Node + `closure-emitter` + all pass traversals land in one
   atomic PR; the bridge-enable + conformance port follow. (Tagged templates
-  `` tag`…` `` remain Phase 3.)
+  `` tag`…` `` are the separate `TaggedTemplateExpression` node, CLOC12.161.)
 - `UpdateExpression` (CLOC12.158) — the `++` / `--` read-modify-write forms
   (`++x`, `x++`, `--x`, `x--`). `UpdateExpression { operator: UpdateOperator,
   prefix: bool, argument: Box<Expression> }`. Distinct from `UnaryExpression`
@@ -76,6 +76,14 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   (`a,b,c;`) and a computed-member key (`obj[a,b]`). Node + `closure-emitter` +
   all pass traversals land in one atomic PR; the bridge-enable + conformance
   port follow (gap-161).
+- `TaggedTemplateExpression` (CLOC12.161) — a tagged template `` tag`abc${x}` ``:
+  the `tag` callee is applied to the template that directly follows it (no call
+  parentheses). `TaggedTemplateExpression { tag: Box<Expression>, quasi:
+  TemplateLiteral }` — the `quasi` reuses the existing `TemplateLiteral` node
+  (CLOC12.154). It is primary (`PREC_PRIMARY`), so a member access on it is
+  paren-free (`` a`x`.length ``) while a looser tag wraps (`` (a,b)`x` ``). Node
+  + `closure-emitter` + all pass traversals land in one atomic PR; the
+  bridge-enable + conformance port follow (gap-162).
 
 ## What's coming (follow-up PRs)
 
