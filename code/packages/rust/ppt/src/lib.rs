@@ -397,23 +397,31 @@ fn walk(
             }
         } else {
             // Atom: opaque data. Only decode text atoms, and only when we are
-            // inside a slide.
+            // inside a slide AND still under the text budget. Checking the
+            // budget *before* decoding matters for hostile input: it bounds the
+            // transient decode work (not just retained text), so a deeply-nested
+            // deck packed with huge text atoms cannot make us decode gigabytes
+            // after the cap is already reached — once `budget` hits the cap we
+            // stop decoding entirely.
             if let Some(idx) = current_slide {
-                let decoded = match rec_type {
-                    REC_TEXT_BYTES => Some(decode_text_bytes(body)),
-                    REC_TEXT_CHARS => Some(decode_text_chars(body)),
-                    _ => None,
-                };
-                if let Some(text) = decoded {
-                    // Enforce the total-text cap before storing.
-                    let next = budget.saturating_add(text.len());
-                    if next <= MAX_TOTAL_TEXT_BYTES {
-                        *budget = next;
-                        if let Some(slide) = deck.slides.get_mut(idx) {
-                            slide.runs.push(text);
+                if *budget < MAX_TOTAL_TEXT_BYTES {
+                    let decoded = match rec_type {
+                        REC_TEXT_BYTES => Some(decode_text_bytes(body)),
+                        REC_TEXT_CHARS => Some(decode_text_chars(body)),
+                        _ => None,
+                    };
+                    if let Some(text) = decoded {
+                        // Enforce the total-text cap before storing. `saturating_add`
+                        // means at most one record can straddle the cap.
+                        let next = budget.saturating_add(text.len());
+                        if next <= MAX_TOTAL_TEXT_BYTES {
+                            *budget = next;
+                            if let Some(slide) = deck.slides.get_mut(idx) {
+                                slide.runs.push(text);
+                            }
                         }
+                        // Over cap: silently drop further text (bounded allocation).
                     }
-                    // Over cap: silently drop further text (bounded allocation).
                 }
             }
             // `REC_DOCUMENT` is documented as a container; if it ever appears as
