@@ -1,0 +1,13 @@
+[package]
+name = "sir-conformance"
+version = "0.1.0"
+edition = "2021"
+description = "Cross-backend golden conformance harness for the Semantic IR: lowers real Ruby source and runs the emitted program through every backend's real toolchain, asserting identical output."
+
+[dependencies]
+ruby-to-semantic-ir = { path = "../ruby-to-semantic-ir" }
+semantic-ir = { path = "../semantic-ir" }
+semantic-ir-to-python = { path = "../semantic-ir-to-python" }
+semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
+semantic-ir-to-go = { path = "../semantic-ir-to-go" }
+semantic-ir-to-rust = { path = "../semantic-ir-to-rust" }
