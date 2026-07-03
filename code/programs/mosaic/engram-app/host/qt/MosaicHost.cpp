@@ -5,11 +5,13 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QFileDialog>
 #include <QFileInfo>
-#include <QJsonValue>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QJsonValue>
 #include <QStringList>
 
 namespace {
@@ -49,7 +51,7 @@ QVariantMap MosaicHost::handleEvent(const QVariantMap &event) {
   if (!response.contains(QStringLiteral("error"))) {
     persistSnapshot();
   }
-  return response;
+  return handleHostIntent(response);
 }
 
 bool MosaicHost::ensureLoaded() {
@@ -94,10 +96,13 @@ bool MosaicHost::ensureLoaded() {
   engramAppProps_ = resolveSymbol<EgEngramAppPropsFn>(library_, "eg_engram_app_props");
   handleEngramAppEvent_ =
       resolveSymbol<EgHandleEngramAppEventFn>(library_, "eg_handle_engram_app_event");
+  exportAnkiApkg_ = resolveSymbol<EgExportAnkiApkgFn>(library_, "eg_export_anki_apkg");
+  mergeAnkiApkg_ = resolveSymbol<EgMergeAnkiApkgFn>(library_, "eg_merge_anki_apkg");
 
   if (sessionNewDemo_ == nullptr || sessionFree_ == nullptr || stringFree_ == nullptr ||
       snapshot_ == nullptr || loadSnapshot_ == nullptr || engramAppProps_ == nullptr ||
-      handleEngramAppEvent_ == nullptr) {
+      handleEngramAppEvent_ == nullptr || exportAnkiApkg_ == nullptr ||
+      mergeAnkiApkg_ == nullptr) {
     qWarning() << "Engram MosaicHost loaded engram-capi but required symbols are missing";
     library_.unload();
     return false;
@@ -205,6 +210,132 @@ QVariantMap MosaicHost::hostResponseFromJson(const QString &json) const {
   return response;
 }
 
+QVariantMap MosaicHost::handleHostIntent(const QVariantMap &response) {
+  const QVariantMap hostIntent = response.value(QStringLiteral("hostIntent")).toMap();
+  const QString type = hostIntent.value(QStringLiteral("type")).toString();
+  if (type == QStringLiteral("importAnki")) {
+    return importAnkiPackage(response, hostIntent);
+  }
+  if (type == QStringLiteral("exportAnki")) {
+    return exportAnkiPackage(response, hostIntent);
+  }
+  return response;
+}
+
+QVariantMap MosaicHost::importAnkiPackage(
+    const QVariantMap &response,
+    const QVariantMap &hostIntent) {
+  const QStringList extensions =
+      hostIntentExtensions(
+          hostIntent,
+          QStringLiteral("accept"),
+          QStringList{QStringLiteral(".apkg"), QStringLiteral(".colpkg")});
+  const QString path = QFileDialog::getOpenFileName(
+      nullptr,
+      QStringLiteral("Import Anki package"),
+      QDir::homePath(),
+      ankiFileFilter(extensions));
+  if (path.isEmpty()) {
+    return hostResultResponse(response, hostIntent, QStringLiteral("cancelled"));
+  }
+
+  QFile file(path);
+  if (!file.open(QIODevice::ReadOnly)) {
+    qWarning() << "Engram MosaicHost could not read Anki package:" << file.errorString();
+    return hostResultResponse(response, hostIntent, QStringLiteral("read-error"), path);
+  }
+
+  const QByteArray data = file.readAll();
+  const QString json = takeCString(mergeAnkiApkg_(
+      session_,
+      reinterpret_cast<const quint8 *>(data.constData()),
+      static_cast<std::size_t>(data.size())));
+  const QVariantMap imported = hostResponseFromJson(json);
+  if (imported.contains(QStringLiteral("error"))) {
+    qWarning() << "Engram MosaicHost could not import Anki package:"
+               << imported.value(QStringLiteral("error")).toString();
+    return hostResultResponse(response, hostIntent, QStringLiteral("import-error"), path);
+  }
+
+  persistSnapshot();
+  QVariantMap refreshed = props();
+  refreshed.insert(QStringLiteral("hostIntent"), hostIntent);
+  QVariantMap hostResult;
+  hostResult.insert(QStringLiteral("status"), QStringLiteral("imported"));
+  hostResult.insert(QStringLiteral("path"), path);
+  refreshed.insert(QStringLiteral("hostResult"), hostResult);
+  return refreshed;
+}
+
+QVariantMap MosaicHost::exportAnkiPackage(
+    const QVariantMap &response,
+    const QVariantMap &hostIntent) {
+  const QStringList extensions =
+      hostIntentExtensions(
+          hostIntent,
+          QStringLiteral("extensions"),
+          QStringList{QStringLiteral(".apkg")});
+  QString path = QFileDialog::getSaveFileName(
+      nullptr,
+      QStringLiteral("Export Anki package"),
+      QDir::home().filePath(suggestedAnkiFileName(hostIntent)),
+      ankiFileFilter(extensions));
+  if (path.isEmpty()) {
+    return hostResultResponse(response, hostIntent, QStringLiteral("cancelled"));
+  }
+
+  if (QFileInfo(path).suffix().isEmpty()) {
+    path += QStringLiteral(".apkg");
+  }
+
+  const QString json = takeCString(exportAnkiApkg_(session_));
+  QJsonParseError parseError;
+  const QJsonDocument document = QJsonDocument::fromJson(json.toUtf8(), &parseError);
+  if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+    qWarning() << "Engram MosaicHost could not parse exported Anki package JSON:"
+               << parseError.errorString();
+    return hostResultResponse(response, hostIntent, QStringLiteral("export-error"), path);
+  }
+
+  const QJsonObject root = document.object();
+  if (root.value(QStringLiteral("ok")).toBool(true) == false) {
+    qWarning() << "Engram MosaicHost could not export Anki package:"
+               << root.value(QStringLiteral("error")).toString();
+    return hostResultResponse(response, hostIntent, QStringLiteral("export-error"), path);
+  }
+
+  const QByteArray data = jsonByteArray(root, QStringLiteral("apkg"));
+  QFile file(path);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+    qWarning() << "Engram MosaicHost could not save Anki package:" << file.errorString();
+    return hostResultResponse(response, hostIntent, QStringLiteral("write-error"), path);
+  }
+  file.write(data);
+  file.close();
+  if (file.error() != QFile::NoError) {
+    qWarning() << "Engram MosaicHost could not finish saving Anki package:" << file.errorString();
+    return hostResultResponse(response, hostIntent, QStringLiteral("write-error"), path);
+  }
+
+  return hostResultResponse(response, hostIntent, QStringLiteral("exported"), path);
+}
+
+QVariantMap MosaicHost::hostResultResponse(
+    const QVariantMap &response,
+    const QVariantMap &hostIntent,
+    const QString &status,
+    const QString &path) const {
+  QVariantMap out = response;
+  out.insert(QStringLiteral("hostIntent"), hostIntent);
+  QVariantMap hostResult;
+  hostResult.insert(QStringLiteral("status"), status);
+  if (!path.isEmpty()) {
+    hostResult.insert(QStringLiteral("path"), path);
+  }
+  out.insert(QStringLiteral("hostResult"), hostResult);
+  return out;
+}
+
 QVariantMap MosaicHost::camelCaseProps(const QVariantMap &props) const {
   QVariantMap out;
   for (auto it = props.cbegin(); it != props.cend(); ++it) {
@@ -229,6 +360,58 @@ QString MosaicHost::mosaicPropName(const QString &name) const {
     } else {
       out.append(ch);
     }
+  }
+  return out;
+}
+
+QStringList MosaicHost::hostIntentExtensions(
+    const QVariantMap &hostIntent,
+    const QString &property,
+    const QStringList &fallback) const {
+  const QVariantList raw = hostIntent.value(property).toList();
+  QStringList out;
+  for (const QVariant &value : raw) {
+    QString extension = value.toString().trimmed();
+    if (extension.isEmpty()) {
+      continue;
+    }
+    if (!extension.startsWith(QLatin1Char('.'))) {
+      extension.prepend(QLatin1Char('.'));
+    }
+    out.push_back(extension);
+  }
+  return out.isEmpty() ? fallback : out;
+}
+
+QString MosaicHost::ankiFileFilter(const QStringList &extensions) const {
+  QStringList patterns;
+  for (const QString &extension : extensions) {
+    patterns.push_back(QStringLiteral("*") + extension);
+  }
+  return QStringLiteral("Anki packages (%1)").arg(patterns.join(QLatin1Char(' ')));
+}
+
+QString MosaicHost::suggestedAnkiFileName(const QVariantMap &hostIntent) const {
+  QString name = hostIntent.value(QStringLiteral("deckId")).toString();
+  if (name.trimmed().isEmpty()) {
+    name = QStringLiteral("engram-collection");
+  }
+  const QString invalidFileNameChars = QStringLiteral("/\\:*?\"<>|");
+  for (const QChar ch : invalidFileNameChars) {
+    name.replace(ch, QLatin1Char('-'));
+  }
+  if (!name.endsWith(QStringLiteral(".apkg"), Qt::CaseInsensitive)) {
+    name += QStringLiteral(".apkg");
+  }
+  return name;
+}
+
+QByteArray MosaicHost::jsonByteArray(const QJsonObject &root, const QString &property) const {
+  const QJsonArray array = root.value(property).toArray();
+  QByteArray out;
+  out.reserve(array.size());
+  for (const QJsonValue &value : array) {
+    out.append(static_cast<char>(value.toInt()));
   }
   return out;
 }

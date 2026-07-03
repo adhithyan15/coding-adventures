@@ -60,7 +60,9 @@ editing, and save/delete/cancel controls.
 - The generated Qt project shell has an optional `MosaicHost` hook. Engram's
   `host/qt/MosaicHost.h/.cpp` implements it with a runtime-loaded
   `engram-capi` library, hydrating QML properties and routing generated Mosaic
-  event envelopes back into the same core.
+  event envelopes back into the same core. It also handles Anki import/export
+  host intents with Qt file dialogs, merging `.apkg` / `.colpkg` packages and
+  saving current collection state through the native C ABI.
 - The generated Compose Desktop shell has an optional reflection-based
   `MosaicHost` hook. Engram's `host/compose/MosaicHost.kt` implements it with
   `engram-capi` through JNA, hydrating Compose slot props and routing generated

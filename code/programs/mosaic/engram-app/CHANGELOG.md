@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wired the generated Qt Engram shell to handle Anki import/export
+  `hostIntent` payloads with Qt file dialogs and the shared `engram-capi` APKG
+  import/export functions.
 - Wired the generated XAML Engram shell to handle Anki import/export
   `hostIntent` payloads with WinUI file pickers and the shared `engram-capi`
   APKG import/export functions, so package files round-trip through the native
