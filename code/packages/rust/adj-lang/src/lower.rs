@@ -1819,6 +1819,55 @@ contributes 1000000 from answer == 60 to correct
         assert!(d.ranked[0].posterior > 0.99, "{d:?}");
     }
 
+    // --- MathML: a THIRD math frontend on the same neutral pipeline (PFE01) ---
+    // Same proof again for presentation MathML: the ONLY difference from `latex`/
+    // `asciimath` is which MathFrontend parses the string; the neutral MathExpr
+    // flows through the identical lowering, so it computes for free.
+
+    #[test]
+    fn native_mathml_fraction_reuses_the_latex_frac_lowering() {
+        // `<mfrac><mn>7</mn><mn>2</mn></mfrac>` parses to the SAME `MathExpr::Frac`
+        // that LaTeX `\frac{7}{2}` and AsciiMath `7/2` produce, so it computes 3.5.
+        let d = crate::compile_and_decide(
+            "let answer = mathml \"<mfrac><mn>7</mn><mn>2</mn></mfrac>\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3.5 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_mathml_sum_computes_inside_let() {
+        // `<mn>3</mn><mo>+</mo><mn>4</mn>` = 7 — the `<mo>+</mo>` operator lowers to
+        // the same Add the LaTeX/AsciiMath `+` did.
+        let d = crate::compile_and_decide(
+            "let answer = mathml \"<mn>3</mn><mo>+</mo><mn>4</mn>\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 7 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_mathml_observed_symbol_binds() {
+        // An observed slot referenced from inside a MathML expression binds
+        // exactly as for LaTeX/AsciiMath: with x=2 observed,
+        // `<mi>x</mi><mo>*</mo><mi>x</mi>` = 4.
+        let d = crate::compile_and_decide(
+            "observe x(2)\n\
+             let answer = mathml \"<mi>x</mi><mo>*</mo><mi>x</mi>\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
     #[test]
     fn native_latex_relation_lowers_to_constraint() {
         let lowered =
