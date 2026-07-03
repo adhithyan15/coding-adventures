@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.4.0 — 2026-07-02
+
+### Added — dynamic-Huffman encoding (BTYPE=10)
+
+- **`compress` now emits dynamic-Huffman blocks when they are smaller.** For each
+  input it costs, in exact bits, both a fixed-table encoding (BTYPE=01) and a
+  data-adapted **dynamic** encoding (BTYPE=10, code lengths transmitted inline)
+  of the same LZSS token stream, then emits the cheaper one as a single final
+  block. On text and other skewed data this is a large win (the fixed tables
+  spend 8–9 bits per literal; an adapted tree gives common bytes 2–4-bit codes).
+  On tiny or near-incompressible inputs, where the dynamic code-length header
+  outweighs its savings, `compress` falls back to fixed — so the output is
+  **never larger** than the previous fixed-only encoding. `compress`'s signature
+  and its standard-RFC-1951 output guarantee are unchanged; the empty-input and
+  correctness behaviour are preserved.
+
+  Measured on ~2.4 KB of repeated English prose: **2364 → 174 bytes** with a
+  dynamic block, versus **235 bytes** for a fixed-only encoding of the same
+  tokens (≈ 26 % smaller than fixed, 13.6× smaller than the input).
+
+- **Length-limited Huffman via the package-merge algorithm** (Larmore–Hirschberg,
+  *A fast algorithm for optimal length-limited Huffman codes*, JACM 1990). RFC
+  1951 caps codes at 15 bits (literal/length and distance) and 7 bits
+  (code-length alphabet); an optimal Huffman tree over up to 286 symbols can
+  exceed 15 bits on skewed frequencies. Package-merge produces the *optimal* code
+  subject to `max_len`, and provably always yields a valid prefix code (Kraft sum
+  ≤ 1) whenever the alphabet fits in `2^max_len` symbols — which all three of our
+  alphabets do (286 ≤ 2¹⁵, 30 ≤ 2¹⁵, 19 ≤ 2⁷). The implementation asserts both
+  invariants (`len ≤ max_len` and Kraft ≤ 1) so a malformed tree can never reach
+  the wire.
+
+- **Code-length RLE** (CL symbols 0–18: 16 = repeat-previous 3–6, 17 = zero-run
+  3–10, 18 = zero-run 11–138) mirroring `inflate`'s `decode_code_lengths`, with
+  the CL tree itself length-limited to 7 bits, so the transmitted header is
+  compact.
+
+- **Edge cases handled per RFC 1951 §3.2.7:** a block with no matches still emits
+  a valid `HDIST` with one dummy distance code of length 1; single-symbol
+  alphabets receive a valid 1-bit code.
+
+### Verification
+
+- New tests: package-merge cap/Kraft invariants under pathological skew
+  (including Fibonacci weights), skewed-distribution round-trips, dynamic-wins
+  and fixed-fallback size assertions, a broad round-trip battery (empty, every
+  byte value, all-256, highly repetitive, pseudo-random, multi-KB text), and the
+  no-distance-code dummy path. All existing round-trip, `inflate`, and
+  `zlib_decompress` tests continue to pass (30 tests total).
+- **Cross-checked with Python `zlib` in both directions:** Python
+  `zlib.decompress(bytes.fromhex(<our output>), -15)` reads our fixed *and*
+  dynamic streams byte-for-byte across a 2000-input randomized fuzz (heavily
+  skewed, uniform-random, tiny-alphabet, periodic, and run-heavy inputs); our
+  `inflate` reads Python's dynamic output (existing `inflate_dynamic_huffman` and
+  `inflate_full_window_real_stream` tests).
+- Downstream `png` (15 tests) and `zip` (24 + 5 tests) — which depend on
+  `deflate` via `zlib_compress`/`inflate` — are unaffected and pass.
+
 ## 0.3.0 — 2026-07-02
 
 ### Changed (breaking wire format)
