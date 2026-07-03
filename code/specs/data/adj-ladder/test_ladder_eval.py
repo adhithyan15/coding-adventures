@@ -92,6 +92,7 @@ SELF_CONTAINED_RUNGS = (
     "rung52_alveolar_ventilation",
     "rung53_caloric_density",
     "rung54_neutrophil_ratio",
+    "rung55_fresh_gas_volume",
 )
 
 
