@@ -91,6 +91,14 @@ pub enum AdapterError {
     /// surfaces as [`AdapterError::UnsupportedLatexMath`] — the shared
     /// neutral-tree lowering names its errors after that first frontend.
     MathMlParse { source: String, detail: String },
+    /// A `unicodemath "<math>"` expression could not be parsed by the repo's
+    /// Unicode-math MathFrontend. Unicode-math is a FOURTH math frontend that
+    /// lowers through the same neutral `MathExpr` pipeline as
+    /// `latex`/`asciimath`/`mathml`; only the parse step is frontend-specific, so
+    /// this is its counterpart to [`AdapterError::LatexParse`]. Once parsed, an
+    /// unsupported node still surfaces as [`AdapterError::UnsupportedLatexMath`] —
+    /// the shared neutral-tree lowering names its errors after that first frontend.
+    UnicodeMathParse { source: String, detail: String },
     /// LaTeX parsed successfully, but used math outside the ADJ arithmetic /
     /// constraint subset this surface can lower faithfully.
     UnsupportedLatexMath { source: String, detail: String },
@@ -871,6 +879,14 @@ fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
         let math = parse_mathml_math(&source)?;
         return latex_math_to_expr_ast(&math, &source);
     }
+    // A FOURTH math frontend on the same factor position: `unicodemath "<...>"`.
+    // Same story — only the parse step differs; the neutral `MathExpr` flows
+    // through the identical `latex_math_to_expr_ast` lowering (PFE01).
+    if let Some(um) = first_named_child(node, "unicodemath_expr") {
+        let source = latex_string_from_node(um, "unicodemath_expr")?;
+        let math = parse_unicodemath_math(&source)?;
+        return latex_math_to_expr_ast(&math, &source);
+    }
     if let Some(agg) = first_named_child(node, "agg") {
         return adapt_agg(agg);
     }
@@ -959,6 +975,28 @@ fn parse_mathml_math(source: &str) -> Result<MathExpr, AdapterError> {
     mathml::MathMl
         .parse(math)
         .map_err(|e| AdapterError::MathMlParse {
+            source: source.to_string(),
+            detail: e.message,
+        })
+}
+
+/// Parse a `unicodemath "..."` string with the repo's Unicode-math `MathFrontend`.
+///
+/// The Unicode-math counterpart to the other `parse_*_math` helpers — the only
+/// frontend-specific step. Its output is the same neutral [`MathExpr`] the LaTeX
+/// frontend produces, lowered by the shared [`latex_math_to_expr_ast`]. (We reuse
+/// `strip_math_delimiters` for symmetry with the sibling surfaces; raw Unicode
+/// math never carries `$…$`-style delimiters, so it is a no-op.)
+///
+/// The Unicode-math parser lives in its own crate with its own recursion guard
+/// (`MAX_DEPTH`) and `#![forbid(unsafe_code)]`; this adapter adds no new
+/// tree-walker, so it introduces no new stack-overflow surface here.
+fn parse_unicodemath_math(source: &str) -> Result<MathExpr, AdapterError> {
+    use math_frontend::MathFrontend;
+    let math = strip_math_delimiters(source);
+    unicode_math::UnicodeMath
+        .parse(math)
+        .map_err(|e| AdapterError::UnicodeMathParse {
             source: source.to_string(),
             detail: e.message,
         })

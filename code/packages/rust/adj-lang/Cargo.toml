@@ -1,6 +1,6 @@
 [package]
 name = "adj-lang"
-version = "0.47.0"
+version = "0.48.0"
 edition = "2021"
 description = "Surface-syntax frontend for the adjudication framework's probabilistic-logic rulebooks. Lexes, parses, and lowers a domain-expert-readable DSL into a `logic-engine` KnowledgeBase. Dissolves ADJ46 awkwardness items A10 (rulebook syntax) and A4 (joint contributions syntactically distinct)."
 
@@ -14,3 +14,4 @@ logic-engine = { path = "../logic-engine" }
 math-frontend = { path = "../math-frontend" }
 mathml = { path = "../mathml" }
 parser = { path = "../parser" }
+unicode-math = { path = "../unicode-math" }

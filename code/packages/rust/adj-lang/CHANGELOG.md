@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.48.0] - 2026-07-03 — a FOURTH math frontend: `unicodemath "…"` — PFE01 quartet complete
+
+### Added
+
+- **`unicodemath "<math>"`** is now accepted anywhere an ADJ arithmetic expression is (as an `expr`
+  factor), alongside `latex "…"`, `asciimath "…"`, and `mathml "…"`. Unicode plain-math is what
+  people and models actually *type* with real glyphs — e.g. `(3+4) ÷ 2`, `3 × 4`, `x² + y²`, `√x`,
+  `π·α` — and the repo already ships a `unicode-math` `MathFrontend` that parses it to the **same
+  neutral `MathExpr`** the other three frontends produce.
+- This **completes the pluggable-frontends quartet (PFE01)**: four genuinely different notations (a
+  macro language, a terse ASCII syntax, an XML tree, and raw Unicode) all compute through the
+  **identical, unchanged** `latex_math_to_expr_ast` lowering. The adapter's only frontend-specific
+  step is the parse call (`parse_unicodemath_math`). So the whole arithmetic + named-function surface
+  is available to Unicode-math **for free** — no new lowering, and **no new engine op**. (`÷` means
+  the same as LaTeX `\div` / AsciiMath+MathML division.)
+- New grammar production `unicodemath_expr = "unicodemath" STRING ;` (regenerated `_lexer_grammar.rs`
+  / `_parser_grammar.rs`); new `AdapterError::UnicodeMathParse` for parse failures (unsupported
+  *nodes* still surface via the shared `UnsupportedLatexMath`).
+- Three end-to-end tests through `compile_and_decide`: `unicodemath "(3+4) ÷ 2"` = 3.5,
+  `unicodemath "3 × 4"` = 12, and an observed slot binding inside Unicode-math
+  (`observe x(2)` + `unicodemath "x × x"` = 4).
+- **Security/DoS:** the adapter adds **no new recursive tree-walker** — it reuses the existing
+  `latex_math_to_expr_ast` lowering. The Unicode-math parser owns its own recursion guard
+  (`MAX_DEPTH = 64`) and `#![forbid(unsafe_code)]` in its crate, so no new stack-overflow surface is
+  introduced here (no new deep-input regression test is warranted on the adapter side).
+
 ## [0.47.0] - 2026-07-03 — a THIRD math frontend: `mathml "…"` (pluggable frontends, PFE01)
 
 ### Added

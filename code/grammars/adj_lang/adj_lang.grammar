@@ -150,7 +150,7 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = latex_expr | asciimath_expr | mathml_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | asciimath_expr | mathml_expr | unicodemath_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 
@@ -183,6 +183,18 @@ asciimath_expr = "asciimath" STRING ;
 # lowering and no new engine op. Unsupported math is a compile error, not a
 # host-language fallback, exactly as for the other two surfaces.
 mathml_expr = "mathml" STRING ;
+
+# Native Unicode plain-math input — a FOURTH math frontend behind the same
+# neutral `MathExpr` tree (PFE01), completing the quartet. A model that emits the
+# real glyphs people type — `x² + y²`, `√x`, `6 ÷ 2`, `3 × 4`, `π·α` — may write
+# `unicodemath "(3+4) ÷ 2"` anywhere an ADJ arithmetic expression is accepted;
+# the adj-lang frontend parses the string with the repo's Unicode-math
+# `MathFrontend` and lowers it through the EXACT SAME `MathExpr -> ExprAst`
+# lowering used for the other three surfaces. `÷` here means the same as LaTeX
+# `\div` / AsciiMath+MathML division — so the whole arithmetic subset is
+# available for free, no new lowering and no new engine op. Unsupported math is a
+# compile error, not a host-language fallback, exactly as for the other surfaces.
+unicodemath_expr = "unicodemath" STRING ;
 
 # ----------------------------------------------------------------
 # Constraint sublanguage (ADJ constraints track B1). The model
