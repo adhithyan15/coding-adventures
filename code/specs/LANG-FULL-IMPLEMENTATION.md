@@ -270,7 +270,12 @@ multiple languages; close an enabler before the features that depend on it.
   (`LET A$ = "OK"; LET B$ = A$; IF B$ = A$ THEN ...`) through `str_eq`, plus
   lexical string ordering branches through `str_cmp`.
   Captured, reassigned, and unobserved/conflicting or closure-derived string
-  parameter values plus broader dynamic string values remain.
+  parameter values plus broader dynamic string values remain — the **runtime
+  (non-literal) string** representation on the static backends is designed in
+  **[`lang-full-e4-dyn-strings.md`](lang-full-e4-dyn-strings.md)** (E4-dyn:
+  reuse the E5 length-prefixed heap block; adds `__twig_str_concat`/`_slice`/
+  `_index` runtime helpers; unblocks ALGOL string procedures + BASIC string
+  `INPUT`/arrays). Pending sign-off.
   Unlocks BASIC strings + string `PRINT` (BA4), ALGOL strings/I-O (AL4), Twig strings (TW4).
 - **E5 — Arrays / linear aggregates.** ✅ **COMPLETE** *(PR-1..4c — runs on all 7 backends:
   VM, JIT, JVM, CLR, LLVM, WASM, native x86_64+aarch64).* An IIR
