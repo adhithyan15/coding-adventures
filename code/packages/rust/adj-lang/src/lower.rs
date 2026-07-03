@@ -1868,6 +1868,54 @@ contributes 1000000 from answer == 60 to correct
         assert!(d.ranked[0].posterior > 0.99, "{d:?}");
     }
 
+    // --- Unicode-math: a FOURTH math frontend — PFE01 quartet complete ---
+    // Raw Unicode glyphs (÷, ×) parse to the SAME neutral MathExpr the other three
+    // surfaces produce, flowing through the identical lowering; the ONLY difference
+    // is which MathFrontend parses the string.
+
+    #[test]
+    fn native_unicodemath_division_computes_inside_let() {
+        // `(3+4) ÷ 2` — the Unicode division sign lowers to the same division as
+        // LaTeX `\div` / AsciiMath+MathML `/`, so it computes 7/2 = 3.5.
+        let d = crate::compile_and_decide(
+            "let answer = unicodemath \"(3+4) ÷ 2\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3.5 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_unicodemath_times_computes_inside_let() {
+        // `3 × 4` — the Unicode multiplication sign is the same Mul the other
+        // frontends' `*`/`×`/`\times` lowered to: = 12.
+        let d = crate::compile_and_decide(
+            "let answer = unicodemath \"3 × 4\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 12 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_unicodemath_observed_symbol_binds() {
+        // An observed slot referenced from inside a Unicode-math expression binds
+        // exactly as for the sibling surfaces: with x=2 observed, `x × x` = 4.
+        let d = crate::compile_and_decide(
+            "observe x(2)\n\
+             let answer = unicodemath \"x × x\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
     #[test]
     fn native_latex_relation_lowers_to_constraint() {
         let lowered =
