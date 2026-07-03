@@ -1,5 +1,8 @@
 import CEngram
 import Foundation
+#if os(macOS)
+import AppKit
+#endif
 
 @objc final class MosaicHost: NSObject, MosaicHostBridgeObject {
     private var session: OpaquePointer?
@@ -47,7 +50,7 @@ import Foundation
         if response?["error"] == nil {
             persistSnapshot()
         }
-        return response
+        return handleHostIntent(response)
     }
 
     private func hydrateSession() {
@@ -113,6 +116,239 @@ import Foundation
         }
         return response as NSDictionary
     }
+
+    private func handleHostIntent(_ response: NSDictionary?) -> NSDictionary? {
+        guard let responseMap = response as? [String: Any],
+              let hostIntent = responseMap["hostIntent"] as? [String: Any],
+              let type = hostIntent["type"] as? String else {
+            return response
+        }
+        switch type {
+        case "importAnki":
+            return importAnkiPackage(response: responseMap, hostIntent: hostIntent)
+        case "exportAnki":
+            return exportAnkiPackage(response: responseMap, hostIntent: hostIntent)
+        default:
+            return response
+        }
+    }
+
+    private func importAnkiPackage(
+        response: [String: Any],
+        hostIntent: [String: Any]
+    ) -> NSDictionary {
+        guard let session else {
+            return hostResultResponse(response, hostIntent: hostIntent, status: "unavailable")
+        }
+
+        #if os(macOS)
+        guard let url = pickAnkiImportURL(hostIntent: hostIntent) else {
+            return hostResultResponse(response, hostIntent: hostIntent, status: "cancelled")
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            let json = data.withUnsafeBytes { rawBuffer -> String in
+                guard let bytes = rawBuffer.bindMemory(to: UInt8.self).baseAddress else {
+                    return "{\"ok\":false,\"error\":\"Anki package was empty\"}"
+                }
+                return takeCString(eg_merge_anki_apkg(session, bytes, data.count))
+            }
+            guard let imported = decodeJsonObject(json),
+                  (imported["ok"] as? Bool) != false else {
+                print("Engram Anki import failed: \(decodeJsonObject(json)?["error"] ?? "unknown error")")
+                return hostResultResponse(
+                    response,
+                    hostIntent: hostIntent,
+                    status: "import-error",
+                    path: url.path)
+            }
+
+            persistSnapshot()
+            var refreshed = applyProps() as? [String: Any] ?? [:]
+            refreshed["hostIntent"] = hostIntent
+            refreshed["hostResult"] = [
+                "status": "imported",
+                "path": url.path,
+            ]
+            return refreshed as NSDictionary
+        } catch {
+            print("Engram could not import Anki package: \(error)")
+            return hostResultResponse(
+                response,
+                hostIntent: hostIntent,
+                status: "read-error",
+                path: url.path)
+        }
+        #else
+        return hostResultResponse(response, hostIntent: hostIntent, status: "unsupported")
+        #endif
+    }
+
+    private func exportAnkiPackage(
+        response: [String: Any],
+        hostIntent: [String: Any]
+    ) -> NSDictionary {
+        guard let session else {
+            return hostResultResponse(response, hostIntent: hostIntent, status: "unavailable")
+        }
+
+        #if os(macOS)
+        guard let url = pickAnkiExportURL(hostIntent: hostIntent) else {
+            return hostResultResponse(response, hostIntent: hostIntent, status: "cancelled")
+        }
+
+        let json = takeCString(eg_export_anki_apkg(session))
+        guard let root = decodeJsonObject(json),
+              (root["ok"] as? Bool) != false else {
+            print("Engram Anki export failed: \(decodeJsonObject(json)?["error"] ?? "unknown error")")
+            return hostResultResponse(
+                response,
+                hostIntent: hostIntent,
+                status: "export-error",
+                path: url.path)
+        }
+
+        let data = jsonByteArray(root, property: "apkg")
+        guard !data.isEmpty else {
+            return hostResultResponse(
+                response,
+                hostIntent: hostIntent,
+                status: "export-error",
+                path: url.path)
+        }
+
+        do {
+            try data.write(to: url, options: [.atomic])
+            return hostResultResponse(
+                response,
+                hostIntent: hostIntent,
+                status: "exported",
+                path: url.path)
+        } catch {
+            print("Engram could not export Anki package: \(error)")
+            return hostResultResponse(
+                response,
+                hostIntent: hostIntent,
+                status: "write-error",
+                path: url.path)
+        }
+        #else
+        return hostResultResponse(response, hostIntent: hostIntent, status: "unsupported")
+        #endif
+    }
+
+    private func hostResultResponse(
+        _ response: [String: Any],
+        hostIntent: [String: Any],
+        status: String,
+        path: String? = nil
+    ) -> NSDictionary {
+        var out = response
+        out["hostIntent"] = hostIntent
+        var hostResult: [String: Any] = ["status": status]
+        if let path, !path.isEmpty {
+            hostResult["path"] = path
+        }
+        out["hostResult"] = hostResult
+        return out as NSDictionary
+    }
+
+    private func hostIntentExtensions(
+        _ hostIntent: [String: Any],
+        property: String,
+        fallback: [String]
+    ) -> [String] {
+        guard let raw = hostIntent[property] as? [Any] else {
+            return fallback
+        }
+        let extensions = raw.compactMap { value -> String? in
+            var extensionValue = String(describing: value)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            if extensionValue.isEmpty {
+                return nil
+            }
+            if !extensionValue.hasPrefix(".") {
+                extensionValue = ".\(extensionValue)"
+            }
+            return extensionValue
+        }
+        return extensions.isEmpty ? fallback : extensions
+    }
+
+    private func suggestedAnkiFileName(_ hostIntent: [String: Any]) -> String {
+        var name = (hostIntent["deckId"] as? String)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if name.isEmpty {
+            name = "engram-collection"
+        }
+        let invalidCharacters = CharacterSet(charactersIn: "/\\:*?\"<>|")
+        name = name.components(separatedBy: invalidCharacters).joined(separator: "-")
+        if !name.lowercased().hasSuffix(".apkg") {
+            name += ".apkg"
+        }
+        return name
+    }
+
+    private func fileTypes(from extensions: [String]) -> [String] {
+        extensions.map { extensionValue in
+            if extensionValue.hasPrefix(".") {
+                return String(extensionValue.dropFirst())
+            }
+            return extensionValue
+        }
+    }
+
+    private func jsonByteArray(_ root: [String: Any], property: String) -> Data {
+        guard let values = root[property] as? [Any] else {
+            return Data()
+        }
+        let bytes = values.compactMap { value -> UInt8? in
+            if let number = value as? NSNumber {
+                return number.uint8Value
+            }
+            if let int = value as? Int {
+                return UInt8(truncatingIfNeeded: int)
+            }
+            return nil
+        }
+        return Data(bytes)
+    }
+
+    #if os(macOS)
+    private func pickAnkiImportURL(hostIntent: [String: Any]) -> URL? {
+        let extensions = hostIntentExtensions(
+            hostIntent,
+            property: "accept",
+            fallback: [".apkg", ".colpkg"])
+        let panel = NSOpenPanel()
+        panel.title = "Import Anki package"
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.allowedFileTypes = fileTypes(from: extensions)
+        return panel.runModal() == .OK ? panel.url : nil
+    }
+
+    private func pickAnkiExportURL(hostIntent: [String: Any]) -> URL? {
+        let extensions = hostIntentExtensions(
+            hostIntent,
+            property: "extensions",
+            fallback: [".apkg"])
+        let panel = NSSavePanel()
+        panel.title = "Export Anki package"
+        panel.nameFieldStringValue = suggestedAnkiFileName(hostIntent)
+        panel.canCreateDirectories = true
+        panel.allowedFileTypes = fileTypes(from: extensions)
+        guard let url = panel.runModal() == .OK ? panel.url : nil else {
+            return nil
+        }
+        if url.pathExtension.isEmpty {
+            return url.appendingPathExtension("apkg")
+        }
+        return url
+    }
+    #endif
 
     private func encodeJson(_ object: NSDictionary) -> String {
         guard JSONSerialization.isValidJSONObject(object),

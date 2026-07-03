@@ -56,7 +56,11 @@ editing, and save/delete/cancel controls.
 - The generated SwiftUI project shell has an optional `MosaicHost` hook.
   Engram's `host/swiftui/MosaicHost.swift` implements it with `engram-capi`
   through a staged `CEngram` Swift module, hydrating SwiftUI props and routing
-  generated Mosaic event envelopes back into the same core.
+  generated Mosaic event envelopes back into the same core. On macOS it also
+  handles Anki import/export host intents with AppKit file panels, merging
+  `.apkg` / `.colpkg` packages and saving current collection state through the
+  native C ABI; non-macOS SwiftUI targets return an explicit unsupported result
+  until Mosaic grows an async document-picker bridge.
 - The generated Qt project shell has an optional `MosaicHost` hook. Engram's
   `host/qt/MosaicHost.h/.cpp` implements it with a runtime-loaded
   `engram-capi` library, hydrating QML properties and routing generated Mosaic

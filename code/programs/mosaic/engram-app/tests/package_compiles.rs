@@ -2524,7 +2524,16 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_host, "eg_engram_app_props");
     assert_contains(&swiftui_host, "eg_handle_engram_app_event");
     assert_contains(&swiftui_host, "hostResponseDictionary");
+    assert_contains(&swiftui_host, "import AppKit");
+    assert_contains(&swiftui_host, "handleHostIntent");
+    assert_contains(&swiftui_host, "importAnkiPackage");
+    assert_contains(&swiftui_host, "exportAnkiPackage");
+    assert_contains(&swiftui_host, "NSOpenPanel");
+    assert_contains(&swiftui_host, "NSSavePanel");
+    assert_contains(&swiftui_host, "eg_merge_anki_apkg");
+    assert_contains(&swiftui_host, "eg_export_anki_apkg");
     assert_contains(&swiftui_host, "\"hostIntent\"");
+    assert_contains(&swiftui_host, "\"hostResult\"");
     assert_contains(&swiftui_host, "\"props\"");
     assert_contains(&swiftui_host, "ENGRAM_SNAPSHOT_PATH");
     assert_contains(&swiftui_host, "mosaic-snapshot.v1.json");
