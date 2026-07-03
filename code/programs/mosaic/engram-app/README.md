@@ -42,6 +42,9 @@ editing, and save/delete/cancel controls.
 - The app shell includes host-status slots so import/export completion,
   cancellation, and host-side file errors can appear in every generated Mosaic
   UI instead of only in host adapter return objects.
+- The web, Electron, Qt, SwiftUI, Compose, Flutter, and XAML host adapters
+  merge their Anki import/export `hostResult` status back into those shared
+  status slots.
 - The generated React and Electron renderer shells mount `EngramApp` through
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.

@@ -46,8 +46,8 @@ public static class MosaicHost
         return hostIntent.Type switch
         {
             "importAnki" => await ImportAnkiPackage(owner, component, hostIntent),
-            "exportAnki" => await ExportAnkiPackage(owner, hostIntent),
-            _ => new MosaicHostResult($"Status: host intent captured: {hostIntent.Type}", hostIntent),
+            "exportAnki" => await ExportAnkiPackage(owner, component, hostIntent),
+            _ => WithAppliedHostStatus(component, "captured", hostIntent),
         };
     }
 
@@ -268,7 +268,7 @@ public static class MosaicHost
         var file = await PickAnkiImportFile(owner, hostIntent);
         if (file is null)
         {
-            return new MosaicHostResult("Status: Anki import cancelled", hostIntent);
+            return WithAppliedHostStatus(component, "cancelled", hostIntent);
         }
 
         var buffer = await FileIO.ReadBufferAsync(file);
@@ -288,18 +288,23 @@ public static class MosaicHost
                 using var document = JsonDocument.Parse(json);
                 if (IsErrorRoot(document.RootElement))
                 {
-                    return new MosaicHostResult(
-                        $"Status: Anki import failed: {JsonString(document.RootElement, "error", "unknown error")}",
-                        hostIntent);
+                    return WithAppliedHostStatus(
+                        component,
+                        "import-error",
+                        hostIntent,
+                        file.Name,
+                        JsonString(document.RootElement, "error", "unknown error"));
                 }
 
                 PersistSnapshot(session);
                 var propsJson = Native.TakeString(
                     Native.eg_engram_app_props(session, CurrentDeckId(), CurrentTimeMillis()));
-                return ApplyPropsFromJson(
+                var result = ApplyPropsFromJson(
                     component,
                     propsJson,
                     $"Status: Imported Anki package {file.Name}");
+                ApplyHostStatus(component, "imported", file.Name);
+                return new MosaicHostResult($"{result.Status}; host status: imported", hostIntent);
             }
             catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
             {
@@ -312,12 +317,13 @@ public static class MosaicHost
 
     private static async Task<MosaicHostResult> ExportAnkiPackage(
         Window owner,
+        EngramApp component,
         MosaicHostIntent hostIntent)
     {
         var file = await PickAnkiExportFile(owner, hostIntent);
         if (file is null)
         {
-            return new MosaicHostResult("Status: Anki export cancelled", hostIntent);
+            return WithAppliedHostStatus(component, "cancelled", hostIntent);
         }
 
         byte[] data;
@@ -334,9 +340,12 @@ public static class MosaicHost
                 using var document = JsonDocument.Parse(json);
                 if (IsErrorRoot(document.RootElement))
                 {
-                    return new MosaicHostResult(
-                        $"Status: Anki export failed: {JsonString(document.RootElement, "error", "unknown error")}",
-                        hostIntent);
+                    return WithAppliedHostStatus(
+                        component,
+                        "export-error",
+                        hostIntent,
+                        file.Name,
+                        JsonString(document.RootElement, "error", "unknown error"));
                 }
 
                 data = JsonByteArray(document.RootElement, "apkg");
@@ -350,7 +359,77 @@ public static class MosaicHost
         }
 
         await FileIO.WriteBytesAsync(file, data);
-        return new MosaicHostResult($"Status: Exported Anki package {file.Name}");
+        return WithAppliedHostStatus(component, "exported", hostIntent, file.Name);
+    }
+
+    private static MosaicHostResult WithAppliedHostStatus(
+        EngramApp component,
+        string status,
+        MosaicHostIntent? hostIntent,
+        string? file = null,
+        string? error = null)
+    {
+        ApplyHostStatus(component, status, file, error);
+        var message = $"Status: {HostStatusLabel(status)}";
+        return hostIntent is null
+            ? new MosaicHostResult(message)
+            : new MosaicHostResult($"{message}; host intent: {hostIntent.Type}", hostIntent);
+    }
+
+    private static void ApplyHostStatus(
+        EngramApp component,
+        string status,
+        string? file = null,
+        string? error = null)
+    {
+        component.HostStatusVisible = true;
+        component.HostStatusKind = status;
+        component.HostStatusLabel = HostStatusLabel(status);
+        component.HostStatusMessage = HostStatusMessage(status, file, error);
+    }
+
+    private static string HostStatusLabel(string status)
+    {
+        return status switch
+        {
+            "imported" => "Import complete",
+            "exported" => "Export complete",
+            "cancelled" => "Import cancelled",
+            "read-error" or "import-error" => "Import failed",
+            "export-error" or "write-error" => "Export failed",
+            "captured" => "Host action",
+            _ => "Host status",
+        };
+    }
+
+    private static string HostStatusMessage(string status, string? file, string? error)
+    {
+        var name = string.IsNullOrWhiteSpace(file) ? "" : Path.GetFileName(file);
+        return status switch
+        {
+            "imported" => string.IsNullOrEmpty(name) ? "Anki package imported." : $"Imported {name}.",
+            "exported" => string.IsNullOrEmpty(name) ? "Anki package exported." : $"Saved {name}.",
+            "cancelled" => "No Anki package was selected.",
+            "read-error" => string.IsNullOrEmpty(error)
+                ? $"Could not read {FileOrFallback(name, "the selected file")}."
+                : $"Could not read {FileOrFallback(name, "the selected file")}: {error}",
+            "import-error" => string.IsNullOrEmpty(error)
+                ? $"Could not import {FileOrFallback(name, "the selected package")}."
+                : $"Could not import {FileOrFallback(name, "the selected package")}: {error}",
+            "export-error" => string.IsNullOrEmpty(error)
+                ? "Could not export Anki package."
+                : $"Could not export Anki package: {error}",
+            "write-error" => string.IsNullOrEmpty(error)
+                ? $"Could not save {FileOrFallback(name, "the Anki package")}."
+                : $"Could not save {FileOrFallback(name, "the Anki package")}: {error}",
+            "captured" => "Host intent captured.",
+            _ => status,
+        };
+    }
+
+    private static string FileOrFallback(string file, string fallback)
+    {
+        return string.IsNullOrEmpty(file) ? fallback : file;
     }
 
     private static async Task<StorageFile?> PickAnkiImportFile(Window owner, MosaicHostIntent hostIntent)

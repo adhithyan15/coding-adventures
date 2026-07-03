@@ -46,6 +46,11 @@ private:
       const QVariantMap &hostIntent,
       const QString &status,
       const QString &path = QString()) const;
+  QVariantMap withHostStatusProps(QVariantMap response, const QVariantMap &hostResult) const;
+  QVariantMap hostStatusProps(const QVariantMap &hostResult) const;
+  QString hostStatusLabel(const QString &status) const;
+  QString hostStatusMessage(const QVariantMap &hostResult, const QString &status) const;
+  QString hostResultFile(const QVariantMap &hostResult) const;
   QVariantMap camelCaseProps(const QVariantMap &props) const;
   QString mosaicPropName(const QString &name) const;
   QStringList hostIntentExtensions(

@@ -2582,6 +2582,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "PersistSnapshot");
     assert_contains(&xaml_host, "eg_snapshot");
     assert_contains(&xaml_host, "eg_load_snapshot");
+    assert_contains(&xaml_host, "ApplyHostStatus(component, \"imported\"");
+    assert_contains(&xaml_host, "component.HostStatusVisible = true");
+    assert_contains(
+        &xaml_host,
+        "component.HostStatusMessage = HostStatusMessage",
+    );
     assert!(
         !xaml_host.contains("private static IntPtr Session = Native.eg_session_new()"),
         "xaml host template must not load the native library from a static field initializer"
@@ -2601,6 +2607,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&electron_host, "export-apkg");
     assert_contains(&electron_host, "loadPersistedSnapshot");
     assert_contains(&electron_host, "persistSnapshot(engine)");
+    assert_contains(&electron_host, "hostStatusProps(result.hostResult)");
+    assert_contains(&electron_host, "hostStatusVisible: true");
 
     let swiftui_host = fs::read_to_string(package_root().join("host/swiftui/MosaicHost.swift"))
         .expect("swiftui host template");
@@ -2625,6 +2633,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_host, "persistSnapshot");
     assert_contains(&swiftui_host, "eg_snapshot");
     assert_contains(&swiftui_host, "eg_load_snapshot");
+    assert_contains(&swiftui_host, "withHostStatusProps");
+    assert_contains(&swiftui_host, "\"host-status-visible\": true");
 
     let qt_host = fs::read_to_string(package_root().join("host/qt/MosaicHost.cpp"))
         .expect("qt host template");
@@ -2647,6 +2657,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "persistSnapshot");
     assert_contains(&qt_host, "eg_snapshot");
     assert_contains(&qt_host, "eg_load_snapshot");
+    assert_contains(&qt_host, "withHostStatusProps");
+    assert_contains(&qt_host, "QStringLiteral(\"hostStatusVisible\")");
 
     let compose_host = fs::read_to_string(package_root().join("host/compose/MosaicHost.kt"))
         .expect("compose host template");
@@ -2670,6 +2682,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&compose_host, "persistSnapshot");
     assert_contains(&compose_host, "eg_snapshot");
     assert_contains(&compose_host, "eg_load_snapshot");
+    assert_contains(&compose_host, "withHostStatusProps");
+    assert_contains(&compose_host, "\"host-status-visible\" to true");
 
     let flutter_host = fs::read_to_string(package_root().join("host/flutter/mosaic_host.dart"))
         .expect("flutter host template");
@@ -2692,6 +2706,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&flutter_host, "_persistSnapshot");
     assert_contains(&flutter_host, "eg_snapshot");
     assert_contains(&flutter_host, "eg_load_snapshot");
+    assert_contains(&flutter_host, "_withHostStatusProps");
+    assert_contains(&flutter_host, "'host-status-visible': true");
 
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");

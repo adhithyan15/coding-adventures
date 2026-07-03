@@ -55,6 +55,10 @@ function withSnapshotPersistence(host, engine) {
         const refreshed = await host.getProps({ component: request?.component ?? "EngramApp" });
         return {
           ...refreshed,
+          props: {
+            ...(refreshed?.props ?? {}),
+            ...hostStatusProps(result.hostResult),
+          },
           hostIntent: result.hostIntent,
           hostResult: result.hostResult,
         };
@@ -199,6 +203,78 @@ function sidecarError(status, path, result) {
     path,
     error: result?.error ?? "Engram native sidecar failed",
   };
+}
+
+function hostStatusProps(hostResult) {
+  const status = typeof hostResult?.status === "string" ? hostResult.status : "";
+  if (!status) {
+    return {};
+  }
+  return {
+    hostStatusVisible: true,
+    hostStatusKind: status,
+    hostStatusLabel: hostStatusLabel(status),
+    hostStatusMessage: hostStatusMessage(hostResult, status),
+  };
+}
+
+function hostStatusLabel(status) {
+  switch (status) {
+    case "imported":
+      return "Import complete";
+    case "exported":
+      return "Export complete";
+    case "cancelled":
+      return "Import cancelled";
+    case "read-error":
+    case "import-error":
+    case "snapshot-error":
+      return "Import failed";
+    case "export-error":
+    case "write-error":
+      return "Export failed";
+    case "captured":
+      return "Host action";
+    default:
+      return "Host status";
+  }
+}
+
+function hostStatusMessage(hostResult, status) {
+  const file = hostResultPath(hostResult);
+  const error = typeof hostResult?.error === "string" ? hostResult.error : "";
+  switch (status) {
+    case "imported":
+      return file ? `Imported ${file}.` : "Anki package imported.";
+    case "exported":
+      return file ? `Saved ${file}.` : "Anki package exported.";
+    case "cancelled":
+      return "No Anki package was selected.";
+    case "read-error":
+      return error
+        ? `Could not read ${file || "the selected file"}: ${error}`
+        : `Could not read ${file || "the selected file"}.`;
+    case "import-error":
+    case "snapshot-error":
+      return error
+        ? `Could not import ${file || "the selected package"}: ${error}`
+        : `Could not import ${file || "the selected package"}.`;
+    case "export-error":
+      return error ? `Could not export Anki package: ${error}` : "Could not export Anki package.";
+    case "write-error":
+      return error
+        ? `Could not save ${file || "the Anki package"}: ${error}`
+        : `Could not save ${file || "the Anki package"}.`;
+    case "captured":
+      return "Host intent captured.";
+    default:
+      return error || file || status;
+  }
+}
+
+function hostResultPath(hostResult) {
+  const path = typeof hostResult?.path === "string" ? hostResult.path : "";
+  return path.split(/[\\/]/).filter(Boolean).at(-1) || path;
 }
 
 function hostIntentExtensions(intent, property, fallback) {
