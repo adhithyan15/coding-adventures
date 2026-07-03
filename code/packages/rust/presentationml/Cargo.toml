@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-presentationml"
+version = "0.1.0"
+edition = "2021"
+description = "PresentationML (.pptx) reader — opens a presentation as an ordered slides → shapes → text model, resolving r:id → slide-part links and pulling text runs from the DrawingML (a:) namespace (OOXML milestone PML01)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-opc = { path = "../opc" }
+coding-adventures-xml-parser = { path = "../xml-parser" }
