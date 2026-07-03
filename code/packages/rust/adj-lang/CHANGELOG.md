@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.44.0] - 2026-07-02 — reciprocal hyperbolic functions (`\coth`/`\sech`/`\csch`) in `latex "…"`
+
+### Added
+
+- `latex "\coth(x)"`, `\sech(x)`, `\csch(x)` — the reciprocal hyperbolic functions — now lower.
+  The frontend has `Func` variants for `\sinh`/`\cosh`/`\tanh` but not their reciprocals, so `\coth`
+  is an unknown control sequence that arrives as the operator-name juxtaposition
+  `Bin(Mul, Symbol("coth"), (x))` (a bare `Symbol` named `coth` can only come from that macro —
+  plain `coth` in math mode is the product `c·o·t·h`). Each reciprocal is composed exactly from the
+  hyperbolic `NamedFn` it inverts — coth = 1/tanh, sech = 1/cosh, csch = 1/sinh — so no engine op is
+  added. This closes the trig/hyperbolic symmetry: the circular reciprocals `cot`/`sec`/`csc`
+  already lowered; their hyperbolic twins now do too.
+- Both spellings are recognised: the bare macro (`\coth(x)`) and the operator-name form
+  (`\operatorname{coth}(x)` / `\mathrm{coth}(x)`, which the frontend renders as `Text("coth")`).
+- Adapter-only, no engine/AST change. The argument recurses through the SAME
+  `latex_math_to_expr_ast` the `\sin`/`\exp` arms use (no new tree-walk, no new DoS surface); the
+  left-factor match is a shallow `Symbol`/`Text` name check.
+
 ## [0.43.0] - 2026-07-02 — binomial coefficients (`\binom{n}{k}`) in `latex "…"`
 
 ### Added

@@ -1126,6 +1126,33 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Box::new(latex_math_to_expr_ast(rhs, source)?),
             ))
         }
+        // `\coth(x)` / `\sech(x)` / `\csch(x)` — the reciprocal hyperbolic functions. The frontend
+        // has `Func` variants for `\sinh`/`\cosh`/`\tanh` (they lower in the `Call` arm) but NOT for
+        // their reciprocals, so `\coth` is an UNKNOWN control sequence: it lowers to a bare
+        // `Symbol("coth")` and the whole `\coth(x)` parses as the operator-name juxtaposition
+        // `Bin(Mul, Symbol("coth"), (x))` — exactly the shape `\operatorname{trunc}(x)` /
+        // `\operatorname{sinh}(x)` take (those arrive as `Bin(Mul, Text("…"), (x))`). A bare
+        // `Symbol("coth")` can ONLY come from the `\coth` macro (plain `coth` in math mode is the
+        // product `c·o·t·h`), so matching it is unambiguous. There is no dedicated engine op, but
+        // each reciprocal hyperbolic is the EXACT reciprocal of a hyperbolic `NamedFn` that IS
+        // wired — coth = 1/tanh, sech = 1/cosh, csch = 1/sinh — so we compose `1 / f(x)` from the
+        // existing `Tanh`/`Cosh`/`Sinh` calls. Pure adapter recognition: no engine, AST, or lowering
+        // change (the argument recurses through the SAME `latex_math_to_expr_ast` the `\sin`/`\exp`
+        // arms use — no new tree-walk). Handles both the bare-macro (`\coth(x)`) and operator-name
+        // (`\operatorname{coth}(x)`) spellings. This closes the trig/hyperbolic symmetry: the
+        // circular reciprocals `cot`/`sec`/`csc` already lower (in the `Call` arm); their hyperbolic
+        // twins now do too.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if reciprocal_hyperbolic_den(lhs).is_some() => {
+            let den = reciprocal_hyperbolic_den(lhs).expect("guard guarantees Some");
+            Ok(ExprAst::Bin(
+                ArithOp::Div,
+                Box::new(ExprAst::Lit(1.0)),
+                Box::new(ExprAst::Call(
+                    den,
+                    Box::new(latex_math_to_expr_ast(rhs, source)?),
+                )),
+            ))
+        }
         MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, lhs, rhs, source),
         MathExpr::Bin(BinOp::Div, lhs, rhs) | MathExpr::Frac(lhs, rhs) => {
             latex_bin(ArithOp::Div, lhs, rhs, source)
@@ -1296,6 +1323,28 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
             source: source.to_string(),
             detail: format!("unsupported ADJ arithmetic subset: {other:?}"),
         }),
+    }
+}
+
+/// If `expr` names a reciprocal hyperbolic function (`\coth`/`\sech`/`\csch`), return the
+/// hyperbolic [`NamedFn`] it is the reciprocal OF, so the caller can compose `1 / f(x)`:
+/// coth = 1/tanh → [`NamedFn::Tanh`], sech = 1/cosh → [`NamedFn::Cosh`], csch = 1/sinh →
+/// [`NamedFn::Sinh`]. Matches the bare-macro spelling (`\coth` → `Symbol("coth")`, an unknown
+/// control sequence — and a `Symbol` named exactly `coth` can ONLY arise from that macro) and the
+/// operator-name spelling (`\operatorname{coth}` / `\mathrm{coth}` → `Text("coth")`). Returns
+/// `None` for anything else, so a genuine product (`2x`) or an unrelated symbol falls through to
+/// the general multiplication arm.
+fn reciprocal_hyperbolic_den(expr: &MathExpr) -> Option<NamedFn> {
+    let name = match expr {
+        MathExpr::Symbol(s) => s.as_str(),
+        MathExpr::Text(s) => s.trim(),
+        _ => return None,
+    };
+    match name {
+        "coth" => Some(NamedFn::Tanh),
+        "sech" => Some(NamedFn::Cosh),
+        "csch" => Some(NamedFn::Sinh),
+        _ => None,
     }
 }
 

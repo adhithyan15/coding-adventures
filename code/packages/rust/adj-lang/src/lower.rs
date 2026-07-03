@@ -2458,6 +2458,54 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_reciprocal_hyperbolic_functions_lower() {
+        // `\coth`/`\sech`/`\csch` — the reciprocal hyperbolics. None is a frontend `Func`, so each
+        // arrives as the operator-name juxtaposition `Bin(Mul, Symbol("coth"), (x))` (bare macro).
+        // The adapter composes `1 / f(x)` from the hyperbolic NamedFn it is the reciprocal of:
+        // coth = 1/tanh, sech = 1/cosh, csch = 1/sinh. Exact anchor: sech(0) = 1/cosh(0) = 1/1 = 1.
+        let sech0 = crate::compile_and_decide(
+            "observe x(0)\n\
+             let answer = latex \"$\\sech(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(sech0.ranked[0].posterior > 0.99, "{sech0:?}");
+        // coth(1) = 1/tanh(1) ≈ 1.3130352854993315 (matched within the engine's 1e-9 == tolerance).
+        let coth1 = crate::compile_and_decide(
+            "observe x(1)\n\
+             let answer = latex \"$\\coth(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1.3130352854993315 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(coth1.ranked[0].posterior > 0.99, "{coth1:?}");
+        // csch(1) = 1/sinh(1) ≈ 0.8509181282393216.
+        let csch1 = crate::compile_and_decide(
+            "observe x(1)\n\
+             let answer = latex \"$\\csch(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0.8509181282393216 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(csch1.ranked[0].posterior > 0.99, "{csch1:?}");
+        // The `\operatorname{sech}(x)` word spelling reaches the SAME composition (Text, not Symbol):
+        // sech(1) = 1/cosh(1) ≈ 0.6480542736638855.
+        let opsech = crate::compile_and_decide(
+            "observe x(1)\n\
+             let answer = latex \"$\\operatorname{sech}(x)$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 0.6480542736638855 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(opsech.ranked[0].posterior > 0.99, "{opsech:?}");
+    }
+
+    #[test]
     fn native_latex_accent_wrapped_operands_are_transparent() {
         // `\hat{x}` / `\bar{x}` / … — an accent is a notational decoration, not an operation. A
         // model that writes a statistics formula (`\hat{p}(1-\hat{p})`, `\bar{x} - \bar{y}`) means
