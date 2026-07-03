@@ -86,6 +86,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_LOADER_PLAN_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_PLAN_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -9859,6 +9861,228 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub runtime_plan_id: String,
+    pub runtime_plan_kind: String,
+    pub runtime_host_id: String,
+    pub runtime_host_kind: String,
+    pub runtime_phase: String,
+    pub runtime_strategy: String,
+    pub runtime_entrypoint: String,
+    pub runtime_bootstrap_id: String,
+    pub runtime_bootstrap_kind: String,
+    pub runtime_mount_id: String,
+    pub runtime_mount_kind: String,
+    pub readiness_gate_id: String,
+    pub readiness_gate_kind: String,
+    pub hydration_scheduler_id: String,
+    pub hydration_scheduler_kind: String,
+    pub loader_plan_id: String,
+    pub loader_plan_kind: String,
+    pub loader_phase: String,
+    pub loader_strategy: String,
+    pub module_request_id: String,
+    pub module_cache_key: String,
+    pub module_integrity_mode: String,
+    pub module_fetch_priority: String,
+    pub instantiation_target_id: String,
+    pub embed_manifest_id: String,
+    pub embed_manifest_kind: String,
+    pub embed_root_id: String,
+    pub wasm_module_name: String,
+    pub wasm_import_namespace: String,
+    pub wasm_export_symbol: String,
+    pub wasm_initializer_symbol: String,
+    pub hydration_target_id: String,
+    pub hydration_mode: String,
+    pub delivery_package_id: String,
+    pub delivery_route: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub runtime_steps: Vec<String>,
+    pub load_order: Vec<String>,
+    pub should_start_runtime: bool,
+    pub should_preload: bool,
+    pub should_instantiate: bool,
+    pub should_mount: bool,
+    pub should_hydrate: bool,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub embed_loader_plan:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_loader_plan(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_loader_plan(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_embed_loader_plan(
+        plan: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan,
+    ) -> Self {
+        let runtime_phase = if plan.ready {
+            "bootstrappable"
+        } else {
+            "blocked"
+        };
+        let runtime_strategy = if plan.should_instantiate && plan.should_mount && plan.should_hydrate {
+            "start-runtime-mount-and-hydrate"
+        } else {
+            "start-runtime-defer-hydration"
+        };
+        let should_start_runtime = plan.should_preload;
+        let mut runtime_steps = vec![
+            "resolve-runtime-host".to_string(),
+            "read-loader-plan".to_string(),
+        ];
+        runtime_steps.extend(plan.load_order.iter().cloned());
+        if should_start_runtime {
+            runtime_steps.push("start-product-handoff-runtime".to_string());
+        }
+        if plan.should_hydrate {
+            runtime_steps.push("publish-runtime-ready".to_string());
+        } else {
+            runtime_steps.push("publish-runtime-blocked".to_string());
+        }
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_PLAN_SCHEMA_VERSION,
+            package_name: plan.package_name.clone(),
+            source_fingerprint: plan.source_fingerprint.clone(),
+            title: plan.title.clone(),
+            startup_route: plan.startup_route.clone(),
+            ready: plan.ready,
+            severity: plan.severity.clone(),
+            attention_required: plan.attention_required,
+            runtime_plan_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-plan"
+                    .to_string(),
+            runtime_plan_kind:
+                "berkeley-product-handoff-webassembly-embed-runtime-plan".to_string(),
+            runtime_host_id: "berkeley-product-handoff-runtime-host".to_string(),
+            runtime_host_kind: "mosaic-webassembly-product-shell-host".to_string(),
+            runtime_phase: runtime_phase.to_string(),
+            runtime_strategy: runtime_strategy.to_string(),
+            runtime_entrypoint: "berkeleyProductHandoffRuntime".to_string(),
+            runtime_bootstrap_id:
+                "berkeley-product-handoff-runtime-bootstrap".to_string(),
+            runtime_bootstrap_kind:
+                "berkeley-product-handoff-webassembly-runtime-bootstrap".to_string(),
+            runtime_mount_id: "berkeley-product-handoff-runtime-mount".to_string(),
+            runtime_mount_kind: "berkeley-product-handoff-webassembly-runtime-mount".to_string(),
+            readiness_gate_id: "berkeley-product-handoff-runtime-readiness-gate".to_string(),
+            readiness_gate_kind: "loader-plan-runtime-readiness".to_string(),
+            hydration_scheduler_id:
+                "berkeley-product-handoff-runtime-hydration-scheduler".to_string(),
+            hydration_scheduler_kind:
+                "berkeley-product-handoff-webassembly-hydration-scheduler".to_string(),
+            loader_plan_id: plan.loader_plan_id.clone(),
+            loader_plan_kind: plan.loader_plan_kind.clone(),
+            loader_phase: plan.loader_phase.clone(),
+            loader_strategy: plan.loader_strategy.clone(),
+            module_request_id: plan.module_request_id.clone(),
+            module_cache_key: plan.module_cache_key.clone(),
+            module_integrity_mode: plan.module_integrity_mode.clone(),
+            module_fetch_priority: plan.module_fetch_priority.clone(),
+            instantiation_target_id: plan.instantiation_target_id.clone(),
+            embed_manifest_id: plan.embed_manifest_id.clone(),
+            embed_manifest_kind: plan.embed_manifest_kind.clone(),
+            embed_root_id: plan.embed_root_id.clone(),
+            wasm_module_name: plan.wasm_module_name.clone(),
+            wasm_import_namespace: plan.wasm_import_namespace.clone(),
+            wasm_export_symbol: plan.wasm_export_symbol.clone(),
+            wasm_initializer_symbol: plan.wasm_initializer_symbol.clone(),
+            hydration_target_id: plan.hydration_target_id.clone(),
+            hydration_mode: plan.hydration_mode.clone(),
+            delivery_package_id: plan.delivery_package_id.clone(),
+            delivery_route: plan.delivery_route.clone(),
+            product_surface: plan.product_surface.clone(),
+            render_region: plan.render_region.clone(),
+            product_shell_action: plan.product_shell_action.clone(),
+            runtime_steps,
+            load_order: plan.load_order.clone(),
+            should_start_runtime,
+            should_preload: plan.should_preload,
+            should_instantiate: plan.should_instantiate,
+            should_mount: plan.should_mount,
+            should_hydrate: plan.should_hydrate,
+            should_render_stack: plan.should_render_stack,
+            should_announce_latest: plan.should_announce_latest,
+            requires_attention: plan.requires_attention,
+            notification_count: plan.notification_count,
+            visible_notification_count: plan.visible_notification_count,
+            announce_notification_count: plan.announce_notification_count,
+            attention_notification_count: plan.attention_notification_count,
+            success_notification_count: plan.success_notification_count,
+            error_notification_count: plan.error_notification_count,
+            info_notification_count: plan.info_notification_count,
+            embed_loader_plan: plan.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id:
+                plan
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-plan-json"
+                    .to_string(),
+            artifact_capability_count: plan.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -12548,6 +12772,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -18109,6 +18394,106 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
         "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlanCapabilityId",
         &plan
             .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id
+    );
+    insert_json!("artifactCapabilityCount", plan.artifact_capability_count);
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_json_value(
+    plan: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlan,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", plan.schema_version);
+    insert_json!("packageName", &plan.package_name);
+    insert_json!("sourceFingerprint", &plan.source_fingerprint);
+    insert_json!("title", &plan.title);
+    insert_json!("startupRoute", &plan.startup_route);
+    insert_json!("ready", plan.ready);
+    insert_json!("severity", &plan.severity);
+    insert_json!("attentionRequired", plan.attention_required);
+    insert_json!("runtimePlanId", &plan.runtime_plan_id);
+    insert_json!("runtimePlanKind", &plan.runtime_plan_kind);
+    insert_json!("runtimeHostId", &plan.runtime_host_id);
+    insert_json!("runtimeHostKind", &plan.runtime_host_kind);
+    insert_json!("runtimePhase", &plan.runtime_phase);
+    insert_json!("runtimeStrategy", &plan.runtime_strategy);
+    insert_json!("runtimeEntrypoint", &plan.runtime_entrypoint);
+    insert_json!("runtimeBootstrapId", &plan.runtime_bootstrap_id);
+    insert_json!("runtimeBootstrapKind", &plan.runtime_bootstrap_kind);
+    insert_json!("runtimeMountId", &plan.runtime_mount_id);
+    insert_json!("runtimeMountKind", &plan.runtime_mount_kind);
+    insert_json!("readinessGateId", &plan.readiness_gate_id);
+    insert_json!("readinessGateKind", &plan.readiness_gate_kind);
+    insert_json!("hydrationSchedulerId", &plan.hydration_scheduler_id);
+    insert_json!("hydrationSchedulerKind", &plan.hydration_scheduler_kind);
+    insert_json!("loaderPlanId", &plan.loader_plan_id);
+    insert_json!("loaderPlanKind", &plan.loader_plan_kind);
+    insert_json!("loaderPhase", &plan.loader_phase);
+    insert_json!("loaderStrategy", &plan.loader_strategy);
+    insert_json!("moduleRequestId", &plan.module_request_id);
+    insert_json!("moduleCacheKey", &plan.module_cache_key);
+    insert_json!("moduleIntegrityMode", &plan.module_integrity_mode);
+    insert_json!("moduleFetchPriority", &plan.module_fetch_priority);
+    insert_json!("instantiationTargetId", &plan.instantiation_target_id);
+    insert_json!("embedManifestId", &plan.embed_manifest_id);
+    insert_json!("embedManifestKind", &plan.embed_manifest_kind);
+    insert_json!("embedRootId", &plan.embed_root_id);
+    insert_json!("wasmModuleName", &plan.wasm_module_name);
+    insert_json!("wasmImportNamespace", &plan.wasm_import_namespace);
+    insert_json!("wasmExportSymbol", &plan.wasm_export_symbol);
+    insert_json!("wasmInitializerSymbol", &plan.wasm_initializer_symbol);
+    insert_json!("hydrationTargetId", &plan.hydration_target_id);
+    insert_json!("hydrationMode", &plan.hydration_mode);
+    insert_json!("deliveryPackageId", &plan.delivery_package_id);
+    insert_json!("deliveryRoute", &plan.delivery_route);
+    insert_json!("productSurface", &plan.product_surface);
+    insert_json!("renderRegion", &plan.render_region);
+    insert_json!("productShellAction", &plan.product_shell_action);
+    insert_json!("runtimeSteps", &plan.runtime_steps);
+    insert_json!("loadOrder", &plan.load_order);
+    insert_json!("shouldStartRuntime", plan.should_start_runtime);
+    insert_json!("shouldPreload", plan.should_preload);
+    insert_json!("shouldInstantiate", plan.should_instantiate);
+    insert_json!("shouldMount", plan.should_mount);
+    insert_json!("shouldHydrate", plan.should_hydrate);
+    insert_json!("shouldRenderStack", plan.should_render_stack);
+    insert_json!("shouldAnnounceLatest", plan.should_announce_latest);
+    insert_json!("requiresAttention", plan.requires_attention);
+    insert_json!("notificationCount", plan.notification_count);
+    insert_json!("visibleNotificationCount", plan.visible_notification_count);
+    insert_json!(
+        "announceNotificationCount",
+        plan.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        plan.attention_notification_count
+    );
+    insert_json!("successNotificationCount", plan.success_notification_count);
+    insert_json!("errorNotificationCount", plan.error_notification_count);
+    insert_json!("infoNotificationCount", plan.info_notification_count);
+    value.insert(
+        "embedLoaderPlan".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json_value(
+            &plan.embed_loader_plan,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlanCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimePlanCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_plan_capability_id
     );
     insert_json!("artifactCapabilityCount", plan.artifact_capability_count);
 
