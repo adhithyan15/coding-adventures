@@ -611,6 +611,11 @@ channels, activation entrypoints, deterministic activation steps, nested
 `embedRuntimeSessionPlan`, and runtime-activation-plan capability metadata so
 WebAssembly-backed product shells can request, publish, or defer runtime
 activation without recomputing the session plan.
+Embed runtime activation receipts add stable receipt IDs, accepted/deferred
+outcomes, receipt messages, deterministic receipt steps, nested
+`embedRuntimeActivationPlan`, and activation-receipt capability metadata so
+WebAssembly-backed product shells can record and replay runtime activation
+handoffs without recomputing the activation plan.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,

@@ -33,34 +33,31 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation plan.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
      receipt-notification-stack-summary-product-handoff-delivery-package-embed-
-     runtime-activation-plan surfaces and JSON helpers that wrap runtime
-     session plans into deterministic WebAssembly runtime activation requests,
-     targets, gates, channels, activation entrypoint, activation steps, nested
-     runtime-session-plan metadata, and runtime-activation-plan capability IDs
-     for first-render product-shell bootstrapping.
+     runtime-activation-receipt surfaces and JSON helpers that wrap runtime
+     activation plans into deterministic WebAssembly activation receipts,
+     accepted/deferred outcomes, receipt messages, receipt steps, nested
+     runtime-activation-plan metadata, and runtime-activation-receipt
+     capability IDs for first-render product-shell bootstrapping.
    - Preserve package name, source fingerprint, route/status metadata,
+     runtime-activation-receipt ID/kind/status/outcome/message,
      runtime-activation-plan ID/kind, activation request/target/gate/channel
      metadata, runtime-session-plan ID/kind, runtime-session ID/kind/phase/
      strategy, session state/owner/publish-channel metadata, runtime-plan ID/
      kind, runtime host ID/kind, runtime phase/strategy, runtime entrypoint,
-     readiness/scheduler metadata,
-     loader-plan ID/kind/phase/strategy, module request/cache/integrity/
-     priority metadata, instantiation target, embed-manifest ID/kind, embed
-     root ID, WebAssembly module/import/export/initializer metadata, hydration
-     target/mode, delivery package ID/route, product surface/region routing,
-     product-shell action, deterministic activation/session/runtime steps,
-     load order,
-     render/announce/hydrate flags, preload/instantiate/mount flags,
-     visible/announce/attention/success/error/info counts, nested embed runtime
-     session plan, runtime-session-plan capability ID, runtime-activation-plan
-     capability ID, and advertised capability count so Mosaic, WebAssembly, and
-     product shells can request, publish, or defer compact post-invocation
-     product handoff runtime activation without re-walking session plans.
+     readiness/scheduler metadata, loader-plan ID/kind, delivery package ID/
+     route, product surface/region routing, product-shell action,
+     deterministic receipt/activation/session/runtime steps, load order,
+     render/announce flags, visible/announce/attention/success/error/info
+     counts, nested embed runtime activation plan, runtime-activation-plan
+     capability ID, runtime-activation-receipt capability ID, and advertised
+     capability count so Mosaic, WebAssembly, and product shells can record,
+     replay, or defer compact post-invocation product handoff runtime
+     activation receipts without re-walking activation plans.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2582,6 +2579,33 @@ the Rust, Python, and TypeScript surfaces together.
      Mosaic, WebAssembly, and product shells can open, activate, publish, or
      defer compact post-invocation product handoff runtime sessions without
      re-walking runtime plans.
+
+196. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation plan.
+   - Status: completed in PR 7452.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-invocation receipt-notification-stack-
+     summary-product-handoff-delivery-package-embed-runtime-activation-plan
+     surfaces plus JSON helpers that wrap runtime session plans into
+     deterministic WebAssembly runtime activation requests, targets, gates,
+     channels, activation entrypoint, activation steps, nested runtime-session-
+     plan metadata, and runtime-activation-plan capability IDs for first-render
+     product-shell bootstrapping.
+   - The product handoff delivery package embed runtime activation plan payload
+     preserves package name, source fingerprint, route/status metadata,
+     runtime-activation-plan ID/kind, activation request/target/gate/channel
+     metadata, runtime-session-plan ID/kind, runtime-session ID/kind/phase/
+     strategy, session state/owner/publish-channel metadata, runtime-plan ID/
+     kind, runtime host ID/kind, runtime phase/strategy, runtime entrypoint,
+     readiness/scheduler metadata, loader-plan ID/kind, delivery package ID/
+     route, product surface/region routing, product-shell action,
+     deterministic activation/session/runtime steps, load order, render/
+     announce flags, visible/announce/attention/success/error/info counts,
+     nested embed runtime session plan, runtime-session-plan capability ID,
+     runtime-activation-plan capability ID, and advertised capability count so
+     Mosaic, WebAssembly, and product shells can request, publish, or defer
+     compact post-invocation product handoff runtime activation without
+     re-walking session plans.
 
 ## Backlog
 

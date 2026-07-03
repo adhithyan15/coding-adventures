@@ -36,6 +36,7 @@ use spice_netlist_parser::{
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_LOADER_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_MANIFEST_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_PLAN_SCHEMA_VERSION,
+    BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_SESSION_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_SCHEMA_VERSION,
@@ -7373,6 +7374,96 @@ C1 out 0 1p
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlanCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-plan-json"
     );
+
+    let accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt =
+        app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+            "queued dispatch",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued".to_string()),
+        )
+        .expect(
+            "shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt should execute",
+        );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .schema_version,
+        BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_RUNTIME_ACTIVATION_RECEIPT_SCHEMA_VERSION
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .runtime_activation_receipt_kind,
+        "berkeley-product-handoff-webassembly-embed-runtime-activation-receipt"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .runtime_activation_receipt_status,
+        "accepted"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .runtime_activation_receipt_outcome,
+        "ready"
+    );
+    assert!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .should_record_receipt
+    );
+    assert!(
+        !accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .should_defer_receipt
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .activation_receipt_steps
+            .last()
+            .map(String::as_str),
+        Some("publish-runtime-activation-receipt-ready")
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt
+            .embed_runtime_activation_plan
+            .runtime_activation_plan_id,
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan
+            .runtime_activation_plan_id
+    );
+
+    let accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload: serde_json::Value = serde_json::from_str(
+        &app.run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(3),
+                active_command_id: Some("analysis.3.inspect-waveform".to_string()),
+            },
+            "queued dispatch",
+            Some("dashboard.dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-result.queued".to_string()),
+        )
+        .unwrap(),
+    )
+    .expect(
+        "shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt JSON should parse",
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["runtimeActivationReceiptStatus"],
+        "accepted"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["activationReceiptSteps"][0],
+        "record-runtime-activation-receipt"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["embedRuntimeActivationPlan"]["runtimeActivationPlanKind"],
+        "berkeley-product-handoff-webassembly-embed-runtime-activation-plan"
+    );
+    assert_eq!(
+        accepted_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-receipt-json"
+    );
 }
 
 #[test]
@@ -11225,6 +11316,50 @@ R1 in out
         empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_plan_payload
             ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationPlanCapabilityId"],
         "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-plan-json"
+    );
+
+    let empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload: serde_json::Value = serde_json::from_str(
+        &app.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_json(
+            BerkeleyAppPersistedEditorState {
+                selected_syntax_card_index: Some(2),
+                active_command_id: Some("analysis.2.run".to_string()),
+            },
+            "missing",
+            None,
+        ),
+    )
+    .expect(
+        "blocked shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette empty search invocation receipt notification stack summary product handoff delivery package embed runtime activation receipt JSON should parse",
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["runtimeActivationReceiptStatus"],
+        "deferred"
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["runtimeActivationReceiptOutcome"],
+        "blocked"
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["shouldDeferReceipt"],
+        true
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["activationReceiptSteps"][14],
+        "publish-runtime-activation-receipt-blocked"
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["embedRuntimeActivationPlan"]["runtimeActivationPhase"],
+        "blocked"
+    );
+    assert_eq!(
+        empty_notification_stack_summary_product_handoff_delivery_package_embed_runtime_activation_receipt_payload
+            ["dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedRuntimeActivationReceiptCapabilityId"],
+        "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-runtime-activation-receipt-json"
     );
 }
 
