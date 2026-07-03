@@ -242,18 +242,34 @@ function Add-EngramFlutterHostDependencies {
         return
     }
     $content = Get-Content -LiteralPath $PubspecPath -Raw
-    if ($content.Contains("  ffi:")) {
-        return
+    $lineEnding = if ($content.Contains("`r`n")) { "`r`n" } else { "`n" }
+    if (-not $content.Contains("  ffi:")) {
+        $content = $content.Replace(
+            "dependencies:`n  flutter:`n    sdk: flutter",
+            "dependencies:`n  flutter:`n    sdk: flutter`n  ffi: ^2.1.3"
+        )
+        $content = $content.Replace(
+            "dependencies:`r`n  flutter:`r`n    sdk: flutter",
+            "dependencies:`r`n  flutter:`r`n    sdk: flutter`r`n  ffi: ^2.1.3"
+        )
     }
-
-    $content = $content.Replace(
-        "dependencies:`n  flutter:`n    sdk: flutter",
-        "dependencies:`n  flutter:`n    sdk: flutter`n  ffi: ^2.1.3"
-    )
-    $content = $content.Replace(
-        "dependencies:`r`n  flutter:`r`n    sdk: flutter",
-        "dependencies:`r`n  flutter:`r`n    sdk: flutter`r`n  ffi: ^2.1.3"
-    )
+    if (-not $content.Contains("  file_selector:")) {
+        if ($content.Contains("  ffi: ^2.1.3")) {
+            $content = $content.Replace(
+                "  ffi: ^2.1.3",
+                "  ffi: ^2.1.3${lineEnding}  file_selector: ^1.0.3"
+            )
+        } else {
+            $content = $content.Replace(
+                "dependencies:`n  flutter:`n    sdk: flutter",
+                "dependencies:`n  flutter:`n    sdk: flutter`n  file_selector: ^1.0.3"
+            )
+            $content = $content.Replace(
+                "dependencies:`r`n  flutter:`r`n    sdk: flutter",
+                "dependencies:`r`n  flutter:`r`n    sdk: flutter`r`n  file_selector: ^1.0.3"
+            )
+        }
+    }
     Write-Utf8NoBom -Path $PubspecPath -Content $content
 }
 

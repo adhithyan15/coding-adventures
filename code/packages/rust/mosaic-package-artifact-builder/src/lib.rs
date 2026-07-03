@@ -3904,15 +3904,16 @@ version = "1"
         let main_dart = fs::read_to_string(dir.join("lib/main.dart")).expect("main.dart");
         assert!(main_dart.contains("import 'mosaic_host.dart';"));
         assert!(main_dart.contains("MosaicHost.load()"));
-        assert!(main_dart.contains("_applyMosaicResponse(_mosaicHost?.props())"));
+        assert!(main_dart.contains("_queueMosaicResponse(_mosaicHost?.props())"));
         assert!(main_dart.contains("String mosaicString(Map<String, Object?> props"));
         assert!(main_dart.contains("_mosaicHost?.handleEvent(event.mosaicEnvelope)"));
+        assert!(main_dart.contains("_queueMosaicResponse(response);"));
         assert!(main_dart.contains("debugPrint(\"event: ${event.mosaicEnvelope}\")"));
 
         let host = fs::read_to_string(dir.join("lib/mosaic_host.dart")).expect("mosaic_host.dart");
         assert!(host.contains("class MosaicHost"));
         assert!(host.contains("static MosaicHost? load() => null;"));
-        assert!(host.contains("Map<String, Object?>? handleEvent"));
+        assert!(host.contains("FutureOr<Map<String, Object?>?> handleEvent"));
     }
 
     #[test]

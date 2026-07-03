@@ -80,7 +80,9 @@ editing, and save/delete/cancel controls.
 - The generated Flutter shell has an optional `MosaicHost` hook. Engram's
   `host/flutter/mosaic_host.dart` implements it with Dart FFI and
   `engram-capi`, hydrating Flutter slot props and routing generated Mosaic
-  event envelopes back into the same core.
+  event envelopes back into the same core. It also handles Anki import/export
+  host intents with `file_selector` dialogs, merging `.apkg` / `.colpkg`
+  packages and saving current collection state through the native C ABI.
 - The web, Electron, and native host adapters persist raw Engram state snapshots
   across launches. Set `ENGRAM_SNAPSHOT_PATH` to override the storage file; by
   default host shells use `~/.engram/mosaic-snapshot.v1.json`.
@@ -148,9 +150,10 @@ that host adapters need. Static host adapters are declared in
 bridge sources during project emission. The script adds the JS loader and
 `engram_engine.wasm` for web/Electron shells, `Sources/CEngram` plus the static
 `engram-capi` library for SwiftUI, the dynamic `engram-capi` library for Qt,
-Flutter, and Compose, the Dart FFI dependency for the Flutter host bridge,
-JNA/JSON dependencies for the Compose host bridge, `engram_capi.dll` as XAML
-project content, and `engram-host-cli` for the Electron APKG sidecar.
+Flutter, and Compose, the Dart FFI and `file_selector` dependencies for the
+Flutter host bridge, JNA/JSON dependencies for the Compose host bridge,
+`engram_capi.dll` as XAML project content, and `engram-host-cli` for the
+Electron APKG sidecar.
 Collection actions such as Anki import/export return `hostIntent` payloads so
 hosts can open file pickers, call native package bridges, and keep the Mosaic
 app interface shared.

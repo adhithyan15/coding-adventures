@@ -338,6 +338,7 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
     format!(
         concat!(
             "{banner}",
+            "import 'dart:async';\n",
             "import 'package:flutter/material.dart';\n",
             "import '../{component_name}.dart';\n",
             "import 'mosaic_host.dart';\n\n",
@@ -356,15 +357,26 @@ fn build_main_dart(component_name: &str, slots: &[SlotDecl]) -> String {
             "  void initState() {{\n",
             "    super.initState();\n",
             "    _mosaicHost = MosaicHost.load();\n",
-            "    _applyMosaicResponse(_mosaicHost?.props());\n",
+            "    _queueMosaicResponse(_mosaicHost?.props());\n",
             "  }}\n\n",
             "  @override\n",
             "  void dispose() {{\n",
             "    _mosaicHost?.dispose();\n",
             "    super.dispose();\n",
             "  }}\n\n",
+            "  void _queueMosaicResponse(\n",
+            "    FutureOr<Map<String, Object?>?>? responseOrFuture,\n",
+            "  ) {{\n",
+            "    if (responseOrFuture == null) return;\n",
+            "    Future<Map<String, Object?>?>.value(responseOrFuture)\n",
+            "        .then(_applyMosaicResponse)\n",
+            "        .catchError((Object error) {{\n",
+            "      debugPrint('host error: $error');\n",
+            "    }});\n",
+            "  }}\n\n",
             "  void _applyMosaicResponse(Map<String, Object?>? response) {{\n",
             "    if (response == null) return;\n",
+            "    if (!mounted) return;\n",
             "    final nextProps = mosaicMap(response['props']);\n",
             "    final hostIntent = mosaicMap(response['hostIntent']);\n",
             "    final error = response['error'];\n",
@@ -482,7 +494,7 @@ fn build_root_widget_constructor(component_name: &str, slots: &[SlotDecl]) -> St
     out.push_str("              if (response == null) {\n");
     out.push_str("                debugPrint(\"event: ${event.mosaicEnvelope}\");\n");
     out.push_str("              }\n");
-    out.push_str("              _applyMosaicResponse(response);\n");
+    out.push_str("              _queueMosaicResponse(response);\n");
     out.push_str("            },\n");
     out.push_str("          )");
     out
@@ -511,11 +523,14 @@ fn host_value_for_slot(slot: &SlotDecl) -> String {
 
 fn build_mosaic_host_dart() -> String {
     let mut out = String::from(BANNER_DART);
+    out.push_str("import 'dart:async';\n\n");
     out.push_str("class MosaicHost {\n");
     out.push_str("  const MosaicHost();\n\n");
     out.push_str("  static MosaicHost? load() => null;\n\n");
-    out.push_str("  Map<String, Object?>? props() => null;\n\n");
-    out.push_str("  Map<String, Object?>? handleEvent(Map<String, Object?> event) => null;\n\n");
+    out.push_str("  FutureOr<Map<String, Object?>?> props() => null;\n\n");
+    out.push_str(
+        "  FutureOr<Map<String, Object?>?> handleEvent(Map<String, Object?> event) => null;\n\n",
+    );
     out.push_str("  void dispose() {}\n");
     out.push_str("}\n");
     out
@@ -4992,7 +5007,7 @@ mod tests {
         );
         assert!(
             proj.main_dart
-                .contains("_applyMosaicResponse(_mosaicHost?.props())"),
+                .contains("_queueMosaicResponse(_mosaicHost?.props())"),
             "main.dart must hydrate initial props through the Mosaic host"
         );
         assert!(
@@ -5013,6 +5028,11 @@ mod tests {
             proj.mosaic_host_dart
                 .contains("static MosaicHost? load() => null;"),
             "default mosaic_host.dart must be a no-op hook"
+        );
+        assert!(
+            proj.mosaic_host_dart
+                .contains("FutureOr<Map<String, Object?>?> handleEvent"),
+            "default mosaic_host.dart must allow async host responses"
         );
     }
 
@@ -5064,7 +5084,7 @@ mod tests {
         assert!(proj
             .main_dart
             .contains("tags: mosaicStringList(_hostProps, \"tags\"),"));
-        assert!(proj.main_dart.contains("_applyMosaicResponse(response);"));
+        assert!(proj.main_dart.contains("_queueMosaicResponse(response);"));
     }
 
     /// Truth table for is_valid_dart_pub_name.
