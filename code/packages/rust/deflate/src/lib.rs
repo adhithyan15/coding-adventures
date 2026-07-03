@@ -4,13 +4,15 @@
 //! powering ZIP, gzip, PNG, and HTTP/2 HPACK header compression. It combines:
 //!
 //! 1. **LZSS tokenization** (CMP02) — replace repeated substrings with
-//!    back-references into a 4096-byte sliding window. Each back-reference
-//!    is a (offset, length) pair where offset is 1–4096 and length is 3–255.
+//!    back-references into a 32768-byte sliding window (the full RFC 1951
+//!    window). Each back-reference is a (offset, length) pair where offset is
+//!    1–32768 and length is 3–255.
 //!
-//! 2. **Dual canonical Huffman coding** (DT27/CMP04) — entropy-code the
-//!    resulting token stream with TWO separate Huffman trees:
-//!    - LL tree: literals (0–255), end-of-data (256), length codes (257–284)
-//!    - Dist tree: distance codes (0–23, for offsets 1–4096)
+//! 2. **Huffman coding** (CMP04) — entropy-code the token stream. `compress`
+//!    uses the **fixed** code tables of RFC 1951 §3.2.6 (a literal/length
+//!    alphabet and a distance alphabet), so nothing is transmitted; `inflate`
+//!    additionally reads **dynamic** (per-block) Huffman trees produced by other
+//!    tools. Output is standard raw DEFLATE — see the *Wire Format* section.
 //!
 //! # The Expanded LL Alphabet
 //!
@@ -18,20 +20,29 @@
 //!
 //! ```text
 //! Symbols 0–255:   literal byte values
-//! Symbol  256:     end-of-data marker
-//! Symbols 257–284: length codes (each covers a range via extra bits)
+//! Symbol  256:     end-of-block marker
+//! Symbols 257–285: length codes (each covers a range via extra bits)
 //! ```
 //!
-//! # Wire Format (CMP05)
+//! # Wire Format — standard RFC 1951
+//!
+//! `compress` emits a **standard RFC 1951 raw DEFLATE stream** (the same bytes a
+//! ZIP entry or a gzip body carries — no envelope). It uses a single
+//! **fixed-Huffman block** (BTYPE=01), so the pre-agreed code tables of
+//! RFC 1951 §3.2.6 are used and nothing extra is transmitted:
 //!
 //! ```text
-//! [4B] original_length    big-endian uint32
-//! [2B] ll_entry_count     big-endian uint16
-//! [2B] dist_entry_count   big-endian uint16 (0 if no matches)
-//! [ll_entry_count × 3B]   (symbol uint16 BE, code_length uint8)
-//! [dist_entry_count × 3B] same format
-//! [remaining bytes]       LSB-first packed bit stream
+//! [3 bits]  block header  — BFINAL=1, BTYPE=01 (fixed Huffman), LSB-first
+//! [ ... ]   token stream  — literals / (length,distance) matches via the fixed
+//!                           code tables; Huffman codes MSB-first, extra bits
+//!                           LSB-first
+//! [7 bits]  end-of-block  — symbol 256
 //! ```
+//!
+//! `inflate` (and its alias `decompress`) reads any RFC 1951 stream — stored
+//! (BTYPE=00), fixed (BTYPE=01), and dynamic Huffman (BTYPE=10) — so it also
+//! decodes streams from `zlib`, `gzip`, and Microsoft Office. Encoding dynamic
+//! blocks is a future optimisation; see the changelog.
 //!
 //! # Series
 //!
@@ -46,7 +57,6 @@
 
 use std::collections::HashMap;
 
-use huffman_tree::HuffmanTree;
 use lzss::Token;
 
 // ---------------------------------------------------------------------------
@@ -211,21 +221,17 @@ impl BitBuilder {
         Self { buf: 0, bit_pos: 0, out: Vec::new() }
     }
 
-    /// Write a bit string (e.g. "1010") LSB-first.
-    fn write_bit_string(&mut self, s: &str) {
-        for ch in s.chars() {
-            if ch == '1' {
-                self.buf |= 1u64 << self.bit_pos;
-            }
-            self.bit_pos += 1;
-            if self.bit_pos == 64 {
-                for _ in 0..8 {
-                    self.out.push((self.buf & 0xFF) as u8);
-                    self.buf >>= 8;
-                }
-                self.bit_pos = 0;
-            }
-        }
+    /// Write a Huffman code of `nbits` bits.
+    ///
+    /// RFC 1951 sends Huffman codes **most-significant-bit first**, but the bit
+    /// stream itself is packed LSB-first. So we bit-reverse the low `nbits` of
+    /// `code` and then emit them LSB-first — after which the decoder, reading
+    /// LSB-first and re-accumulating MSB-first, recovers the original code. This
+    /// is the exact inverse of `decode_symbol`.
+    fn write_huffman(&mut self, code: u32, nbits: u32) {
+        debug_assert!(nbits > 0 && nbits <= 16);
+        let reversed = code.reverse_bits() >> (32 - nbits);
+        self.write_raw_bits_lsb(reversed, nbits);
     }
 
     /// Write `n` raw bits from `val`, LSB of val first.
@@ -263,275 +269,105 @@ impl BitBuilder {
     }
 }
 
-fn unpack_bits(data: &[u8]) -> Vec<u8> {
-    // Returns a vector of 0/1 bytes.
-    let mut bits = Vec::with_capacity(data.len() * 8);
-    for &byte in data {
-        for i in 0..8 {
-            bits.push((byte >> i) & 1);
-        }
-    }
-    bits
-}
-
 // ---------------------------------------------------------------------------
-// Canonical code reconstruction
+// Fixed Huffman code table (RFC 1951 §3.2.6) — encoder side
 // ---------------------------------------------------------------------------
+//
+// The fixed literal/length codes are pre-agreed, so `compress` transmits no
+// table. The canonical assignment is:
+//
+//   Symbols   0–143 → 8-bit codes, starting at 0b0011_0000  (= 48)
+//   Symbols 144–255 → 9-bit codes, starting at 0b1_1001_0000 (= 400)
+//   Symbols 256–279 → 7-bit codes, starting at 0b000_0000    (= 0)
+//   Symbols 280–287 → 8-bit codes, starting at 0b1100_0000   (= 192)
+//
+// Distance symbols are all 5-bit codes equal to the symbol number.
 
-fn build_canonical_codes(pairs: &[(u16, usize)]) -> HashMap<u16, String> {
-    let mut result = HashMap::new();
-    if pairs.is_empty() {
-        return result;
+/// Return the fixed literal/length Huffman code and its bit width for `sym`.
+fn fixed_ll_code(sym: u16) -> (u32, u32) {
+    match sym {
+        0..=143   => (0b0011_0000 + sym as u32,             8),
+        144..=255 => (0b1_1001_0000 + (sym as u32 - 144),   9),
+        256..=279 => (sym as u32 - 256,                     7),
+        280..=287 => (0b1100_0000 + (sym as u32 - 280),     8),
+        _ => panic!("fixed_ll_code: invalid LL symbol {}", sym),
     }
-    if pairs.len() == 1 {
-        result.insert(pairs[0].0, "0".to_string());
-        return result;
-    }
-    let mut code: u32 = 0;
-    let mut prev_len = pairs[0].1;
-    for &(symbol, code_len) in pairs {
-        if code_len > prev_len {
-            code <<= code_len - prev_len;
-        }
-        let bit_str = format!("{:0>width$b}", code, width = code_len);
-        result.insert(symbol, bit_str);
-        code += 1;
-        prev_len = code_len;
-    }
-    result
-}
-
-fn reverse_code_map(m: &HashMap<u16, String>) -> HashMap<String, u16> {
-    m.iter().map(|(&sym, bits)| (bits.clone(), sym)).collect()
 }
 
 // ---------------------------------------------------------------------------
 // Public API: compress
 // ---------------------------------------------------------------------------
 
-/// Compress `data` using DEFLATE (CMP05) and return wire-format bytes.
+/// Compress `data` to a raw RFC 1951 DEFLATE bit-stream and return the bytes.
 ///
-/// Two-pass algorithm:
-/// 1. LZSS tokenization (window=4096, max_match=255, min_match=3).
-/// 2. Dual canonical Huffman coding (LL tree + dist tree).
+/// Emits a single **fixed-Huffman block** (BTYPE=01) using the pre-defined code
+/// tables of RFC 1951 §3.2.6, so no Huffman table is transmitted. This is real,
+/// standard DEFLATE: the output is decodable by any conforming inflater —
+/// [`inflate`] here, and equally `zlib`, `gzip`, `unzip`, and web browsers.
 ///
-/// Returns `Err(String)` if the underlying tree build fails.
+/// Fixed Huffman is not the smallest possible encoding (dynamic Huffman, BTYPE=10,
+/// adapts the code lengths to the data), but it is correct for *every* input and
+/// needs none of the length-limited-tree machinery a safe dynamic encoder
+/// requires. Dynamic-Huffman encoding is a future optimisation; the decoder
+/// already reads it.
+///
+/// Algorithm:
+/// 1. LZSS tokenization (window=32768, max_match=255, min_match=3) — the full
+///    RFC 1951 window, so matches map into the length (3–255) and distance
+///    (1–32768) tables.
+/// 2. Emit BFINAL=1, BTYPE=01, then each token via the fixed code tables, then
+///    the end-of-block symbol (256).
+///
+/// Returns `Ok` for all inputs (the `Result` is kept for API stability).
 pub fn compress(data: &[u8]) -> Result<Vec<u8>, String> {
-    let original_length = data.len();
+    let mut bw = BitBuilder::new();
 
-    if original_length == 0 {
-        // Empty input: LL tree has only symbol 256 (end-of-data), code "0".
-        let mut out = Vec::with_capacity(12);
-        out.extend_from_slice(&0u32.to_be_bytes());
-        out.extend_from_slice(&1u16.to_be_bytes()); // ll_entry_count = 1
-        out.extend_from_slice(&0u16.to_be_bytes()); // dist_entry_count = 0
-        out.extend_from_slice(&256u16.to_be_bytes()); // symbol = 256
-        out.push(1u8); // code_length = 1
-        out.push(0x00); // bit stream: "0" → 0x00
-        return Ok(out);
-    }
+    // Block header, written LSB-first: BFINAL=1 (single, final block) then
+    // BTYPE=0b01 (fixed Huffman), which as a 2-bit little-endian field is 1.
+    bw.write_raw_bits_lsb(1, 1); // BFINAL = 1
+    bw.write_raw_bits_lsb(1, 2); // BTYPE  = 01 (fixed Huffman)
 
-    // ── Pass 1: LZSS tokenization ────────────────────────────────────────────
-    let tokens = lzss::encode(data, 4096, 255, 3);
-
-    // ── Pass 2a: Tally frequencies ───────────────────────────────────────────
-    let mut ll_freq: HashMap<u16, u32> = HashMap::new();
-    let mut dist_freq: HashMap<u16, u32> = HashMap::new();
-
-    for tok in &tokens {
+    for tok in lzss::encode(data, 32768, 255, 3) {
         match tok {
             Token::Literal(b) => {
-                *ll_freq.entry(*b as u16).or_insert(0) += 1;
+                let (code, nbits) = fixed_ll_code(b as u16);
+                bw.write_huffman(code, nbits);
             }
             Token::Match { offset, length } => {
-                let sym = length_symbol(*length as u32);
-                *ll_freq.entry(sym).or_insert(0) += 1;
-                let dc = dist_code_for(*offset as u32);
-                *dist_freq.entry(dc).or_insert(0) += 1;
+                // Length: fixed LL code for the length symbol + its extra bits.
+                let sym = length_symbol(length as u32);
+                let (code, nbits) = fixed_ll_code(sym);
+                bw.write_huffman(code, nbits);
+                bw.write_raw_bits_lsb(length as u32 - length_base(sym), length_extra(sym));
+
+                // Distance: fixed 5-bit code (value == code number) + extra bits.
+                let dc = dist_code_for(offset as u32);
+                bw.write_huffman(dc as u32, 5);
+                bw.write_raw_bits_lsb(offset as u32 - dist_base(dc), dist_extra(dc));
             }
         }
     }
-    *ll_freq.entry(256).or_insert(0) += 1;
 
-    // ── Pass 2b: Build canonical Huffman trees ───────────────────────────────
-    let ll_weights: Vec<(u16, u32)> = ll_freq.iter().map(|(&sym, &freq)| (sym, freq)).collect();
-    let ll_tree = HuffmanTree::build(&ll_weights)?;
-    let ll_code_table = ll_tree.canonical_code_table(); // HashMap<u16, String>
+    // End-of-block marker (symbol 256).
+    let (eob, nbits) = fixed_ll_code(256);
+    bw.write_huffman(eob, nbits);
 
-    let mut dist_code_table: HashMap<u16, String> = HashMap::new();
-    if !dist_freq.is_empty() {
-        let dist_weights: Vec<(u16, u32)> = dist_freq.iter().map(|(&sym, &freq)| (sym, freq)).collect();
-        let dist_tree = HuffmanTree::build(&dist_weights)?;
-        dist_code_table = dist_tree.canonical_code_table();
-    }
-
-    // ── Pass 2c: Encode token stream ─────────────────────────────────────────
-    let mut bb = BitBuilder::new();
-    for tok in &tokens {
-        match tok {
-            Token::Literal(b) => {
-                let code = ll_code_table.get(&(*b as u16))
-                    .ok_or_else(|| format!("no LL code for literal {}", b))?;
-                bb.write_bit_string(code);
-            }
-            Token::Match { offset, length } => {
-                let sym = length_symbol(*length as u32);
-                let code = ll_code_table.get(&sym)
-                    .ok_or_else(|| format!("no LL code for length symbol {}", sym))?;
-                bb.write_bit_string(code);
-                let extra = length_extra(sym);
-                let extra_val = (*length as u32) - length_base(sym);
-                bb.write_raw_bits_lsb(extra_val, extra);
-
-                let dc = dist_code_for(*offset as u32);
-                let dcode = dist_code_table.get(&dc)
-                    .ok_or_else(|| format!("no dist code for code {}", dc))?;
-                bb.write_bit_string(dcode);
-                let dextra = dist_extra(dc);
-                let dextra_val = (*offset as u32) - dist_base(dc);
-                bb.write_raw_bits_lsb(dextra_val, dextra);
-            }
-        }
-    }
-    let eod_code = ll_code_table.get(&256)
-        .ok_or("no LL code for end-of-data symbol 256")?;
-    bb.write_bit_string(eod_code);
-    let packed_bits = bb.finish();
-
-    // ── Assemble wire format ─────────────────────────────────────────────────
-    let mut ll_pairs: Vec<(u16, usize)> = ll_code_table.iter()
-        .map(|(&sym, code)| (sym, code.len()))
-        .collect();
-    ll_pairs.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
-
-    let mut dist_pairs: Vec<(u16, usize)> = dist_code_table.iter()
-        .map(|(&sym, code)| (sym, code.len()))
-        .collect();
-    dist_pairs.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
-
-    let mut out = Vec::with_capacity(
-        8 + 3 * ll_pairs.len() + 3 * dist_pairs.len() + packed_bits.len()
-    );
-    out.extend_from_slice(&(original_length as u32).to_be_bytes());
-    out.extend_from_slice(&(ll_pairs.len() as u16).to_be_bytes());
-    out.extend_from_slice(&(dist_pairs.len() as u16).to_be_bytes());
-
-    for (sym, len) in &ll_pairs {
-        out.extend_from_slice(&sym.to_be_bytes());
-        out.push(*len as u8);
-    }
-    for (sym, len) in &dist_pairs {
-        out.extend_from_slice(&sym.to_be_bytes());
-        out.push(*len as u8);
-    }
-    out.extend_from_slice(&packed_bits);
-
-    Ok(out)
+    Ok(bw.finish())
 }
 
 // ---------------------------------------------------------------------------
 // Public API: decompress
 // ---------------------------------------------------------------------------
 
-/// Decompress CMP05 wire-format `data` and return the original bytes.
+/// Decompress a raw RFC 1951 DEFLATE bit-stream and return the original bytes.
 ///
-/// Stops decoding at the end-of-data symbol (256). Copies are done byte-by-byte
-/// to correctly handle overlapping matches (where offset < length), which encode
-/// run-length sequences.
+/// This is an alias for [`inflate`]. Now that [`compress`] emits standard
+/// RFC 1951, the symmetric decode *is* the standard inflate — so `decompress`
+/// simply forwards, keeping the `compress`/`decompress` pair for callers that
+/// want the symmetric naming. `inflate` decodes all three block types (stored,
+/// fixed, and dynamic Huffman) and enforces the [`MAX_INFLATE_OUTPUT`] guard.
 pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
-    if data.len() < 8 {
-        return Err(format!("deflate: data too short: {} bytes", data.len()));
-    }
-
-    let original_length = u32::from_be_bytes([data[0], data[1], data[2], data[3]]) as usize;
-    let ll_entry_count = u16::from_be_bytes([data[4], data[5]]) as usize;
-    let dist_entry_count = u16::from_be_bytes([data[6], data[7]]) as usize;
-
-    if original_length == 0 {
-        return Ok(Vec::new());
-    }
-
-    let mut off = 8usize;
-
-    // Parse LL code-length table.
-    let mut ll_lengths: Vec<(u16, usize)> = Vec::with_capacity(ll_entry_count);
-    for _ in 0..ll_entry_count {
-        let sym = u16::from_be_bytes([data[off], data[off + 1]]);
-        let clen = data[off + 2] as usize;
-        ll_lengths.push((sym, clen));
-        off += 3;
-    }
-
-    // Parse dist code-length table.
-    let mut dist_lengths: Vec<(u16, usize)> = Vec::with_capacity(dist_entry_count);
-    for _ in 0..dist_entry_count {
-        let sym = u16::from_be_bytes([data[off], data[off + 1]]);
-        let clen = data[off + 2] as usize;
-        dist_lengths.push((sym, clen));
-        off += 3;
-    }
-
-    // Reconstruct canonical codes.
-    let ll_code_map = build_canonical_codes(&ll_lengths);
-    let dist_code_map = build_canonical_codes(&dist_lengths);
-    let ll_rev_map = reverse_code_map(&ll_code_map);
-    let dist_rev_map = reverse_code_map(&dist_code_map);
-
-    // Unpack bit stream.
-    let bits = unpack_bits(&data[off..]);
-    let mut bit_pos = 0usize;
-
-    let read_bits = |bits: &[u8], pos: &mut usize, n: u32| -> u32 {
-        let mut val = 0u32;
-        for i in 0..n {
-            val |= (bits[*pos] as u32) << i;
-            *pos += 1;
-        }
-        val
-    };
-
-    let next_huffman_symbol = |bits: &[u8], pos: &mut usize, rev_map: &HashMap<String, u16>| -> Result<u16, String> {
-        let mut acc = String::new();
-        loop {
-            if *pos >= bits.len() {
-                return Err("deflate: bit stream exhausted".to_string());
-            }
-            acc.push(if bits[*pos] == 1 { '1' } else { '0' });
-            *pos += 1;
-            if let Some(&sym) = rev_map.get(&acc) {
-                return Ok(sym);
-            }
-        }
-    };
-
-    // Decode token stream.
-    let mut output: Vec<u8> = Vec::with_capacity(original_length);
-    loop {
-        let ll_sym = next_huffman_symbol(&bits, &mut bit_pos, &ll_rev_map)?;
-
-        if ll_sym == 256 {
-            break; // end-of-data
-        } else if ll_sym < 256 {
-            output.push(ll_sym as u8);
-        } else {
-            // Length code 257–284.
-            let extra = length_extra(ll_sym);
-            let length = length_base(ll_sym) + read_bits(&bits, &mut bit_pos, extra);
-
-            let dist_sym = next_huffman_symbol(&bits, &mut bit_pos, &dist_rev_map)?;
-            let dextra = dist_extra(dist_sym);
-            let dist_offset = dist_base(dist_sym) + read_bits(&bits, &mut bit_pos, dextra);
-
-            // Copy byte-by-byte (supports overlapping matches).
-            let start = output.len() - dist_offset as usize;
-            for i in 0..length as usize {
-                let b = output[start + i];
-                output.push(b);
-            }
-        }
-    }
-
-    Ok(output)
+    inflate(data)
 }
 
 // ---------------------------------------------------------------------------
@@ -1168,8 +1004,16 @@ mod tests {
 
     fn roundtrip(data: &[u8]) {
         let compressed = compress(data).expect("compress failed");
+        // `decompress` is an alias for `inflate`; decode via `inflate` directly
+        // too, so this proves the output is standard RFC 1951 (any conforming
+        // decoder reads it) rather than a private compress/decompress pair.
         let decompressed = decompress(&compressed).expect("decompress failed");
         assert_eq!(decompressed, data, "roundtrip mismatch for {:?}", &data[..data.len().min(20)]);
+        assert_eq!(inflate(&compressed).expect("inflate failed"), data,
+            "compress output is not standard RFC 1951");
+        // The stream must start with a fixed-Huffman final-block header: the
+        // first three bits (LSB-first) are BFINAL=1, BTYPE=0b01 → 0b011 = 3.
+        assert_eq!(compressed[0] & 0b111, 0b011, "expected BFINAL=1, BTYPE=01 header");
     }
 
     #[test]
@@ -1194,22 +1038,17 @@ mod tests {
 
     #[test]
     fn test_all_literals_aaabbc() {
-        let data = b"AAABBC";
-        roundtrip(data);
-        let compressed = compress(data).unwrap();
-        let dist_count = u16::from_be_bytes([compressed[6], compressed[7]]);
-        assert_eq!(dist_count, 0, "no matches expected for AAABBC");
+        // Literal-heavy input: exercises the fixed LL codes (8/9-bit literals)
+        // and the end-of-block symbol. roundtrip() also asserts standard-RFC-1951
+        // decodability and the fixed-Huffman block header.
+        roundtrip(b"AAABBC");
     }
 
     #[test]
     fn test_one_match_aabcbbabc() {
-        let data = b"AABCBBABC";
-        roundtrip(data);
-        let compressed = compress(data).unwrap();
-        let orig_len = u32::from_be_bytes([compressed[0], compressed[1], compressed[2], compressed[3]]);
-        assert_eq!(orig_len, 9);
-        let dist_count = u16::from_be_bytes([compressed[6], compressed[7]]);
-        assert!(dist_count > 0, "expected a match in AABCBBABC");
+        // Input with a repeated "ABC" so LZSS emits a length/distance match:
+        // exercises the length code + extra bits + fixed 5-bit distance code path.
+        roundtrip(b"AABCBBABC");
     }
 
     #[test]
