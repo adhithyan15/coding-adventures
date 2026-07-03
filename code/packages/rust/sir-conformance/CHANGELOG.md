@@ -2,6 +2,38 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.2.0] - 2026-07-02
+
+### Added — corpus expansion (6 -> 11 programs) + three latent gaps found
+
+Broadened the conformance corpus to exercise loops, arrays, string methods,
+instance state, and mixins. Five new programs, all green on every backend:
+
+- `while_loop` — a `while` with a mutable accumulator (0+1+2+3+4 = 10).
+- `array_length` — array literal + `.length`.
+- `string_length` — `String#length`.
+- `counter_state` — `@ivar` state mutated across method calls (2).
+- `mixin_include` — a `module` mixed into a class via `include`.
+
+Verified locally: **11 corpus x 4 backends = 44 runs, 0 skipped, all agree.**
+
+### Found (documented, kept OUT of the corpus until fixed; see lessons.md)
+
+Expanding coverage immediately surfaced three real `case_eq`-style gaps — caught
+only because each backend is compared to the reference, not to backend-consensus:
+
+- **Frontend array/hash index** — `puts a[1]` mis-parses as `(puts a)[1]`,
+  `puts(a[1])` fails to parse, and `x = a[1]` fails SIR validation (index base
+  mis-scoped). Index-based programs are therefore excluded for now.
+- **JS string-method rename** — the JS backend renames Ruby method names to
+  native JS at emit time but is missing `upcase`/`downcase` → `NoMethodError`
+  on JS only.
+- **JS `or` builtin** — a multi-value `when 1, 2, 3` lowers to a
+  `BuiltinCall("or", …)` the JS runtime doesn't implement → `unknown builtin`.
+
+Each is tracked for a separate focused fix; adding a program that can't pass
+would only mask them.
+
 ## [0.1.0] - 2026-07-02
 
 ### Added — cross-backend golden conformance harness
