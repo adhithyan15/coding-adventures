@@ -2458,6 +2458,35 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_overset_underset_are_transparent_to_base() {
+        // `\overset{note}{base}` / `\underset{note}{base}` (and `\overbrace`/`\underbrace`) — an
+        // over/under annotation is a notational decoration, not an operation; the value is the
+        // base's. The adapter lowers Overset/Underset transparently to `base`, dropping the mark.
+        // `\overset{\text{sum}}{a + b}` with a=3, b=4 → 7 (the annotation is discarded).
+        let over = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(4)\n\
+             let answer = latex \"$\\overset{s}{a + b}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 7 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(over.ranked[0].posterior > 0.99, "{over:?}");
+        // `\underbrace{a * b}` (an Underset with a brace mark) with a=6, b=7 → 42.
+        let under = crate::compile_and_decide(
+            "observe a(6)\n\
+             observe b(7)\n\
+             let answer = latex \"$\\underbrace{a * b}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 42 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(under.ranked[0].posterior > 0.99, "{under:?}");
+    }
+
+    #[test]
     fn native_latex_subscripts_bind_as_distinct_variables() {
         // `x_i` / `x_1` / `V_{max}` — a subscript names a DISTINCT variable, not a computation.
         // The adapter mangles the subscript into a flat `base_sub` identifier that binds to a

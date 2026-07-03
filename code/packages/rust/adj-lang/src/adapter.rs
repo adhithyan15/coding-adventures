@@ -1246,6 +1246,19 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         // dimension and value flowing through the decoration unchanged. Pure adapter recognition:
         // no engine, AST, or lowering change — the accent simply disappears at adapt time.
         MathExpr::Accent { body, .. } => latex_math_to_expr_ast(body, source),
+        // `\overset{note}{base}` / `\underset{note}{base}` (and `\overbrace{base}` /
+        // `\underbrace{base}`, which parse as an `Overset`/`Underset` whose mark is a brace symbol) —
+        // an annotation placed OVER or UNDER a base. Like an accent, an over/under annotation is a
+        // NOTATIONAL decoration, not an operation: `\overbrace{a + b}^{\text{sum}}` labels the sum
+        // in prose but computes `a + b`, and `\underset{x \to 0}{\lim}`-style marks annotate without
+        // changing the base's value. So we lower `Overset`/`Underset` TRANSPARENTLY to the `base`,
+        // discarding the `over`/`under` mark — exactly as the `Accent` arm above drops its diacritic.
+        // The value and dimension flow through the annotation unchanged. Pure adapter recognition: no
+        // engine/AST/lowering change, and (like the accent arm) it recurses into a single strict
+        // sub-node, so no new deep-walk vector.
+        MathExpr::Overset { base, .. } | MathExpr::Underset { base, .. } => {
+            latex_math_to_expr_ast(base, source)
+        }
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),

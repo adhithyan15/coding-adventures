@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.40.0] - 2026-07-02 — over/under annotations (`\overset`, `\underset`, `\overbrace`, `\underbrace`) compute transparently in `latex "…"`
+
+### Added
+
+- `latex "\overset{note}{base}"`, `\underset{note}{base}`, `\overbrace{base}`, `\underbrace{base}` and
+  any other over/under annotation now **compute, lowering transparently to the `base`** and dropping
+  the annotation mark. Like an accent, an over/under mark is a notational decoration, not an
+  operation: `\overbrace{a + b}^{\text{sum}}` labels the sum in prose but computes `a + b`. Previously
+  these were an `UnsupportedLatexMath` error. (`\overline{x}`/`\underline{x}` already computed — they
+  parse as `Accent`, handled by the accent-transparent arm.) Pure adapter recognition — no engine,
+  AST, or lowering change; the arm recurses into the single `base` sub-node exactly like the accent
+  arm, so no new deep-walk vector. Note: `\sum`/`\prod`/`\int` (`MathExpr::BigOp`) remain unsupported —
+  a finite summation/product needs index-binding and bounded unrolling, a larger feature deferred to a
+  dedicated slice.
+
 ## [0.39.0] - 2026-07-02 — subscripted variables (`x_i`, `x_1`, `V_{max}`) bind as distinct names in `latex "…"`
 
 ### Added
