@@ -616,6 +616,11 @@ outcomes, receipt messages, deterministic receipt steps, nested
 `embedRuntimeActivationPlan`, and activation-receipt capability metadata so
 WebAssembly-backed product shells can record and replay runtime activation
 handoffs without recomputing the activation plan.
+Embed runtime activation receipt journals add stable journal and entry IDs,
+committed/deferred outcomes, deterministic journal steps, nested
+`embedRuntimeActivationReceipt`, and journal capability metadata so
+WebAssembly-backed product shells can append and replay activation receipt
+handoff records without recomputing receipt payloads.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
