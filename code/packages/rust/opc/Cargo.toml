@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-opc"
+version = "0.1.0"
+edition = "2021"
+description = "Open Packaging Conventions (OPC) package reader — opens .xlsx/.docx/.pptx ZIP packages, resolves content types, and parses/resolves relationships (OOXML milestone M2)"
+license = "MIT"
+
+[dependencies]
+zip = { path = "../zip" }
+coding-adventures-xml-parser = { path = "../xml-parser" }

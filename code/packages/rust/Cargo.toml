@@ -345,6 +345,7 @@ members = [
     "wasm-simulator",
     "xml-lexer",
     "xml-parser",
+    "opc",
     "arm1-gatelevel",
     "arm1-simulator",
     "immutable-list",
