@@ -1,0 +1,15 @@
+[package]
+name = "coding-adventures-pptx-writer"
+version = "0.1.0"
+edition = "2021"
+description = "PresentationML (.pptx) writer — turns a simple in-memory slide-deck model into valid .pptx bytes by generating the PresentationML parts (presentation, slides, slide master, slide layout, theme) and packaging them via opc-writer (OOXML milestone C3)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-opc-writer = { path = "../opc-writer" }
+
+[dev-dependencies]
+# Structural verification: re-open our output with this repo's OWN zero-dep
+# readers (the .pptx reader isn't on this branch, so we assert on the parts).
+zip = { path = "../zip" }
+coding-adventures-xml-parser = { path = "../xml-parser" }

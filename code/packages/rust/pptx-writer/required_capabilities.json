@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/pptx-writer",
+  "capabilities": [],
+  "justification": "Pure computation. Serializes an in-memory slide-deck model into .pptx bytes via opc-writer. No filesystem, network, process, or environment access needed."
+}

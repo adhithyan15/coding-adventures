@@ -352,6 +352,7 @@ members = [
     "opc",
     "opc-writer",
     "xlsx-writer",
+    "pptx-writer",
     "spreadsheetml",
     "wordprocessingml",
     "presentationml",
