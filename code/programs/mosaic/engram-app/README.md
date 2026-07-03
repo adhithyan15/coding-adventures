@@ -45,7 +45,10 @@ editing, and save/delete/cancel controls.
 - The generated Electron preload/main shell exposes those calls over
   context-isolated IPC channels and can delegate them to an optional
   `electron/host.ts` or `MOSAIC_ELECTRON_HOST_MODULE` host module. The
-  `engram-wasm` JS loader can serve that contract from the shared Rust facade.
+  `engram-wasm` JS loader can serve that contract from the shared Rust facade,
+  and Engram's Electron host handles Anki import/export intents with native
+  dialogs plus a native `engram-host-cli` sidecar that imports/exports APKG
+  files against the shared snapshot.
 - The generated XAML project shell has an optional `MosaicHost` hook. Engram's
   `host/xaml/MosaicHost.cs` implements it with `engram-capi`, hydrating the
   generated WinUI dependency properties from the shared Rust facade and routing
@@ -143,7 +146,8 @@ bridge sources during project emission. The script adds the JS loader and
 `engram_engine.wasm` for web/Electron shells, `Sources/CEngram` plus the static
 `engram-capi` library for SwiftUI, the dynamic `engram-capi` library for Qt,
 Flutter, and Compose, the Dart FFI dependency for the Flutter host bridge,
-JNA/JSON dependencies for the Compose host bridge, and `engram_capi.dll` as
-XAML project content. Collection actions such as Anki
-import/export return `hostIntent` payloads so hosts can open file pickers or
-save APKG bytes while keeping the Mosaic app interface shared.
+JNA/JSON dependencies for the Compose host bridge, `engram_capi.dll` as XAML
+project content, and `engram-host-cli` for the Electron APKG sidecar.
+Collection actions such as Anki import/export return `hostIntent` payloads so
+hosts can open file pickers, call native package bridges, and keep the Mosaic
+app interface shared.

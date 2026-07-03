@@ -13,7 +13,10 @@ protobuf metadata, zstd-compressed payloads, and protobuf media entries.
 `write_v11_collection_bytes_from_engram_state` generates a legacy/V11 SQLite
 collection from `engram-core::AppState`, while
 `write_legacy_apkg_from_engram_state` and `write_modern_apkg_from_engram_state`
-wrap that collection in legacy or modern APKG envelopes.
+wrap that collection in legacy or modern APKG envelopes. The V11 collection
+byte helpers serialize and deserialize SQLite databases in memory, keeping the
+same import/export path usable from native host bridges and sidecars without
+temporary files.
 
 It also parses legacy/V11 SQLite collection files into an owned Anki
 representation. `read_v11_collection` accepts APKG bytes, extracts
