@@ -77,7 +77,7 @@ Going with `mosaic-pkg-toolkit` until a better name surfaces.
 Standard userland package shape per UI29 §4.1:
 
 ```
-code/packages/mosaic-pkg-toolkit/
+code/packages/mosaic/mosaic-pkg-toolkit/
 ├── mosaic-package.toml             # manifest — lists every export
 ├── Cargo.toml                      # smoke-test harness only
 ├── README.md

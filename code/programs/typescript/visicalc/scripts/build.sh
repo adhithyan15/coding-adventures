@@ -51,7 +51,7 @@ echo "Compiling Grid..."
   --interface           "$REPO_ROOT/code/programs/mosaic/visicalc/Grid.mil" \
   --layout              "$REPO_ROOT/code/programs/mosaic/visicalc/Grid.desktop.mll" \
   --style               "$REPO_ROOT/code/programs/mosaic/visicalc/Grid.dark.msl" \
-  --package-search-path "$REPO_ROOT/code/packages" \
+  --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/Grid.tsx"
 
 echo "Compiling FormulaBar..."

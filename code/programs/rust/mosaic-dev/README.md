@@ -35,21 +35,21 @@ Arguments:
 ## Example
 
 ```bash
-mosaic-dev code/packages/mosaic-pkg-grid \
+mosaic-dev code/packages/mosaic/mosaic-pkg-grid \
     --backend react \
     --component Grid
 ```
 
 This will:
 
-1. Read `code/packages/mosaic-pkg-grid/mosaic-package.toml`.
+1. Read `code/packages/mosaic/mosaic-pkg-grid/mosaic-package.toml`.
 2. Build the package for React into a temp dir (`<tmp>/react/Grid.tsx`,
    etc.).
 3. Auto-generate `<tmp>/main.tsx` and `<tmp>/index.html` that mount the
    `<Grid>` component with dummy props derived from `Grid.mil`.
 4. Launch `npx vite` against the temp dir on port `5173`.
 5. Open `http://127.0.0.1:5173` in your browser.
-6. Watch `code/packages/mosaic-pkg-grid/src/` and re-build on every
+6. Watch `code/packages/mosaic/mosaic-pkg-grid/src/` and re-build on every
    `.mil` / `.mll` / `.msl` change.
 
 ## Backends

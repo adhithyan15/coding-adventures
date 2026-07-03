@@ -86,7 +86,7 @@ echo "Compiling Grid (Qt / QML)..."
   --interface           "$SRC/Grid.mil" \
   --layout              "$SRC/Grid.desktop.mll" \
   --style               "$SRC/Grid.dark.msl" \
-  --package-search-path "$REPO_ROOT/code/packages" \
+  --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/Grid.qml"
 
 echo "Building the spreadsheet engine (Rust → static lib) and vendoring it..."

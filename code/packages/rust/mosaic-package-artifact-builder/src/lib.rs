@@ -72,7 +72,7 @@
 //! use mosaic_package_artifact_builder::{build_package, BuildOptions, Backend};
 //!
 //! let opts = BuildOptions {
-//!     package_root: PathBuf::from("code/packages/mosaic-pkg-grid"),
+//!     package_root: PathBuf::from("code/packages/mosaic/mosaic-pkg-grid"),
 //!     output_root:  PathBuf::from("/tmp/mosaic-pkg-grid-dist"),
 //!     backend:      Backend::React,
 //!     emit_project: false,

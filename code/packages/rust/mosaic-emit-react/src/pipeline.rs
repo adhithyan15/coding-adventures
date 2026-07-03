@@ -938,7 +938,7 @@ fn emit_jsx_tree(
 
     // `Grid`, `Cell`, and `Column` are intentionally NOT primitives in
     // this emitter — they are userland-package primitives exported by
-    // `code/packages/mosaic-pkg-grid` (built from UI29 kernel
+    // `code/packages/mosaic/mosaic-pkg-grid` (built from UI29 kernel
     // primitives like HostTable / HostInput / HostButton).  Layouts
     // that reference these tags resolve through the package-resolver
     // path (`mosaic-compile --package-manifest <path>`); an unresolved

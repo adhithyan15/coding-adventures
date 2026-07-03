@@ -108,7 +108,7 @@ echo "Compiling Grid (Compose / Kotlin)..."
   --interface           "$SRC/Grid.mil" \
   --layout              "$SRC"   --variant desktop \
   --style               "$SRC/Grid.dark.msl" \
-  --package-search-path "$REPO_ROOT/code/packages" \
+  --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/Grid.kt"
 
 # Match the FormulaBar package-prefix shim — mosaic-emit-compose
