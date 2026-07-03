@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Preserved Engram Anki import/export host-side error details in Qt, SwiftUI,
+  and Compose `hostResult` statuses so generated shells show actionable read,
+  import, export, and write failures instead of generic status text.
 - Wired the generated HTML, WebComponent, and React Engram web hosts to handle
   Anki import/export `hostIntent` payloads with browser file input/download
   helpers and the `engram-wasm` APKG byte API, surfacing `hostResult` errors

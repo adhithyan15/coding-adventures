@@ -66,7 +66,7 @@ class MosaicHost {
             ?: return hostResultResponse(response, hostIntent, "cancelled")
         val bytes = runCatching { file.readBytes() }.getOrElse {
             println("Engram Compose MosaicHost could not read Anki package: ${it.message}")
-            return hostResultResponse(response, hostIntent, "read-error", file.path)
+            return hostResultResponse(response, hostIntent, "read-error", file.path, it.message)
         }
 
         val imported = hostResponseFromJson(
@@ -74,7 +74,7 @@ class MosaicHost {
         )
         if (imported.containsKey("error")) {
             println("Engram Compose MosaicHost could not import Anki package: ${imported["error"]}")
-            return hostResultResponse(response, hostIntent, "import-error", file.path)
+            return hostResultResponse(response, hostIntent, "import-error", file.path, imported["error"])
         }
 
         persistSnapshot()
@@ -104,16 +104,23 @@ class MosaicHost {
         val exported = runCatching { JSONObject(takeCString(api.eg_export_anki_apkg(handle), api)) }
             .getOrElse {
                 println("Engram Compose MosaicHost could not parse exported Anki package: ${it.message}")
-                return hostResultResponse(response, hostIntent, "export-error", outputFile.path)
+                return hostResultResponse(response, hostIntent, "export-error", outputFile.path, it.message)
             }
         if (!exported.optBoolean("ok", true)) {
-            println("Engram Compose MosaicHost could not export Anki package: ${jsonValue(exported.opt("error"))}")
-            return hostResultResponse(response, hostIntent, "export-error", outputFile.path)
+            val error = jsonValue(exported.opt("error"))
+            println("Engram Compose MosaicHost could not export Anki package: $error")
+            return hostResultResponse(response, hostIntent, "export-error", outputFile.path, error)
         }
 
         val bytes = jsonByteArray(exported, "apkg")
         if (bytes.isEmpty()) {
-            return hostResultResponse(response, hostIntent, "export-error", outputFile.path)
+            return hostResultResponse(
+                response,
+                hostIntent,
+                "export-error",
+                outputFile.path,
+                "Engram native host returned an empty APKG"
+            )
         }
 
         val wrote = runCatching {
@@ -122,7 +129,13 @@ class MosaicHost {
         }
         if (wrote.isFailure) {
             println("Engram Compose MosaicHost could not save Anki package: ${wrote.exceptionOrNull()?.message}")
-            return hostResultResponse(response, hostIntent, "write-error", outputFile.path)
+            return hostResultResponse(
+                response,
+                hostIntent,
+                "write-error",
+                outputFile.path,
+                wrote.exceptionOrNull()?.message
+            )
         }
 
         return hostResultResponse(response, hostIntent, "exported", outputFile.path)
@@ -257,13 +270,17 @@ class MosaicHost {
         response: Map<String, Any?>,
         hostIntent: Map<*, *>,
         status: String,
-        path: String? = null
+        path: String? = null,
+        error: Any? = null
     ): Map<String, Any?> {
         val out = response.toMutableMap()
         out["hostIntent"] = jsonMap(hostIntent)
         val hostResult = mutableMapOf<String, Any?>("status" to status)
         if (!path.isNullOrBlank()) {
             hostResult["path"] = path
+        }
+        if (error != null && error.toString().isNotBlank()) {
+            hostResult["error"] = error.toString()
         }
         out["hostResult"] = hostResult
         return withHostStatusProps(out, hostResult)
@@ -307,29 +324,38 @@ class MosaicHost {
 
     private fun hostStatusMessage(hostResult: Map<String, Any?>, status: String): String {
         val file = hostResultFile(hostResult)
+        val error = hostResult["error"]?.toString().orEmpty()
         return when (status) {
             "imported" -> if (file.isBlank()) "Anki package imported." else "Imported $file."
             "exported" -> if (file.isBlank()) "Anki package exported." else "Saved $file."
             "cancelled" -> "No Anki package was selected."
             "read-error" -> if (file.isBlank()) {
-                "Could not read the selected file."
+                if (error.isBlank()) "Could not read the selected file." else "Could not read the selected file: $error"
             } else {
-                "Could not read $file."
+                if (error.isBlank()) "Could not read $file." else "Could not read $file: $error"
             }
             "import-error" -> if (file.isBlank()) {
-                "Could not import the selected package."
+                if (error.isBlank()) "Could not import the selected package." else "Could not import the selected package: $error"
             } else {
-                "Could not import $file."
+                if (error.isBlank()) "Could not import $file." else "Could not import $file: $error"
             }
-            "export-error" -> "Could not export Anki package."
-            "write-error" -> if (file.isBlank()) {
-                "Could not save the Anki package."
+            "export-error" -> if (error.isBlank()) {
+                "Could not export Anki package."
             } else {
-                "Could not save $file."
+                "Could not export Anki package: $error"
+            }
+            "write-error" -> if (file.isBlank()) {
+                if (error.isBlank()) "Could not save the Anki package." else "Could not save the Anki package: $error"
+            } else {
+                if (error.isBlank()) "Could not save $file." else "Could not save $file: $error"
             }
             "unavailable" -> "Engram native host is unavailable."
             "unsupported" -> "This host does not support native Anki file dialogs yet."
-            else -> if (file.isBlank()) status else file
+            else -> if (error.isBlank()) {
+                if (file.isBlank()) status else file
+            } else {
+                error
+            }
         }
     }
 

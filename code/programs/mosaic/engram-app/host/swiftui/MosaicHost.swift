@@ -156,12 +156,14 @@ import AppKit
             }
             guard let imported = decodeJsonObject(json),
                   (imported["ok"] as? Bool) != false else {
-                print("Engram Anki import failed: \(decodeJsonObject(json)?["error"] ?? "unknown error")")
+                let error = decodeJsonObject(json)?["error"] as? String ?? "unknown error"
+                print("Engram Anki import failed: \(error)")
                 return hostResultResponse(
                     response,
                     hostIntent: hostIntent,
                     status: "import-error",
-                    path: url.path)
+                    path: url.path,
+                    error: error)
             }
 
             persistSnapshot()
@@ -179,7 +181,8 @@ import AppKit
                 response,
                 hostIntent: hostIntent,
                 status: "read-error",
-                path: url.path)
+                path: url.path,
+                error: String(describing: error))
         }
         #else
         return hostResultResponse(response, hostIntent: hostIntent, status: "unsupported")
@@ -202,12 +205,14 @@ import AppKit
         let json = takeCString(eg_export_anki_apkg(session))
         guard let root = decodeJsonObject(json),
               (root["ok"] as? Bool) != false else {
-            print("Engram Anki export failed: \(decodeJsonObject(json)?["error"] ?? "unknown error")")
+            let error = decodeJsonObject(json)?["error"] as? String ?? "unknown error"
+            print("Engram Anki export failed: \(error)")
             return hostResultResponse(
                 response,
                 hostIntent: hostIntent,
                 status: "export-error",
-                path: url.path)
+                path: url.path,
+                error: error)
         }
 
         let data = jsonByteArray(root, property: "apkg")
@@ -216,7 +221,8 @@ import AppKit
                 response,
                 hostIntent: hostIntent,
                 status: "export-error",
-                path: url.path)
+                path: url.path,
+                error: "Engram native host returned an empty APKG")
         }
 
         do {
@@ -232,7 +238,8 @@ import AppKit
                 response,
                 hostIntent: hostIntent,
                 status: "write-error",
-                path: url.path)
+                path: url.path,
+                error: String(describing: error))
         }
         #else
         return hostResultResponse(response, hostIntent: hostIntent, status: "unsupported")
@@ -243,13 +250,17 @@ import AppKit
         _ response: [String: Any],
         hostIntent: [String: Any],
         status: String,
-        path: String? = nil
+        path: String? = nil,
+        error: String? = nil
     ) -> NSDictionary {
         var out = response
         out["hostIntent"] = hostIntent
         var hostResult: [String: Any] = ["status": status]
         if let path, !path.isEmpty {
             hostResult["path"] = path
+        }
+        if let error, !error.isEmpty {
+            hostResult["error"] = error
         }
         out["hostResult"] = hostResult
         return withHostStatusProps(out, hostResult: hostResult)
@@ -305,6 +316,7 @@ import AppKit
 
     private func hostStatusMessage(_ hostResult: [String: Any], status: String) -> String {
         let file = hostResultFile(hostResult)
+        let error = hostResult["error"] as? String ?? ""
         switch status {
         case "imported":
             return file.isEmpty ? "Anki package imported." : "Imported \(file)."
@@ -313,19 +325,22 @@ import AppKit
         case "cancelled":
             return "No Anki package was selected."
         case "read-error":
-            return file.isEmpty ? "Could not read the selected file." : "Could not read \(file)."
+            let subject = file.isEmpty ? "the selected file" : file
+            return error.isEmpty ? "Could not read \(subject)." : "Could not read \(subject): \(error)"
         case "import-error":
-            return file.isEmpty ? "Could not import the selected package." : "Could not import \(file)."
+            let subject = file.isEmpty ? "the selected package" : file
+            return error.isEmpty ? "Could not import \(subject)." : "Could not import \(subject): \(error)"
         case "export-error":
-            return "Could not export Anki package."
+            return error.isEmpty ? "Could not export Anki package." : "Could not export Anki package: \(error)"
         case "write-error":
-            return file.isEmpty ? "Could not save the Anki package." : "Could not save \(file)."
+            let subject = file.isEmpty ? "the Anki package" : file
+            return error.isEmpty ? "Could not save \(subject)." : "Could not save \(subject): \(error)"
         case "unavailable":
             return "Engram native host is unavailable."
         case "unsupported":
             return "This host does not support native Anki file dialogs yet."
         default:
-            return file.isEmpty ? status : file
+            return error.isEmpty ? (file.isEmpty ? status : file) : error
         }
     }
 

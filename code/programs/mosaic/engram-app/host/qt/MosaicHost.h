@@ -45,7 +45,8 @@ private:
       const QVariantMap &response,
       const QVariantMap &hostIntent,
       const QString &status,
-      const QString &path = QString()) const;
+      const QString &path = QString(),
+      const QString &error = QString()) const;
   QVariantMap withHostStatusProps(QVariantMap response, const QVariantMap &hostResult) const;
   QVariantMap hostStatusProps(const QVariantMap &hostResult) const;
   QString hostStatusLabel(const QString &status) const;

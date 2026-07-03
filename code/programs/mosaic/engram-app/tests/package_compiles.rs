@@ -2635,6 +2635,9 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_host, "eg_load_snapshot");
     assert_contains(&swiftui_host, "withHostStatusProps");
     assert_contains(&swiftui_host, "\"host-status-visible\": true");
+    assert_contains(&swiftui_host, "hostResult[\"error\"] = error");
+    assert_contains(&swiftui_host, "Could not import \\(subject): \\(error)");
+    assert_contains(&swiftui_host, "Could not export Anki package: \\(error)");
 
     let qt_host = fs::read_to_string(package_root().join("host/qt/MosaicHost.cpp"))
         .expect("qt host template");
@@ -2659,6 +2662,9 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "eg_load_snapshot");
     assert_contains(&qt_host, "withHostStatusProps");
     assert_contains(&qt_host, "QStringLiteral(\"hostStatusVisible\")");
+    assert_contains(&qt_host, "hostResult.insert(QStringLiteral(\"error\"), error)");
+    assert_contains(&qt_host, "Could not import %1: %2");
+    assert_contains(&qt_host, "Could not export Anki package: %1");
 
     let compose_host = fs::read_to_string(package_root().join("host/compose/MosaicHost.kt"))
         .expect("compose host template");
@@ -2684,6 +2690,9 @@ fn source_tree_has_expected_shape() {
     assert_contains(&compose_host, "eg_load_snapshot");
     assert_contains(&compose_host, "withHostStatusProps");
     assert_contains(&compose_host, "\"host-status-visible\" to true");
+    assert_contains(&compose_host, "hostResult[\"error\"] = error.toString()");
+    assert_contains(&compose_host, "Could not import $file: $error");
+    assert_contains(&compose_host, "Could not export Anki package: $error");
 
     let flutter_host = fs::read_to_string(package_root().join("host/flutter/mosaic_host.dart"))
         .expect("flutter host template");
