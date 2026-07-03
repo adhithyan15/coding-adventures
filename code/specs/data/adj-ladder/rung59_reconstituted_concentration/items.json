@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 59 \u2014 reconstituted drug concentration from four stated quantities (a NEW panel: oncology infusion pharmacy). From a strength per vial and a vial count (their product is the total drug mass) and a labelled bag volume and an un-deliverable overfill (their difference is the net deliverable volume), compute the delivered concentration ((vial_strength*vial_count)/(total_volume-overfill_volume)), the total mass (vial_strength*vial_count), or the net volume (total_volume-overfill_volume). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT OVER A DIFFERENCE (a*b)/(c-d), the first on the ladder to divide a product by a difference (distinct from rung-58 product-over-sum (a*b)/(c+d) and rung-15 product-over-product (a*b)/(c*d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, - and / \u2014 no constant leaks, and neither the total mass, the net volume, nor any concentration figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: breaking the grouping so the mass divides only the labelled volume ((a*b)/c-d, not (a*b)/(c-d)), and dividing by the labelled volume alone ((a*b)/c). The core confusion tested is dividing a product by a grouped difference.",
+  "items": [
+    {
+      "id": "r59conc-01",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 2 vials of 200 mg each, in a bag labelled 50 mL of which 5 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(200)\nobserve vial_count(2)\nobserve total_volume(50)\nobserve overfill_volume(5)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.88888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r59conc-02",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 2 vials of 200 mg each, in a bag labelled 50 mL of which 5 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(200)\nobserve vial_count(2)\nobserve total_volume(50)\nobserve overfill_volume(5)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.88888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r59conc-03",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 2 vials of 200 mg each, in a bag labelled 50 mL of which 5 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(200)\nobserve vial_count(2)\nobserve total_volume(50)\nobserve overfill_volume(5)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.88888888888889,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r59conc-04",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 3 vials of 100 mg each, in a bag labelled 60 mL of which 4 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(100)\nobserve vial_count(3)\nobserve total_volume(60)\nobserve overfill_volume(4)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.357142857142857,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r59conc-05",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 3 vials of 100 mg each, in a bag labelled 60 mL of which 4 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(100)\nobserve vial_count(3)\nobserve total_volume(60)\nobserve overfill_volume(4)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.357142857142857,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 300,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r59conc-06",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 3 vials of 100 mg each, in a bag labelled 60 mL of which 4 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(100)\nobserve vial_count(3)\nobserve total_volume(60)\nobserve overfill_volume(4)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 56,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.357142857142857,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r59conc-07",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 6 vials of 50 mg each, in a bag labelled 40 mL of which 5 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(50)\nobserve vial_count(6)\nobserve total_volume(40)\nobserve overfill_volume(5)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r59conc-08",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 6 vials of 50 mg each, in a bag labelled 40 mL of which 5 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(50)\nobserve vial_count(6)\nobserve total_volume(40)\nobserve overfill_volume(5)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r59conc-09",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 6 vials of 50 mg each, in a bag labelled 40 mL of which 5 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(50)\nobserve vial_count(6)\nobserve total_volume(40)\nobserve overfill_volume(5)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 8.571428571428571,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 7.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r59conc-10",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 5 vials of 80 mg each, in a bag labelled 50 mL of which 6 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(80)\nobserve vial_count(5)\nobserve total_volume(50)\nobserve overfill_volume(6)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 8.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 9.090909090909092,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r59conc-11",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 5 vials of 80 mg each, in a bag labelled 50 mL of which 6 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(80)\nobserve vial_count(5)\nobserve total_volume(50)\nobserve overfill_volume(6)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 9.090909090909092,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r59conc-12",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 5 vials of 80 mg each, in a bag labelled 50 mL of which 6 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(80)\nobserve vial_count(5)\nobserve total_volume(50)\nobserve overfill_volume(6)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.090909090909092,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 44,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r59conc-13",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 3 vials of 120 mg each, in a bag labelled 80 mL of which 4 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(120)\nobserve vial_count(3)\nobserve total_volume(80)\nobserve overfill_volume(4)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 76,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4.7368421052631575,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r59conc-14",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 3 vials of 120 mg each, in a bag labelled 80 mL of which 4 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(120)\nobserve vial_count(3)\nobserve total_volume(80)\nobserve overfill_volume(4)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.7368421052631575,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 76,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r59conc-15",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 3 vials of 120 mg each, in a bag labelled 80 mL of which 4 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(120)\nobserve vial_count(3)\nobserve total_volume(80)\nobserve overfill_volume(4)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.7368421052631575,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 76,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r59conc-16",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 4 vials of 90 mg each, in a bag labelled 45 mL of which 6 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(90)\nobserve vial_count(4)\nobserve total_volume(45)\nobserve overfill_volume(6)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.23076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 39,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r59conc-17",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 4 vials of 90 mg each, in a bag labelled 45 mL of which 6 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(90)\nobserve vial_count(4)\nobserve total_volume(45)\nobserve overfill_volume(6)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.23076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 39,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r59conc-18",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 4 vials of 90 mg each, in a bag labelled 45 mL of which 6 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(90)\nobserve vial_count(4)\nobserve total_volume(45)\nobserve overfill_volume(6)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 9.23076923076923,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 39,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 8.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r59conc-19",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 2 vials of 250 mg each, in a bag labelled 100 mL of which 4 mL is un-deliverable overfill. What is the the delivered concentration (the total drug mass over the net deliverable volume)?",
+      "program": "observe vial_strength(250)\nobserve vial_count(2)\nobserve total_volume(100)\nobserve overfill_volume(4)\nlet answer = (vial_strength * vial_count) / (total_volume - overfill_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.208333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r59conc-20",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 2 vials of 250 mg each, in a bag labelled 100 mL of which 4 mL is un-deliverable overfill. What is the the total drug mass (strength per vial times the number of vials)?",
+      "program": "observe vial_strength(250)\nobserve vial_count(2)\nobserve total_volume(100)\nobserve overfill_volume(4)\nlet answer = vial_strength * vial_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5.208333333333333,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 500,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r59conc-21",
+      "qtype": "reconstituted_concentration",
+      "stem": "A chemotherapy bag is prepared from 2 vials of 250 mg each, in a bag labelled 100 mL of which 4 mL is un-deliverable overfill. What is the the net deliverable volume (labelled volume minus the overfill)?",
+      "program": "observe vial_strength(250)\nobserve vial_count(2)\nobserve total_volume(100)\nobserve overfill_volume(4)\nlet answer = total_volume - overfill_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 96,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5.208333333333333,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
