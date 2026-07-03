@@ -1,5 +1,39 @@
 # Changelog — `twig-aot`
 
+## 0.26.0 — 2026-07-03 — E4-dyn E4d-1: runtime string helpers
+
+First step of the **E4-dyn** arc (`code/specs/lang-full-e4-dyn-strings.md`):
+runtime (non-literal) strings on the static backends. This PR lands the
+**runtime C helpers** — the shared substrate the LLVM/WASM/native backends will
+lower to in E4d-2…4 — without touching any backend yet.
+
+Added to `runtime/twig_runtime.c`, all operating on the **same length-prefixed
+heap block E5 arrays use** (`offset 0: int64_t length`, `offset 8: bytes`) via
+`__twig_alloc_bytes`:
+
+| helper | semantics |
+|--------|-----------|
+| `__twig_str_len(s)` | byte length (offset-0 header); null/corrupt → 0 |
+| `__twig_str_concat(a,b)` | fresh block = a's bytes then b's; null operand = empty; overflow/OOM `abort()` |
+| `__twig_str_slice(s,start,end)` | fresh block = bytes `[start,end)`; **traps** (`abort()`) on out-of-range or backwards range (E4 bounds contract) |
+| `__twig_str_index(s,i)` | unsigned byte `0..255` at `i`; **traps** on out-of-range |
+| `__twig_str_cmp(a,b)` | lexicographic byte compare → `-1/0/1`; shorter string is "less" on a tie |
+
+Every producing helper allocates a **fresh** block and copies — it never writes
+through an operand handle, upholding E4's immutable-value contract. Null/corrupt
+handles are guarded (a negative length header is treated as empty, never a
+size_t over-read), matching the existing `__twig_str_eq`. `__twig_str_eq`
+already reads these blocks and is unchanged.
+
+**Tests** (`tests/e4d_str_helpers.rs`, Unix-gated): a C driver compiled with the
+runtime via the system `cc` validates concat/len/slice/index/cmp on valid inputs
+(incl. empty operands, boundary slices, unsigned-byte index, and operand
+immutability), plus three trap cases (out-of-range index, out-of-range slice,
+backwards slice range) that must `abort()`.
+
+No backend or IIR change; the static-backend lowering that calls these helpers
+is E4d-2 (LLVM), E4d-3 (WASM), E4d-4 (native). VM/JIT already run runtime strings.
+
 ## 0.25.0 — 2026-07-01 — TWIG-GC: conservative mark-and-sweep GC for native AOT
 
 **TWIG-GC** (native-aot-substrate Layer 1, `code/specs/native-aot-substrate.md`):
