@@ -1,0 +1,16 @@
+[package]
+name = "xls-writer"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-third-party-dependency writer for the legacy .xls / BIFF8 spreadsheet format ([MS-XLS]): emits BIFF records and wraps them in an OLE2 Compound File via cfb-writer. Milestone C4 (legacy write)."
+license = "MIT"
+
+[dependencies]
+# The OLE2 container writer. This crate builds the `Workbook` BIFF stream and
+# hands it to cfb-writer to be wrapped into the final .xls file.
+cfb-writer = { path = "../cfb-writer" }
+
+[dev-dependencies]
+# The reader, used to prove our output round-trips: open the .xls we wrote,
+# extract the Workbook stream, and re-parse the BIFF records.
+cfb = { path = "../cfb" }

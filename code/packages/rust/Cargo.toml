@@ -30,6 +30,7 @@ members = [
     "ppt",
     "doc",
     "cfb-writer",
+    "xls-writer",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
