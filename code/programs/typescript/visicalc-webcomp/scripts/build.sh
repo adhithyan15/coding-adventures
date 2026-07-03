@@ -68,7 +68,7 @@ echo "Compiling Grid (WebComponent)..."
   --interface           "$SRC/Grid.mil" \
   --layout              "$SRC/Grid.desktop.mll" \
   --style               "$SRC/Grid.dark.msl" \
-  --package-search-path "$REPO_ROOT/code/packages" \
+  --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/Grid.js"
 
 echo "Done. Generated:"

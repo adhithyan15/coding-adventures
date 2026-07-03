@@ -1,7 +1,7 @@
 # toolkit-xaml-showcase — static visual preview of the Bootstrap-shape toolkit
 
 A browser-openable visual tour of every component shipped in
-`code/packages/mosaic-pkg-toolkit`. The CSS here is a hand-tuned
+`code/packages/mosaic/mosaic-pkg-toolkit`. The CSS here is a hand-tuned
 approximation of each component's `.light.msl` so the static page
 is faithful to what the real Mosaic-rendered output looks like.
 
@@ -14,7 +14,7 @@ WinUI 3 window built from auto-emitted `mosaic-emit-xaml` XAML.
 
 ```
 mosaic/        — copies of all 20 toolkit components' .mil/.mll/.light.msl
-                  triples (from code/packages/mosaic-pkg-toolkit/src/)
+                  triples (from code/packages/mosaic/mosaic-pkg-toolkit/src/)
 preview.html   — open in any browser to SEE the full catalog rendered
 README.md      — this file
 ```
@@ -49,7 +49,7 @@ mosaic-compile --backend xaml \
 
 # Or the whole package at once for React / SwiftUI / Qt
 mosaic-compile pkg --backend react --output out/ \
-  code/packages/mosaic-pkg-toolkit/
+  code/packages/mosaic/mosaic-pkg-toolkit/
 ```
 
 ## Component inventory

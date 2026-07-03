@@ -35,9 +35,9 @@ exits 1 silently.
 
 ```sh
 mosaic-compile --backend xaml \
-  --interface code/packages/mosaic-pkg-toolkit/src/Button.mil \
-  --layout    code/packages/mosaic-pkg-toolkit/src/Button.mll \
-  --style     code/packages/mosaic-pkg-toolkit/src/Button.light.msl \
+  --interface code/packages/mosaic/mosaic-pkg-toolkit/src/Button.mil \
+  --layout    code/packages/mosaic/mosaic-pkg-toolkit/src/Button.mll \
+  --style     code/packages/mosaic/mosaic-pkg-toolkit/src/Button.light.msl \
   --output    Button.xaml
 ```
 

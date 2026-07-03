@@ -11,7 +11,7 @@ toolkit lowers cleanly to real native UI — not just abstract markup.
 ## What's here
 
 ```
-mosaic/                    — toolkit sources (copies of code/packages/mosaic-pkg-toolkit/src/)
+mosaic/                    — toolkit sources (copies of code/packages/mosaic/mosaic-pkg-toolkit/src/)
   Button.mil, .mll, .light.msl
   Alert.mil,  .mll, .light.msl
   Badge.mil,  .mll, .light.msl

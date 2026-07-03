@@ -13,7 +13,7 @@ The review card composes further Mosaic packages such as
 `mosaic-pkg-rating-controls`; Engram does not fork those components into the app
 package.
 
-Reusable UI components should live under `code/packages/mosaic-pkg-*`. Engram
+Reusable UI components should live under `code/packages/mosaic/mosaic-pkg-*`. Engram
 itself should grow here as an app package that composes those components and
 binds them to the shared Rust business logic core through host shells.
 `mosaic-pkg-note-editor` provides the reusable focused-field note editor

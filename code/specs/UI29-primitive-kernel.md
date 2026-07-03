@@ -269,12 +269,12 @@ just two more primitive names.
 
 ### 4.1 Package shape
 
-A component package lives at `code/packages/mosaic-pkg-{name}/` and
+A component package lives at `code/packages/mosaic/mosaic-pkg-{name}/` and
 follows the same three-file convention as a normal Mosaic component,
 plus a manifest:
 
 ```
-code/packages/mosaic-pkg-grid/
+code/packages/mosaic/mosaic-pkg-grid/
 ├── mosaic-package.toml        // manifest
 ├── README.md
 ├── CHANGELOG.md
@@ -292,6 +292,11 @@ code/packages/mosaic-pkg-grid/
 └── tests/
     └── grid_compiles_to_react.rs  // smoke test per backend
 ```
+
+(All `mosaic-pkg-*` component packages live grouped under `code/packages/mosaic/` —
+previously they sat directly under `code/packages/`, alongside the per-language
+directories like `code/packages/rust/`; they were moved into their own directory
+for the same reason every other same-topic package family gets one.)
 
 ### 4.2 Manifest
 

@@ -63,7 +63,7 @@
 // carries one `<td>` containing the row's text. A v2 Grid extending
 // viewport-rows to `list<list<text>>` would let the inner For iterate
 // columns; that is a separate change (matches the v0.1.0 caveat in
-// `packages/mosaic-pkg-grid/src/Grid.mll`).
+// `packages/mosaic/mosaic-pkg-grid/src/Grid.mll`).
 //
 // Part names ("root", "cell-grid") still map to mosstyle selectors so
 // the .msl file can provide scoped visual styles. `.mos-Grid-cell-grid`

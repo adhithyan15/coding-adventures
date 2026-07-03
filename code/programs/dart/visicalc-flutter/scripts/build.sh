@@ -93,7 +93,7 @@ echo "Compiling Grid (Flutter)..."
   --interface           "$SRC/Grid.mil" \
   --layout              "$SRC/Grid.desktop.mll" \
   --style               "$SRC/Grid.dark.msl" \
-  --package-search-path "$REPO_ROOT/code/packages" \
+  --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/grid.dart"
 
 echo "Building the spreadsheet engine (Rust → dynamic lib) and vendoring it..."

@@ -1,0 +1,38 @@
+# Cargo.toml — smoke-test harness for mosaic-pkg-toolkit.
+#
+# This package's primary deliverables are .mil / .mll / .msl source
+# files (consumed by mosaic-compile and downstream emitters), NOT a
+# Rust crate. The Cargo.toml exists ONLY to host an integration smoke
+# test that runs each source file through its respective compiler crate
+# and asserts the whole package round-trips at the language-frontend
+# layer.
+#
+# `[workspace]` is empty so this Cargo project does NOT join the main
+# code/packages/rust workspace. It lives at
+# code/packages/mosaic/mosaic-pkg-toolkit (outside the rust/ tree), is
+# conceptually a Mosaic package (not a Rust crate), and runs as a
+# standalone Cargo project via `cargo test`.
+
+[workspace]
+# Intentionally empty: opt out of the parent workspace.
+
+[package]
+name        = "mosaic-pkg-toolkit-smoke"
+version     = "0.1.0"
+edition     = "2021"
+description = "Smoke-test harness for the mosaic-pkg-toolkit component package"
+publish     = false
+
+# The crate has no library code — it exists for the integration test below.
+[lib]
+path = "src/lib.rs"
+
+[dev-dependencies]
+mosmodel-compiler   = { path = "../../rust/mosmodel-compiler" }
+moslayout-compiler  = { path = "../../rust/moslayout-compiler" }
+mosstyle-compiler   = { path = "../../rust/mosstyle-compiler" }
+toml                = "0.8"
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"

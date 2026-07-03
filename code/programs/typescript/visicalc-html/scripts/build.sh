@@ -98,7 +98,7 @@ for theme in dark light; do
     --interface           "$SRC/Grid.mil" \
     --layout              "$SRC/Grid.desktop.mll" \
     --style               "$SRC/Grid.$theme.msl" \
-    --package-search-path "$REPO_ROOT/code/packages" \
+    --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
     -o "$OUT_DIR/Grid.$theme.html"
 done
 # Back-compat alias for the pre-switcher filename.

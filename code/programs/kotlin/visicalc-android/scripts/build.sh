@@ -52,7 +52,7 @@ generate() {
     --interface           "$SRC/${name}.mil" \
     --layout              "$layout" \
     --style               "$SRC/${name}.dark.msl" \
-    --package-search-path "$REPO_ROOT/code/packages" \
+    --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
     -o "$OUT_DIR/${name}.kt"
 
   local tmp="$OUT_DIR/${name}.kt.tmp"
@@ -84,7 +84,7 @@ echo "Compiling FormulaBar (Compose / Android, touch)..."
   --interface           "$SRC/FormulaBar.mil" \
   --layout              "$SRC/FormulaBar.touch.mll" \
   --style               "$SRC/FormulaBar.dark.msl" \
-  --package-search-path "$REPO_ROOT/code/packages" \
+  --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/FormulaBarTouch.kt.raw"
 {
   echo "// THIS FILE IS GENERATED.  Edit FormulaBar.{mil,touch.mll,dark.msl}"

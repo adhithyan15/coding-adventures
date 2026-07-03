@@ -679,19 +679,24 @@ fn run_pipeline(
     // (every pre-UI34 demo) are byte-identical to before.
     //
     // Search paths: explicit `--package-search-path` wins; otherwise
-    // we default to `code/packages/` relative to the cwd, which makes
-    // monorepo builds work out of the box.  The default is empty (no
-    // search) only when `code/packages/` does not exist, so single-file
+    // we default to `code/packages/` (and, if present, `code/packages/mosaic/`
+    // — where the mosaic-pkg-* component family lives) relative to the cwd,
+    // which makes monorepo builds work out of the box.  The default is empty
+    // (no search) only when neither directory exists, so single-file
     // projects without any packages do not pay an I/O cost.
     let search_paths: Vec<PathBuf> = match package_search_path {
         Some(s) => s.split(':').map(PathBuf::from).collect(),
         None => {
-            let default = PathBuf::from("code/packages");
-            if default.is_dir() {
-                vec![default]
-            } else {
-                Vec::new()
+            let base = PathBuf::from("code/packages");
+            let mut paths = Vec::new();
+            if base.is_dir() {
+                paths.push(base.clone());
             }
+            let mosaic = base.join("mosaic");
+            if mosaic.is_dir() {
+                paths.push(mosaic);
+            }
+            paths
         }
     };
     let resolver = mosaic_package_resolver::LayoutPackageResolver::new(search_paths);

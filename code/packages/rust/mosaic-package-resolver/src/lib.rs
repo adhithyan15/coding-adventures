@@ -44,7 +44,7 @@
 //!
 //! In production a user's manifest will say
 //! `mosaic-pkg-grid = "0.1.0"`, and on disk the package is at
-//! `code/packages/mosaic-pkg-grid/`.  The literal-name fallback exists
+//! `code/packages/mosaic/mosaic-pkg-grid/`.  The literal-name fallback exists
 //! for tests and ad-hoc packages where the directory just happens to be
 //! named the same as the dep key.  Trying both is cheap and keeps the
 //! UX forgiving.

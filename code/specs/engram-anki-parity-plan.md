@@ -574,25 +574,25 @@ Emit React first, then validate one native target.
 
 Status:
 
-- `code/packages/mosaic-pkg-deck-stats` adds reusable total, new, due,
+- `code/packages/mosaic/mosaic-pkg-deck-stats` adds reusable total, new, due,
   learning, and hidden deck counters with label/value slots ready to bind to
   shared Engram core deck-stat JSON.
-- `code/packages/mosaic-pkg-review-card` adds the first reusable
+- `code/packages/mosaic/mosaic-pkg-review-card` adds the first reusable
   `ReviewCard` component package. It now composes
   `mosaic-pkg-rating-controls` instead of owning the rating button row.
-- `code/packages/mosaic-pkg-review-actions` adds reusable Anki-style undo,
+- `code/packages/mosaic/mosaic-pkg-review-actions` adds reusable Anki-style undo,
   bury-card, bury-siblings, suspend-card, and mark/unmark review controls.
-- `code/packages/mosaic-pkg-review-history` adds reusable review total,
+- `code/packages/mosaic/mosaic-pkg-review-history` adds reusable review total,
   accuracy, per-rating count, and first/last review summary controls backed by
   shared Engram review-history props.
-- `code/packages/mosaic-pkg-deck-options` adds reusable daily-limit,
+- `code/packages/mosaic/mosaic-pkg-deck-options` adds reusable daily-limit,
   graduation-interval, maximum-interval, interval-modifier, hard/easy
   multiplier, lapse-multiplier, and sibling-bury checkbox controls for
   Anki-style deck settings.
-- `code/packages/mosaic-pkg-rating-controls` adds reusable
+- `code/packages/mosaic/mosaic-pkg-rating-controls` adds reusable
   Again/Hard/Good/Easy answer grading controls with label slots and review
   events.
-- `code/packages/mosaic-pkg-session-progress` adds reusable current,
+- `code/packages/mosaic/mosaic-pkg-session-progress` adds reusable current,
   remaining, correct, and total review-session counters with label/value slots
   ready to bind to shared Engram core facade JSON.
 - Mosaic package artifact builds now inline nested package layouts and merge

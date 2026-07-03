@@ -33,7 +33,7 @@
 //!
 //! Note on path resolution: mosaic-emit-xaml lives in
 //! `code/packages/rust/mosaic-emit-xaml/` and mosaic-pkg-grid lives
-//! in `code/packages/mosaic-pkg-grid/`. We resolve relative to
+//! in `code/packages/mosaic/mosaic-pkg-grid/`. We resolve relative to
 //! `CARGO_MANIFEST_DIR` (set to the mosaic-emit-xaml crate root by
 //! Cargo) and step up four directory levels to find the package.
 
@@ -46,7 +46,7 @@ fn pkg_grid_src_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .parent() // mosaic-emit-xaml → rust/
         .and_then(|p| p.parent()) // rust → packages/
-        .map(|p| p.join("mosaic-pkg-grid").join("src"))
+        .map(|p| p.join("mosaic").join("mosaic-pkg-grid").join("src"))
         .expect("derive mosaic-pkg-grid src root from CARGO_MANIFEST_DIR")
 }
 
