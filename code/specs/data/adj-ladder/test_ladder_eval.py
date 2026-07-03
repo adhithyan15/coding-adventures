@@ -89,6 +89,7 @@ SELF_CONTAINED_RUNGS = (
     "rung49_fractionated_dose",
     "rung50_insulin_correction",
     "rung51_dispensing_quantity",
+    "rung52_alveolar_ventilation",
 )
 
 
