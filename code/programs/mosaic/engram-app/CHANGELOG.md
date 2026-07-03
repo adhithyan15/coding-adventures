@@ -5,6 +5,16 @@
 - Preserved Engram Anki import/export host-side error details in Qt, SwiftUI,
   and Compose `hostResult` statuses so generated shells show actionable read,
   import, export, and write failures instead of generic status text.
+- Added `EngramApp.touch.mll`, a touch / mobile layout variant of the app shell
+  (UI30). The desktop shell's horizontal header — app title beside a Row of six
+  nav buttons — overflows on a phone-width viewport, so the touch variant stacks
+  the header and nav vertically (Row → Column) while keeping the interface
+  (`EngramApp.mil`) and every component mount / slot binding byte-for-byte
+  identical. `mosaic-package-artifact-builder`'s `discover_variants` auto-emits
+  it, so every backend now produces both `EngramApp` (desktop) and
+  `EngramApp.touch` artifacts. Verified across all nine backends
+  (react/html/webcomponent/swiftui/qt/flutter/compose/xaml); the emitted React
+  differs from desktop only in the two `flexDirection: row → column` containers.
 - Wired the generated HTML, WebComponent, and React Engram web hosts to handle
   Anki import/export `hostIntent` payloads with browser file input/download
   helpers and the `engram-wasm` APKG byte API, surfacing `hostResult` errors
