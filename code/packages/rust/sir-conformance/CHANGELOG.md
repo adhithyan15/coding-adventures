@@ -2,6 +2,15 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.4.0] - 2026-07-03
+
+### Added — `string_case` (13 -> 14 programs)
+
+The JS String-method rename gap this corpus tracked is fixed, so a `string_case`
+program joins the suite: `"hello".upcase` -> `HELLO`, `"WORLD".downcase` ->
+`world`, `"  hi  ".strip` -> `hi`. Verified 14 corpus x 4 backends = 56 runs,
+0 skipped, all agree.
+
 ## [0.3.0] - 2026-07-03
 
 ### Added — `logical_ops` + `multi_when` (11 -> 13 programs)
