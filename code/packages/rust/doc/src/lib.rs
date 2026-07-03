@@ -95,6 +95,11 @@ const FC_OFFSET_MASK: u32 = 0x3FFF_FFFF;
 const MAX_TEXT_BYTES: usize = 64 * 1024 * 1024; // 64 MiB
 /// Cap on the number of pieces, likewise defensive against a hostile `lcb`.
 const MAX_PIECES: usize = 1_000_000;
+/// Cap on the number of CLX parts (`Prc`s) walked before the `Pcdt`. A real
+/// document has a tiny handful; this bounds worst-case work independent of the
+/// attacker-controlled CLX length, so a giant run of empty `Prc` parts cannot
+/// pin a CPU core.
+const MAX_CLX_PARTS: usize = 100_000;
 
 // ---------------------------------------------------------------------------
 // Errors
@@ -261,7 +266,11 @@ fn extract_text(
 /// advances or errors — it can never spin.
 fn find_plc_pcd(clx: &[u8]) -> Result<&[u8], DocError> {
     let mut pos: usize = 0;
-    loop {
+    // Bound the number of parts walked. `pos` already advances by >= 3 each
+    // iteration, so the loop terminates; this cap additionally bounds the work
+    // by a constant rather than by the attacker-controlled CLX length, so a
+    // multi-hundred-MB run of empty `Prc` parts cannot become a CPU-bound DoS.
+    for _ in 0..MAX_CLX_PARTS {
         // A part must have at least its one-byte tag.
         let &clxt = clx.get(pos).ok_or(DocError::MalformedPieceTable)?;
         match clxt {
@@ -299,6 +308,8 @@ fn find_plc_pcd(clx: &[u8]) -> Result<&[u8], DocError> {
             _ => return Err(DocError::MalformedPieceTable),
         }
     }
+    // Walked MAX_CLX_PARTS parts without reaching a Pcdt: treat as malformed.
+    Err(DocError::MalformedPieceTable)
 }
 
 /// Parse a `PlcPcd` and decode each piece into the growing output string.

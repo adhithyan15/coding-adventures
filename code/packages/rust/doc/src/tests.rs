@@ -428,3 +428,19 @@ fn read_helpers_bounds_check() {
     assert_eq!(read_u16_le(&buf, usize::MAX), None);
     assert_eq!(read_u32_le(&buf, usize::MAX), None);
 }
+
+/// Regression for the CLX part-count cap (security review HIGH): a CLX that is a
+/// long run of empty `Prc` parts (`01 00 00`) with no terminating `Pcdt` must be
+/// rejected by the `MAX_CLX_PARTS` cap rather than walked to exhaustion. This
+/// bounds worst-case work independent of the attacker-controlled CLX length.
+#[test]
+fn clx_prc_flood_is_capped_not_hung() {
+    // One more empty Prc than the cap allows.
+    let mut clx = Vec::with_capacity((MAX_CLX_PARTS + 1) * 3);
+    for _ in 0..(MAX_CLX_PARTS + 1) {
+        clx.extend_from_slice(&[CLXT_PRC, 0x00, 0x00]); // tag=Prc, cbGrpprl=0
+    }
+    let word = [0u8; 16];
+    let err = extract_text(&word, &clx, 0, clx.len()).unwrap_err();
+    assert!(matches!(err, DocError::MalformedPieceTable));
+}
