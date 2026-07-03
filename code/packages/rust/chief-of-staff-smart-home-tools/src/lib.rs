@@ -308,6 +308,10 @@ pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
 pub const SMART_HOME_GET_CONTROLLER_HANDOFF_SUMMARY_TOOL_ID: &str =
     "smart_home.get_controller_handoff_summary";
 pub const SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID: &str = "smart_home.get_platform_brief";
+pub const SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID: &str =
+    "smart_home.list_platform_evidence_ledger";
+pub const SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_platform_evidence_ledger_summary";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID: &str = "smart_home.get_pending_work_summary";
 pub const SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID: &str = "smart_home.get_attention_overview";
@@ -2397,6 +2401,24 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_platform_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID => {
+                    let query = platform_evidence_ledger_query(&arguments)?;
+                    list_platform_evidence_ledger_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
+                }
+                SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID => {
+                    let query = platform_evidence_ledger_query(&arguments)?;
+                    get_platform_evidence_ledger_summary_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                        query,
+                    )
                 }
                 SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6621,6 +6643,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_capability_grant_summary_definition(),
         get_controller_handoff_summary_definition(),
         get_platform_brief_definition(),
+        list_platform_evidence_ledger_definition(),
+        get_platform_evidence_ledger_summary_definition(),
         get_runtime_snapshot_definition(),
         get_pending_work_summary_definition(),
         get_attention_overview_definition(),
@@ -7401,6 +7425,62 @@ fn get_platform_brief_definition() -> ToolDefinition {
                 "sections",
                 "source_tools",
             ],
+            false,
+        ),
+    )
+}
+
+fn platform_evidence_ledger_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("evidence_kind", JsonSchema::String),
+            SchemaProperty::new("status", JsonSchema::String),
+            SchemaProperty::new("owner_lane", JsonSchema::String),
+            SchemaProperty::new("ready", JsonSchema::Boolean),
+            SchemaProperty::new("requires_attention", JsonSchema::Boolean),
+            SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        Vec::new(),
+        false,
+    )
+}
+
+fn list_platform_evidence_ledger_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID,
+        "List smart-home platform evidence ledger",
+        "List Chief-facing platform evidence ledger rows derived from existing D23 platform brief, closeout retention, and runtime maintenance evidence outputs.",
+        platform_evidence_ledger_query_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("platform_evidence_ledger", JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                }),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+                SchemaProperty::new("source_record_count", JsonSchema::Integer),
+            ],
+            vec![
+                "platform_evidence_ledger",
+                "summary",
+                "count",
+                "source_record_count",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_platform_evidence_ledger_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID,
+        "Get smart-home platform evidence ledger summary",
+        "Return compact Chief-facing platform evidence ledger counts by status, kind, owner lane, attention, blockers, and source-tool coverage.",
+        platform_evidence_ledger_query_schema(),
+        object_schema(
+            vec![SchemaProperty::new("summary", JsonSchema::Any)],
+            vec!["summary"],
             false,
         ),
     )
@@ -11578,6 +11658,32 @@ fn runtime_maintenance_work_order_evidence_query(
             .into_iter()
             .map(|status| parse_runtime_maintenance_work_order_evidence_status(&status))
             .collect::<Result<Vec<_>, _>>()?,
+    })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct PlatformEvidenceLedgerQuery {
+    evidence_kind: Option<String>,
+    status: Option<String>,
+    owner_lane: Option<String>,
+    ready: Option<bool>,
+    requires_attention: Option<bool>,
+    has_blockers: Option<bool>,
+    limit: Option<usize>,
+}
+
+fn platform_evidence_ledger_query(
+    arguments: &JsonValue,
+) -> Result<PlatformEvidenceLedgerQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(PlatformEvidenceLedgerQuery {
+        evidence_kind: optional_string(arguments, "evidence_kind")?,
+        status: optional_string(arguments, "status")?,
+        owner_lane: optional_string(arguments, "owner_lane")?,
+        ready: optional_bool(arguments, "ready")?,
+        requires_attention: optional_bool(arguments, "requires_attention")?,
+        has_blockers: optional_bool(arguments, "has_blockers")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
     })
 }
 
@@ -46398,6 +46504,674 @@ fn get_platform_brief_output_handler_output(
                 ]),
             ),
     )
+}
+
+fn list_platform_evidence_ledger_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: PlatformEvidenceLedgerQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (records, source_record_count) =
+        platform_evidence_ledger_records_for_query(runtime, principal_id, now_ms, &query)?;
+    let summary = platform_evidence_ledger_summary_json(&records, source_record_count);
+    let status = morning_brief_string_at(&summary, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let records_requiring_attention =
+        morning_brief_integer_at(&summary, &["records_requiring_attention"]).unwrap_or(0);
+    let blocked_records = morning_brief_integer_at(&summary, &["blocked_records"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&summary, &["next_tool"])
+        .unwrap_or(SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(object([
+        (
+            "platform_evidence_ledger",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(platform_evidence_ledger_record_json)
+                    .collect(),
+            ),
+        ),
+        ("summary", summary),
+        ("count", integer(records.len() as i64)),
+        ("source_record_count", integer(source_record_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_platform_evidence_ledger")),
+            ("status", string(&status)),
+            ("records", integer(records.len() as i64)),
+            ("source_record_count", integer(source_record_count as i64)),
+            (
+                "records_requiring_attention",
+                integer(records_requiring_attention),
+            ),
+            ("blocked_records", integer(blocked_records)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
+fn get_platform_evidence_ledger_summary_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: PlatformEvidenceLedgerQuery,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let (records, source_record_count) =
+        platform_evidence_ledger_records_for_query(runtime, principal_id, now_ms, &query)?;
+    let summary = platform_evidence_ledger_summary_json(&records, source_record_count);
+    let status = morning_brief_string_at(&summary, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let records_requiring_attention =
+        morning_brief_integer_at(&summary, &["records_requiring_attention"]).unwrap_or(0);
+    let blocked_records = morning_brief_integer_at(&summary, &["blocked_records"]).unwrap_or(0);
+
+    Ok(
+        ToolHandlerOutput::new(object([("summary", summary)])).with_event(
+            ToolEventKind::Progress,
+            object([
+                ("operation", string("get_platform_evidence_ledger_summary")),
+                ("status", string(&status)),
+                ("records", integer(records.len() as i64)),
+                ("source_record_count", integer(source_record_count as i64)),
+                (
+                    "records_requiring_attention",
+                    integer(records_requiring_attention),
+                ),
+                ("blocked_records", integer(blocked_records)),
+            ]),
+        ),
+    )
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct PlatformEvidenceLedgerRecord {
+    ledger_id: String,
+    evidence_kind: &'static str,
+    source_tool: &'static str,
+    source_record_id: String,
+    label: String,
+    status: String,
+    ready: bool,
+    requires_attention: bool,
+    has_blockers: bool,
+    owner_lane: String,
+    recommended_tool: String,
+    recommended_action: String,
+    priority: i64,
+    evidence: JsonValue,
+}
+
+fn platform_evidence_ledger_records_for_query(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+    query: &PlatformEvidenceLedgerQuery,
+) -> Result<(Vec<PlatformEvidenceLedgerRecord>, usize), ToolCallError> {
+    let platform =
+        get_platform_brief_output_handler_output(runtime, principal_id.clone(), now_ms)?.output;
+    let closeout_retention =
+        get_closeout_retention_ledger_output_handler_output(runtime, principal_id.clone(), now_ms)?
+            .output;
+    let maintenance_query = runtime_maintenance_work_order_evidence_query(&object([]))?;
+    let maintenance_evidence = list_runtime_maintenance_work_order_evidence_output_handler_output(
+        runtime,
+        principal_id,
+        now_ms,
+        maintenance_query,
+    )?
+    .output;
+
+    let mut records = platform_evidence_ledger_records_from_platform(&platform);
+    records.extend(platform_evidence_ledger_records_from_retention(
+        &closeout_retention,
+    ));
+    records.extend(platform_evidence_ledger_records_from_maintenance(
+        &maintenance_evidence,
+    ));
+    records.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.ledger_id.cmp(&right.ledger_id))
+    });
+
+    let source_record_count = records.len();
+    records.retain(|record| platform_evidence_ledger_record_matches_query(record, query));
+    if let Some(limit) = query.limit {
+        records.truncate(limit);
+    }
+
+    Ok((records, source_record_count))
+}
+
+fn platform_evidence_ledger_records_from_platform(
+    platform: &JsonValue,
+) -> Vec<PlatformEvidenceLedgerRecord> {
+    let mut records = Vec::new();
+    let Some(JsonValue::Array(sections)) = optional_field(platform, "sections") else {
+        return records;
+    };
+
+    for section in sections {
+        let section_id = morning_brief_string_at(section, &["section_id"])
+            .unwrap_or("unknown")
+            .to_string();
+        let ready = morning_brief_bool_at(section, &["ready"]).unwrap_or(false);
+        let has_blockers = morning_brief_bool_at(section, &["has_blockers"]).unwrap_or(false);
+        let attention_count = morning_brief_integer_at(section, &["attention_count"]).unwrap_or(0);
+        let blocked_count = morning_brief_integer_at(section, &["blocked_count"]).unwrap_or(0);
+        let requires_attention = !ready || has_blockers || attention_count > 0 || blocked_count > 0;
+        let status = morning_brief_string_at(section, &["status"])
+            .unwrap_or(if ready { "ready" } else { "attention" })
+            .to_string();
+        let recommended_tool = morning_brief_string_at(section, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID)
+            .to_string();
+        let recommended_action = morning_brief_string_at(section, &["recommended_action"])
+            .unwrap_or("inspect_platform_brief")
+            .to_string();
+
+        records.push(PlatformEvidenceLedgerRecord {
+            ledger_id: format!("platform-evidence:platform-section:{section_id}"),
+            evidence_kind: "platform_section",
+            source_tool: SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+            source_record_id: section_id.clone(),
+            label: morning_brief_string_at(section, &["label"])
+                .unwrap_or("Platform evidence")
+                .to_string(),
+            status,
+            ready,
+            requires_attention,
+            has_blockers,
+            owner_lane: platform_evidence_platform_owner_lane(&section_id).to_string(),
+            recommended_tool,
+            recommended_action,
+            priority: if requires_attention { 0 } else { 50 },
+            evidence: object([
+                ("summary", morning_brief_field_clone(section, "summary")),
+                (
+                    "platform_surfaces",
+                    morning_brief_field_clone(section, "platform_surfaces"),
+                ),
+            ]),
+        });
+    }
+
+    records
+}
+
+fn platform_evidence_ledger_records_from_retention(
+    retention: &JsonValue,
+) -> Vec<PlatformEvidenceLedgerRecord> {
+    let mut records = Vec::new();
+    let Some(JsonValue::Array(entries)) = optional_field(retention, "ledger_entries") else {
+        return records;
+    };
+
+    for entry in entries {
+        let source_record_id = morning_brief_string_at(entry, &["ledger_entry_id"])
+            .unwrap_or("unknown")
+            .to_string();
+        let ledger_state = morning_brief_string_at(entry, &["ledger_state"]).unwrap_or("monitor");
+        let priority = morning_brief_integer_at(entry, &["priority"]).unwrap_or(9);
+        let has_blockers = ledger_state == "hold_open";
+        let ready = ledger_state == "retained";
+        let requires_attention =
+            has_blockers || ledger_state == "review_open" || ledger_state == "action_open";
+
+        records.push(PlatformEvidenceLedgerRecord {
+            ledger_id: format!("platform-evidence:closeout-retention:{source_record_id}"),
+            evidence_kind: "closeout_retention",
+            source_tool: SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID,
+            source_record_id,
+            label: morning_brief_string_at(entry, &["label"])
+                .unwrap_or("Closeout retention evidence")
+                .to_string(),
+            status: ledger_state.to_string(),
+            ready,
+            requires_attention,
+            has_blockers,
+            owner_lane: morning_brief_string_at(entry, &["owner_lane"])
+                .unwrap_or("chief")
+                .to_string(),
+            recommended_tool: morning_brief_string_at(entry, &["recommended_tool"])
+                .unwrap_or(SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID)
+                .to_string(),
+            recommended_action: morning_brief_string_at(entry, &["recommended_action"])
+                .unwrap_or("inspect_closeout_retention_ledger")
+                .to_string(),
+            priority: 10 + priority,
+            evidence: object([
+                (
+                    "manifest_entry_id",
+                    morning_brief_field_clone(entry, "manifest_entry_id"),
+                ),
+                ("record_id", morning_brief_field_clone(entry, "record_id")),
+                (
+                    "audit_event_id",
+                    morning_brief_field_clone(entry, "audit_event_id"),
+                ),
+                ("evidence", morning_brief_field_clone(entry, "evidence")),
+            ]),
+        });
+    }
+
+    records
+}
+
+fn platform_evidence_ledger_records_from_maintenance(
+    maintenance: &JsonValue,
+) -> Vec<PlatformEvidenceLedgerRecord> {
+    let mut records = Vec::new();
+    if let Some(JsonValue::Array(packets)) = optional_field(
+        maintenance,
+        "runtime_maintenance_work_order_evidence_packets",
+    ) {
+        for packet in packets {
+            records.push(platform_evidence_ledger_record_from_maintenance_packet(
+                packet,
+            ));
+        }
+    }
+
+    if records.is_empty() {
+        let summary = morning_brief_field_clone(maintenance, "summary");
+        records.push(platform_evidence_ledger_record_from_maintenance_summary(
+            &summary,
+        ));
+    }
+
+    records
+}
+
+fn platform_evidence_ledger_record_from_maintenance_packet(
+    packet: &JsonValue,
+) -> PlatformEvidenceLedgerRecord {
+    let evidence_id = morning_brief_string_at(packet, &["evidence_id"])
+        .unwrap_or("summary")
+        .to_string();
+    let release_blocking = morning_brief_bool_at(packet, &["release_blocking"]).unwrap_or(false);
+    let operator_required = morning_brief_bool_at(packet, &["operator_required"]).unwrap_or(false);
+    let verified = morning_brief_bool_at(packet, &["verified"]).unwrap_or(false);
+    let lineage_complete = morning_brief_bool_at(packet, &["lineage_complete"]).unwrap_or(false);
+    let blocked_action_count =
+        morning_brief_integer_at(packet, &["blocked_action_count"]).unwrap_or(0);
+    let requires_attention_count =
+        morning_brief_integer_at(packet, &["requires_attention_count"]).unwrap_or(0);
+    let ready = verified && lineage_complete && !release_blocking && !operator_required;
+    let has_blockers = release_blocking || blocked_action_count > 0;
+    let requires_attention =
+        has_blockers || operator_required || requires_attention_count > 0 || !ready;
+    let status = if has_blockers {
+        "blocked"
+    } else if operator_required {
+        "operator_required"
+    } else if !verified {
+        "attention"
+    } else if !lineage_complete {
+        "lineage_gap"
+    } else {
+        "ready"
+    };
+
+    PlatformEvidenceLedgerRecord {
+        ledger_id: format!("platform-evidence:runtime-maintenance:{evidence_id}"),
+        evidence_kind: "runtime_maintenance_evidence",
+        source_tool: SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID,
+        source_record_id: evidence_id.clone(),
+        label: format!("Runtime maintenance evidence {evidence_id}"),
+        status: status.to_string(),
+        ready,
+        requires_attention,
+        has_blockers,
+        owner_lane: morning_brief_string_at(packet, &["assignment_lane"])
+            .unwrap_or("operations")
+            .to_string(),
+        recommended_tool: morning_brief_string_at(packet, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_LIST_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(packet, &["recommended_action"])
+            .unwrap_or("review_runtime_maintenance_evidence")
+            .to_string(),
+        priority: 20 + morning_brief_integer_at(packet, &["priority"]).unwrap_or(9),
+        evidence: packet.clone(),
+    }
+}
+
+fn platform_evidence_ledger_record_from_maintenance_summary(
+    summary: &JsonValue,
+) -> PlatformEvidenceLedgerRecord {
+    let total_packets = morning_brief_integer_at(summary, &["total_packets"]).unwrap_or(0);
+    let blocking_packets = morning_brief_integer_at(summary, &["blocking_packets"]).unwrap_or(0);
+    let operator_required_packets =
+        morning_brief_integer_at(summary, &["operator_required_packets"]).unwrap_or(0);
+    let has_packets = morning_brief_bool_at(summary, &["has_packets"]).unwrap_or(total_packets > 0);
+    let has_complete_lineage =
+        morning_brief_bool_at(summary, &["has_complete_lineage"]).unwrap_or(!has_packets);
+    let execution_evidence_ready =
+        morning_brief_bool_at(summary, &["execution_evidence_ready"]).unwrap_or(!has_packets);
+    let ready = !has_packets
+        || (execution_evidence_ready
+            && has_complete_lineage
+            && blocking_packets == 0
+            && operator_required_packets == 0);
+    let has_blockers = blocking_packets > 0;
+    let requires_attention = has_blockers
+        || operator_required_packets > 0
+        || (has_packets && (!execution_evidence_ready || !has_complete_lineage));
+    let status = if has_blockers {
+        "blocked"
+    } else if operator_required_packets > 0 {
+        "operator_required"
+    } else if has_packets && !has_complete_lineage {
+        "lineage_gap"
+    } else if has_packets && !execution_evidence_ready {
+        "attention"
+    } else if has_packets {
+        "ready"
+    } else {
+        "monitor"
+    };
+
+    PlatformEvidenceLedgerRecord {
+        ledger_id: "platform-evidence:runtime-maintenance:summary".to_string(),
+        evidence_kind: "runtime_maintenance_evidence",
+        source_tool: SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID,
+        source_record_id: "runtime-maintenance-evidence-summary".to_string(),
+        label: "Runtime maintenance evidence summary".to_string(),
+        status: status.to_string(),
+        ready,
+        requires_attention,
+        has_blockers,
+        owner_lane: "operations".to_string(),
+        recommended_tool: SMART_HOME_GET_RUNTIME_MAINTENANCE_WORK_ORDER_EVIDENCE_SUMMARY_TOOL_ID
+            .to_string(),
+        recommended_action: if requires_attention {
+            "review_runtime_maintenance_evidence"
+        } else {
+            "monitor_runtime_maintenance_evidence"
+        }
+        .to_string(),
+        priority: if requires_attention { 20 } else { 70 },
+        evidence: summary.clone(),
+    }
+}
+
+fn platform_evidence_ledger_record_matches_query(
+    record: &PlatformEvidenceLedgerRecord,
+    query: &PlatformEvidenceLedgerQuery,
+) -> bool {
+    if let Some(evidence_kind) = query.evidence_kind.as_deref() {
+        if record.evidence_kind != evidence_kind {
+            return false;
+        }
+    }
+    if let Some(status) = query.status.as_deref() {
+        if record.status != status {
+            return false;
+        }
+    }
+    if let Some(owner_lane) = query.owner_lane.as_deref() {
+        if record.owner_lane != owner_lane {
+            return false;
+        }
+    }
+    if let Some(ready) = query.ready {
+        if record.ready != ready {
+            return false;
+        }
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        if record.requires_attention != requires_attention {
+            return false;
+        }
+    }
+    if let Some(has_blockers) = query.has_blockers {
+        if record.has_blockers != has_blockers {
+            return false;
+        }
+    }
+
+    true
+}
+
+fn platform_evidence_ledger_summary_json(
+    records: &[PlatformEvidenceLedgerRecord],
+    source_record_count: usize,
+) -> JsonValue {
+    let ready_records = records.iter().filter(|record| record.ready).count();
+    let records_requiring_attention = records
+        .iter()
+        .filter(|record| record.requires_attention)
+        .count();
+    let blocked_records = records.iter().filter(|record| record.has_blockers).count();
+    let platform_section_records = records
+        .iter()
+        .filter(|record| record.evidence_kind == "platform_section")
+        .count();
+    let closeout_retention_records = records
+        .iter()
+        .filter(|record| record.evidence_kind == "closeout_retention")
+        .count();
+    let runtime_maintenance_evidence_records = records
+        .iter()
+        .filter(|record| record.evidence_kind == "runtime_maintenance_evidence")
+        .count();
+    let mut source_tools = Vec::<String>::new();
+    for record in records {
+        if !source_tools.iter().any(|tool| tool == record.source_tool) {
+            source_tools.push(record.source_tool.to_string());
+        }
+    }
+    let status = platform_evidence_ledger_summary_status(
+        records.len(),
+        records_requiring_attention,
+        blocked_records,
+    );
+    let next_record = platform_evidence_ledger_next_record(records);
+
+    object([
+        ("status", string(status)),
+        (
+            "ready",
+            JsonValue::Bool(records_requiring_attention == 0 && blocked_records == 0),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(records_requiring_attention > 0),
+        ),
+        ("has_blockers", JsonValue::Bool(blocked_records > 0)),
+        ("total_records", integer(records.len() as i64)),
+        ("source_record_count", integer(source_record_count as i64)),
+        ("ready_records", integer(ready_records as i64)),
+        (
+            "records_requiring_attention",
+            integer(records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(blocked_records as i64)),
+        (
+            "platform_section_records",
+            integer(platform_section_records as i64),
+        ),
+        (
+            "closeout_retention_records",
+            integer(closeout_retention_records as i64),
+        ),
+        (
+            "runtime_maintenance_evidence_records",
+            integer(runtime_maintenance_evidence_records as i64),
+        ),
+        ("source_tool_count", integer(source_tools.len() as i64)),
+        (
+            "source_tools",
+            JsonValue::Array(source_tools.iter().map(string).collect()),
+        ),
+        (
+            "next_tool",
+            string(
+                next_record
+                    .map(|record| record.recommended_tool.as_str())
+                    .unwrap_or(SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID),
+            ),
+        ),
+        (
+            "next_action",
+            string(
+                next_record
+                    .map(|record| record.recommended_action.as_str())
+                    .unwrap_or("monitor_platform_evidence_ledger"),
+            ),
+        ),
+        (
+            "next_owner_lane",
+            string(
+                next_record
+                    .map(|record| record.owner_lane.as_str())
+                    .unwrap_or("chief_adapter"),
+            ),
+        ),
+        (
+            "decision",
+            platform_evidence_ledger_decision_json(
+                status,
+                records_requiring_attention,
+                blocked_records,
+                next_record,
+            ),
+        ),
+    ])
+}
+
+fn platform_evidence_ledger_record_json(record: &PlatformEvidenceLedgerRecord) -> JsonValue {
+    object([
+        ("ledger_id", string(&record.ledger_id)),
+        ("evidence_kind", string(record.evidence_kind)),
+        ("source_tool", string(record.source_tool)),
+        ("source_record_id", string(&record.source_record_id)),
+        ("label", string(&record.label)),
+        ("status", string(&record.status)),
+        ("ready", JsonValue::Bool(record.ready)),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention),
+        ),
+        ("has_blockers", JsonValue::Bool(record.has_blockers)),
+        ("owner_lane", string(&record.owner_lane)),
+        ("recommended_tool", string(&record.recommended_tool)),
+        ("recommended_action", string(&record.recommended_action)),
+        ("priority", integer(record.priority)),
+        ("evidence", record.evidence.clone()),
+    ])
+}
+
+fn platform_evidence_ledger_summary_status(
+    total_records: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+) -> &'static str {
+    if blocked_records > 0 {
+        "blocked"
+    } else if records_requiring_attention > 0 {
+        "attention"
+    } else if total_records == 0 {
+        "empty"
+    } else {
+        "ready"
+    }
+}
+
+fn platform_evidence_ledger_next_record(
+    records: &[PlatformEvidenceLedgerRecord],
+) -> Option<&PlatformEvidenceLedgerRecord> {
+    records
+        .iter()
+        .find(|record| record.has_blockers)
+        .or_else(|| records.iter().find(|record| record.requires_attention))
+        .or_else(|| records.iter().find(|record| !record.ready))
+        .or_else(|| records.first())
+}
+
+fn platform_evidence_ledger_decision_json(
+    status: &str,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    next_record: Option<&PlatformEvidenceLedgerRecord>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(platform_evidence_ledger_recommendation(
+                status,
+                records_requiring_attention,
+                blocked_records,
+                next_record,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(
+                next_record
+                    .map(|record| record.recommended_tool.as_str())
+                    .unwrap_or(SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID),
+            ),
+        ),
+        (
+            "recommended_action",
+            string(
+                next_record
+                    .map(|record| record.recommended_action.as_str())
+                    .unwrap_or("monitor_platform_evidence_ledger"),
+            ),
+        ),
+        (
+            "owner_lane",
+            string(
+                next_record
+                    .map(|record| record.owner_lane.as_str())
+                    .unwrap_or("chief_adapter"),
+            ),
+        ),
+        (
+            "reason",
+            string(
+                next_record
+                    .map(|record| record.ledger_id.as_str())
+                    .unwrap_or("no_platform_evidence_records"),
+            ),
+        ),
+    ])
+}
+
+fn platform_evidence_ledger_recommendation(
+    status: &str,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    next_record: Option<&PlatformEvidenceLedgerRecord>,
+) -> &'static str {
+    if blocked_records > 0 || status == "blocked" {
+        "clear_platform_evidence_blockers"
+    } else if records_requiring_attention > 0 || status == "attention" {
+        "review_platform_evidence"
+    } else if next_record.is_none() || status == "empty" {
+        "widen_platform_evidence_filters"
+    } else {
+        "platform_evidence_ready"
+    }
+}
+
+fn platform_evidence_platform_owner_lane(section_id: &str) -> &'static str {
+    match section_id {
+        "repo_http_stack" | "browser_dashboard" | "fixture_controller" => "platform",
+        "state_history_events" | "commands_services_scenes" => "runtime",
+        "authorization_boundaries" => "policy",
+        _ => "chief_adapter",
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -88974,7 +89748,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 308);
+        assert_eq!(definitions.len(), 310);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -89007,6 +89781,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID));
@@ -89863,7 +90643,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            300
+            302
         );
         assert_eq!(
             export
@@ -90559,6 +91339,13 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID).is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_READINESS_BRIEF_TOOL_ID).is_some());
@@ -90796,6 +91583,100 @@ mod tests {
             Some(&string(SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID))
         );
         assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(8));
+    }
+
+    #[test]
+    fn platform_evidence_ledger_rolls_up_runtime_owned_evidence_sources() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .registry_mut()
+            .apply_state_snapshot(confirmed_state(
+                &EntityId::trusted("entity-light-1"),
+                Value::Bool(true),
+                1_000,
+            ))
+            .unwrap();
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_request = request(
+            "call-platform-evidence-ledger",
+            SMART_HOME_LIST_PLATFORM_EVIDENCE_LEDGER_TOOL_ID,
+            object([("limit", integer(20))]),
+            1_290,
+        );
+        let list_trace = tool_runtime.invoke_with_events(&list_request);
+        assert!(list_trace.result.ok);
+        assert_eq!(list_trace.summary().progress_event_count, 1);
+        let list_output = list_trace.result.output.as_ref().unwrap();
+        let count = integer_value(field(list_output, "count").unwrap()).unwrap();
+        assert!(count >= 7);
+        assert!(
+            integer_value(field(list_output, "source_record_count").unwrap()).unwrap() >= count
+        );
+        let summary = field(list_output, "summary").unwrap();
+        assert_eq!(field(summary, "total_records"), Some(&integer(count)));
+        assert_eq!(
+            field(summary, "platform_section_records"),
+            Some(&integer(6))
+        );
+        assert!(
+            integer_value(field(summary, "runtime_maintenance_evidence_records").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(integer_value(field(summary, "source_tool_count").unwrap()).unwrap() >= 2);
+        assert!(field(summary, "decision").is_some());
+
+        let first_record = array_item(field(list_output, "platform_evidence_ledger").unwrap(), 0)
+            .expect("at least one platform evidence ledger record");
+        assert!(field(first_record, "ledger_id").is_some());
+        assert!(field(first_record, "evidence_kind").is_some());
+        assert!(field(first_record, "source_tool").is_some());
+        assert!(field(first_record, "recommended_tool").is_some());
+        assert!(field(first_record, "evidence").is_some());
+
+        let summary_request = request(
+            "call-platform-evidence-ledger-summary",
+            SMART_HOME_GET_PLATFORM_EVIDENCE_LEDGER_SUMMARY_TOOL_ID,
+            object([
+                ("evidence_kind", string("platform_section")),
+                ("owner_lane", string("policy")),
+            ]),
+            1_291,
+        );
+        let summary_trace = tool_runtime.invoke_with_events(&summary_request);
+        assert!(summary_trace.result.ok);
+        assert_eq!(summary_trace.summary().progress_event_count, 1);
+        let summary_output = summary_trace.result.output.as_ref().unwrap();
+        let filtered_summary = field(summary_output, "summary").unwrap();
+        assert_eq!(field(filtered_summary, "total_records"), Some(&integer(1)));
+        assert_eq!(
+            field(filtered_summary, "platform_section_records"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(filtered_summary, "next_owner_lane"),
+            Some(&string("policy"))
+        );
+        assert_eq!(
+            field(filtered_summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID))
+        );
     }
 
     #[test]
@@ -93406,11 +94287,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(308))
+            Some(&integer(310))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(300))
+            Some(&integer(302))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
