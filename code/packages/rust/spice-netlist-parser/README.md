@@ -596,6 +596,11 @@ module cache/integrity hints, deterministic load order, nested `embedManifest`,
 and loader-plan capability metadata so WebAssembly-backed product shells can
 preload, instantiate, mount, or defer the post-dispatch handoff without
 recomputing the embed manifest.
+Embed runtime plans add stable runtime host/bootstrap/mount/readiness metadata,
+runtime phase/strategy, runtime entrypoints, hydration scheduler hints,
+deterministic runtime steps, nested `embedLoaderPlan`, and runtime-plan
+capability metadata so WebAssembly-backed product shells can start, publish, or
+defer the post-dispatch handoff runtime without recomputing the loader plan.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
