@@ -84,6 +84,8 @@ pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION
     u32 = 1;
 pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_MANIFEST_SCHEMA_VERSION:
     u32 = 1;
+pub const BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_LOADER_PLAN_SCHEMA_VERSION:
+    u32 = 1;
 pub const BERKELEY_APP_PACKAGE_NAME: &str = "berkeley-spice-mosaic-app";
 pub const BERKELEY_APP_SOURCE_FINGERPRINT_ALGORITHM: &str = "fnv1a-64";
 
@@ -9648,6 +9650,215 @@ impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortc
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan
+{
+    pub schema_version: u32,
+    pub package_name: String,
+    pub source_fingerprint: String,
+    pub title: Option<String>,
+    pub startup_route: String,
+    pub ready: bool,
+    pub severity: String,
+    pub attention_required: bool,
+    pub loader_plan_id: String,
+    pub loader_plan_kind: String,
+    pub loader_phase: String,
+    pub loader_strategy: String,
+    pub module_request_id: String,
+    pub module_request_kind: String,
+    pub module_cache_key: String,
+    pub module_integrity_mode: String,
+    pub module_fetch_priority: String,
+    pub instantiation_target_id: String,
+    pub embed_manifest_id: String,
+    pub embed_manifest_kind: String,
+    pub embed_mode: String,
+    pub embed_root_id: String,
+    pub embed_script_id: String,
+    pub wasm_module_name: String,
+    pub wasm_module_format: String,
+    pub wasm_content_type: String,
+    pub wasm_import_namespace: String,
+    pub wasm_export_symbol: String,
+    pub wasm_initializer_symbol: String,
+    pub hydration_target_id: String,
+    pub hydration_mode: String,
+    pub delivery_package_id: String,
+    pub delivery_package_kind: String,
+    pub delivery_route: String,
+    pub handoff_route: String,
+    pub product_surface: String,
+    pub render_region: String,
+    pub product_shell_action: String,
+    pub load_order: Vec<String>,
+    pub should_preload: bool,
+    pub should_instantiate: bool,
+    pub should_mount: bool,
+    pub should_hydrate: bool,
+    pub should_render_stack: bool,
+    pub should_announce_latest: bool,
+    pub requires_attention: bool,
+    pub notification_count: usize,
+    pub visible_notification_count: usize,
+    pub announce_notification_count: usize,
+    pub attention_notification_count: usize,
+    pub success_notification_count: usize,
+    pub error_notification_count: usize,
+    pub info_notification_count: usize,
+    pub embed_manifest:
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id:
+        String,
+    pub dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id:
+        String,
+    pub artifact_capability_count: usize,
+}
+
+impl BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan {
+    pub fn from_bootstrap_snapshot(
+        snapshot: &BerkeleyAppBootstrapSnapshot,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_manifest(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest::from_bootstrap_snapshot(
+                snapshot,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_shell_handoff(
+        handoff: &BerkeleyAppShellHandoff,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Self {
+        Self::from_embed_manifest(
+            &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest::from_shell_handoff(
+                handoff,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn from_embed_manifest(
+        manifest: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifest,
+    ) -> Self {
+        let loader_phase = if manifest.ready { "ready" } else { "blocked" };
+        let loader_strategy = if manifest.should_instantiate && manifest.should_mount {
+            "preload-instantiate-mount-hydrate"
+        } else {
+            "preload-defer"
+        };
+        let module_fetch_priority = if manifest.requires_attention {
+            "high"
+        } else {
+            "auto"
+        };
+        let mut load_order = vec!["preload-module".to_string()];
+        if manifest.should_instantiate {
+            load_order.push("instantiate-module".to_string());
+        }
+        if manifest.should_mount {
+            load_order.push("mount-embed-root".to_string());
+        }
+        if manifest.should_hydrate {
+            load_order.push("hydrate-product-handoff".to_string());
+        } else {
+            load_order.push("defer-product-handoff-hydration".to_string());
+        }
+
+        Self {
+            schema_version:
+                BERKELEY_APP_SHELL_DASHBOARD_DISPATCH_QUEUE_LANE_TAB_PANEL_CARD_ACTION_MENU_GROUP_SHORTCUT_COMMAND_PALETTE_SEARCH_INVOCATION_RECEIPT_NOTIFICATION_STACK_SUMMARY_PRODUCT_HANDOFF_DELIVERY_PACKAGE_EMBED_LOADER_PLAN_SCHEMA_VERSION,
+            package_name: manifest.package_name.clone(),
+            source_fingerprint: manifest.source_fingerprint.clone(),
+            title: manifest.title.clone(),
+            startup_route: manifest.startup_route.clone(),
+            ready: manifest.ready,
+            severity: manifest.severity.clone(),
+            attention_required: manifest.attention_required,
+            loader_plan_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-loader-plan"
+                    .to_string(),
+            loader_plan_kind:
+                "berkeley-product-handoff-webassembly-embed-loader-plan".to_string(),
+            loader_phase: loader_phase.to_string(),
+            loader_strategy: loader_strategy.to_string(),
+            module_request_id:
+                "dashboard.dispatch-queue.shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-module-request"
+                    .to_string(),
+            module_request_kind:
+                "berkeley-product-handoff-webassembly-module-request".to_string(),
+            module_cache_key: format!(
+                "{}:{}:{}",
+                manifest.wasm_module_name, manifest.source_fingerprint, manifest.hydration_mode
+            ),
+            module_integrity_mode: "source-fingerprint".to_string(),
+            module_fetch_priority: module_fetch_priority.to_string(),
+            instantiation_target_id: format!("{}::{}", manifest.embed_root_id, manifest.wasm_export_symbol),
+            embed_manifest_id: manifest.embed_manifest_id.clone(),
+            embed_manifest_kind: manifest.embed_manifest_kind.clone(),
+            embed_mode: manifest.embed_mode.clone(),
+            embed_root_id: manifest.embed_root_id.clone(),
+            embed_script_id: manifest.embed_script_id.clone(),
+            wasm_module_name: manifest.wasm_module_name.clone(),
+            wasm_module_format: manifest.wasm_module_format.clone(),
+            wasm_content_type: manifest.wasm_content_type.clone(),
+            wasm_import_namespace: manifest.wasm_import_namespace.clone(),
+            wasm_export_symbol: manifest.wasm_export_symbol.clone(),
+            wasm_initializer_symbol: manifest.wasm_initializer_symbol.clone(),
+            hydration_target_id: manifest.hydration_target_id.clone(),
+            hydration_mode: manifest.hydration_mode.clone(),
+            delivery_package_id: manifest.delivery_package_id.clone(),
+            delivery_package_kind: manifest.delivery_package_kind.clone(),
+            delivery_route: manifest.delivery_route.clone(),
+            handoff_route: manifest.handoff_route.clone(),
+            product_surface: manifest.product_surface.clone(),
+            render_region: manifest.render_region.clone(),
+            product_shell_action: manifest.product_shell_action.clone(),
+            load_order,
+            should_preload: manifest.should_preload,
+            should_instantiate: manifest.should_instantiate,
+            should_mount: manifest.should_mount,
+            should_hydrate: manifest.should_hydrate,
+            should_render_stack: manifest.should_render_stack,
+            should_announce_latest: manifest.should_announce_latest,
+            requires_attention: manifest.requires_attention,
+            notification_count: manifest.notification_count,
+            visible_notification_count: manifest.visible_notification_count,
+            announce_notification_count: manifest.announce_notification_count,
+            attention_notification_count: manifest.attention_notification_count,
+            success_notification_count: manifest.success_notification_count,
+            error_notification_count: manifest.error_notification_count,
+            info_notification_count: manifest.info_notification_count,
+            embed_manifest: manifest.clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id:
+                manifest
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id:
+                manifest
+                    .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id
+                    .clone(),
+            dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id:
+                "app-shell-dashboard-dispatch-queue-lane-tab-panel-card-action-menu-group-shortcut-command-palette-search-invocation-receipt-notification-stack-summary-product-handoff-delivery-package-embed-loader-plan-json"
+                    .to_string(),
+            artifact_capability_count: manifest.artifact_capability_count + 1,
+        }
+    }
+
+    pub fn to_json(&self) -> String {
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json_value(self)
+            .to_string()
+    }
+}
+
 fn command_palette_search_tokens(search_text: &str, keywords: &[String]) -> Vec<String> {
     let mut tokens = Vec::new();
     for source in std::iter::once(search_text).chain(keywords.iter().map(String::as_str)) {
@@ -12276,6 +12487,67 @@ impl BerkeleyAppDeck {
     ) -> Result<String, AnalysisExecutionError> {
         Ok(self
             .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest(
+                persisted_state,
+                search_query,
+                selected_search_result_id,
+            )?
+            .to_json())
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan
+    {
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan::from_bootstrap_snapshot(
+            &self.app_bootstrap_snapshot(persisted_state),
+            search_query,
+            selected_search_result_id,
+        )
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<
+        BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan,
+        AnalysisExecutionError,
+    >{
+        Ok(
+            BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan::from_bootstrap_snapshot(
+                &self.run_app_bootstrap_snapshot(persisted_state)?,
+                search_query,
+                selected_search_result_id,
+            ),
+        )
+    }
+
+    pub fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> String {
+        self.app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
+            persisted_state,
+            search_query,
+            selected_search_result_id,
+        )
+        .to_json()
+    }
+
+    pub fn run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json(
+        &self,
+        persisted_state: BerkeleyAppPersistedEditorState,
+        search_query: impl Into<String>,
+        selected_search_result_id: Option<String>,
+    ) -> Result<String, AnalysisExecutionError> {
+        Ok(self
+            .run_app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan(
                 persisted_state,
                 search_query,
                 selected_search_result_id,
@@ -17744,6 +18016,101 @@ fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shor
         "artifactCapabilityCount",
         manifest.artifact_capability_count
     );
+
+    serde_json::Value::Object(value)
+}
+
+fn app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_json_value(
+    plan: &BerkeleyAppShellDashboardDispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlan,
+) -> serde_json::Value {
+    let mut value = serde_json::Map::new();
+    macro_rules! insert_json {
+        ($key:literal, $value:expr) => {
+            value.insert($key.to_string(), serde_json::json!($value));
+        };
+    }
+
+    insert_json!("schemaVersion", plan.schema_version);
+    insert_json!("packageName", &plan.package_name);
+    insert_json!("sourceFingerprint", &plan.source_fingerprint);
+    insert_json!("title", &plan.title);
+    insert_json!("startupRoute", &plan.startup_route);
+    insert_json!("ready", plan.ready);
+    insert_json!("severity", &plan.severity);
+    insert_json!("attentionRequired", plan.attention_required);
+    insert_json!("loaderPlanId", &plan.loader_plan_id);
+    insert_json!("loaderPlanKind", &plan.loader_plan_kind);
+    insert_json!("loaderPhase", &plan.loader_phase);
+    insert_json!("loaderStrategy", &plan.loader_strategy);
+    insert_json!("moduleRequestId", &plan.module_request_id);
+    insert_json!("moduleRequestKind", &plan.module_request_kind);
+    insert_json!("moduleCacheKey", &plan.module_cache_key);
+    insert_json!("moduleIntegrityMode", &plan.module_integrity_mode);
+    insert_json!("moduleFetchPriority", &plan.module_fetch_priority);
+    insert_json!("instantiationTargetId", &plan.instantiation_target_id);
+    insert_json!("embedManifestId", &plan.embed_manifest_id);
+    insert_json!("embedManifestKind", &plan.embed_manifest_kind);
+    insert_json!("embedMode", &plan.embed_mode);
+    insert_json!("embedRootId", &plan.embed_root_id);
+    insert_json!("embedScriptId", &plan.embed_script_id);
+    insert_json!("wasmModuleName", &plan.wasm_module_name);
+    insert_json!("wasmModuleFormat", &plan.wasm_module_format);
+    insert_json!("wasmContentType", &plan.wasm_content_type);
+    insert_json!("wasmImportNamespace", &plan.wasm_import_namespace);
+    insert_json!("wasmExportSymbol", &plan.wasm_export_symbol);
+    insert_json!("wasmInitializerSymbol", &plan.wasm_initializer_symbol);
+    insert_json!("hydrationTargetId", &plan.hydration_target_id);
+    insert_json!("hydrationMode", &plan.hydration_mode);
+    insert_json!("deliveryPackageId", &plan.delivery_package_id);
+    insert_json!("deliveryPackageKind", &plan.delivery_package_kind);
+    insert_json!("deliveryRoute", &plan.delivery_route);
+    insert_json!("handoffRoute", &plan.handoff_route);
+    insert_json!("productSurface", &plan.product_surface);
+    insert_json!("renderRegion", &plan.render_region);
+    insert_json!("productShellAction", &plan.product_shell_action);
+    insert_json!("loadOrder", &plan.load_order);
+    insert_json!("shouldPreload", plan.should_preload);
+    insert_json!("shouldInstantiate", plan.should_instantiate);
+    insert_json!("shouldMount", plan.should_mount);
+    insert_json!("shouldHydrate", plan.should_hydrate);
+    insert_json!("shouldRenderStack", plan.should_render_stack);
+    insert_json!("shouldAnnounceLatest", plan.should_announce_latest);
+    insert_json!("requiresAttention", plan.requires_attention);
+    insert_json!("notificationCount", plan.notification_count);
+    insert_json!("visibleNotificationCount", plan.visible_notification_count);
+    insert_json!(
+        "announceNotificationCount",
+        plan.announce_notification_count
+    );
+    insert_json!(
+        "attentionNotificationCount",
+        plan.attention_notification_count
+    );
+    insert_json!("successNotificationCount", plan.success_notification_count);
+    insert_json!("errorNotificationCount", plan.error_notification_count);
+    insert_json!("infoNotificationCount", plan.info_notification_count);
+    value.insert(
+        "embedManifest".to_string(),
+        app_shell_dashboard_dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_json_value(
+            &plan.embed_manifest,
+        ),
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedManifestCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_manifest_capability_id
+    );
+    insert_json!(
+        "dispatchQueueLaneTabPanelCardActionMenuGroupShortcutCommandPaletteSearchInvocationReceiptNotificationStackSummaryProductHandoffDeliveryPackageEmbedLoaderPlanCapabilityId",
+        &plan
+            .dispatch_queue_lane_tab_panel_card_action_menu_group_shortcut_command_palette_search_invocation_receipt_notification_stack_summary_product_handoff_delivery_package_embed_loader_plan_capability_id
+    );
+    insert_json!("artifactCapabilityCount", plan.artifact_capability_count);
 
     serde_json::Value::Object(value)
 }

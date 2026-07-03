@@ -591,6 +591,11 @@ module/import/export metadata, hydration mode, preload/instantiate/mount flags,
 nested `deliveryPackage`, and embed-manifest capability metadata so
 WebAssembly-backed product shells can decide when to load, instantiate, and
 mount the post-dispatch handoff.
+Embed loader plans add stable module-request metadata, loader phase/strategy,
+module cache/integrity hints, deterministic load order, nested `embedManifest`,
+and loader-plan capability metadata so WebAssembly-backed product shells can
+preload, instantiate, mount, or defer the post-dispatch handoff without
+recomputing the embed manifest.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,

@@ -33,25 +33,29 @@ the Rust, Python, and TypeScript surfaces together.
 
 ## Current PR Slice
 
-1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed manifest.
+1. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed loader plan.
    - Status: current PR completion candidate.
    - Add schema-versioned Rust app shell dashboard dispatch-queue lane-tab
      panel-card-action-menu-group-shortcut-command-palette-search-invocation
      receipt-notification-stack-summary-product-handoff-delivery-package-embed-
-     manifest surfaces and JSON helpers that wrap delivery packages into
-     deterministic WebAssembly module/import/export metadata, hydration mode,
-     preload/instantiate/mount flags, nested delivery-package metadata, and
-     embed-manifest capability IDs for first-render product-shell bootstrapping.
+     loader-plan surfaces and JSON helpers that wrap embed manifests into
+     deterministic WebAssembly module-request metadata, loader phase/strategy,
+     module cache and integrity hints, load order, nested embed-manifest
+     metadata, and loader-plan capability IDs for first-render product-shell
+     bootstrapping.
    - Preserve package name, source fingerprint, route/status metadata,
-     embed-manifest ID/kind/mode, embed root/script IDs, WebAssembly module
-     name/format/content type/import namespace/export symbol/initializer symbol,
-     hydration target/mode, delivery package ID/kind/route, product
-     surface/region routing, product-shell action, render/announce/hydrate
+     loader-plan ID/kind/phase/strategy, module request ID/kind/cache/
+     integrity/priority metadata, instantiation target, embed-manifest ID/kind/
+     mode, embed root/script IDs, WebAssembly module name/format/content type/
+     import namespace/export symbol/initializer symbol, hydration target/mode,
+     delivery package ID/kind/route, product surface/region routing,
+     product-shell action, deterministic load order, render/announce/hydrate
      flags, preload/instantiate/mount flags, visible/announce/attention/success/
-     error/info counts, nested delivery package, delivery-package capability ID,
-     embed-manifest capability ID, and advertised capability count so Mosaic,
-     WebAssembly, and product shells can load, instantiate, and mount compact
-     post-invocation product handoffs without re-walking delivery packages.
+     error/info counts, nested embed manifest, delivery-package capability ID,
+     embed-manifest capability ID, loader-plan capability ID, and advertised
+     capability count so Mosaic, WebAssembly, and product shells can preload,
+     instantiate, mount, hydrate, or defer compact post-invocation product
+     handoffs without re-walking embed manifests.
    - Keep this as a Rust-only app-substrate packaging slice over the public
      parser contract; Python and TypeScript parser parity remains aligned when
      parser behavior changes.
@@ -2470,6 +2474,28 @@ the Rust, Python, and TypeScript surfaces together.
      advertised capability count so Mosaic, WebAssembly, and product shells can
      hydrate compact post-invocation product handoffs without re-walking receipt
      or summary rows.
+
+192. Rust Berkeley Mosaic app shell dashboard dispatch queue lane tab panel card action menu group shortcut command palette search invocation receipt notification stack summary product handoff delivery package embed manifest.
+   - Status: completed in PR 7423.
+   - Rust `spice-netlist-parser` now exposes schema-versioned Berkeley Mosaic
+     app shell dashboard dispatch-queue lane-tab panel-card-action-menu-group-
+     shortcut-command-palette-search-invocation receipt-notification-stack-
+     summary-product-handoff-delivery-package-embed-manifest surfaces plus JSON
+     helpers that wrap delivery packages into deterministic WebAssembly module/
+     import/export metadata, hydration mode, preload/instantiate/mount flags,
+     nested delivery-package metadata, and embed-manifest capability IDs for
+     first-render product-shell bootstrapping.
+   - The product handoff delivery package embed manifest payload preserves
+     package name, source fingerprint, route/status metadata, embed-manifest ID/
+     kind/mode, embed root/script IDs, WebAssembly module name/format/content
+     type/import namespace/export symbol/initializer symbol, hydration target/
+     mode, delivery package ID/kind/route, product surface/region routing,
+     product-shell action, render/announce/hydrate flags, preload/instantiate/
+     mount flags, visible/announce/attention/success/error/info counts, nested
+     delivery package, delivery-package capability ID, embed-manifest capability
+     ID, and advertised capability count so Mosaic, WebAssembly, and product
+     shells can load, instantiate, and mount compact post-invocation product
+     handoffs without re-walking delivery packages.
 
 ## Backlog
 
