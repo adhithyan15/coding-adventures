@@ -682,6 +682,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&html_host, "hydrateEngine(engine);");
     assert_contains(&html_host, "withSnapshotPersistence(host, engine)");
     assert_contains(&html_host, "persistSnapshot(engine);");
+    assert_contains(&html_host, "handleHostIntent(engine, intent, result)");
+    assert_contains(&html_host, "chooseAnkiImportFile(intent)");
+    assert_contains(&html_host, "engine.mergeAnkiApkg(bytes)");
+    assert_contains(&html_host, "engine.exportAnkiApkg()");
+    assert_contains(&html_host, "downloadBytes(bytes, name)");
 
     let webcomponent_index = fs::read_to_string(tmp.path().join("webcomponent").join("index.html"))
         .expect("webcomponent/index.html");
@@ -772,6 +777,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&webcomponent_host, "hydrateEngine(engine);");
     assert_contains(&webcomponent_host, "withSnapshotPersistence(host, engine)");
     assert_contains(&webcomponent_host, "persistSnapshot(engine);");
+    assert_contains(&webcomponent_host, "handleHostIntent(engine, intent, result)");
+    assert_contains(&webcomponent_host, "chooseAnkiImportFile(intent)");
+    assert_contains(&webcomponent_host, "engine.mergeAnkiApkg(bytes)");
+    assert_contains(&webcomponent_host, "engine.exportAnkiApkg()");
+    assert_contains(&webcomponent_host, "downloadBytes(bytes, name)");
 
     let react_app = fs::read_to_string(tmp.path().join("react").join("src").join("main.tsx"))
         .expect("react/src/main.tsx");
@@ -882,6 +892,11 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&react_host, "hydrateEngine(engine);");
     assert_contains(&react_host, "withSnapshotPersistence(host, engine)");
     assert_contains(&react_host, "persistSnapshot(engine);");
+    assert_contains(&react_host, "handleHostIntent(engine, intent, result)");
+    assert_contains(&react_host, "chooseAnkiImportFile(intent)");
+    assert_contains(&react_host, "engine.mergeAnkiApkg(bytes)");
+    assert_contains(&react_host, "engine.exportAnkiApkg()");
+    assert_contains(&react_host, "downloadBytes(bytes, name)");
     assert!(
         tmp.path()
             .join("react")
@@ -2503,6 +2518,35 @@ fn source_tree_has_expected_shape() {
             path.display()
         );
     }
+
+    let web_ts_host = fs::read_to_string(package_root().join("host/web/engram-host.ts"))
+        .expect("web ts host template");
+    assert_contains(&web_ts_host, "handleHostIntent(engine, intent, result)");
+    assert_contains(&web_ts_host, "importAnkiPackage(engine, intent)");
+    assert_contains(&web_ts_host, "exportAnkiPackage(engine, intent)");
+    assert_contains(&web_ts_host, "chooseAnkiImportFile(intent)");
+    assert_contains(&web_ts_host, "engine.mergeAnkiApkg(bytes)");
+    assert_contains(&web_ts_host, "engine.exportAnkiApkg()");
+    assert_contains(&web_ts_host, "downloadBytes(bytes, name)");
+    assert_contains(&web_ts_host, "hostResultStatus(result) === \"imported\"");
+
+    let web_mjs_host = fs::read_to_string(package_root().join("host/web/engram-host.mjs"))
+        .expect("web mjs host template");
+    assert_contains(&web_mjs_host, "handleHostIntent(engine, intent, result)");
+    assert_contains(&web_mjs_host, "importAnkiPackage(engine, intent)");
+    assert_contains(&web_mjs_host, "exportAnkiPackage(engine, intent)");
+    assert_contains(&web_mjs_host, "chooseAnkiImportFile(intent)");
+    assert_contains(&web_mjs_host, "engine.mergeAnkiApkg(bytes)");
+    assert_contains(&web_mjs_host, "engine.exportAnkiApkg()");
+    assert_contains(&web_mjs_host, "downloadBytes(bytes, name)");
+    assert_contains(&web_mjs_host, "hostResultStatus(result) === \"imported\"");
+
+    let web_wasm_defs =
+        fs::read_to_string(package_root().join("host/web/engram-mosaic-host-wasm.d.ts"))
+            .expect("web wasm declarations");
+    assert_contains(&web_wasm_defs, "exportAnkiApkg");
+    assert_contains(&web_wasm_defs, "mergeAnkiApkg");
+    assert_contains(&web_wasm_defs, "Promise<unknown>");
 
     let xaml_host = fs::read_to_string(package_root().join("host/xaml/MosaicHost.cs"))
         .expect("xaml host template");

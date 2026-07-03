@@ -42,6 +42,12 @@ editing, and save/delete/cancel controls.
 - The generated React and Electron renderer shells mount `EngramApp` through
   `window.mosaicHost.getProps` and `window.mosaicHost.handleEvent`, with sample
   slot values as a fallback when no host is installed.
+- The generated HTML, WebComponent, and React web hosts handle Anki
+  import/export `hostIntent` payloads with browser file input/download helpers
+  and the `engram-wasm` APKG byte API. The current browser WASM build still
+  returns a native-host delegation error for APKG parsing/export, so the host
+  reports that through `hostResult` until the package stack is made
+  browser-buildable.
 - The generated Electron preload/main shell exposes those calls over
   context-isolated IPC channels and can delegate them to an optional
   `electron/host.ts` or `MOSAIC_ELECTRON_HOST_MODULE` host module. The
@@ -155,5 +161,5 @@ Flutter host bridge, JNA/JSON dependencies for the Compose host bridge,
 `engram_capi.dll` as XAML project content, and `engram-host-cli` for the
 Electron APKG sidecar.
 Collection actions such as Anki import/export return `hostIntent` payloads so
-hosts can open file pickers, call native package bridges, and keep the Mosaic
-app interface shared.
+hosts can open file pickers, call package bridges, and keep the Mosaic app
+interface shared.
