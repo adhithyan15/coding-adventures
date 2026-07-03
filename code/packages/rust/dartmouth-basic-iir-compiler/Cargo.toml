@@ -1,8 +1,8 @@
 [package]
 name = "dartmouth-basic-iir-compiler"
-version = "0.33.0"
+version = "0.35.0"
 edition = "2021"
-description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.33.0 (BA-arctan): ATN(X) and TAN(X) built-ins lower to f64_atan / f64_tan IIR ops — libm atan/tan on all 7 backends. v0.31.0 proves BA4 lexical string ordering in IF branches on all seven backends; v0.30.0 proved variable-variable string concat in IF equality."
+description = "Dartmouth BASIC frontend for the LANG VM AOT chain — lowers parsed BASIC into interpreter_ir::IIRModule. v0.35.0 (BA-DIM-2D): multi-dimensional DIM arrays — `DIM A(m,n)` allocates one flat array and `A(i,j)` folds through row-major strides to a flat 0-based index; no backend change. v0.34.0 (BA-pow): general `^` exponentiation. v0.33.0 (BA-arctan): ATN(X)/TAN(X) built-ins lower to f64_atan / f64_tan IIR ops."
 
 [dependencies]
 coding-adventures-dartmouth-basic-parser = { path = "../dartmouth-basic-parser" }

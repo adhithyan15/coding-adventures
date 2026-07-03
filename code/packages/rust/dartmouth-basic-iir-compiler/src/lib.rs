@@ -233,14 +233,20 @@ struct Compiler {
     /// reference is a clean `Unsupported` error rather than an
     /// undefined-register miscompile.  `None` while lowering `main`.
     current_fn_param: Option<String>,
-    /// Names declared as arrays via `DIM` (BA3 / enabler **E5**).  Each
-    /// name maps to the IIR register holding the array *handle* — we use
-    /// the BASIC variable name itself as that register (an array `A` and a
-    /// scalar `A` are different variables in Dartmouth BASIC, and tiny
-    /// programs never collide them).  Membership also tells the `LET` and
-    /// expression paths whether a subscripted `A(I)` is a real array
-    /// access (→ `array_set`/`array_get`) or an undeclared use (an error).
-    arrays: std::collections::HashSet<String>,
+    /// Names declared as arrays via `DIM` (BA3 / BA-DIM-2D / enabler **E5**).
+    /// Each name maps to its **row-major strides**, one per declared dimension.
+    /// We use the BASIC variable name itself as the IIR register holding the
+    /// array *handle* (an array `A` and a scalar `A` are different variables in
+    /// Dartmouth BASIC, and tiny programs never collide them).  Membership tells
+    /// the `LET` and expression paths whether a subscripted `A(I)`/`A(I,J)` is a
+    /// real array access (→ `array_set`/`array_get`) or an undeclared use.
+    ///
+    /// The stride vector's length is the array's dimensionality, so it also
+    /// enforces the subscript count.  For `DIM A(M,N)` the sizes are `(M+1,N+1)`
+    /// (0-based inclusive) and the strides are `[N+1, 1]`: the flat index of
+    /// `A(i,j)` is `i*(N+1) + j`.  A 1-D `DIM A(N)` stores `[1]`, so `A(i)` is
+    /// the flat index `i` directly — unchanged from BA3.
+    arrays: std::collections::HashMap<String, Vec<i64>>,
     /// Scalar value types learned while lowering `main`.  BA7 makes BASIC
     /// scalar values real (`f64`); the few integer slots left are true
     /// structural boundaries such as indexes, read pointers, and return PCs.
@@ -287,7 +293,7 @@ impl Default for Compiler {
             functions: Vec::new(),
             defined_fns: std::collections::HashSet::new(),
             current_fn_param: None,
-            arrays: std::collections::HashSet::new(),
+            arrays: std::collections::HashMap::new(),
             scalar_types: std::collections::HashMap::new(),
             data_pool: Vec::new(),
             needs_print_helpers: false,
@@ -532,26 +538,27 @@ impl Compiler {
         // both cases so the index expression's temporaries don't interleave
         // with it confusingly — the order is irrelevant to correctness (no
         // shared state) but keeps the emitted IR readable.
-        if let Some(index_expr) = array_subscript_index(var_node) {
+        let subs = array_subscript_indices(var_node);
+        if !subs.is_empty() {
             let name = array_target_name(var_node)?;
             if is_basic_string_name(&name) {
                 return Err(CompileError::Unsupported(format!(
                     "string array `{name}(...)` — BA4 currently supports scalar string variables")));
             }
-            if !self.arrays.contains(&name) {
+            if !self.arrays.contains_key(&name) {
                 return Err(CompileError::Unsupported(format!(
                     "assignment to `{name}(...)` but `{name}` was never DIMmed \
                      — declare it with `DIM {name}(n)` first")));
             }
-            let idx = self.emit_expr(index_expr)?;
-            let idx = self.coerce_value(idx, BasicScalarType::Int);
+            // `array_set handle, flat_idx, value` — the flat index folds the
+            // (possibly multi-dimensional) subscripts through the row-major
+            // strides recorded at `DIM` (BA-DIM-2D).  1-D arrays fold to the bare
+            // subscript, so BA3 semantics are unchanged.
+            let flat = self.emit_flat_index(&name, &subs)?;
             let val = self.emit_expr(expr_node)?;
             let val = self.coerce_value(val, BasicScalarType::Real);
-            // `array_set handle, idx, value` — BASIC subscripts are already
-            // 0-based (`DIM A(N)` gives `A(0)..A(N)`), so the subscript IS the
-            // IIR index; no lower-bound subtraction (unlike ALGOL's `[lo:hi]`).
             self.emit("array_set", None,
-                vec![Operand::Var(name), Operand::Var(idx.slot), Operand::Var(val.slot)],
+                vec![Operand::Var(name), Operand::Var(flat), Operand::Var(val.slot)],
                 "f64");
             return Ok(());
         }
@@ -581,8 +588,59 @@ impl Compiler {
         Ok(())
     }
 
+    /// Emit the flat 0-based index for a subscripted array reference `A(i)` or
+    /// `A(i,j)` (BA3 / BA-DIM-2D).  `subs` are the subscript expressions in
+    /// source order; the array's row-major strides come from the `arrays` table
+    /// recorded at `DIM`.  Returns the register holding the flat `i64` index,
+    /// ready for `array_get`/`array_set`.
+    ///
+    /// `flat = Σ_d subscript[d] * stride[d]`.  BASIC subscripts are already
+    /// 0-based (`DIM A(N)` gives `A(0)..A(N)`), so — unlike ALGOL's `[lo:hi]` —
+    /// no lower-bound subtraction is needed.  The innermost dimension has
+    /// `stride == 1`, so its term is the bare subscript with no multiply
+    /// emitted; a 1-D array therefore lowers to exactly the same IIR as before
+    /// BA-DIM-2D (`array_get A, i`).
+    fn emit_flat_index(&mut self, name: &str, subs: &[&GrammarASTNode])
+        -> Result<String, CompileError>
+    {
+        let strides = self.arrays.get(name)
+            .expect("caller checked the array is DIMmed")
+            .clone();
+        if subs.len() != strides.len() {
+            return Err(CompileError::Unsupported(format!(
+                "`{name}` was DIMmed with {} dimension(s) but {} subscript(s) given",
+                strides.len(), subs.len())));
+        }
+        let mut flat: Option<String> = None;
+        for (sub, stride) in subs.iter().zip(&strides) {
+            let idx = self.emit_expr(sub)?;
+            let idx = self.coerce_value(idx, BasicScalarType::Int);
+            // contrib = subscript * stride  (stride == 1 ⇒ just the subscript).
+            let contrib = if *stride == 1 {
+                idx.slot
+            } else {
+                let s = self.fresh_temp();
+                self.emit("const", Some(&s), vec![Operand::Int(*stride)], "i64");
+                let prod = self.fresh_temp();
+                self.emit("mul", Some(&prod),
+                    vec![Operand::Var(idx.slot), Operand::Var(s)], "i64");
+                prod
+            };
+            flat = Some(match flat {
+                None => contrib,
+                Some(acc) => {
+                    let sum = self.fresh_temp();
+                    self.emit("add", Some(&sum),
+                        vec![Operand::Var(acc), Operand::Var(contrib)], "i64");
+                    sum
+                }
+            });
+        }
+        Ok(flat.expect("a DIMmed array always has at least one dimension"))
+    }
+
     /// Lower `DIM A(n) [, B(m) …]` to one `alloc_array` per declared name
-    /// (BA3 / enabler **E5**).
+    /// (BA3 / BA-DIM-2D / enabler **E5**).
     ///
     /// Dartmouth BASIC arrays are **0-based and inclusive**: `DIM A(10)`
     /// declares the eleven elements `A(0)` through `A(10)`.  So the element
@@ -596,7 +654,8 @@ impl Compiler {
         for decl in child_nodes(stmt).into_iter()
             .filter(|n| n.rule_name == "dim_decl")
         {
-            // `dim_decl = NAME LPAREN NUMBER RPAREN`.
+            // `dim_decl = NAME LPAREN NUMBER { COMMA NUMBER } RPAREN` —
+            // one bound per dimension (BA-DIM-2D generalises BA3's single bound).
             let name = first_name_token_value(decl).ok_or_else(|| {
                 CompileError::Malformed("DIM decl missing array name".into())
             })?;
@@ -604,25 +663,47 @@ impl Compiler {
                 return Err(CompileError::Unsupported(format!(
                     "DIM {name}(...) — string arrays are a BA4 follow-up")));
             }
-            let max_sub = dim_decl_bound(decl)?;
-            if max_sub < 0 {
-                return Err(CompileError::Unsupported(format!(
-                    "DIM {name}({max_sub}) — array bound must be non-negative")));
+            let bounds = dim_decl_bounds(decl)?;
+            // Per-dimension size = max subscript + 1 (0-based inclusive).  Each
+            // bound was already range-checked (`0..=MAX_DIM_BOUND`) so the `+ 1`
+            // and the running product below stay panic-free via `checked_*`.
+            let mut sizes: Vec<i64> = Vec::with_capacity(bounds.len());
+            for max_sub in &bounds {
+                if *max_sub < 0 {
+                    return Err(CompileError::Unsupported(format!(
+                        "DIM {name}({max_sub}) — array bound must be non-negative")));
+                }
+                sizes.push(max_sub.checked_add(1).ok_or_else(|| {
+                    CompileError::Unsupported(format!(
+                        "DIM {name}({max_sub}) — array bound too large"))
+                })?);
             }
-            // Element count = max subscript + 1 (inclusive, 0-based).
-            // `dim_decl_bound` already rejects bounds above `MAX_DIM_BOUND`, so
-            // this `+ 1` cannot overflow; the `checked_add` is a belt-and-braces
-            // guard that keeps the compile path panic-free regardless.
-            let count = max_sub.checked_add(1).ok_or_else(|| {
-                CompileError::Unsupported(format!(
-                    "DIM {name}({max_sub}) — array bound too large"))
-            })?;
+            // Total element count = product of the per-dimension sizes.  A 2×3
+            // array is 6 flat elements; overflow (absurd for BASIC, but we stay
+            // panic-free) is a clean `Unsupported`.
+            let mut count: i64 = 1;
+            for s in &sizes {
+                count = count.checked_mul(*s).ok_or_else(|| {
+                    CompileError::Unsupported(format!(
+                        "DIM {name}(...) — total array size too large"))
+                })?;
+            }
+            // Row-major strides: stride[last] = 1, stride[d] = product of all
+            // later dimension sizes.  For `DIM A(M,N)` (sizes M+1, N+1) this is
+            // `[N+1, 1]`, so `A(i,j)` → flat `i*(N+1) + j`.
+            let mut strides: Vec<i64> = vec![1; sizes.len()];
+            for d in (0..sizes.len().saturating_sub(1)).rev() {
+                strides[d] = strides[d + 1].checked_mul(sizes[d + 1]).ok_or_else(|| {
+                    CompileError::Unsupported(format!(
+                        "DIM {name}(...) — stride overflow"))
+                })?;
+            }
             let len = self.fresh_temp();
             self.emit("const", Some(&len),
                 vec![Operand::Int(count)], "i64");
             self.emit("alloc_array", Some(&name),
                 vec![Operand::Var(len)], "array<f64>");
-            self.arrays.insert(name);
+            self.arrays.insert(name, strides);
         }
         Ok(())
     }
@@ -708,9 +789,10 @@ impl Compiler {
                 vec![Operand::Var(BASIC_DATA_ARRAY.into()),
                      Operand::Var(BASIC_DATA_PTR.into())], "f64");
             // Store it into the target — array element or scalar.
-            if let Some(index_expr) = array_subscript_index(var_node) {
+            let subs = array_subscript_indices(var_node);
+            if !subs.is_empty() {
                 let name = array_target_name(var_node)?;
-                if !self.arrays.contains(&name) {
+                if !self.arrays.contains_key(&name) {
                     return Err(CompileError::Unsupported(format!(
                         "READ into `{name}(...)` but `{name}` was never DIMmed")));
                 }
@@ -718,10 +800,9 @@ impl Compiler {
                     return Err(CompileError::Unsupported(format!(
                         "READ into string array `{name}(...)` — DATA is numeric today")));
                 }
-                let idx = self.emit_expr(index_expr)?;
-                let idx = self.coerce_value(idx, BasicScalarType::Int);
+                let flat = self.emit_flat_index(&name, &subs)?;
                 self.emit("array_set", None,
-                    vec![Operand::Var(name), Operand::Var(idx.slot),
+                    vec![Operand::Var(name), Operand::Var(flat),
                          Operand::Var(value)], "f64");
             } else {
                 let target = numeric_scalar_variable_name(var_node)?;
@@ -1513,19 +1594,20 @@ impl Compiler {
                     return self.emit_builtin_fn(&t.value.to_lowercase(), node);
                 }
                 ASTNodeOrToken::Node(n) if n.rule_name == "variable" => {
-                    // `A(I)` reads an array element (BA3 / E5) → `array_get`.
-                    if let Some(index_expr) = array_subscript_index(n) {
+                    // `A(I)` / `A(I,J)` reads an array element (BA3 / BA-DIM-2D /
+                    // E5) → `array_get` at the flat row-major index.
+                    let subs = array_subscript_indices(n);
+                    if !subs.is_empty() {
                         let name = array_target_name(n)?;
-                        if !self.arrays.contains(&name) {
+                        if !self.arrays.contains_key(&name) {
                             return Err(CompileError::Unsupported(format!(
                                 "`{name}(...)` is read but `{name}` was never \
                                  DIMmed — declare it with `DIM {name}(n)` first")));
                         }
-                        let idx = self.emit_expr(index_expr)?;
-                        let idx = self.coerce_value(idx, BasicScalarType::Int);
+                        let flat = self.emit_flat_index(&name, &subs)?;
                         let dest = self.fresh_temp();
                         self.emit("array_get", Some(&dest),
-                            vec![Operand::Var(name), Operand::Var(idx.slot)], "f64");
+                            vec![Operand::Var(name), Operand::Var(flat)], "f64");
                         return Ok(ExprValue { slot: dest, ty: BasicScalarType::Real });
                     }
                     let name = numeric_scalar_variable_name(n)?;
@@ -1832,13 +1914,14 @@ fn extract_line_num(line: &GrammarASTNode) -> Option<i64> {
     None
 }
 
-/// If `var` is a *subscripted* variable `A(I)` (`variable = NAME LPAREN expr
-/// RPAREN`), return its index `expr` node; for the scalar form (`NAME`) return
-/// `None`.  This is the single place that distinguishes an array access from a
-/// plain variable — both the `LET` write path and the expression read path use
-/// it (BA3 / enabler **E5**).
-fn array_subscript_index(var: &GrammarASTNode) -> Option<&GrammarASTNode> {
-    child_nodes(var).into_iter().find(|n| n.rule_name == "expr")
+/// The subscript `expr` nodes of a variable, in source order.  For a scalar
+/// `NAME` this is empty; for `A(I)` it is one element; for `A(I,J)` (BA-DIM-2D)
+/// it is two.  This is the single place that distinguishes an array access from
+/// a plain variable — the `LET` write, `READ`, and expression read paths all use
+/// it (BA3 / BA-DIM-2D / enabler **E5**).  `variable = NAME LPAREN expr
+/// { COMMA expr } RPAREN | NAME`, so every direct `expr` child is a subscript.
+fn array_subscript_indices(var: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    child_nodes(var).into_iter().filter(|n| n.rule_name == "expr").collect()
 }
 
 /// The array name of a subscripted `variable` node `A(I)` — the leading NAME
@@ -1892,7 +1975,8 @@ const MAX_LITERAL_EXPONENT: u32 = 64;
 /// value reaches the (now lossless) `as i64` cast.  A fractional spelling is
 /// truncated toward zero because the DIM bound remains an integer structural
 /// boundary even though BASIC values are otherwise real in BA7.
-fn dim_decl_bound(decl: &GrammarASTNode) -> Result<i64, CompileError> {
+fn dim_decl_bounds(decl: &GrammarASTNode) -> Result<Vec<i64>, CompileError> {
+    let mut bounds = Vec::new();
     for c in &decl.children {
         if let ASTNodeOrToken::Token(t) = c {
             if t.effective_type_name() == "NUMBER" {
@@ -1906,11 +1990,14 @@ fn dim_decl_bound(decl: &GrammarASTNode) -> Result<i64, CompileError> {
                 }
                 // In range and non-negative ⇒ this `as i64` truncates the
                 // fractional part without saturation or overflow.
-                return Ok(f as i64);
+                bounds.push(f as i64);
             }
         }
     }
-    Err(CompileError::Malformed("DIM decl missing NUMBER bound".into()))
+    if bounds.is_empty() {
+        return Err(CompileError::Malformed("DIM decl missing NUMBER bound".into()));
+    }
+    Ok(bounds)
 }
 
 fn literal_integer_exponent(node: &GrammarASTNode) -> Result<Option<u32>, CompileError> {
@@ -2027,7 +2114,7 @@ fn expr_string_variable_name(node: &GrammarASTNode)
     let Some(var) = expr_plain_variable(node) else {
         return Ok(None);
     };
-    if array_subscript_index(var).is_some() {
+    if !array_subscript_indices(var).is_empty() {
         return Ok(None);
     }
     let name = scalar_variable_name(var)?;
@@ -3572,6 +3659,87 @@ mod tests {
         assert_eq!(allocs.len(), 2);
         assert_eq!(allocs[0].dest.as_deref(), Some("A"));
         assert_eq!(allocs[1].dest.as_deref(), Some("B"));
+    }
+
+    /// `DIM A(2,3)` (BA-DIM-2D) lowers to a single flat `alloc_array` whose
+    /// length is the product of the per-dimension inclusive sizes:
+    /// `(2+1) * (3+1) = 12`.
+    #[test]
+    fn compiles_2d_dim_to_alloc_array() {
+        let m = compile("10 DIM A(2,3)\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let alloc = body.iter().find(|i| i.op == "alloc_array")
+            .expect("2-D DIM produces one alloc_array");
+        assert_eq!(alloc.dest.as_deref(), Some("A"));
+        let len_reg = var_name(alloc.srcs.first()).expect("alloc_array len reg");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.dest.as_deref() == Some(len_reg)
+                && matches!(i.srcs.first(), Some(Operand::Int(12)))),
+            "expected `const 12` (= 3*4) feeding the 2-D alloc_array length");
+    }
+
+    /// `LET A(1,2) = 7` on a `DIM A(2,3)` array folds the two subscripts into the
+    /// row-major flat index `i*(N+1) + j = 1*4 + 2 = 6`.  The lowering therefore
+    /// emits a `const 4` stride, a `mul` (i*stride), and an `add` (+ j), feeding a
+    /// single `array_set`.
+    #[test]
+    fn compiles_2d_array_write_uses_stride_mul_and_add() {
+        let m = compile("10 DIM A(2,3)\n20 LET A(1,2) = 7\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        // The outer stride is size[1] = N+1 = 4 — emitted as an i64 const.
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.type_hint == "i64"
+                && matches!(i.srcs.first(), Some(Operand::Int(4)))),
+            "expected an i64 `const 4` for the row stride (N+1)");
+        assert!(body.iter().any(|i| i.op == "mul" && i.type_hint == "i64"),
+            "flat index needs a `mul` for i*stride");
+        assert!(body.iter().any(|i| i.op == "add" && i.type_hint == "i64"),
+            "flat index needs an `add` to combine i*stride + j");
+        let set = body.iter().find(|i| i.op == "array_set")
+            .expect("LET A(i,j)=e produces one array_set");
+        assert_eq!(var_name(set.srcs.first()), Some("A"));
+        assert_eq!(set.srcs.len(), 3, "array_set takes handle, flat index, value");
+    }
+
+    /// Reading `A(1,2)` from a 2-D array produces a single `array_get` at the
+    /// flat index.
+    #[test]
+    fn compiles_2d_array_read_to_array_get() {
+        let m = compile("10 DIM A(2,3)\n20 LET X = A(1,2)\n30 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let get = body.iter().find(|i| i.op == "array_get" && var_name(i.srcs.first()) == Some("A"))
+            .expect("reading A(i,j) produces an array_get on A");
+        assert_eq!(get.type_hint, "f64");
+        assert!(get.dest.is_some());
+    }
+
+    /// Giving the wrong number of subscripts for a DIMmed array is a clean
+    /// `Unsupported` error (dimension mismatch), not a miscompile.
+    #[test]
+    fn wrong_subscript_count_is_unsupported() {
+        // A(1) has one subscript but A was DIMmed 2-D.
+        let err = compile("10 DIM A(2,3)\n20 LET A(1) = 7\n30 END\n").unwrap_err();
+        match err {
+            CompileError::Unsupported(msg) =>
+                assert!(msg.contains("dimension"),
+                    "expected a dimension-mismatch message, got {msg:?}"),
+            other => panic!("expected Unsupported(dimension…), got {other:?}"),
+        }
+    }
+
+    /// A 3-D `DIM A(1,1,1)` also works — the strides generalise: sizes
+    /// `(2,2,2)`, total `8`.
+    #[test]
+    fn compiles_3d_dim_to_alloc_array() {
+        let m = compile("10 DIM A(1,1,1)\n20 END\n").expect("ok");
+        let body = &m.functions[0].instructions;
+        let alloc = body.iter().find(|i| i.op == "alloc_array")
+            .expect("3-D DIM produces one alloc_array");
+        let len_reg = var_name(alloc.srcs.first()).expect("alloc_array len reg");
+        assert!(body.iter().any(|i|
+            i.op == "const" && i.dest.as_deref() == Some(len_reg)
+                && matches!(i.srcs.first(), Some(Operand::Int(8)))),
+            "expected `const 8` (= 2*2*2) for the 3-D alloc_array length");
     }
 
     /// `LET A(2) = 7` lowers to `array_set A, idx, val` with the subscript

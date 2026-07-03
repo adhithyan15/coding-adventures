@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.167.0"
+version = "0.168.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.167.0 (AL-multidim-3D): ALGOL 60 3D integer array matrix proof cell runs on all 7 backends; proves the N-dimensional stride product (stride[0]=size[1]*size[2]).  v0.166.0 (AL-multidim-real): 2D real array cell on all 7 backends.  v0.165.0 (AL-multidim): 2D integer array cell on all 7 backends."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.168.0 (BA-DIM-2D): Dartmouth BASIC 2D DIM array matrix proof cell (`DIM A(1,2)`) runs on all 7 backends via row-major flat index.  v0.167.0 (AL-multidim-3D): ALGOL 60 3D integer array cell on all 7 backends.  v0.166.0 (AL-multidim-real): 2D real array cell on all 7 backends."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

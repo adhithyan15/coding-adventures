@@ -1,5 +1,37 @@
 # Changelog — `dartmouth-basic-iir-compiler`
 
+## [0.35.0] — 2026-07-02 (LANG-FULL BA-DIM-2D — multi-dimensional DIM arrays)
+
+Dartmouth BASIC arrays can now be **multi-dimensional**: `DIM A(m,n)` (and
+`A(m,n,p)`, …) declare one flat array, and `A(i,j)` reads/writes an element
+through a row-major flat index.  No new IIR op and **no backend change** — the
+existing E5 `alloc_array`/`array_set`/`array_get` ops carry it, exactly like the
+ALGOL 60 multidim work.
+
+**Frontend (`src/lib.rs`):**
+- `arrays` changed from `HashSet<String>` to `HashMap<String, Vec<i64>>`,
+  mapping each DIMmed array to its **row-major strides** (one per dimension).
+  For `DIM A(M,N)` the sizes are `(M+1, N+1)` (0-based inclusive) and the
+  strides are `[N+1, 1]`.  A 1-D `DIM A(N)` stores `[1]`, so `A(i)` folds to the
+  bare subscript `i` — BA3 semantics unchanged, no extra IIR emitted.
+- `emit_dim` reads all bounds (`dim_decl_bounds`), computes per-dimension sizes,
+  the total element count (product), and the strides — all `checked_*` so an
+  absurd size is a clean `Unsupported`, never a panic.
+- New `emit_flat_index` folds the subscripts through the strides:
+  `flat = Σ_d subscript[d] * stride[d]` (`const` + `mul` + `add`, with the
+  innermost `stride == 1` term emitted as the bare subscript).  It enforces the
+  subscript count against the array's dimensionality (a mismatch is
+  `Unsupported`).
+- The `LET` write, `READ`, and expression-read paths all use `emit_flat_index`
+  via the new plural `array_subscript_indices` helper.
+
+**Tests:** 5 new unit tests (73 total) — 2-D `DIM`/write/read, the stride
+`mul`+`add`, a 3-D `DIM`, and the wrong-subscript-count error.  The 7-backend
+proof is the `DIM A(1,2)` cell in `lang-aot` `lang_matrix.rs`.
+
+Requires `coding-adventures-dartmouth-basic-parser` 0.3.0 (multi-subscript
+grammar).
+
 ## [0.34.0] — 2026-06-29 (LANG-FULL BA-pow — general `^` exponentiation)
 
 Extended the `^` operator to handle non-integer exponents.  Previously
