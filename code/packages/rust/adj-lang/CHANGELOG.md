@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.49.0] - 2026-07-03 — `constrain asciimath "…"` — a second frontend reaches the constraint surface
+
+### Added
+
+- **`constrain asciimath "<relation>"`** is now accepted anywhere `constrain latex "…"` is. Until now
+  only the LaTeX surface could state a *constraint* (`constrain latex "x^2 = 4"`); a model that writes
+  its equations in AsciiMath had to fall back to the bare `constrain <expr> <relop> <expr>` form. Now
+  the AsciiMath relation surface reaches the constraint sublanguage too: `constrain asciimath "x^2 = 4"`
+  and inequalities like `constrain asciimath "a <= b"` lower to a `Statement::Constrain` and feed the
+  solver (`solve for { … }` / `check`) exactly as the LaTeX form does.
+- **One code path, one frontend swapped.** The new `adapt_constrain_asciimath` is a verbatim mirror of
+  `adapt_constrain_latex` — it parses the string with the SAME AsciiMath `MathFrontend` already used for
+  `asciimath "…"` expression factors (`parse_asciimath_math`), yielding the neutral
+  `MathExpr::Rel(op, lhs, rhs)`, then lowers the operator through the SAME `lower_latex_relop` and both
+  sides through the SAME `latex_math_to_expr_ast`. So `x^2` becomes the identical single
+  `ComputeOp::Pow` node the LaTeX surface produces — no new relation semantics, **no new tree-walker**,
+  and therefore no new stack-overflow/DoS surface (the AsciiMath crate owns its own `MAX_DEPTH`
+  discipline and `#![forbid(unsafe_code)]`).
+- New grammar productions `constrain_asciimath_decl = "constrain" asciimath_relation ;` and
+  `asciimath_relation = "asciimath" STRING ;` (regenerated `_parser_grammar.rs`; no new tokens, so
+  `_lexer_grammar.rs` is unchanged). Unsupported/non-relation AsciiMath still surfaces via the shared
+  `AdapterError::UnsupportedLatexMath`.
+- Two new e2e tests: `native_asciimath_relation_lowers_to_constraint` (equality → `ComputeOp::Pow`
+  quadratic) and `native_asciimath_inequality_relation_lowers` (`a <= b` → `RelOp::Le`).
+
 ## [0.48.0] - 2026-07-03 — a FOURTH math frontend: `unicodemath "…"` — PFE01 quartet complete
 
 ### Added

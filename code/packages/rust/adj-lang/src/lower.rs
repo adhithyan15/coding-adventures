@@ -1932,6 +1932,38 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_asciimath_relation_lowers_to_constraint() {
+        // `constrain asciimath "x^2 = 4"` lowers through the SAME path as
+        // `constrain latex`: the AsciiMath frontend yields MathExpr::Rel(Eq, ..),
+        // the operator lowers via lower_latex_relop, and both sides via
+        // latex_math_to_expr_ast — so `x^2` becomes the same single ComputeOp::Pow
+        // node the LaTeX surface produces (proving the two constraint surfaces are
+        // one code path with the frontend swapped).
+        let lowered =
+            compile("symbol x : scalar\nconstrain asciimath \"x^2 = 4\"\nsolve for { x }\n")
+                .unwrap();
+        let c = &lowered.constraints.constraints[0];
+        assert_eq!(c.op, crate::ast::RelOp::Eq);
+        assert!(matches!(
+            c.lhs,
+            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Pow, _, _)
+        ));
+    }
+
+    #[test]
+    fn native_asciimath_inequality_relation_lowers() {
+        // A non-equality AsciiMath relation (`a <= b`) lowers to the matching
+        // engine RelOp, confirming lower_latex_relop is reused verbatim — the
+        // AsciiMath surface is not limited to equalities.
+        let lowered = compile(
+            "symbol a : scalar\nsymbol b : scalar\nconstrain asciimath \"a <= b\"\ncheck\n",
+        )
+        .unwrap();
+        let c = &lowered.constraints.constraints[0];
+        assert_eq!(c.op, crate::ast::RelOp::Le);
+    }
+
+    #[test]
     fn native_latex_power_computes_as_one_node_without_the_old_cap() {
         // `x^{10}` used to be rejected (expansion capped at exponent 8); it now
         // lowers to a single ComputeOp::Pow node and computes: 2^10 = 1024.
