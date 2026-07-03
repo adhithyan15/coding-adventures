@@ -233,390 +233,169 @@ extra_value=7 with 3 bits is emitted as "111" (7 in binary, same either way sinc
 symmetric for all-ones). More subtly, extra_value=5 with 3 bits: 5 = 0b101, emitted as
 bit0=1, bit1=0, bit2=1 (LSB first).
 
-## Wire Format (CMP05)
+## Wire Format — standard RFC 1951
+
+`compress` emits a **standard RFC 1951 raw DEFLATE stream** — the exact bytes a
+ZIP entry or gzip body carries, with no envelope and no private header. This is a
+deliberate choice: an educational codec is only convincing if a real tool
+(`zlib`, `gzip`, `unzip`, a browser) can read its output. We use a single
+**fixed-Huffman block** (BTYPE=01), so the pre-agreed code tables of RFC 1951
+§3.2.6 are used and no table is transmitted:
 
 ```
-Header (8 bytes):
-  Bytes 0–3:   original_length   — big-endian uint32. Byte length of uncompressed data.
-  Bytes 4–5:   ll_entry_count    — big-endian uint16. Entries in LL code-length table.
-  Bytes 6–7:   dist_entry_count  — big-endian uint16. Entries in distance table (0 if
-                                   no matches in the input).
+Block header (3 bits, LSB-first):
+  bit 0     BFINAL = 1   (this is the only, final block)
+  bits 1–2  BTYPE  = 01  (fixed Huffman)
 
-LL code-length table (ll_entry_count × 3 bytes each):
-  [2 bytes] symbol      — big-endian uint16. LL symbol value (0–284).
-  [1 byte]  code_length — uint8. Huffman code length (1–16).
-  Entries sorted by (code_length ASC, symbol ASC).
+Token stream (LSB-first packed bits):
+  For each LZSS token in sequence:
+    Literal(byte):   fixed LL Huffman code for symbol `byte`   [MSB-first code]
+    Match(off, len): fixed LL code for length_symbol(len)      [MSB-first code]
+                   + extra_bits(len)                           [raw, LSB-first]
+                   + fixed 5-bit distance code dist_code(off)  [MSB-first code]
+                   + extra_bits(off)                           [raw, LSB-first]
+  At end:            fixed LL code for symbol 256 (end-of-block)
 
-Distance code-length table (dist_entry_count × 3 bytes each):
-  [2 bytes] symbol      — big-endian uint16. Distance code (0–23).
-  [1 byte]  code_length — uint8. Huffman code length (1–16).
-  Entries sorted by (code_length ASC, symbol ASC).
-  Omitted entirely (dist_entry_count=0) when input has no matches.
-
-Bit stream (remaining bytes):
-  LSB-first packed bits. Encoding:
-    For each LZSS token in sequence:
-      Literal(byte):    LL Huffman code for symbol `byte`.
-      Match(off, len):  LL Huffman code for length_symbol(len)
-                      + extra_bits(len)   [raw, LSB-first]
-                      + dist code for dist_code(off)
-                      + extra_bits(off)   [raw, LSB-first]
-    At end:             LL Huffman code for symbol 256 (end-of-data).
-  Zero-padded to byte boundary.
+Zero-padded to the next byte boundary.
 ```
+
+The fixed literal/length codes are the canonical assignment of RFC 1951 §3.2.6
+(8-bit codes for symbols 0–143, 9-bit for 144–255, 7-bit for 256–279, 8-bit for
+280–287); distance symbols are 5-bit codes equal to the symbol number. Because
+these are pre-defined, the decoder needs no transmitted table — it is the same
+`fixed Huffman` path `inflate` uses.
+
+Fixed Huffman is correct for every input but not the smallest encoding. **Dynamic
+Huffman** (BTYPE=10) adapts the code lengths to the data for better ratios; it is
+a planned encoder optimisation and requires length-limiting the Huffman trees to
+the RFC's 15-bit maximum. The **decoder** (`inflate`) already reads all three
+block types — stored, fixed, and dynamic — so it decodes `zlib`/`gzip`/Office
+streams today.
 
 ### Key Differences from CMP04
 
 | Feature              | CMP04              | CMP05                              |
 |----------------------|--------------------|------------------------------------|
 | LZ preprocessing     | None               | LZSS tokenization first            |
-| LL alphabet size     | 0–255 (256 syms)   | 0–284 (285 syms, lengths included) |
-| End-of-data          | original_length    | Explicit symbol 256 in LL tree     |
-| Distance tree        | None               | Separate dist Huffman tree         |
+| LL alphabet size     | 0–255 (256 syms)   | 0–285 (lengths + max-match code)   |
+| End-of-data          | original_length    | Explicit symbol 256 (end-of-block) |
+| Distance codes       | None               | Separate distance alphabet (0–29)  |
 | Extra bits           | None               | Raw bits after length/dist codes   |
-| Table entry width    | 2 bytes (sym+len)  | 3 bytes (sym 2B + len 1B)          |
+| Output format        | Custom             | Standard RFC 1951 raw DEFLATE      |
 
-CMP05 uses an explicit end-of-data symbol (256) instead of original_length counting
-because the number of tokens does not correspond 1:1 to output bytes (a single Match
-token can expand to many bytes).
+CMP05 uses an explicit end-of-block symbol (256) instead of an original-length
+count because the number of tokens does not correspond 1:1 to output bytes (a
+single Match token can expand to many bytes).
 
 ## Encoding Algorithm
 
 ```
 function compress(data: bytes,
-                  window_size: int = 4096,
+                  window_size: int = 32768,
                   max_match:   int = 255,
                   min_match:   int = 3) -> bytes:
+    # Emits ONE fixed-Huffman block (BTYPE=01). The literal/length and distance
+    # codes are the pre-defined tables of RFC 1951 §3.2.6, so no Huffman table is
+    # transmitted and the machinery is trivial and always-correct.
 
-    if len(data) == 0:
-        # No symbols at all — empty LL tree with just the end-of-data symbol.
-        return pack(">IHHHH", 0, 1, 0) + encode_single_symbol_tree(256)
-
-    # ── Pass 1: LZSS tokenization (same algorithm as CMP02) ──────────────────
-    tokens ← lzss_tokenize(data, window_size, max_match, min_match)
-
-    # ── Pass 2a: Tally symbol frequencies ────────────────────────────────────
-    ll_freq   ← Counter()   # literal/length symbols
-    dist_freq ← Counter()   # distance codes
-
-    for token in tokens:
-        if token is Literal(byte):
-            ll_freq[byte] += 1
-        else:  # Match(offset, length)
-            ll_freq[length_symbol(token.length)] += 1
-            dist_freq[dist_code(token.offset)]   += 1
-    ll_freq[256] += 1  # end-of-data marker
-
-    # ── Pass 2b: Build canonical Huffman trees (via DT27) ────────────────────
-    ll_tree   ← HuffmanTree.build(list(ll_freq.items()))
-    ll_table  ← ll_tree.canonical_code_table()   # {symbol: bit_string}
-
-    dist_table ← {}
-    if dist_freq:
-        dist_tree  ← HuffmanTree.build(list(dist_freq.items()))
-        dist_table ← dist_tree.canonical_code_table()
-
-    # ── Pass 2c: Encode token stream ─────────────────────────────────────────
     bits ← ""
-    for token in tokens:
+    bits += "1"        # BFINAL = 1 (single, final block)
+    bits += "10"       # BTYPE  = 01, written LSB-first → the two bits "1","0"
+
+    # ── LZSS tokenization (same algorithm as CMP02) ─────────────────────────
+    for token in lzss_tokenize(data, window_size, max_match, min_match):
         if token is Literal(byte):
-            bits += ll_table[byte]
+            bits += fixed_ll_code(byte)                       # MSB-first code
         else:  # Match(offset, length)
-            sym   = length_symbol(token.length)
-            extra = token.length - LENGTH_BASE[sym]
-            ebits = LENGTH_EXTRA[sym]
-            bits += ll_table[sym]
-            if ebits > 0:
-                bits += format(extra, f"0{ebits}b")[::-1]  # LSB-first extra bits
+            sym = length_symbol(token.length)
+            bits += fixed_ll_code(sym)                        # MSB-first code
+            bits += lsb_first(token.length - LENGTH_BASE[sym], LENGTH_EXTRA[sym])
+            dc  = dist_code(token.offset)
+            bits += fixed_dist_code(dc)                       # 5-bit MSB-first code
+            bits += lsb_first(token.offset - DIST_BASE[dc], DIST_EXTRA[dc])
 
-            dc    = dist_code(token.offset)
-            dextra = token.offset - DIST_BASE[dc]
-            debits = DIST_EXTRA[dc]
-            bits += dist_table[dc]
-            if debits > 0:
-                bits += format(dextra, f"0{debits}b")[::-1]  # LSB-first extra bits
-    bits += ll_table[256]  # end-of-data
+    bits += fixed_ll_code(256)  # end-of-block
 
-    bit_bytes ← pack_bits_lsb_first(bits)
-
-    # ── Assemble wire format ──────────────────────────────────────────────────
-    ll_lengths   ← sorted([(s, len(b)) for s,b in ll_table.items()],   key=lambda p: (p[1],p[0]))
-    dist_lengths ← sorted([(s, len(b)) for s,b in dist_table.items()], key=lambda p: (p[1],p[0]))
-
-    header   ← pack(">IHH", len(data), len(ll_lengths), len(dist_lengths))
-    ll_bytes ← concat(pack(">HB", s, l) for s,l in ll_lengths)
-    dt_bytes ← concat(pack(">HB", s, l) for s,l in dist_lengths)
-
-    return header + ll_bytes + dt_bytes + bit_bytes
+    return pack_bits_lsb_first(bits)   # zero-padded to a byte boundary
 
 
-# ── Helper: length symbol lookup ─────────────────────────────────────────────
-function length_symbol(length: int) -> int:
-    # Find S such that LENGTH_BASE[S] <= length < LENGTH_BASE[S+1].
-    for S in range(257, 285):
-        if length <= LENGTH_MAX[S]:
-            return S
-    return 284  # max
+# ── Fixed literal/length codes (RFC 1951 §3.2.6), returned MSB-first ─────────
+function fixed_ll_code(sym: int) -> bitstring:
+    if   0   <= sym <= 143: return bin(0b0011_0000  + sym,        width=8)
+    elif 144 <= sym <= 255: return bin(0b1_1001_0000 + sym - 144, width=9)
+    elif 256 <= sym <= 279: return bin(sym - 256,                 width=7)
+    else:                   return bin(0b1100_0000  + sym - 280,  width=8)  # 280–287
 
-
-# ── Helper: distance code lookup ─────────────────────────────────────────────
-function dist_code(offset: int) -> int:
-    # Find C such that DIST_BASE[C] <= offset < DIST_BASE[C+1].
-    for C in range(0, 24):
-        if offset <= DIST_MAX[C]:
-            return C
-    return 23  # max
+# Fixed distance codes are 5-bit values equal to the symbol number (MSB-first).
+function fixed_dist_code(code: int) -> bitstring:  return bin(code, width=5)
 ```
 
-**Note on extra-bits byte order:** Extra bits are emitted with the **least-significant
-bit first** (same LSB-first convention as the rest of the bit stream). For a 3-bit
-extra value of 5 (binary 101), the bits emitted are: 1 (lsb), 0, 1 (msb). The decoder
-reads them back in the same order.
+**Note on bit order:** Huffman codes are emitted **MSB-first** (the canonical
+convention), while extra bits and the block header are emitted **LSB-first**. The
+decoder reverses each Huffman code as it accumulates bits and reads extra bits
+directly — see `inflate`.
 
 ## Decoding Algorithm
 
-```
-function decompress(data: bytes) -> bytes:
+`decompress` is an alias for `inflate`, the standard RFC 1951 decoder. Because
+`compress` emits standard raw DEFLATE (see *Wire Format* above), decoding is
+exactly standard inflate — there is no private format to parse. `inflate`:
 
-    # ── Parse header ────────────────────────────────────────────────────────
-    original_length ← unpack(">I", data[0:4])
-    ll_entry_count  ← unpack(">H", data[4:6])
-    dist_entry_count← unpack(">H", data[6:8])
+1. Reads each block header (`BFINAL`, `BTYPE`).
+2. Dispatches on `BTYPE`:
+   - **00 stored** — byte-aligned `LEN`/`NLEN`, then `LEN` verbatim bytes.
+   - **01 fixed** — decode with the pre-defined §3.2.6 code tables.
+   - **10 dynamic** — first read the transmitted code-length trees (the
+     code-length alphabet, run-length-encoded in the `CL_PERMUTATION` order),
+     then decode the literal/length and distance trees with them.
+3. In fixed/dynamic blocks it loops: decode an LL symbol; `<256` is a literal,
+   `256` ends the block, `257–285` is a length code followed by a distance code
+   and a back-reference copy (byte-by-byte, to honour overlapping matches).
+4. Repeats until the `BFINAL` block, enforcing a 256 MB output cap
+   (`MAX_INFLATE_OUTPUT`) against decompression bombs.
 
-    if original_length == 0: return b""
-
-    offset ← 8
-
-    # ── Parse LL code-length table ──────────────────────────────────────────
-    ll_lengths ← []
-    for i in range(ll_entry_count):
-        symbol ← unpack(">H", data[offset:offset+2])
-        length ← data[offset+2]
-        ll_lengths.append((symbol, length))
-        offset += 3
-
-    # ── Parse distance code-length table ───────────────────────────────────
-    dist_lengths ← []
-    for i in range(dist_entry_count):
-        symbol ← unpack(">H", data[offset:offset+2])
-        length ← data[offset+2]
-        dist_lengths.append((symbol, length))
-        offset += 3
-
-    # ── Reconstruct canonical Huffman codes ────────────────────────────────
-    ll_code_table   ← reconstruct_canonical_codes(ll_lengths)
-    dist_code_table ← reconstruct_canonical_codes(dist_lengths)
-
-    # ── Unpack bit stream ──────────────────────────────────────────────────
-    bits ← unpack_bits_lsb_first(data[offset:])
-    bit_pos ← 0
-
-    function read_bits(n: int) -> int:
-        # Read n raw bits LSB-first, return as integer.
-        val ← 0
-        for i in range(n):
-            val |= int(bits[bit_pos + i]) << i
-        bit_pos += n
-        return val
-
-    function next_huffman_symbol(code_table: dict) -> int:
-        # Read bits until we match a code in code_table.
-        acc ← ""
-        while True:
-            acc += bits[bit_pos]; bit_pos += 1
-            if acc in code_table: return code_table[acc]
-
-    # ── Decode token stream ────────────────────────────────────────────────
-    output ← []
-    while True:
-        ll_sym ← next_huffman_symbol(ll_code_table)
-
-        if ll_sym == 256:
-            break  # end-of-data
-
-        elif ll_sym < 256:
-            output.append(ll_sym)  # literal byte
-
-        else:  # ll_sym is 257–284: length code
-            extra_bits ← LENGTH_EXTRA[ll_sym]
-            length ← LENGTH_BASE[ll_sym] + read_bits(extra_bits)
-
-            dist_sym   ← next_huffman_symbol(dist_code_table)
-            extra_bits ← DIST_EXTRA[dist_sym]
-            offset     ← DIST_BASE[dist_sym] + read_bits(extra_bits)
-
-            # Copy length bytes from output[-offset] byte-by-byte (supports overlap).
-            start ← len(output) - offset
-            for i in range(length):
-                output.append(output[start + i])
-
-    return bytes(output)
-```
-
-### Worked Example: "AABCBBABC"
-
-LZSS tokenization (window=4096, min_match=3):
-```
-cursor=0: window empty → Literal('A')
-cursor=1: window=[A],   A@1: len=1 < 3 → Literal('A')
-cursor=2: window=[AA],  B → no match → Literal('B')
-cursor=3: window=[AAB], C → no match → Literal('C')
-cursor=4: window=[AABC], B@1: len=1 < 3 → Literal('B')
-cursor=5: window=[AABCB], B@1: len=1 < 3 → Literal('B')
-cursor=6: window=[AABCBB]:
-  pos=2 (B): B=A?→No; pos=0 (A): A=A✓,B=B? wait…
-  scanning: pos=0(A): A✓,then data[7]='B',window[1]='A'→No, len=1.
-            pos=3(C): C≠A. pos=4(B): B≠A. pos=5(B): B≠A.
-            best len=1 < 3 → Literal('A')  [NOTE: A at window[0] or [1] matches 1]
-
-Hmm let me reconsider cursor=6 more carefully.
-data = A A B C B B A B C  (indices 0-8)
-cursor=6, data[6]=A, data[7]=B, data[8]=C
-window = data[0..5] = A A B C B B
-Check each position in window:
-  pos=0 (A): data[6]='A'==window[0]='A' ✓
-             data[7]='B'==window[1]='A' ✗ → len=1
-  pos=1 (A): data[6]='A'==window[1]='A' ✓
-             data[7]='B'==window[2]='B' ✓
-             data[8]='C'==window[3]='C' ✓ → len=3, offset=cursor-pos=6-1=5
-
-cursor=6: Match(offset=5, length=3), cursor→9.
-cursor=9: end of input.
-
-Tokens: [Lit(A), Lit(A), Lit(B), Lit(C), Lit(B), Lit(B), Match(offset=5, length=3)]
-```
-
-Build LL frequency table:
-```
-A(65) → 2,  B(66) → 3,  C(67) → 1
-length=3 → symbol 257 (base=3, extra_bits=0) → freq 1
-256(end) → 1
-```
-
-Build distance frequency table:
-```
-offset=5 → dist_code=4 (base=5, extra_bits=1, extra_value=0) → freq 1
-```
-
-Build canonical Huffman trees:
-
-**LL tree** (frequencies: B=3, A=2, C=1, 256=1, 257=1):
-```
-Heap: [(1,C), (1,256), (1,257), (2,A), (3,B)]
-Step 1: Pop C(1),256(1)→N1(2).   Heap: [(1,257),(2,A),(2,N1),(3,B)]
-Step 2: Pop 257(1),A(2)→N2(3).   Heap: [(2,N1),(3,B),(3,N2)]
-Step 3: Pop N1(2),B(3)→N3(5).    Heap: [(3,N2),(5,N3)]
-Step 4: Pop N2(3),N3(5)→root(8).
-
-Depths:  257→3, C→3, 256→3, A→3, B→2
-
-Canonical codes (sorted by len, then symbol):
-  (2, B=66):  code=0           → "00"
-  (3, A=65):  code=0<<1+0=0→  wait, code advances:
-    prev_len=2, code=0 → B gets "00"; code→1
-    len jumps to 3: code = 1 << (3-2) = 2
-  A(65):  code=2 → "010";  code→3
-  C(67):  code=3 → "011";  code→4
-  256:    code=4 → "100";  code→5
-  257:    code=5 → "101";  code→6
-```
-
-**Distance tree** (only dist code 4, freq=1):
-```
-Single symbol → code length=1, code="0"
-```
-
-Bit stream assembly (tokens → bits):
-```
-Lit(A)=010, Lit(A)=010, Lit(B)=00, Lit(C)=011,
-Lit(B)=00,  Lit(B)=00,
-Match(5,3):
-  LL for len 3 (symbol 257)="101", extra_bits=0 (no extra)
-  Dist code 4 = "0",       extra_bits=1, extra_value=5−5=0 → "0"
-End (256)="100"
-
-Full bit string:
-  0,1,0, 0,1,0, 0,0, 0,1,1, 0,0, 0,0, 1,0,1, 0, 0, 1,0,0
-  [A  ] [A  ] [B] [C  ] [B] [B] [257 ] [d4][de][256]
-  Total: 3+3+2+3+2+2+3+1+1+3 = 23 bits → 3 bytes (1 padding bit)
-
-LSB-first byte packing:
-  Bits 0–7 : 0,1,0,0,1,0,0,0 → 0×1+1×2+0×4+0×8+1×16+0×32+0×64+0×128 = 18 = 0x12
-  Bits 8–15: 1,0,0,0,0,1,0,0 → 1+0+0+0+0+32+0+0 = 33 = 0x21
-  Bits 16–23: 0,1,1,0,0,1,0,0 → 0+2+4+0+0+32+0+0 = 38 = 0x26
-```
-
-Wire bytes for "AABCBBABC":
-```
-original_length:  00 00 00 09
-ll_entry_count:   00 05
-dist_entry_count: 00 01
-
-LL table (sorted by len ASC, symbol ASC):
-  B  (66),  len=2: 00 42 02
-  A  (65),  len=3: 00 41 03
-  C  (67),  len=3: 00 43 03
-  256,      len=3: 01 00 03
-  257,      len=3: 01 01 03
-
-Dist table:
-  dist_code 4, len=1: 00 04 01
-
-Bit stream: 12 21 26
-
-Total wire bytes: 4 + 2 + 2 + 15 + 3 + 3 = 29 bytes
-(expands 9→29; overhead dominates for tiny inputs)
-```
-
-Verification: Decode bit stream "010 010 00 011 00 00 101 0 0 100" against trees above:
-- "010" → A ✓
-- "010" → A ✓
-- "00"  → B ✓
-- "011" → C ✓
-- "00"  → B ✓
-- "00"  → B ✓
-- "101" → 257 (length code): base=3, extra_bits=0 → length=3
-- "0"   → dist code 4: base=5, extra_bits=1 → read 1 raw bit = "0" → offset=5+0=5
-- Copy 3 bytes from position (6−5)=1: output[1]='A', output[2]='B', output[3]='C' → appends "ABC"
-- "100" → 256 (end-of-data) → stop
-- Output: "AABCBBABC" ✓
-
+Huffman codes are decoded by accumulating bits MSB-first and matching against the
+canonical `(code, length)` table; extra bits are read LSB-first. This is the same
+decoder that reads `zlib`, `gzip`, and Microsoft Office (OOXML) streams.
 ## Parameters
 
 | Parameter   | Default | Meaning                                               |
 |-------------|---------|-------------------------------------------------------|
-| window_size | 4096    | Max lookback distance for LZSS matching.              |
+| window_size | 32768   | Max lookback distance for LZSS matching (full window).|
 | max_match   | 255     | Max match length (fits in our length code table).     |
 | min_match   | 3       | Minimum match length to emit a Match token.           |
 
-The window_size=4096 cap means distance codes 0–23 suffice (dist code 23 covers up to 4096).
-The max_match=255 cap means length codes 257–284 suffice (symbol 284 covers up to 255).
+window_size=32768 makes every distance code 0–29 reachable (code 29 covers up to
+32768). max_match=255 means the encoder only needs length codes 257–284 (symbol
+284 covers up to 258); the decoder additionally recognises symbol 285 (length
+258, no extra bits) from other producers.
 
 ## Interface Contract
 
 ```
-compress(data: bytes,
-         window_size: int = 4096,
-         max_match:   int = 255,
-         min_match:   int = 3) -> bytes
-  Returns CMP05 wire-format bytes.
-  compress(b"") → minimal header (original_length=0, single end-of-data symbol).
+compress(data: bytes) -> bytes
+  Returns a standard RFC 1951 raw DEFLATE stream (one fixed-Huffman block).
+  Decodable by any conforming inflater: this crate's `inflate`, zlib, gzip, unzip.
+  compress(b"") -> the 2-byte empty fixed-Huffman block `03 00`.
 
-decompress(data: bytes) -> bytes
-  Returns original bytes from CMP05 wire-format input.
-  decompress(compress(b"")) → b"".
+decompress(data: bytes) -> bytes          # alias for `inflate`
+  Decodes any RFC 1951 stream (stored / fixed / dynamic Huffman).
+  decompress(compress(b"")) -> b"".
 
-Round-trip invariant: decompress(compress(x)) == x   for all x: bytes
+Round-trip invariant: decompress(compress(x)) == x                 for all x
+Standard invariant:   python_zlib.decompress(compress(x), -15) == x for all x
 ```
 
 **Dependencies:**
 - `coding-adventures-lzss` (CMP02) — LZSS tokenization and the `Literal`/`Match` token types.
-- `coding-adventures-huffman-tree` (DT27) — Huffman tree construction and canonical codes.
+
+(No `huffman-tree` dependency: fixed Huffman uses the pre-defined RFC 1951 code
+tables, so no tree is constructed.)
 
 ## Length Code Table (constant)
 
 ```python
-# (base_length, extra_bits) indexed by LL symbol 257–284.
+# (base_length, extra_bits) indexed by LL symbol 257-285.
 LENGTH_CODES = {
     257: (3,  0),  258: (4,  0),  259: (5,  0),  260: (6,  0),
     261: (7,  0),  262: (8,  0),  263: (9,  0),  264: (10, 0),
@@ -625,202 +404,68 @@ LENGTH_CODES = {
     273: (35, 3),  274: (43, 3),  275: (51, 3),  276: (59, 3),
     277: (67, 4),  278: (83, 4),  279: (99, 4),  280: (115, 4),
     281: (131, 5), 282: (163, 5), 283: (195, 5), 284: (227, 5),
+    285: (258, 0),  # maximum-match code: length 258, no extra bits
 }
-# Max length per symbol = base + (2**extra_bits - 1), capped at max_match=255.
 ```
 
 ## Distance Code Table (constant)
 
 ```python
-# (base_distance, extra_bits) indexed by distance code 0–23.
+# (base_distance, extra_bits) indexed by distance code 0-29.
 DIST_CODES = [
-    (1,    0), (2,    0), (3,    0), (4,    0),
-    (5,    1), (7,    1), (9,    2), (13,   2),
-    (17,   3), (25,   3), (33,   4), (49,   4),
-    (65,   5), (97,   5), (129,  6), (193,  6),
-    (257,  7), (385,  7), (513,  8), (769,  8),
-    (1025, 9), (1537, 9), (2049, 10),(3073, 10),
+    (1,     0), (2,     0), (3,     0), (4,     0),
+    (5,     1), (7,     1), (9,     2), (13,    2),
+    (17,    3), (25,    3), (33,    4), (49,    4),
+    (65,    5), (97,    5), (129,   6), (193,   6),
+    (257,   7), (385,   7), (513,   8), (769,   8),
+    (1025,  9), (1537,  9), (2049, 10), (3073, 10),
+    (4097, 11), (6145, 11), (8193, 12), (12289,12),
+    (16385,13), (24577,13),
 ]
-# Max distance per code = base + (2**extra_bits - 1), capped at window_size=4096.
+# Covers the full RFC 1951 32 KB window (code 29 reaches 32768).
 ```
 
 ## Test Vectors
 
-All vectors use `window_size=4096, max_match=255, min_match=3`.
+Outputs are **standard RFC 1951 raw DEFLATE** and were verified in both
+directions: this crate's `inflate` decodes them, and Python's
+`zlib.decompress(bytes, wbits=-15)` decodes them to the original input.
 
 ### 1. Empty input
-
 ```
-compress(b"") → header with original_length=0
-decompress(compress(b"")) == b""
-```
-
-### 2. No matches (all literals) — "AAABBC"
-
-```
-LZSS tokens: all literals [Lit(A)×3, Lit(B)×2, Lit(C)]
-LL symbols: A(65)=3, B(66)=2, C(67)=1, 256(end)=1
-Dist symbols: none → dist_entry_count=0
-
-LL Huffman tree (same construction as CMP04 reference vector):
-  Code lengths: A=1, B=2, C=3, 256=3
-  Canonical codes: A→"0", B→"10", C→"110", 256→"111"
-
-Bit stream:
-  A=0, A=0, A=0, B=10, B=10, C=110, 256=111
-  = "000" + "10" + "10" + "110" + "111"
-  = "000101011" + "0111"  (13 bits → 2 bytes)
-
-LSB-first:
-  Byte 0: bit0=0,1=0,2=0,3=1,4=0,5=1,6=0,7=1 → 8+32+128 = 168 = 0xA8
-  Byte 1: bit0=1,1=0,2=1,3=1,4=1,5..7=0     → 1+4+8+16 = 29  = 0x1D
-
-Wire bytes:
-  00 00 00 06          (original_length = 6)
-  00 04                (ll_entry_count = 4)
-  00 00                (dist_entry_count = 0)
-  00 41 01             (A=65, len=1)
-  00 42 02             (B=66, len=2)
-  00 43 03             (C=67, len=3)
-  01 00 03             (256,  len=3)
-  A8 1D                (bit stream)
+compress(b"")  -> 03 00      (BFINAL=1, BTYPE=01, then the 7-bit EOB symbol 256)
+inflate(03 00) -> b""
 ```
 
-### 3. Mixed literals + match — "AABCBBABC"
-
-See the worked example above. Wire bytes:
+### 2. Literals only — "AAABBC"
 ```
-  00 00 00 09          (original_length = 9)
-  00 05                (ll_entry_count = 5)
-  00 01                (dist_entry_count = 1)
-  00 42 02             (B=66,  len=2)
-  00 41 03             (A=65,  len=3)
-  00 43 03             (C=67,  len=3)
-  01 00 03             (256,   len=3)
-  01 01 03             (257,   len=3)
-  00 04 01             (dist_code_4, len=1)
-  12 21 26             (bit stream)
+compress(b"AAABBC") -> 73 74 74 74 72 72 06 00
+  First byte 0x73 -> low 3 bits 0b011 = BFINAL=1, BTYPE=01 (fixed Huffman).
+  Body: the six literals as fixed 8-bit LL codes, then EOB (256), LSB-packed.
+inflate(...) == b"AAABBC"                    # and python zlib agrees
 ```
 
-### 4. Long repetition — "AAABBBAAABBB" (12 bytes)
-
+### 3. With matches — "AABCBBABC", "AAAAAAA" (overlap)
 ```
-LZSS tokens (min_match=3):
-  cursor=0–2: Lit(A)×3
-  cursor=3–5: Lit(B)×3
-  cursor=6: window=[AAABBB], data[6..11]='AAABBB'
-    pos=0: A=A✓, A=A✓, A=A✓, B=B✓, B=B✓, B=B✓ → len=6
-    Match(offset=6, length=6)
-  cursor=12: end.
-
-Tokens: [Lit(A)×3, Lit(B)×3, Match(offset=6, length=6)]
-
-Length=6 → symbol 260 (base=6, extra_bits=0)
-Distance=6 → dist_code=4 (base=5, extra_bits=1, extra_value=6−5=1 → bit "1")
-
-LL freqs: A=3, B=3, 260=1, 256=1
-Dist freqs: code_4=1
-
-Build LL Huffman (A=3, B=3, 256=1, 260=1):
-  Pop 256(1),260(1) → N1(2).  Heap: [N1(2), A(3), B(3)]
-  Pop N1(2), A(3)   → N2(5).  Heap: [B(3), N2(5)]
-  Pop B(3), N2(5)   → root(8).
-  Depths: B=1, N1=2→256=3, 260=3; A=2
-
-  Canonical (sorted by len, sym):
-    B(66)  len=1: "0"
-    A(65)  len=2: code = 1<<1 = 2 → "10"
-    256    len=3: code = (2+1)<<1 = 6 → "110"
-    260    len=3: code = 7 → "111"
-
-Bit stream:
-  A=10, A=10, A=10, B=0, B=0, B=0, 260=111 (0 extra bits), dist_4="0" + "1" (extra), 256=110
-  Bits: 10,10,10, 0,0,0, 111, 0,1, 110
-  = 1,0,1,0,1,0,0,0,0,1,1,1,0,1,1,1,0   (17 bits → 3 bytes with 7 padding bits)
-
-Wait, the extra bit for dist_code=4 is extra_value=6−5=1, and extra_bits=1, so we emit "1".
-The extra_value=1 in binary is "1", LSB-first = "1". ✓
-
-Byte 0 (bits 0-7): 1,0,1,0,1,0,0,0 → 1+4+16 = 21 = 0x15
-Byte 1 (bits 8-15): 0,1,1,1,0,1,1,1 → 2+4+8+32+64+128 = 238 = 0xEE (wait)
-  bit8=0→0, bit9=1→2, bit10=1→4, bit11=1→8, bit12=0→0, bit13=1→32, bit14=1→64, bit15=1→128
-  = 0+2+4+8+0+32+64+128 = 238 = 0xEE
-Byte 2 (bits 16): 0 + 7 padding zeros → 0x00
-
-Wire bytes:
-  00 00 00 0C          (original_length = 12)
-  00 04                (ll_entry_count = 4)
-  00 01                (dist_entry_count = 1)
-  00 42 01             (B=66, len=1)
-  00 41 02             (A=65, len=2)
-  01 00 03             (256,  len=3)
-  01 04 03             (260,  len=3)
-  00 04 01             (dist_code_4, len=1)
-  15 EE 00             (bit stream)
+These contain repeats, so LZSS emits (length, distance) matches — exercising the
+fixed length codes + extra bits and the fixed 5-bit distance codes, including the
+overlapping-copy case for "AAAAAAA" (offset=1, length=6). Verified by roundtrip
+and python-zlib decode in the crate's tests.
 ```
 
-### 5. Overlapping match — "AAAAAAA" (7 bytes)
-
+### 4. Round-trip and standard-decode invariants
 ```
-LZSS tokens: Lit(A), Match(offset=1, length=6)
-
-Length=6 → symbol 260 (extra_bits=0)
-Distance=1 → dist_code=0 (base=1, extra_bits=0, extra_value=0)
-
-LL freqs: A(65)=1, 260=1, 256=1
-Dist freqs: code_0=1
-
-LL Huffman (3 symbols of freq 1 each):
-  Pop any two, merge:
-    Pop 256(1), 260(1) → N1(2). Heap: [A(1), N1(2)]  ← actually A has freq 1 too
-    Wait: A=1, 256=1, 260=1.
-    Pop 256(1), 260(1) → N1(2). Heap: [A(1), N1(2)]
-    Pop A(1), N1(2) → root(3).
-  Depths: A=1; 256=2, 260=2
-
-  Canonical (sorted):
-    A(65)  len=1: "0"
-    256    len=2: code=1<<1=2 → "10"
-    260    len=2: code=3 → "11"
-
-Bit stream:
-  A=0, 260=11(0 extra), dist_0="0"(0 extra), 256=10
-  = 0, 1,1, 0, 1,0  (6 bits → 1 byte with 2 padding)
-  Byte 0: bit0=0,1=1,2=1,3=0,4=1,5=0,6=0,7=0 → 2+4+16 = 22 = 0x16
-
-decompress: output=[A]; copy 6 bytes from offset 1 (pos 0), byte-by-byte:
-  → [A,A,A,A,A,A,A] ✓
+for x in [b"", b"A", bytes(0..=255), repetitive text, binary]:
+    assert decompress(compress(x)) == x      # our decoder (alias of inflate)
+    assert inflate(compress(x))    == x       # standard RFC 1951 decoder
 ```
 
-### 6. Binary data
-
-```python
-data = bytes(range(256)) * 4   # 1024 bytes, all byte values
-assert decompress(compress(data)) == data
+### 5. Compression
 ```
-
-### 7. Round-trip invariant
-
-```python
-for s in [b"", b"A", b"AAABBC", b"ABABAB", b"AABCBBABC",
-          b"AAABBBAAABBB", b"AAAAAAA", bytes(range(256))]:
-    assert decompress(compress(s)) == s
-```
-
-### 8. Compression ratio beats CMP02 (LZSS) and CMP04 (Huffman alone)
-
-```python
-import random
-random.seed(42)
-# Skewed distribution: many A's, fewer others
-data = b"A" * 5000 + b"B" * 1000 + b"C" * 500 + b"D" * 200
-
-lzss_size    = len(lzss_compress(data))
-huffman_size = len(huffman_compress(data))
-deflate_size = len(compress(data))
-
-# DEFLATE should beat both on most realistic data
-assert deflate_size <= min(lzss_size, huffman_size)
+Repetitive input compresses (LZSS matches + fixed entropy coding): for large n,
+compress(b"ABCABCABC..." * n) is shorter than the input. Fixed Huffman is not
+optimal (dynamic Huffman would do better) but is standard and correct for every
+input.
 ```
 
 ## Comparison with Prior Algorithms
