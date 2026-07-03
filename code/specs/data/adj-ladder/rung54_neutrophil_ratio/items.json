@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 54 \u2014 leukocyte-differential neutrophil ratio from four stated quantities (a NEW panel: hematology / leukocyte-differential). From neutrophil, lymphocyte, monocyte and eosinophil counts compute the neutrophil ratio (neutrophil_count/(lymphocyte_count+monocyte_count+eosinophil_count)), the other-leukocyte total (lymphocyte_count+monocyte_count+eosinophil_count), or the lymph-plus-mono partial sum (lymphocyte_count+monocyte_count). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, ONE OVER A SUM-OF-THREE a/(b+c+d), the first on the ladder to divide a single quantity by a parenthesised three-term sum (the inverse of rung-53 sum-of-three-over-one (a+b+c)/d, and distinct from rung-37 ratio-of-two-sums (a+b)/(c+d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via + and / \u2014 no constant leaks, and neither the other-leukocyte total, the lymph-plus-mono partial sum, nor any neutrophil-ratio figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: dividing by the GRAND total (folding the neutrophils in) instead of the other lines, and breaking the grouping so only the first term is a divisor (a/b+c+d, not a/(b+c+d)). The core confusion tested is dividing one quantity by a grouped three-term sum.",
+  "items": [
+    {
+      "id": "r54neut-01",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 60 neutrophils, 25 lymphocytes, 8 monocytes and 3 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(60)\nobserve lymphocyte_count(25)\nobserve monocyte_count(8)\nobserve eosinophil_count(3)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r54neut-02",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 60 neutrophils, 25 lymphocytes, 8 monocytes and 3 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(60)\nobserve lymphocyte_count(25)\nobserve monocyte_count(8)\nobserve eosinophil_count(3)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r54neut-03",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 60 neutrophils, 25 lymphocytes, 8 monocytes and 3 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(60)\nobserve lymphocyte_count(25)\nobserve monocyte_count(8)\nobserve eosinophil_count(3)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.6666666666666667,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r54neut-04",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 72 neutrophils, 18 lymphocytes, 6 monocytes and 4 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(72)\nobserve lymphocyte_count(18)\nobserve monocyte_count(6)\nobserve eosinophil_count(4)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.72,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r54neut-05",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 72 neutrophils, 18 lymphocytes, 6 monocytes and 4 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(72)\nobserve lymphocyte_count(18)\nobserve monocyte_count(6)\nobserve eosinophil_count(4)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.72,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 28,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r54neut-06",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 72 neutrophils, 18 lymphocytes, 6 monocytes and 4 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(72)\nobserve lymphocyte_count(18)\nobserve monocyte_count(6)\nobserve eosinophil_count(4)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.5714285714285716,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 28,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.72,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r54neut-07",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 55 neutrophils, 30 lymphocytes, 10 monocytes and 5 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(55)\nobserve lymphocyte_count(30)\nobserve monocyte_count(10)\nobserve eosinophil_count(5)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.2222222222222223,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.55,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.833333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r54neut-08",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 55 neutrophils, 30 lymphocytes, 10 monocytes and 5 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(55)\nobserve lymphocyte_count(30)\nobserve monocyte_count(10)\nobserve eosinophil_count(5)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2222222222222223,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.55,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.833333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r54neut-09",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 55 neutrophils, 30 lymphocytes, 10 monocytes and 5 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(55)\nobserve lymphocyte_count(30)\nobserve monocyte_count(10)\nobserve eosinophil_count(5)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.2222222222222223,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.55,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 16.833333333333336,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r54neut-10",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 66 neutrophils, 20 lymphocytes, 9 monocytes and 2 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(66)\nobserve lymphocyte_count(20)\nobserve monocyte_count(9)\nobserve eosinophil_count(2)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 31,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 29,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.6804123711340206,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 14.3,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.129032258064516,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r54neut-11",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 66 neutrophils, 20 lymphocytes, 9 monocytes and 2 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(66)\nobserve lymphocyte_count(20)\nobserve monocyte_count(9)\nobserve eosinophil_count(2)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 31,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2.129032258064516,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 29,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6804123711340206,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r54neut-12",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 66 neutrophils, 20 lymphocytes, 9 monocytes and 2 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(66)\nobserve lymphocyte_count(20)\nobserve monocyte_count(9)\nobserve eosinophil_count(2)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.129032258064516,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 29,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 31,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6804123711340206,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r54neut-13",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 48 neutrophils, 35 lymphocytes, 12 monocytes and 6 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(48)\nobserve lymphocyte_count(35)\nobserve monocyte_count(12)\nobserve eosinophil_count(6)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 53,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 47,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.9056603773584906,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.4752475247524752,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19.371428571428574,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r54neut-14",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 48 neutrophils, 35 lymphocytes, 12 monocytes and 6 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(48)\nobserve lymphocyte_count(35)\nobserve monocyte_count(12)\nobserve eosinophil_count(6)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.9056603773584906,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 47,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4752475247524752,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 53,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 19.371428571428574,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r54neut-15",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 48 neutrophils, 35 lymphocytes, 12 monocytes and 6 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(48)\nobserve lymphocyte_count(35)\nobserve monocyte_count(12)\nobserve eosinophil_count(6)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.9056603773584906,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 53,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.4752475247524752,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 19.371428571428574,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 47,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r54neut-16",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 80 neutrophils, 12 lymphocytes, 5 monocytes and 3 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(80)\nobserve lymphocyte_count(12)\nobserve monocyte_count(5)\nobserve eosinophil_count(3)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r54neut-17",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 80 neutrophils, 12 lymphocytes, 5 monocytes and 3 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(80)\nobserve lymphocyte_count(12)\nobserve monocyte_count(5)\nobserve eosinophil_count(3)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r54neut-18",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 80 neutrophils, 12 lymphocytes, 5 monocytes and 3 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(80)\nobserve lymphocyte_count(12)\nobserve monocyte_count(5)\nobserve eosinophil_count(3)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 17,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.666666666666668,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r54neut-19",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 63 neutrophils, 22 lymphocytes, 7 monocytes and 4 eosinophils. What is the neutrophil ratio (the neutrophils over the sum of the other three lines)?",
+      "program": "observe neutrophil_count(63)\nobserve lymphocyte_count(22)\nobserve monocyte_count(7)\nobserve eosinophil_count(4)\nlet answer = neutrophil_count / (lymphocyte_count + monocyte_count + eosinophil_count)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 29,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.65625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.9090909090909092,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.863636363636363,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r54neut-20",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 63 neutrophils, 22 lymphocytes, 7 monocytes and 4 eosinophils. What is the the other-leukocyte total (lymphocytes plus monocytes plus eosinophils)?",
+      "program": "observe neutrophil_count(63)\nobserve lymphocyte_count(22)\nobserve monocyte_count(7)\nobserve eosinophil_count(4)\nlet answer = lymphocyte_count + monocyte_count + eosinophil_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 1.9090909090909092,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 29,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.65625,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 13.863636363636363,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 33,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r54neut-21",
+      "qtype": "neutrophil_ratio",
+      "stem": "A differential reports 63 neutrophils, 22 lymphocytes, 7 monocytes and 4 eosinophils. What is the the lymphocyte-plus-monocyte count (one partial sum, before adding eosinophils)?",
+      "program": "observe neutrophil_count(63)\nobserve lymphocyte_count(22)\nobserve monocyte_count(7)\nobserve eosinophil_count(4)\nlet answer = lymphocyte_count + monocyte_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 29,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 1.9090909090909092,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 33,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.65625,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 13.863636363636363,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
