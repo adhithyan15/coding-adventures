@@ -321,6 +321,8 @@ pub const SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID: &str = "smart_home.get_recovery
 pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
 pub const SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID: &str = "smart_home.get_escalation_brief";
 pub const SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID: &str = "smart_home.get_continuity_brief";
+pub const SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID: &str =
+    "smart_home.get_operator_readiness_brief";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2449,6 +2451,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_continuity_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_operator_readiness_brief_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6571,6 +6581,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_morning_brief_definition(),
         get_escalation_brief_definition(),
         get_continuity_brief_definition(),
+        get_operator_readiness_brief_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7948,6 +7959,62 @@ fn get_continuity_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "continuity_plan",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_operator_readiness_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID,
+        "Get smart-home operator readiness brief",
+        "Summarize existing D23 smart-home continuity lanes into an operator-ready proceed, handoff, action, or hold decision without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("operator_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("readiness_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("blocker_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("handoff_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("action_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("monitor_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "operator_lanes",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "operator_ready",
+                "requires_human_review",
+                "has_blockers",
+                "readiness_lane_count",
+                "blocker_lane_count",
+                "handoff_lane_count",
+                "action_lane_count",
+                "monitor_lane_count",
+                "summary",
+                "decision",
+                "operator_lanes",
                 "source_tools",
             ],
             false,
@@ -45417,6 +45484,50 @@ fn get_continuity_brief_output_handler_output(
     ))
 }
 
+fn get_operator_readiness_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let continuity =
+        get_continuity_brief_output_handler_output(runtime, principal_id, now_ms)?.output;
+    let output = operator_readiness_brief_output_json(now_ms, &continuity);
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let operator_ready = morning_brief_bool_at(&output, &["operator_ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let readiness_lane_count =
+        morning_brief_integer_at(&output, &["readiness_lane_count"]).unwrap_or(0);
+    let blocker_lane_count =
+        morning_brief_integer_at(&output, &["blocker_lane_count"]).unwrap_or(0);
+    let handoff_lane_count =
+        morning_brief_integer_at(&output, &["handoff_lane_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_operator_readiness_brief")),
+            ("status", string(&status)),
+            ("operator_ready", JsonValue::Bool(operator_ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("readiness_lane_count", integer(readiness_lane_count)),
+            ("blocker_lane_count", integer(blocker_lane_count)),
+            ("handoff_lane_count", integer(handoff_lane_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -50294,6 +50405,351 @@ fn continuity_brief_next_action(next_lane: Option<&ContinuityBriefLane>) -> &str
 }
 
 fn continuity_brief_next_owner_lane(next_lane: Option<&ContinuityBriefLane>) -> &str {
+    next_lane
+        .map(|lane| lane.owner_lane.as_str())
+        .unwrap_or("chief")
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct OperatorReadinessLane {
+    lane_id: String,
+    section_id: String,
+    label: String,
+    status: String,
+    severity: String,
+    operator_state: &'static str,
+    readiness_action: &'static str,
+    continuity_action: String,
+    handoff_required: bool,
+    priority: i64,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    source_summary: JsonValue,
+}
+
+fn operator_readiness_brief_output_json(now_ms: u64, continuity: &JsonValue) -> JsonValue {
+    let lanes = operator_readiness_lanes_from_continuity(continuity);
+    let generated_at_ms =
+        morning_brief_integer_at(continuity, &["generated_at_ms"]).unwrap_or(now_ms as i64);
+    let blocker_lane_count = lanes
+        .iter()
+        .filter(|lane| lane.operator_state == "blocked")
+        .count();
+    let handoff_lane_count = lanes.iter().filter(|lane| lane.handoff_required).count();
+    let action_lane_count = lanes
+        .iter()
+        .filter(|lane| lane.operator_state == "action_required")
+        .count();
+    let monitor_lane_count = lanes
+        .iter()
+        .filter(|lane| lane.operator_state == "monitor")
+        .count();
+    let has_blockers = blocker_lane_count > 0;
+    let requires_human_review = lanes.iter().any(|lane| lane.handoff_required);
+    let operator_ready = lanes.is_empty()
+        && morning_brief_bool_at(continuity, &["ready"]).unwrap_or(false)
+        && morning_brief_bool_at(continuity, &["continuity_ready"]).unwrap_or(false);
+    let status = operator_readiness_status(
+        operator_ready,
+        has_blockers,
+        requires_human_review,
+        action_lane_count,
+    );
+    let next_lane = lanes.first();
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(operator_ready)),
+        ("operator_ready", JsonValue::Bool(operator_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("readiness_lane_count", integer(lanes.len() as i64)),
+        ("blocker_lane_count", integer(blocker_lane_count as i64)),
+        ("handoff_lane_count", integer(handoff_lane_count as i64)),
+        ("action_lane_count", integer(action_lane_count as i64)),
+        ("monitor_lane_count", integer(monitor_lane_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "continuity_status",
+                    string(morning_brief_string_at(continuity, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "continuity_ready",
+                    JsonValue::Bool(
+                        morning_brief_bool_at(continuity, &["continuity_ready"])
+                            .unwrap_or(false),
+                    ),
+                ),
+                ("operator_ready", JsonValue::Bool(operator_ready)),
+                ("readiness_lane_count", integer(lanes.len() as i64)),
+                ("blocker_lane_count", integer(blocker_lane_count as i64)),
+                ("handoff_lane_count", integer(handoff_lane_count as i64)),
+                ("action_lane_count", integer(action_lane_count as i64)),
+                (
+                    "next_tool",
+                    string(operator_readiness_next_tool(next_lane)),
+                ),
+                (
+                    "next_action",
+                    string(operator_readiness_next_action(next_lane)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(operator_readiness_next_owner_lane(next_lane)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            operator_readiness_decision_json(
+                status,
+                operator_ready,
+                has_blockers,
+                requires_human_review,
+                action_lane_count,
+                next_lane,
+            ),
+        ),
+        (
+            "operator_lanes",
+            JsonValue::Array(lanes.iter().map(operator_readiness_lane_json).collect()),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn operator_readiness_lanes_from_continuity(continuity: &JsonValue) -> Vec<OperatorReadinessLane> {
+    let mut lanes = match optional_field(continuity, "continuity_plan") {
+        Some(JsonValue::Array(items)) => items
+            .iter()
+            .map(operator_readiness_lane_from_continuity_lane)
+            .collect::<Vec<_>>(),
+        _ => Vec::new(),
+    };
+    lanes.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.section_id.cmp(&right.section_id))
+    });
+    lanes
+}
+
+fn operator_readiness_lane_from_continuity_lane(item: &JsonValue) -> OperatorReadinessLane {
+    let section_id = morning_brief_string_at(item, &["section_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let severity = morning_brief_string_at(item, &["severity"])
+        .unwrap_or("monitor")
+        .to_string();
+    let continuity_action = morning_brief_string_at(item, &["continuity_action"])
+        .unwrap_or("monitor_owner_lane")
+        .to_string();
+    let priority = morning_brief_integer_at(item, &["priority"])
+        .unwrap_or_else(|| operator_readiness_priority(&severity));
+    let handoff_required = morning_brief_bool_at(item, &["handoff_required"])
+        .unwrap_or_else(|| matches!(severity.as_str(), "blocker" | "review"));
+
+    OperatorReadinessLane {
+        lane_id: format!("operator:{}:{}", severity, section_id),
+        section_id,
+        label: morning_brief_string_at(item, &["label"])
+            .unwrap_or("Unknown")
+            .to_string(),
+        status: morning_brief_string_at(item, &["status"])
+            .unwrap_or("unknown")
+            .to_string(),
+        operator_state: operator_readiness_state(&severity, handoff_required),
+        readiness_action: operator_readiness_action(&severity, &continuity_action),
+        continuity_action,
+        severity,
+        handoff_required,
+        priority,
+        recommended_tool: morning_brief_string_at(item, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(item, &["recommended_action"])
+            .unwrap_or("inspect_continuity_brief")
+            .to_string(),
+        owner_lane: morning_brief_string_at(item, &["owner_lane"])
+            .unwrap_or("chief")
+            .to_string(),
+        source_summary: morning_brief_field_clone(item, "source_summary"),
+    }
+}
+
+fn operator_readiness_lane_json(lane: &OperatorReadinessLane) -> JsonValue {
+    object([
+        ("lane_id", string(&lane.lane_id)),
+        ("section_id", string(&lane.section_id)),
+        ("label", string(&lane.label)),
+        ("status", string(&lane.status)),
+        ("severity", string(&lane.severity)),
+        ("operator_state", string(lane.operator_state)),
+        ("readiness_action", string(lane.readiness_action)),
+        ("continuity_action", string(&lane.continuity_action)),
+        ("handoff_required", JsonValue::Bool(lane.handoff_required)),
+        ("priority", integer(lane.priority)),
+        ("recommended_tool", string(&lane.recommended_tool)),
+        ("recommended_action", string(&lane.recommended_action)),
+        ("owner_lane", string(&lane.owner_lane)),
+        ("source_summary", lane.source_summary.clone()),
+    ])
+}
+
+fn operator_readiness_status(
+    operator_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_lane_count: usize,
+) -> &'static str {
+    if has_blockers {
+        "hold"
+    } else if requires_human_review {
+        "handoff_required"
+    } else if action_lane_count > 0 {
+        "action_required"
+    } else if operator_ready {
+        "ready"
+    } else {
+        "monitor"
+    }
+}
+
+fn operator_readiness_priority(severity: &str) -> i64 {
+    match severity {
+        "blocker" => 0,
+        "review" => 1,
+        "attention" => 2,
+        _ => 3,
+    }
+}
+
+fn operator_readiness_state(severity: &str, handoff_required: bool) -> &'static str {
+    match severity {
+        "blocker" => "blocked",
+        "review" => "handoff_required",
+        "attention" => "action_required",
+        _ if handoff_required => "handoff_required",
+        _ => "monitor",
+    }
+}
+
+fn operator_readiness_action(severity: &str, continuity_action: &str) -> &'static str {
+    match severity {
+        "blocker" => "recover_before_handoff",
+        "review" => "confirm_handoff_owner",
+        "attention" => "coordinate_operator_lane",
+        _ if continuity_action == "coordinate_owner_lane" => "coordinate_operator_lane",
+        _ => "monitor_operator_lane",
+    }
+}
+
+fn operator_readiness_decision_json(
+    status: &str,
+    operator_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_lane_count: usize,
+    next_lane: Option<&OperatorReadinessLane>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(operator_readiness_decision_label(
+                status,
+                operator_ready,
+                has_blockers,
+                requires_human_review,
+                action_lane_count,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(operator_readiness_next_tool(next_lane)),
+        ),
+        (
+            "recommended_action",
+            string(operator_readiness_next_action(next_lane)),
+        ),
+        (
+            "owner_lane",
+            string(operator_readiness_next_owner_lane(next_lane)),
+        ),
+        (
+            "reason",
+            string(
+                next_lane
+                    .map(|lane| lane.section_id.as_str())
+                    .unwrap_or("no_open_operator_lanes"),
+            ),
+        ),
+    ])
+}
+
+fn operator_readiness_decision_label(
+    status: &str,
+    operator_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_lane_count: usize,
+) -> &'static str {
+    if has_blockers || status == "hold" {
+        "hold_for_recovery"
+    } else if requires_human_review {
+        "prepare_operator_handoff"
+    } else if action_lane_count > 0 {
+        "coordinate_operator_actions"
+    } else if operator_ready {
+        "proceed"
+    } else {
+        "monitor"
+    }
+}
+
+fn operator_readiness_next_tool(next_lane: Option<&OperatorReadinessLane>) -> &str {
+    next_lane
+        .map(|lane| lane.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID)
+}
+
+fn operator_readiness_next_action(next_lane: Option<&OperatorReadinessLane>) -> &str {
+    next_lane
+        .map(|lane| lane.readiness_action)
+        .unwrap_or("monitor_operator_readiness")
+}
+
+fn operator_readiness_next_owner_lane(next_lane: Option<&OperatorReadinessLane>) -> &str {
     next_lane
         .map(|lane| lane.owner_lane.as_str())
         .unwrap_or("chief")
@@ -84971,7 +85427,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 300);
+        assert_eq!(definitions.len(), 301);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -85031,6 +85487,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -85836,7 +86295,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            292
+            293
         );
         assert_eq!(
             export
@@ -86541,6 +87000,9 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID).is_some()
+        );
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -87750,6 +88212,140 @@ mod tests {
     }
 
     #[test]
+    fn operator_readiness_brief_turns_continuity_lanes_into_operator_decision() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-operator-readiness-brief-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-operator-readiness-brief",
+            SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "operator_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "readiness_lane_count").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "blocker_lane_count").unwrap()).unwrap() >= 1);
+        assert!(integer_value(field(output, "handoff_lane_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(field(summary, "continuity_status"), Some(&string("hold")));
+        assert_eq!(
+            field(summary, "continuity_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("recover_before_handoff"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(
+            field(decision, "recommendation"),
+            Some(&string("hold_for_recovery"))
+        );
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("recover_before_handoff"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("incident")));
+
+        let lanes = field(output, "operator_lanes").unwrap();
+        assert!(array_len(lanes).unwrap() >= 4);
+        let first = array_item(lanes, 0).unwrap();
+        assert_eq!(field(first, "severity"), Some(&string("blocker")));
+        assert_eq!(field(first, "operator_state"), Some(&string("blocked")));
+        assert_eq!(
+            field(first, "readiness_action"),
+            Some(&string("recover_before_handoff"))
+        );
+        assert_eq!(
+            field(first, "continuity_action"),
+            Some(&string("pause_and_recover"))
+        );
+        assert_eq!(
+            field(first, "handoff_required"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(first, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(first, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(first, "source_summary").and_then(|summary| field(summary, "next_tool")),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(14));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -88251,11 +88847,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(300))
+            Some(&integer(301))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(292))
+            Some(&integer(293))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),

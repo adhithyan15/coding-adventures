@@ -44,6 +44,7 @@ Chief of Staff job/session/agent
      handoff signals
   -> escalation brief over morning, blocker, review, and owner-lane signals
   -> continuity brief over escalation, recovery, and operator handoff signals
+  -> operator readiness brief over continuity lanes and handoff decisions
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
   -> primitive coverage gap list and summary reads for backlog planning
@@ -288,6 +289,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_morning_brief`
 - `smart_home.get_escalation_brief`
 - `smart_home.get_continuity_brief`
+- `smart_home.get_operator_readiness_brief`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
