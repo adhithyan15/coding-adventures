@@ -767,6 +767,11 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                 count_uses_expr(a, name, count);
             }
         }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                count_uses_expr(e, name, count);
+            }
+        }
         Expression::MemberExpression(m) => {
             count_uses_member(&m.object, &m.property, m.computed, name, count)
         }
@@ -1048,6 +1053,11 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
             changed |= propagate_in_expr(&mut ne.callee, cand);
             for a in &mut ne.arguments {
                 changed |= propagate_in_expr(a, cand);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &mut se.expressions {
+                changed |= propagate_in_expr(e, cand);
             }
         }
         Expression::MemberExpression(m) => changed |= propagate_in_member(m, cand),

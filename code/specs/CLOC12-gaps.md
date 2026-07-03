@@ -1769,3 +1769,48 @@ the callee-with-call wraps (`new (f())()`, `new (a.b().c)()`), the
 `#[test]`s, no `#[ignore]` — the emitter conforms to every covered shape. This
 completes the CLOC12.159 `NewExpression` three-PR arc (node+emit → bridge →
 conformance).
+
+## CLOC12.160 — `SequenceExpression` (`a, b, c`): atomic node + emit + passes (PR1)
+
+Adds `Expression::SequenceExpression { cv, expressions }` to `javascript-ast`
+(0.19.0) — the **comma operator**: evaluate each operand left to right, yield
+the last. It is the **loosest** expression in the grammar (the entry production
+`Expression : AssignmentExpression { , AssignmentExpression }`), binding below
+assignment.
+
+`closure-emitter` (0.24.0) `emit_sequence` prints the operands comma-joined
+(`a,b,c`), each at `PREC_ASSIGNMENT`. The sequence itself is the new lowest
+precedence `PREC_SEQUENCE` (0). Correct wrapping of a sequence sub-operand
+required the four **assignment-position** emit sites to emit their child at
+`PREC_ASSIGNMENT` rather than the parent-precedence-0 sentinel: **call
+arguments, `new` arguments, array elements, and the assignment RHS**. A sequence
+there now wraps — `f((a,b),c)` (never the three-argument `f(a,b,c)`),
+`[(a,b),c]` (never the three-element `[a,b,c]`), `x=(a,b)` (never `x=a,b` =
+`(x=a),b`). This is a **no-op for every existing node type** (all bind at
+`PREC_ASSIGNMENT` or higher, so nothing new wraps — the full closurec suite is
+unchanged). Two positions keep a bare sequence: statement position (`a,b,c;`)
+and a computed-member key (`obj[a,b]`, which the surrounding `[ ]` already
+delimits).
+
+All nine downstream pass/analysis crates get a `SequenceExpression` match arm
+recursing into `expressions` (the transforms rebuild it; `constant-fold` folds
+each operand but keeps them all — earlier operands may have side effects), and
+`fold-control-flow`'s exhaustive `expression_cv` accessor gains its arm — all in
+one atomic commit so the workspace never has a broken exhaustive `match`.
+
+8 new emitter unit tests (statement-bare, sole/multi call arg, array element,
+assignment RHS, computed-member-key-bare, conditional branch, unary operand).
+No behaviour change for existing inputs — the bridge still declines the comma
+operator (gap-161), so closurec falls back to WHITESPACE_ONLY on `a, b, c` for
+now. PR2 (bridge-enable) and PR3 (conformance port) follow.
+
+### gap-161 — bridge declines the comma operator (`SequenceExpression`)
+
+The `javascript-parser` bridge's `convert_expression_rule` handles only the
+single-expression form of the grammar's `expression = assignment_expression {
+COMMA assignment_expression }`; a multi-expression comma list returns
+`UnsupportedSyntax { rule: "SequenceExpression" }`, so any file with a top-level
+comma operator drops to WHITESPACE_ONLY. With the `Expression::SequenceExpression`
+node now in place (CLOC12.160 PR1), PR2 will build it from the comma-separated
+`assignment_expression` children and add a closurec e2e diff fixture, closing
+this gap.

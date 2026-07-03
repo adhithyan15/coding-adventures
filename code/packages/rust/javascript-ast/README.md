@@ -68,6 +68,14 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   callee excludes a trailing call (`new (f())()` needs the parens). Node +
   `closure-emitter` + all pass traversals land in one atomic PR; the
   bridge-enable + conformance port follow (gap-160).
+- `SequenceExpression` (CLOC12.160) — the comma operator: `a, b, c`. Evaluates
+  each operand left to right and yields the last.
+  `SequenceExpression { expressions: Vec<Expression> }`. It is the **loosest**
+  expression (below assignment), so a sequence sub-operand almost always needs
+  parentheses (`f((a,b),c)`, `x=(a,b)`) — the exceptions are statement position
+  (`a,b,c;`) and a computed-member key (`obj[a,b]`). Node + `closure-emitter` +
+  all pass traversals land in one atomic PR; the bridge-enable + conformance
+  port follow (gap-161).
 
 ## What's coming (follow-up PRs)
 

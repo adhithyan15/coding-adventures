@@ -1179,6 +1179,11 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
                 classify_expr(a, cls);
             }
         }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                classify_expr(e, cls);
+            }
+        }
         Expression::MemberExpression(m) => classify_member(&m.object, &m.property, m.computed, cls),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter().flatten() {
@@ -1443,6 +1448,11 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             rewrite_expr(&mut ne.callee, map);
             for a in &mut ne.arguments {
                 rewrite_expr(a, map);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &mut se.expressions {
+                rewrite_expr(e, map);
             }
         }
         Expression::MemberExpression(m) => {

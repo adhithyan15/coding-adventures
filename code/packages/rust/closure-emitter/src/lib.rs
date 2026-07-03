@@ -74,7 +74,7 @@ use coding_adventures_javascript_ast::{
     ForStatement,
     FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
-    MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
+    MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
@@ -1111,6 +1111,7 @@ impl<'a> Emitter<'a> {
             Expression::ConditionalExpression(c) => self.emit_conditional(c),
             Expression::CallExpression(c) => self.emit_call(c),
             Expression::NewExpression(n) => self.emit_new(n),
+            Expression::SequenceExpression(s) => self.emit_sequence(s),
             Expression::MemberExpression(m) => self.emit_member(m),
             Expression::ArrayExpression(a) => self.emit_array(a),
             Expression::ObjectExpression(o) => self.emit_object(o),
@@ -1384,7 +1385,11 @@ impl<'a> Emitter<'a> {
         self.pretty_ws();
         self.write_str(assignment_op_str(a.operator));
         self.pretty_ws();
-        self.emit_expression(&a.right);
+        // The RHS is an `AssignmentExpression`, so it is emitted at
+        // `PREC_ASSIGNMENT`: a looser *sequence* RHS wraps (`x=(a,b)`, never
+        // `x=a,b` which parses as `(x=a),b`). Every other node is
+        // `PREC_ASSIGNMENT` or higher and prints bare.
+        self.emit_expression_inner(&a.right, PREC_ASSIGNMENT);
     }
 
     fn emit_conditional(&mut self, c: &ConditionalExpression) {
@@ -1396,10 +1401,10 @@ impl<'a> Emitter<'a> {
         // delimits them, so `a ? b = 1 : c = 2` reparses identically to
         // `a ? (b=1) : (c=2)` and `a ? b ? c : d : e` to `a ? (b?c:d) : e`.
         //
-        // We therefore emit both branches at `PREC_ASSIGNMENT` — the lowest
-        // precedence in our expression set (there is no SequenceExpression in
-        // the AST, so nothing binds looser) — which means the precedence
-        // wrapper never adds parens to a branch. Previously the consequent was
+        // We therefore emit both branches at `PREC_ASSIGNMENT` — which wraps
+        // only a still-looser SequenceExpression (`a?(b,c):d` — a bare comma
+        // branch would be captured by the enclosing statement), never an
+        // assignment or nested conditional. Previously the consequent was
         // emitted at `PREC_CONDITIONAL + 1` and the alternate at
         // `PREC_CONDITIONAL`, so an assignment branch (`a?b=1:c`) was needlessly
         // parenthesised (`a?(b=1):c`).
@@ -1437,7 +1442,11 @@ impl<'a> Emitter<'a> {
                 self.write_str(",");
                 self.pretty_ws();
             }
-            self.emit_expression(a);
+            // An argument is an `AssignmentExpression` in the grammar, so it is
+            // emitted at `PREC_ASSIGNMENT`: a looser *sequence* argument wraps
+            // (`f((a,b),c)`, never the three-argument `f(a,b,c)`), while every
+            // other node — already `PREC_ASSIGNMENT` or higher — prints bare.
+            self.emit_expression_inner(a, PREC_ASSIGNMENT);
         }
         self.write_str(")");
     }
@@ -1488,9 +1497,32 @@ impl<'a> Emitter<'a> {
                 self.write_str(",");
                 self.pretty_ws();
             }
-            self.emit_expression(a);
+            // Assignment-position argument — a sequence wraps. See `emit_call`.
+            self.emit_expression_inner(a, PREC_ASSIGNMENT);
         }
         self.write_str(")");
+    }
+
+    /// Emit a `SequenceExpression` — the comma operator `a, b, c`.
+    ///
+    /// The operands print comma-separated with no minified inter-operand space
+    /// (`a,b,c`). Each operand is emitted at `PREC_ASSIGNMENT`: an operand that
+    /// is itself a looser sequence (e.g. a pass built `(a,b),c`) is wrapped —
+    /// but every non-sequence operand is `PREC_ASSIGNMENT` or higher, so it
+    /// prints bare. The *sequence itself* is `PREC_SEQUENCE` (the loosest), so a
+    /// parent that emits its child above statement level wraps the whole
+    /// sequence — see the four assignment-position sites (`emit_call` /
+    /// `emit_new` arguments, `emit_array` elements, `emit_assignment` RHS) and
+    /// `expr_prec`.
+    fn emit_sequence(&mut self, s: &SequenceExpression) {
+        self.maybe_map(&s.cv);
+        for (i, e) in s.expressions.iter().enumerate() {
+            if i > 0 {
+                self.write_str(",");
+                self.pretty_ws();
+            }
+            self.emit_expression_inner(e, PREC_ASSIGNMENT);
+        }
     }
 
     fn emit_member(&mut self, m: &MemberExpression) {
@@ -1523,7 +1555,10 @@ impl<'a> Emitter<'a> {
                 self.pretty_ws();
             }
             match el {
-                Some(e) => self.emit_expression(e),
+                // Assignment-position element — a sequence wraps
+                // (`[(a,b),c]`, never the three-element `[a,b,c]`). See
+                // `emit_call`.
+                Some(e) => self.emit_expression_inner(e, PREC_ASSIGNMENT),
                 None => {
                     // Elision. Empty position between commas.
                 }
@@ -1781,6 +1816,12 @@ fn format_exponential_uppercase(n: f64) -> String {
 // of a given AST node.
 // =====================================================================
 
+/// The comma operator — the loosest expression there is (below assignment). A
+/// sequence sub-operand wraps under any parent that emits its child above the
+/// statement level. `0` doubles as the "wrap nothing" sentinel used at
+/// statement position and inside a computed-member key, which is exactly where
+/// a bare sequence is legal.
+const PREC_SEQUENCE: u8 = 0;
 const PREC_CONDITIONAL: u8 = 2;
 const PREC_UNARY: u8 = 14;
 const PREC_PRIMARY: u8 = 18;
@@ -1874,6 +1915,9 @@ fn expr_prec(e: &Expression) -> u8 {
         // empty parens — a future minification — the no-arg form would need the
         // looser bare-`NewExpression` precedence; we don't, so one tag suffices.)
         Expression::NewExpression(_) => PREC_PRIMARY,
+        // The comma operator binds looser than every other expression — a
+        // sequence sub-operand must be wrapped in almost every context.
+        Expression::SequenceExpression(_) => PREC_SEQUENCE,
         // A function expression is primary-*ish*, but two contexts
         // mis-parse a bare one: as a call callee (`function(){}()` is a
         // syntax error) and as a member object (`function(){}.x`). Tag
@@ -4506,5 +4550,97 @@ mod tests {
     fn nested_new_inner_not_wrapped() {
         let inner = new_expr(ident("X"), vec![]);
         assert_eq!(emit_expr(new_expr(inner, vec![])), "new new X()();");
+    }
+
+    // ---- SequenceExpression (CLOC12.160) -------------------------------
+
+    fn seq(exprs: Vec<Expression>) -> Expression {
+        Expression::SequenceExpression(SequenceExpression { cv: None, expressions: exprs })
+    }
+
+    /// A sequence at statement position prints bare — the loosest expression,
+    /// nothing captures it: `a,b,c;`.
+    #[test]
+    fn sequence_at_statement_is_bare() {
+        assert_eq!(emit_expr(seq(vec![ident("a"), ident("b"), ident("c")])), "a,b,c;");
+    }
+
+    /// A sequence as a call argument MUST wrap, or `f(a,b)` would be a
+    /// two-argument call instead of one sequence argument: `f((a,b));`.
+    #[test]
+    fn sequence_as_sole_call_arg_is_wrapped() {
+        let e = call(ident("f"), vec![seq(vec![ident("a"), ident("b")])]);
+        assert_eq!(emit_expr(e), "f((a,b));");
+    }
+
+    /// A sequence as ONE of several call arguments wraps so the arity is
+    /// preserved: `f((a,b),c);` — never the three-argument `f(a,b,c)`.
+    #[test]
+    fn sequence_as_call_arg_preserves_arity() {
+        let e = call(ident("f"), vec![seq(vec![ident("a"), ident("b")]), ident("c")]);
+        assert_eq!(emit_expr(e), "f((a,b),c);");
+    }
+
+    /// A sequence as an array element wraps, or the element count changes:
+    /// `[(a,b),c];` — never the three-element `[a,b,c]`.
+    #[test]
+    fn sequence_as_array_element_is_wrapped() {
+        let e = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(seq(vec![ident("a"), ident("b")])), Some(ident("c"))],
+        });
+        assert_eq!(emit_expr(e), "[(a,b),c];");
+    }
+
+    /// A sequence as an assignment RHS wraps: `x=(a,b);` — a bare `x=a,b`
+    /// reparses as `(x=a),b`, a different program.
+    #[test]
+    fn sequence_as_assignment_rhs_is_wrapped() {
+        let e = Expression::AssignmentExpression(AssignmentExpression {
+            cv: None,
+            operator: AssignmentOperator::Eq,
+            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+            right: Box::new(seq(vec![ident("a"), ident("b")])),
+        });
+        assert_eq!(emit_expr(e), "x=(a,b);");
+    }
+
+    /// A sequence as a computed-member key needs NO parens — the `[ ]` already
+    /// delimits a full `Expression`: `a[b,c];` (which evaluates the key to `c`).
+    #[test]
+    fn sequence_as_computed_member_key_is_bare() {
+        let e = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(ident("a")),
+            property: Box::new(seq(vec![ident("b"), ident("c")])),
+            computed: true,
+        });
+        assert_eq!(emit_expr(e), "a[b,c];");
+    }
+
+    /// A sequence as a conditional branch wraps (the branch is an
+    /// `AssignmentExpression`): `x?(a,b):c;`.
+    #[test]
+    fn sequence_as_conditional_branch_is_wrapped() {
+        let e = Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(ident("x")),
+            consequent: Box::new(seq(vec![ident("a"), ident("b")])),
+            alternate: Box::new(ident("c")),
+        });
+        assert_eq!(emit_expr(e), "x?(a,b):c;");
+    }
+
+    /// A sequence as a unary operand wraps: `!(a,b);` — a bare `!a,b` parses as
+    /// `(!a),b`.
+    #[test]
+    fn sequence_as_unary_operand_is_wrapped() {
+        let e = Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: UnaryOperator::Not,
+            prefix: true,
+            argument: Box::new(seq(vec![ident("a"), ident("b")])),
+        });
+        assert_eq!(emit_expr(e), "!(a,b);");
     }
 }
