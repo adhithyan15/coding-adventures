@@ -1,0 +1,13 @@
+[package]
+name = "coding-adventures-xlsx-eval"
+version = "0.1.0"
+edition = "2021"
+description = "Evaluate .xlsx formulas — bridges the spreadsheetml (.xlsx) reader to the spreadsheet-core formula engine so a workbook's formulas are recomputed from scratch (OOXML milestone M5)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-spreadsheetml = { path = "../spreadsheetml" }
+spreadsheet-core = { path = "../spreadsheet-core" }
+
+[dev-dependencies]
+# The end-to-end fixture (a real .xlsx byte array) lives under tests/.

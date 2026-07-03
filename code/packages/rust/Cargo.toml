@@ -850,4 +850,5 @@ members = [
     "spreadsheet-android-jni",
     "spreadsheet-capi",
     "spreadsheet-wasm",
+    "xlsx-eval",
 ]
