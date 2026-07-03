@@ -1703,6 +1703,7 @@ pub enum SmartHomeTool {
     GetCloseoutAuditTrail,
     GetCloseoutArchive,
     GetCloseoutArchiveManifest,
+    GetCloseoutRetentionLedger,
     GetTopologySummary,
     ListDesiredStates,
     ListDesiredStateDriftAudit,
@@ -2445,6 +2446,9 @@ impl SmartHomeTool {
             Self::GetCloseoutArchive => read_tool("smart_home.get_closeout_archive"),
             Self::GetCloseoutArchiveManifest => {
                 read_tool("smart_home.get_closeout_archive_manifest")
+            }
+            Self::GetCloseoutRetentionLedger => {
+                read_tool("smart_home.get_closeout_retention_ledger")
             }
             Self::GetTopologySummary => read_tool("smart_home.get_topology_summary"),
             Self::ListDesiredStates => read_tool("smart_home.list_desired_states"),
@@ -3364,6 +3368,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetCloseoutAuditTrail,
         SmartHomeTool::GetCloseoutArchive,
         SmartHomeTool::GetCloseoutArchiveManifest,
+        SmartHomeTool::GetCloseoutRetentionLedger,
         SmartHomeTool::GetTopologySummary,
         SmartHomeTool::ListDesiredStates,
         SmartHomeTool::ListDesiredStateDriftAudit,
@@ -4210,7 +4215,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 307);
+        assert_eq!(catalog.len(), 308);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_command_risk_audit"
@@ -4320,6 +4325,10 @@ mod tests {
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.get_closeout_archive_manifest"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_closeout_retention_ledger"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
@@ -5441,15 +5450,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 307);
-        assert_eq!(summary.read_tools, 299);
+        assert_eq!(summary.total_tools, 308);
+        assert_eq!(summary.read_tools, 300);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 299);
+        assert_eq!(summary.read_only_tier_tools, 300);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 307);
+        assert_eq!(summary.total_required_capabilities, 308);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());
