@@ -93,6 +93,7 @@ SELF_CONTAINED_RUNGS = (
     "rung53_caloric_density",
     "rung54_neutrophil_ratio",
     "rung55_fresh_gas_volume",
+    "rung56_stroke_work",
 )
 
 

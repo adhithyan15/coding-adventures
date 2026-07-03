@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 56 \u2014 cardiac stroke work from four stated quantities (a NEW panel: cardiology / ventricular-mechanics). From a systolic and a diastolic pressure and a forward and a regurgitant volume compute the stroke work ((systolic_pressure-diastolic_pressure)*(forward_volume+regurgitant_volume)), the driving pressure (systolic_pressure-diastolic_pressure), or the ejected volume (forward_volume+regurgitant_volume). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, DIFFERENCE-TIMES-SUM (a-b)*(c+d), the first on the ladder to multiply a difference by a sum (distinct from rung-55 product-of-two-sums (a+b)*(c+d) and rung-48 sum-times-difference (a+b)*(c-d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via +, - and * \u2014 no constant leaks, and neither the driving pressure, the ejected volume, nor any stroke-work figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: ADDING the driving pressure and the ejected volume instead of multiplying them, and breaking the grouping so the pressure multiplies only the forward volume ((a-b)*c+d, not (a-b)*(c+d)). The core confusion tested is multiplying a grouped difference by a grouped sum.",
+  "items": [
+    {
+      "id": "r56work-01",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 120 mmHg and a diastolic pressure of 80 mmHg, and ejects a forward volume of 60 mL plus a regurgitant volume of 20 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(120)\nobserve diastolic_pressure(80)\nobserve forward_volume(60)\nobserve regurgitant_volume(20)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2420,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r56work-02",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 120 mmHg and a diastolic pressure of 80 mmHg, and ejects a forward volume of 60 mL plus a regurgitant volume of 20 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(120)\nobserve diastolic_pressure(80)\nobserve forward_volume(60)\nobserve regurgitant_volume(20)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2420,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r56work-03",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 120 mmHg and a diastolic pressure of 80 mmHg, and ejects a forward volume of 60 mL plus a regurgitant volume of 20 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(120)\nobserve diastolic_pressure(80)\nobserve forward_volume(60)\nobserve regurgitant_volume(20)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2420,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r56work-04",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 140 mmHg and a diastolic pressure of 90 mmHg, and ejects a forward volume of 55 mL plus a regurgitant volume of 25 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(140)\nobserve diastolic_pressure(90)\nobserve forward_volume(55)\nobserve regurgitant_volume(25)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2775,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r56work-05",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 140 mmHg and a diastolic pressure of 90 mmHg, and ejects a forward volume of 55 mL plus a regurgitant volume of 25 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(140)\nobserve diastolic_pressure(90)\nobserve forward_volume(55)\nobserve regurgitant_volume(25)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2775,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r56work-06",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 140 mmHg and a diastolic pressure of 90 mmHg, and ejects a forward volume of 55 mL plus a regurgitant volume of 25 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(140)\nobserve diastolic_pressure(90)\nobserve forward_volume(55)\nobserve regurgitant_volume(25)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4000,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 130,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2775,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r56work-07",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 110 mmHg and a diastolic pressure of 70 mmHg, and ejects a forward volume of 70 mL plus a regurgitant volume of 10 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(110)\nobserve diastolic_pressure(70)\nobserve forward_volume(70)\nobserve regurgitant_volume(10)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2810,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r56work-08",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 110 mmHg and a diastolic pressure of 70 mmHg, and ejects a forward volume of 70 mL plus a regurgitant volume of 10 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(110)\nobserve diastolic_pressure(70)\nobserve forward_volume(70)\nobserve regurgitant_volume(10)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2810,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r56work-09",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 110 mmHg and a diastolic pressure of 70 mmHg, and ejects a forward volume of 70 mL plus a regurgitant volume of 10 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(110)\nobserve diastolic_pressure(70)\nobserve forward_volume(70)\nobserve regurgitant_volume(10)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2810,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r56work-10",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 130 mmHg and a diastolic pressure of 85 mmHg, and ejects a forward volume of 50 mL plus a regurgitant volume of 30 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(130)\nobserve diastolic_pressure(85)\nobserve forward_volume(50)\nobserve regurgitant_volume(30)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2280,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3600,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r56work-11",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 130 mmHg and a diastolic pressure of 85 mmHg, and ejects a forward volume of 50 mL plus a regurgitant volume of 30 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(130)\nobserve diastolic_pressure(85)\nobserve forward_volume(50)\nobserve regurgitant_volume(30)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2280,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r56work-12",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 130 mmHg and a diastolic pressure of 85 mmHg, and ejects a forward volume of 50 mL plus a regurgitant volume of 30 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(130)\nobserve diastolic_pressure(85)\nobserve forward_volume(50)\nobserve regurgitant_volume(30)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3600,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 125,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2280,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r56work-13",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 150 mmHg and a diastolic pressure of 100 mmHg, and ejects a forward volume of 45 mL plus a regurgitant volume of 15 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(150)\nobserve diastolic_pressure(100)\nobserve forward_volume(45)\nobserve regurgitant_volume(15)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3000,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2265,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r56work-14",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 150 mmHg and a diastolic pressure of 100 mmHg, and ejects a forward volume of 45 mL plus a regurgitant volume of 15 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(150)\nobserve diastolic_pressure(100)\nobserve forward_volume(45)\nobserve regurgitant_volume(15)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2265,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r56work-15",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 150 mmHg and a diastolic pressure of 100 mmHg, and ejects a forward volume of 45 mL plus a regurgitant volume of 15 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(150)\nobserve diastolic_pressure(100)\nobserve forward_volume(45)\nobserve regurgitant_volume(15)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2265,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 60,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r56work-16",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 125 mmHg and a diastolic pressure of 75 mmHg, and ejects a forward volume of 65 mL plus a regurgitant volume of 35 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(125)\nobserve diastolic_pressure(75)\nobserve forward_volume(65)\nobserve regurgitant_volume(35)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r56work-17",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 125 mmHg and a diastolic pressure of 75 mmHg, and ejects a forward volume of 65 mL plus a regurgitant volume of 35 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(125)\nobserve diastolic_pressure(75)\nobserve forward_volume(65)\nobserve regurgitant_volume(35)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r56work-18",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 125 mmHg and a diastolic pressure of 75 mmHg, and ejects a forward volume of 65 mL plus a regurgitant volume of 35 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(125)\nobserve diastolic_pressure(75)\nobserve forward_volume(65)\nobserve regurgitant_volume(35)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5000,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3285,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r56work-19",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 135 mmHg and a diastolic pressure of 95 mmHg, and ejects a forward volume of 40 mL plus a regurgitant volume of 28 mL. What is the stroke work (the driving pressure times the ejected volume)?",
+      "program": "observe systolic_pressure(135)\nobserve diastolic_pressure(95)\nobserve forward_volume(40)\nobserve regurgitant_volume(28)\nlet answer = (systolic_pressure - diastolic_pressure) * (forward_volume + regurgitant_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 108,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2720,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1628,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r56work-20",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 135 mmHg and a diastolic pressure of 95 mmHg, and ejects a forward volume of 40 mL plus a regurgitant volume of 28 mL. What is the the driving pressure (systolic minus diastolic)?",
+      "program": "observe systolic_pressure(135)\nobserve diastolic_pressure(95)\nobserve forward_volume(40)\nobserve regurgitant_volume(28)\nlet answer = systolic_pressure - diastolic_pressure\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2720,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 108,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1628,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 40,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r56work-21",
+      "qtype": "stroke_work",
+      "stem": "A ventricle sees a systolic pressure of 135 mmHg and a diastolic pressure of 95 mmHg, and ejects a forward volume of 40 mL plus a regurgitant volume of 28 mL. What is the the ejected volume (forward plus regurgitant)?",
+      "program": "observe systolic_pressure(135)\nobserve diastolic_pressure(95)\nobserve forward_volume(40)\nobserve regurgitant_volume(28)\nlet answer = forward_volume + regurgitant_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 68,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 2720,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 108,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1628,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
