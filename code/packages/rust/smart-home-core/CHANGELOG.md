@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.list_platform_evidence_ledger` and
+  `smart_home.get_platform_evidence_ledger_summary` tool descriptors for
+  read-only Chief platform evidence rollups over existing D23 platform,
+  closeout-retention, and runtime maintenance evidence primitives.
 - `smart_home.get_closeout_retention_ledger` tool descriptor for read-only Chief
   retention ledgers over existing D23 closeout archive manifest primitives.
 - `smart_home.get_closeout_archive_manifest` tool descriptor for read-only Chief

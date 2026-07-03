@@ -40,6 +40,8 @@ Chief of Staff job/session/agent
   -> controller-readiness handoff summary over runtime and platform primitives
   -> platform brief over HTTP, dashboard, fixture, state/history/event,
      command, scene, and authorization readiness
+  -> platform evidence ledger over platform, closeout-retention, and runtime
+     maintenance evidence signals without owning smart-home state
   -> recovery brief over incident, policy, runtime, state, and validation
      handoff signals
   -> escalation brief over morning, blocker, review, and owner-lane signals
@@ -278,6 +280,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_capability_grant_summary`
 - `smart_home.get_controller_handoff_summary`
 - `smart_home.get_platform_brief`
+- `smart_home.list_platform_evidence_ledger`
+- `smart_home.get_platform_evidence_ledger_summary`
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_pending_work_summary`
 - `smart_home.get_attention_overview`

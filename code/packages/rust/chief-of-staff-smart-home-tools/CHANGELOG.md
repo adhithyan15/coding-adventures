@@ -4,6 +4,10 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.list_platform_evidence_ledger` and
+  `smart_home.get_platform_evidence_ledger_summary`, read-only Chief adapter
+  tools that consolidate existing D23 platform brief, closeout retention, and
+  runtime maintenance evidence outputs without owning smart-home state.
 - Added `smart_home.get_closeout_retention_ledger`, a read-only Chief adapter
   tool that turns the existing D23 closeout archive manifest into a final
   retention ledger without owning smart-home state.
