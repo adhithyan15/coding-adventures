@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_closeout_retention_ledger`, a read-only Chief adapter
+  tool that turns the existing D23 closeout archive manifest into a final
+  retention ledger without owning smart-home state.
 - Added `smart_home.get_closeout_archive_manifest`, a read-only Chief adapter
   tool that turns the existing D23 closeout archive into a final retention
   manifest without owning smart-home state.

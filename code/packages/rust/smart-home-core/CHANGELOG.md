@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_closeout_retention_ledger` tool descriptor for read-only Chief
+  retention ledgers over existing D23 closeout archive manifest primitives.
 - `smart_home.get_closeout_archive_manifest` tool descriptor for read-only Chief
   retention manifests over existing D23 closeout archive primitives.
 - `smart_home.get_closeout_archive` tool descriptor for read-only Chief archive

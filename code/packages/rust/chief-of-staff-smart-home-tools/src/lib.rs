@@ -330,6 +330,8 @@ pub const SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID: &str = "smart_home.get_cl
 pub const SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID: &str = "smart_home.get_closeout_archive";
 pub const SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID: &str =
     "smart_home.get_closeout_archive_manifest";
+pub const SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID: &str =
+    "smart_home.get_closeout_retention_ledger";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2498,6 +2500,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_closeout_archive_manifest_output_handler_output(
+                        &mut runtime,
+                        principal_id,
+                        now_ms,
+                    )
+                }
+                SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_closeout_retention_ledger_output_handler_output(
                         &mut runtime,
                         principal_id,
                         now_ms,
@@ -6631,6 +6641,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_closeout_audit_trail_definition(),
         get_closeout_archive_definition(),
         get_closeout_archive_manifest_definition(),
+        get_closeout_retention_ledger_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -8400,6 +8411,64 @@ fn get_closeout_archive_manifest_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "manifest_entries",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_closeout_retention_ledger_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID,
+        "Get smart-home closeout retention ledger",
+        "Project the existing D23 smart-home closeout archive manifest into a final retention ledger without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("retention_ledger_ready", JsonSchema::Boolean),
+                SchemaProperty::new("manifest_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("ledger_entry_count", JsonSchema::Integer),
+                SchemaProperty::new("hold_entry_count", JsonSchema::Integer),
+                SchemaProperty::new("review_entry_count", JsonSchema::Integer),
+                SchemaProperty::new("action_entry_count", JsonSchema::Integer),
+                SchemaProperty::new("retained_entry_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "ledger_entries",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "retention_ledger_ready",
+                "manifest_ready",
+                "requires_human_review",
+                "has_blockers",
+                "ledger_entry_count",
+                "hold_entry_count",
+                "review_entry_count",
+                "action_entry_count",
+                "retained_entry_count",
+                "summary",
+                "decision",
+                "ledger_entries",
                 "source_tools",
             ],
             false,
@@ -46188,6 +46257,58 @@ fn get_closeout_archive_manifest_output_handler_output(
     ))
 }
 
+fn get_closeout_retention_ledger_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let manifest =
+        get_closeout_archive_manifest_output_handler_output(runtime, principal_id, now_ms)?.output;
+    let output = closeout_retention_ledger_output_json(now_ms, &manifest);
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let retention_ledger_ready =
+        morning_brief_bool_at(&output, &["retention_ledger_ready"]).unwrap_or(false);
+    let manifest_ready = morning_brief_bool_at(&output, &["manifest_ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let ledger_entry_count =
+        morning_brief_integer_at(&output, &["ledger_entry_count"]).unwrap_or(0);
+    let hold_entry_count = morning_brief_integer_at(&output, &["hold_entry_count"]).unwrap_or(0);
+    let review_entry_count =
+        morning_brief_integer_at(&output, &["review_entry_count"]).unwrap_or(0);
+    let action_entry_count =
+        morning_brief_integer_at(&output, &["action_entry_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_closeout_retention_ledger")),
+            ("status", string(&status)),
+            (
+                "retention_ledger_ready",
+                JsonValue::Bool(retention_ledger_ready),
+            ),
+            ("manifest_ready", JsonValue::Bool(manifest_ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("ledger_entry_count", integer(ledger_entry_count)),
+            ("hold_entry_count", integer(hold_entry_count)),
+            ("review_entry_count", integer(review_entry_count)),
+            ("action_entry_count", integer(action_entry_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -53762,6 +53883,419 @@ fn closeout_archive_manifest_next_action(
 
 fn closeout_archive_manifest_next_owner_lane(
     next_entry: Option<&CloseoutArchiveManifestEntry>,
+) -> &str {
+    next_entry
+        .map(|entry| entry.owner_lane.as_str())
+        .unwrap_or("chief")
+}
+
+struct CloseoutRetentionLedgerEntry {
+    ledger_entry_id: String,
+    manifest_entry_id: String,
+    record_id: String,
+    audit_event_id: String,
+    closeout_item_id: String,
+    lane_id: String,
+    section_id: String,
+    label: String,
+    status: String,
+    severity: String,
+    manifest_state: String,
+    ledger_state: &'static str,
+    ledger_action: &'static str,
+    retention_action: String,
+    archive_action: String,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    evidence: JsonValue,
+    priority: i64,
+}
+
+fn closeout_retention_ledger_output_json(now_ms: u64, manifest: &JsonValue) -> JsonValue {
+    let entries = closeout_retention_ledger_entries_from_manifest(manifest);
+    let generated_at_ms =
+        morning_brief_integer_at(manifest, &["generated_at_ms"]).unwrap_or(now_ms as i64);
+    let hold_entry_count = entries
+        .iter()
+        .filter(|entry| entry.ledger_state == "hold_open")
+        .count();
+    let review_entry_count = entries
+        .iter()
+        .filter(|entry| entry.ledger_state == "review_open")
+        .count();
+    let action_entry_count = entries
+        .iter()
+        .filter(|entry| entry.ledger_state == "action_open")
+        .count();
+    let retained_entry_count = entries
+        .iter()
+        .filter(|entry| entry.ledger_state == "retained")
+        .count();
+    let manifest_ready = morning_brief_bool_at(manifest, &["manifest_ready"]).unwrap_or(false);
+    let has_blockers =
+        hold_entry_count > 0 || morning_brief_bool_at(manifest, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review = review_entry_count > 0
+        || morning_brief_bool_at(manifest, &["requires_human_review"]).unwrap_or(false);
+    let retention_ledger_ready = manifest_ready
+        && hold_entry_count == 0
+        && review_entry_count == 0
+        && action_entry_count == 0;
+    let status = closeout_retention_ledger_status(
+        retention_ledger_ready,
+        has_blockers,
+        requires_human_review,
+        action_entry_count,
+        retained_entry_count,
+    );
+    let next_entry = entries.first();
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(retention_ledger_ready)),
+        (
+            "retention_ledger_ready",
+            JsonValue::Bool(retention_ledger_ready),
+        ),
+        ("manifest_ready", JsonValue::Bool(manifest_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("ledger_entry_count", integer(entries.len() as i64)),
+        ("hold_entry_count", integer(hold_entry_count as i64)),
+        ("review_entry_count", integer(review_entry_count as i64)),
+        ("action_entry_count", integer(action_entry_count as i64)),
+        ("retained_entry_count", integer(retained_entry_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "manifest_status",
+                    string(morning_brief_string_at(manifest, &["status"]).unwrap_or("unknown")),
+                ),
+                ("manifest_ready", JsonValue::Bool(manifest_ready)),
+                (
+                    "retention_ledger_ready",
+                    JsonValue::Bool(retention_ledger_ready),
+                ),
+                ("ledger_entry_count", integer(entries.len() as i64)),
+                ("hold_entry_count", integer(hold_entry_count as i64)),
+                ("review_entry_count", integer(review_entry_count as i64)),
+                ("action_entry_count", integer(action_entry_count as i64)),
+                ("retained_entry_count", integer(retained_entry_count as i64)),
+                (
+                    "next_tool",
+                    string(closeout_retention_ledger_next_tool(next_entry)),
+                ),
+                (
+                    "next_action",
+                    string(closeout_retention_ledger_next_action(next_entry)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(closeout_retention_ledger_next_owner_lane(next_entry)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            closeout_retention_ledger_decision_json(
+                status,
+                retention_ledger_ready,
+                has_blockers,
+                requires_human_review,
+                action_entry_count,
+                retained_entry_count,
+                next_entry,
+            ),
+        ),
+        (
+            "ledger_entries",
+            JsonValue::Array(
+                entries
+                    .iter()
+                    .map(closeout_retention_ledger_entry_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_ARCHIVE_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_AUDIT_TRAIL_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID,
+                SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SHIFT_HANDOFF_BRIEF_TOOL_ID,
+                SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn closeout_retention_ledger_entries_from_manifest(
+    manifest: &JsonValue,
+) -> Vec<CloseoutRetentionLedgerEntry> {
+    let mut entries = match optional_field(manifest, "manifest_entries") {
+        Some(JsonValue::Array(manifest_entries)) => manifest_entries
+            .iter()
+            .map(closeout_retention_ledger_entry_from_manifest_entry)
+            .collect::<Vec<_>>(),
+        _ => Vec::new(),
+    };
+    entries.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.section_id.cmp(&right.section_id))
+    });
+    entries
+}
+
+fn closeout_retention_ledger_entry_from_manifest_entry(
+    entry: &JsonValue,
+) -> CloseoutRetentionLedgerEntry {
+    let manifest_entry_id = morning_brief_string_at(entry, &["manifest_entry_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let section_id = morning_brief_string_at(entry, &["section_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let manifest_state = morning_brief_string_at(entry, &["manifest_state"])
+        .unwrap_or("monitor")
+        .to_string();
+    let ledger_state = closeout_retention_ledger_state(&manifest_state);
+
+    CloseoutRetentionLedgerEntry {
+        ledger_entry_id: format!("closeout-retention-ledger:{}:{}", ledger_state, section_id),
+        manifest_entry_id,
+        record_id: morning_brief_string_at(entry, &["record_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        audit_event_id: morning_brief_string_at(entry, &["audit_event_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        closeout_item_id: morning_brief_string_at(entry, &["closeout_item_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        lane_id: morning_brief_string_at(entry, &["lane_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        section_id,
+        label: morning_brief_string_at(entry, &["label"])
+            .unwrap_or("Unknown")
+            .to_string(),
+        status: morning_brief_string_at(entry, &["status"])
+            .unwrap_or("unknown")
+            .to_string(),
+        severity: morning_brief_string_at(entry, &["severity"])
+            .unwrap_or("monitor")
+            .to_string(),
+        manifest_state,
+        ledger_state,
+        ledger_action: closeout_retention_ledger_action(ledger_state),
+        retention_action: morning_brief_string_at(entry, &["retention_action"])
+            .unwrap_or("monitor_archive_manifest")
+            .to_string(),
+        archive_action: morning_brief_string_at(entry, &["archive_action"])
+            .unwrap_or("monitor_closeout_archive")
+            .to_string(),
+        recommended_tool: morning_brief_string_at(entry, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(entry, &["recommended_action"])
+            .unwrap_or("inspect_closeout_archive_manifest")
+            .to_string(),
+        owner_lane: morning_brief_string_at(entry, &["owner_lane"])
+            .unwrap_or("chief")
+            .to_string(),
+        evidence: morning_brief_field_clone(entry, "evidence"),
+        priority: closeout_retention_ledger_priority(ledger_state),
+    }
+}
+
+fn closeout_retention_ledger_entry_json(entry: &CloseoutRetentionLedgerEntry) -> JsonValue {
+    object([
+        ("ledger_entry_id", string(&entry.ledger_entry_id)),
+        ("manifest_entry_id", string(&entry.manifest_entry_id)),
+        ("record_id", string(&entry.record_id)),
+        ("audit_event_id", string(&entry.audit_event_id)),
+        ("closeout_item_id", string(&entry.closeout_item_id)),
+        ("lane_id", string(&entry.lane_id)),
+        ("section_id", string(&entry.section_id)),
+        ("label", string(&entry.label)),
+        ("status", string(&entry.status)),
+        ("severity", string(&entry.severity)),
+        ("manifest_state", string(&entry.manifest_state)),
+        ("ledger_state", string(entry.ledger_state)),
+        ("ledger_action", string(entry.ledger_action)),
+        ("retention_action", string(&entry.retention_action)),
+        ("archive_action", string(&entry.archive_action)),
+        ("recommended_tool", string(&entry.recommended_tool)),
+        ("recommended_action", string(&entry.recommended_action)),
+        ("owner_lane", string(&entry.owner_lane)),
+        ("priority", integer(entry.priority)),
+        ("evidence", entry.evidence.clone()),
+    ])
+}
+
+fn closeout_retention_ledger_status(
+    retention_ledger_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_entry_count: usize,
+    retained_entry_count: usize,
+) -> &'static str {
+    if has_blockers {
+        "hold"
+    } else if requires_human_review {
+        "review_required"
+    } else if action_entry_count > 0 {
+        "action_required"
+    } else if retention_ledger_ready {
+        "ready"
+    } else if retained_entry_count > 0 {
+        "retained"
+    } else {
+        "monitor"
+    }
+}
+
+fn closeout_retention_ledger_state(manifest_state: &str) -> &'static str {
+    match manifest_state {
+        "retention_hold" => "hold_open",
+        "review_packet" => "review_open",
+        "action_packet" => "action_open",
+        "retained" => "retained",
+        _ => "monitor",
+    }
+}
+
+fn closeout_retention_ledger_action(ledger_state: &str) -> &'static str {
+    match ledger_state {
+        "hold_open" => "retain_hold_and_escalate",
+        "review_open" => "route_retention_review",
+        "action_open" => "complete_retention_action",
+        "retained" => "record_retention_acknowledgement",
+        _ => "monitor_retention_ledger",
+    }
+}
+
+fn closeout_retention_ledger_priority(ledger_state: &str) -> i64 {
+    match ledger_state {
+        "hold_open" => 0,
+        "review_open" => 1,
+        "action_open" => 2,
+        "retained" => 3,
+        _ => 4,
+    }
+}
+
+fn closeout_retention_ledger_decision_json(
+    status: &str,
+    retention_ledger_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_entry_count: usize,
+    retained_entry_count: usize,
+    next_entry: Option<&CloseoutRetentionLedgerEntry>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(closeout_retention_ledger_decision_label(
+                status,
+                retention_ledger_ready,
+                has_blockers,
+                requires_human_review,
+                action_entry_count,
+                retained_entry_count,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(closeout_retention_ledger_next_tool(next_entry)),
+        ),
+        (
+            "recommended_action",
+            string(closeout_retention_ledger_next_action(next_entry)),
+        ),
+        (
+            "owner_lane",
+            string(closeout_retention_ledger_next_owner_lane(next_entry)),
+        ),
+        (
+            "reason",
+            string(
+                next_entry
+                    .map(|entry| entry.section_id.as_str())
+                    .unwrap_or("no_open_closeout_retention_ledger_entries"),
+            ),
+        ),
+    ])
+}
+
+fn closeout_retention_ledger_decision_label(
+    status: &str,
+    retention_ledger_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_entry_count: usize,
+    retained_entry_count: usize,
+) -> &'static str {
+    if has_blockers || status == "hold" {
+        "hold_retention_ledger"
+    } else if requires_human_review {
+        "prepare_retention_ledger_review"
+    } else if action_entry_count > 0 {
+        "complete_retention_ledger_actions"
+    } else if retention_ledger_ready {
+        "retention_ledger_ready"
+    } else if retained_entry_count > 0 {
+        "retain_closeout_records"
+    } else {
+        "monitor"
+    }
+}
+
+fn closeout_retention_ledger_next_tool(next_entry: Option<&CloseoutRetentionLedgerEntry>) -> &str {
+    next_entry
+        .map(|entry| entry.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID)
+}
+
+fn closeout_retention_ledger_next_action(
+    next_entry: Option<&CloseoutRetentionLedgerEntry>,
+) -> &str {
+    next_entry
+        .map(|entry| entry.ledger_action)
+        .unwrap_or("monitor_retention_ledger")
+}
+
+fn closeout_retention_ledger_next_owner_lane(
+    next_entry: Option<&CloseoutRetentionLedgerEntry>,
 ) -> &str {
     next_entry
         .map(|entry| entry.owner_lane.as_str())
@@ -88440,7 +88974,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 307);
+        assert_eq!(definitions.len(), 308);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -88521,6 +89055,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_CLOSEOUT_ARCHIVE_MANIFEST_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -89326,7 +89863,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            299
+            300
         );
         assert_eq!(
             export
@@ -92227,6 +92764,147 @@ mod tests {
     }
 
     #[test]
+    fn closeout_retention_ledger_turns_manifest_entries_into_ledger_records() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-closeout-retention-ledger-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-closeout-retention-ledger",
+            SMART_HOME_GET_CLOSEOUT_RETENTION_LEDGER_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "retention_ledger_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "manifest_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "ledger_entry_count").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "hold_entry_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(field(summary, "manifest_status"), Some(&string("hold")));
+        assert_eq!(
+            field(summary, "manifest_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("retain_hold_and_escalate"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(
+            field(decision, "recommendation"),
+            Some(&string("hold_retention_ledger"))
+        );
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("retain_hold_and_escalate"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("incident")));
+
+        let entries = field(output, "ledger_entries").unwrap();
+        assert!(array_len(entries).unwrap() >= 4);
+        let first = array_item(entries, 0).unwrap();
+        assert_eq!(field(first, "severity"), Some(&string("blocker")));
+        assert_eq!(
+            field(first, "manifest_state"),
+            Some(&string("retention_hold"))
+        );
+        assert_eq!(field(first, "ledger_state"), Some(&string("hold_open")));
+        assert_eq!(
+            field(first, "ledger_action"),
+            Some(&string("retain_hold_and_escalate"))
+        );
+        assert_eq!(
+            field(first, "retention_action"),
+            Some(&string("keep_closeout_hold"))
+        );
+        assert_eq!(
+            field(first, "archive_action"),
+            Some(&string("hold_closeout_archive"))
+        );
+        assert_eq!(
+            field(first, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(first, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(first, "evidence").and_then(|summary| field(summary, "next_tool")),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(21));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -92728,11 +93406,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(307))
+            Some(&integer(308))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(299))
+            Some(&integer(300))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
