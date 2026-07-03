@@ -344,6 +344,7 @@ members = [
     "vm-type-suggestions",
     "wasm-simulator",
     "xml-lexer",
+    "xml-parser",
     "arm1-gatelevel",
     "arm1-simulator",
     "immutable-list",

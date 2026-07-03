@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-xml-parser"
+version = "0.1.0"
+edition = "2021"
+description = "XML parser — parses XML source text into a namespace-aware AST using the grammar-driven parser and the xml.grammar file, with entity decoding and XML-declaration extraction (OOXML/OPC milestone M1)"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding-adventures-xml-lexer = { path = "../xml-lexer" }
