@@ -189,6 +189,9 @@ the r:id and shared-string indirections resolved for you.
 
 ## Non-goals / deferred
 
-- **M4** — styles, number formats, date/time interpretation, column widths.
+- **M4** — styles, number formats, date/time interpretation, merged cells, and
+  defined names are implemented in milestone **M4**; see
+  [`SML02-number-formats.md`](SML02-number-formats.md). Column widths remain
+  deferred.
 - Formula **evaluation** — we return formula text + cached value only.
 - Writing `.xlsx` — this is a read-only reader.
