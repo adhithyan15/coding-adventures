@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.47.0] - 2026-07-03 — a THIRD math frontend: `mathml "…"` (pluggable frontends, PFE01)
+
+### Added
+
+- **`mathml "<math>"`** is now accepted anywhere an ADJ arithmetic expression is (as an `expr`
+  factor), alongside `latex "…"` and `asciimath "…"`. Presentation MathML is what many rendering
+  pipelines and some models emit — e.g. `<mfrac><mn>1</mn><mn>2</mn></mfrac>`,
+  `<mn>3</mn><mo>+</mo><mn>4</mn>`, `<mi>x</mi><mo>*</mo><mi>x</mi>` — and the repo already ships a
+  `mathml` `MathFrontend` that parses it to the **same neutral `MathExpr`** the LaTeX and AsciiMath
+  frontends produce.
+- Third demonstration of the **pluggable-frontends thesis (PFE01)**: the adapter's only
+  frontend-specific step is the parse call (`parse_mathml_math`). The resulting `MathExpr` flows
+  through the **identical, unchanged** `latex_math_to_expr_ast` lowering, so the whole arithmetic +
+  named-function surface is available to MathML **for free** — no new lowering, and **no new engine
+  op**. (`<mfrac>` means the same as LaTeX `\frac{1}{2}` and AsciiMath `1/2`: all `MathExpr::Frac`.)
+- New grammar production `mathml_expr = "mathml" STRING ;` (regenerated `_parser_grammar.rs`); new
+  `AdapterError::MathMlParse` for parse failures (unsupported *nodes* still surface via the shared
+  `UnsupportedLatexMath`, since the neutral-tree lowering names its errors after the first frontend).
+- Three end-to-end tests through `compile_and_decide`: `mathml "<mfrac><mn>7</mn><mn>2</mn></mfrac>"`
+  = 3.5 (reusing the very `MathExpr::Frac` lowering LaTeX `\frac` uses),
+  `mathml "<mn>3</mn><mo>+</mo><mn>4</mn>"` = 7, and an observed slot binding inside MathML
+  (`observe x(2)` + `mathml "<mi>x</mi><mo>*</mo><mi>x</mi>"` = 4).
+- **Security/DoS:** the adapter adds **no new recursive tree-walker** — it reuses the existing
+  `latex_math_to_expr_ast` lowering. The MathML parser owns its own recursion guard (`MAX_DEPTH = 64`,
+  iterative teardown) and `#![forbid(unsafe_code)]` in its crate, so no new stack-overflow surface is
+  introduced here (no new deep-input regression test is warranted on the adapter side).
+
 ## [0.46.0] - 2026-07-03 — a SECOND math frontend: `asciimath "…"` (pluggable frontends, PFE01)
 
 ### Added

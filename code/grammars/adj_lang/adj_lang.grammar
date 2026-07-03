@@ -150,7 +150,7 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = latex_expr | asciimath_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | asciimath_expr | mathml_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 
@@ -171,6 +171,18 @@ latex_expr = "latex" STRING ;
 # is available for free — no new lowering, no new engine op. Unsupported math is
 # a compile error, not a host-language fallback, exactly as for `latex`.
 asciimath_expr = "asciimath" STRING ;
+
+# Native (presentation) MathML input — a THIRD math frontend behind the same
+# neutral `MathExpr` tree (PFE01). A model that emits MathML may write
+# `mathml "<mfrac><mn>1</mn><mn>2</mn></mfrac>"` anywhere an ADJ arithmetic
+# expression is accepted; the adj-lang frontend parses the string with the
+# repo's MathML `MathFrontend` and lowers it through the EXACT SAME
+# `MathExpr -> ExprAst` lowering used for `latex "..."` and `asciimath "..."`.
+# `<mfrac>` here means the same as LaTeX `\frac{1}{2}` and AsciiMath `1/2` — all
+# `MathExpr::Frac` — so the whole arithmetic subset is available for free, no new
+# lowering and no new engine op. Unsupported math is a compile error, not a
+# host-language fallback, exactly as for the other two surfaces.
+mathml_expr = "mathml" STRING ;
 
 # ----------------------------------------------------------------
 # Constraint sublanguage (ADJ constraints track B1). The model
