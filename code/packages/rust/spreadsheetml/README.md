@@ -4,8 +4,11 @@ Read the bytes of an `.xlsx` file as a **typed cell grid** — workbook → shee
 cells, with each populated cell carrying a decoded value and, where present, its
 formula text plus cached result.
 
-This is milestone **M3** of the OOXML effort. See the full spec at
-[`code/specs/SML01-spreadsheetml.md`](../../../specs/SML01-spreadsheetml.md).
+This is milestones **M3–M4** of the OOXML effort. See the full specs at
+[`code/specs/SML01-spreadsheetml.md`](../../../specs/SML01-spreadsheetml.md)
+(M3, the base reader) and
+[`code/specs/SML02-number-formats.md`](../../../specs/SML02-number-formats.md)
+(M4, number formats / dates / merged cells / defined names).
 
 ## Where it fits in the stack
 
@@ -36,11 +39,48 @@ so you see a plain grid:
 Shared strings and inline strings both surface as `Value::Text` — the caller
 never sees the storage indirection.
 
-## Not yet (deferred to M4)
+## M4 — number formats, dates, merged cells, defined names
 
-- Styles, number formats, date/time interpretation. Numbers are the bare stored
-  `f64`, so a cell that *displays* as `$1,000.00` or a date returns the raw
-  number.
+M4 reads `xl/styles.xml` so a raw numeric value can be *interpreted* per its
+applied format. The stored value is **unchanged** (a date cell still holds
+`Value::Number(45292.0)`); a `NumberFormat` is attached alongside so you can
+recover the human meaning:
+
+```rust
+use coding_adventures_spreadsheetml::{open_workbook, NumberFormatKind, Value};
+
+let wb = open_workbook(bytes)?;
+let sheet = wb.sheet_by_name("Report").unwrap();
+
+// A2 stores the serial 45292 but is styled as a date:
+let a2 = sheet.cell("A2").unwrap();
+assert_eq!(a2.value, Value::Number(45292.0));        // raw value untouched
+assert_eq!(a2.format_kind(), NumberFormatKind::Date);
+assert_eq!(a2.as_date().as_deref(), Some("2024-01-01"));  // ← the headline
+
+// Merged cells and defined names:
+assert_eq!(sheet.merged_ranges().len(), 1);          // e.g. A1:B1
+assert!(wb.defined_names().iter().any(|(n, _)| n == "TaxRate"));
+# Ok::<(), coding_adventures_spreadsheetml::XlsxError>(())
+```
+
+**The style chain.** A cell carries a *style index* `s=`, not a format:
+`<c s="1">` → `cellXfs[1]` → `numFmtId 14` → the built-in code `m/d/yyyy` →
+`Date`. Ids `< 164` are spec-defined built-ins (hard-coded); ids `≥ 164` are
+custom, defined in `<numFmts>` with an explicit `formatCode`.
+
+**The 1900 date system.** Serial `0` is anchored at the fictitious `1899-12-30`,
+which reproduces Excel's phantom `1900-02-29` leap-year bug for serials ≥ 60.
+So `serial_to_date(1.0) == "1900-01-01"`, `serial_to_date(60.0) == "1900-02-29"`
+(the bug), `serial_to_date(45292.0) == "2024-01-01"`.
+
+`formatted()` is a *pragmatic* renderer (not a full number-format engine): exact
+ISO strings for dates, `value ×100 + "%"` for percent, and the raw number for
+currency (no symbol synthesis).
+
+### Still deferred
+
+- A full number-format renderer (grouping, decimal places, currency symbols).
 - Formula **evaluation**. Formulas return their text plus the cached value.
 
 ## Usage
@@ -81,7 +121,7 @@ assert_eq!(parse_a1_ref("AA10"), Some((27, 10)));
 
 | `Value`         | source                                                       |
 |-----------------|--------------------------------------------------------------|
-| `Number(f64)`   | `t` absent / `t="n"` — bare stored number                    |
+| `Number(f64)`   | `t` absent / `t="n"` — bare stored number (see M4 formats)    |
 | `Text(String)`  | `t="s"` (shared), `t="str"` (formula result), `t="inlineStr"`|
 | `Bool(bool)`    | `t="b"`                                                      |
 | `Error(String)` | `t="e"`, e.g. `#DIV/0!`                                      |

@@ -5,6 +5,55 @@ All notable changes to `coding-adventures-spreadsheetml` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] — 2026-07-02
+
+OOXML milestone **M4** — number formats, dates, merged cells, defined names.
+Fully **backward-compatible** with M3: `Value` and every existing signature are
+unchanged, so a date cell still holds `Value::Number(45292.0)`; the format is
+attached *alongside* the raw value, never applied to it.
+
+### Added
+
+- `xl/styles.xml` interpretation. The styles part is resolved via the workbook's
+  `.../relationships/styles` relationship and parsed into a `StyleTable`
+  (`<numFmts>` custom-format map + ordered `<cellXfs>`).
+- The built-in number-format id table (ECMA-376 §18.8.30): ids `< 164` map to
+  their spec-defined format codes (`14 → m/d/yyyy`, `9 → 0%`, `49 → @`, …) via
+  `builtin_format_code(id)`.
+- `NumberFormatKind` enum (`General`, `Number`, `Date`, `Time`, `DateTime`,
+  `Percent`, `Currency`, `Text`, `Other`) plus classifiers `classify_id(id)` and
+  `classify_format_code(code)` (custom codes are inferred from their tokens,
+  respecting quoted/bracketed/escaped literal contexts).
+- `NumberFormat { id, code, kind }` and `Cell::number_format: Option<NumberFormat>`
+  resolved from the cell's `s=` style index. `None` for unstyled, `General`, or
+  out-of-range style indices (graceful).
+- Date interpretation in the **1900 date system** (serial 0 = 1899-12-30,
+  reproducing Excel's phantom 1900-02-29 leap-year bug for serials ≥ 60):
+  `serial_to_date(f64) -> Option<String>` (ISO `YYYY-MM-DD`) and
+  `serial_to_datetime(f64) -> Option<String>` (ISO `YYYY-MM-DDTHH:MM:SS`).
+- `Cell` methods: `format_kind()`, `as_date()`, `as_datetime()`, and a pragmatic
+  `formatted()` (exact ISO for dates; `×100 + "%"` for percent; raw number for
+  currency — a full number-format renderer is out of scope).
+- Merged cells: `Sheet::merged_ranges() -> &[CellRange]` from `<mergeCells>`, and
+  a `CellRange { start, end }` type with `CellRange::parse("A1:B1")`.
+- Defined names: `Workbook::defined_names() -> &[(String, String)]` from
+  `<definedNames>` (name → raw reference text; not evaluated).
+
+### Semantics implemented
+
+- The `s=` → `cellXfs[s]` → `numFmtId` → format-code → kind chain, with custom
+  (`≥ 164`) codes read from `<numFmts>` and built-ins hard-coded.
+- The famous "the number 45292 is actually 2024-01-01" is now recoverable via
+  `Cell::as_date()`.
+
+### Tests
+
+- 45 unit/integration tests + 3 doctests, all passing. Adds a real
+  DEFLATE-compressed styled `.xlsx` fixture (`STYLED_XLSX`) asserting the
+  date/currency/percent/merged/defined-name end-to-end, plus unit coverage of
+  the built-in id table, custom-code classification, and serial→date edge cases
+  (serial 1, 60, 61, 45292). All original M3 tests pass unchanged.
+
 ## [0.1.0] — 2026-07-02
 
 Initial release — OOXML milestone **M3** (SpreadsheetML workbook reader).

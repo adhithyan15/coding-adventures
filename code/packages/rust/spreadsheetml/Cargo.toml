@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-spreadsheetml"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "SpreadsheetML (.xlsx) reader — opens a workbook as a typed sheets → cells grid, resolving shared strings and r:id → part links (OOXML milestone M3)"
+description = "SpreadsheetML (.xlsx) reader — opens a workbook as a typed sheets → cells grid, resolving shared strings, r:id → part links, number formats/dates, merged cells and defined names (OOXML milestones M3–M4)"
 license = "MIT"
 
 [dependencies]

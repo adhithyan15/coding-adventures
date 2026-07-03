@@ -52,6 +52,12 @@ use coding_adventures_opc::{OpcError, Package};
 use coding_adventures_xml_parser::{parse_xml, XmlElement};
 use std::collections::BTreeMap;
 
+mod styles;
+pub use styles::{
+    builtin_format_code, classify_format_code, classify_id, serial_to_date, serial_to_datetime,
+    CellRange, NumberFormat, NumberFormatKind, StyleTable, FIRST_CUSTOM_FORMAT_ID,
+};
+
 // ===========================================================================
 // Namespace constants
 // ===========================================================================
@@ -72,6 +78,12 @@ const REL_NS: &str = "http://schemas.openxmlformats.org/officeDocument/2006/rela
 /// workbook's relationships for it.
 const SHARED_STRINGS_TYPE: &str =
     "http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings";
+
+/// The relationship *type* URI of the workbook's `xl/styles.xml` part. Like the
+/// shared-strings part, we find it by scanning the workbook's relationships for
+/// this type (M4).
+const STYLES_TYPE: &str =
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles";
 
 /// The logical part name of the workbook. `main_document_part()` yields this for
 /// an `.xlsx`; we keep the constant for the (rare) fallback path.
@@ -151,6 +163,12 @@ pub enum Value {
 }
 
 /// One populated cell.
+///
+/// M4 adds [`number_format`](Cell::number_format): the format applied to this
+/// cell's stored value, resolved through its `s=` style index (see the
+/// [`styles`] module). The raw [`value`](Cell::value) is **unchanged** from M3 —
+/// a date cell still holds `Value::Number(45292.0)` — but the format lets the
+/// caller *interpret* it (e.g. [`as_date`](Cell::as_date) → `"2024-01-01"`).
 #[derive(Debug, Clone, PartialEq)]
 pub struct Cell {
     /// The A1 reference exactly as written, e.g. `"B2"`.
@@ -161,6 +179,107 @@ pub struct Cell {
     /// `Some("SUM(B1:B1)")`. The [`value`](Cell::value) is then the *cached*
     /// result; we never evaluate formulas at this milestone.
     pub formula: Option<String>,
+    /// The number format applied to this cell, resolved through its `s=` style
+    /// index. `None` for a cell with no style, an out-of-range style index, or a
+    /// `General`-formatted cell (kept `None` so unstyled numbers behave as in
+    /// M3). See [`NumberFormat`].
+    pub number_format: Option<NumberFormat>,
+}
+
+impl Cell {
+    /// The coarse [`NumberFormatKind`] applied to this cell, or
+    /// [`NumberFormatKind::General`] when it has no attached format.
+    pub fn format_kind(&self) -> NumberFormatKind {
+        self.number_format
+            .as_ref()
+            .map(|f| f.kind)
+            .unwrap_or(NumberFormatKind::General)
+    }
+
+    /// If this cell is a **date** (or date-time) holding a numeric serial,
+    /// render it as an ISO `YYYY-MM-DD` string using the 1900 date system.
+    ///
+    /// Returns `None` when the cell is not a date-kinded numeric cell — so a
+    /// plain number, a text cell, or a percent cell all yield `None`. A
+    /// date-time cell's *date* part is returned here; use
+    /// [`as_datetime`](Cell::as_datetime) for the time too.
+    ///
+    /// This is M4's headline: `45292` styled as a date becomes `"2024-01-01"`.
+    pub fn as_date(&self) -> Option<String> {
+        match (self.format_kind(), &self.value) {
+            (NumberFormatKind::Date | NumberFormatKind::DateTime, Value::Number(n)) => {
+                serial_to_date(*n)
+            }
+            _ => None,
+        }
+    }
+
+    /// If this cell is a date-time (or date) numeric serial, render it as an ISO
+    /// `YYYY-MM-DDTHH:MM:SS` string. `None` otherwise.
+    pub fn as_datetime(&self) -> Option<String> {
+        match (self.format_kind(), &self.value) {
+            (NumberFormatKind::Date | NumberFormatKind::DateTime, Value::Number(n)) => {
+                serial_to_datetime(*n)
+            }
+            _ => None,
+        }
+    }
+
+    /// A human-readable rendering of the cell that applies its format where it
+    /// matters. This is a *pragmatic* renderer, **not** a full Excel
+    /// number-format engine (that is out of scope):
+    ///
+    /// * **Date / DateTime** — the ISO date (or date-time) string. This is the
+    ///   part that must be exact, and it is.
+    /// * **Percent** — the stored fraction ×100 with a trailing `%`
+    ///   (`0.25` → `"25%"`). We do not honour the code's decimal-place count.
+    /// * **Currency** — the raw number as a plain string; we deliberately do
+    ///   **not** synthesize the currency symbol / grouping (documented
+    ///   limitation).
+    /// * **Everything else** (General, Number, Text, Bool, Error, Empty) — the
+    ///   value's natural string form.
+    pub fn formatted(&self) -> String {
+        // Dates/date-times: exact ISO rendering.
+        if let Some(dt) = self.as_datetime() {
+            // For a date-only format, trim the midnight time component.
+            if matches!(self.format_kind(), NumberFormatKind::Date) {
+                if let Some(d) = self.as_date() {
+                    return d;
+                }
+            }
+            return dt;
+        }
+
+        match (&self.value, self.format_kind()) {
+            // Percent: the fraction ×100 with a % sign.
+            (Value::Number(n), NumberFormatKind::Percent) => {
+                format_number(n * 100.0) + "%"
+            }
+            // Currency: raw number (documented — no symbol synthesis).
+            (Value::Number(n), NumberFormatKind::Currency) => format_number(*n),
+            (Value::Number(n), _) => format_number(*n),
+            (Value::Text(s), _) => s.clone(),
+            (Value::Bool(b), _) => {
+                if *b {
+                    "TRUE".to_string()
+                } else {
+                    "FALSE".to_string()
+                }
+            }
+            (Value::Error(e), _) => e.clone(),
+            (Value::Empty, _) => String::new(),
+        }
+    }
+}
+
+/// Render an `f64` without a trailing `.0` for integers, so `25.0` shows as
+/// `"25"` while `12.5` stays `"12.5"`.
+fn format_number(n: f64) -> String {
+    if n.fract() == 0.0 && n.is_finite() && n.abs() < 1e15 {
+        format!("{}", n as i64)
+    } else {
+        format!("{n}")
+    }
 }
 
 /// One worksheet: a name plus its populated cells.
@@ -176,6 +295,8 @@ pub struct Sheet {
     /// Populated cells keyed by `(row, col)` (both 1-based) so natural map order
     /// is row-major, then left-to-right — the order a human reads.
     cells: BTreeMap<(u32, u32), Cell>,
+    /// Merged-cell ranges (`<mergeCell ref="A1:B1"/>`), in document order (M4).
+    merged: Vec<CellRange>,
 }
 
 impl Sheet {
@@ -195,12 +316,20 @@ impl Sheet {
     pub fn cell_count(&self) -> usize {
         self.cells.len()
     }
+
+    /// The merged-cell ranges on this sheet, in document order (M4). Each is a
+    /// [`CellRange`] such as `A1:B1`. Empty when the sheet merges nothing.
+    pub fn merged_ranges(&self) -> &[CellRange] {
+        &self.merged
+    }
 }
 
 /// A whole workbook: its sheets in workbook order.
 #[derive(Debug, Clone)]
 pub struct Workbook {
     sheets: Vec<Sheet>,
+    /// Defined (named) ranges: `(name, reference text)`, in document order (M4).
+    defined_names: Vec<(String, String)>,
 }
 
 impl Workbook {
@@ -217,6 +346,13 @@ impl Workbook {
     /// All sheets, in workbook order.
     pub fn sheets(&self) -> &[Sheet] {
         &self.sheets
+    }
+
+    /// The workbook's defined (named) ranges as `(name, reference)` pairs, in
+    /// document order (M4). E.g. `("TaxRate", "Report!$B$4")`. The reference is
+    /// the raw formula text of the `<definedName>` — we do **not** evaluate it.
+    pub fn defined_names(&self) -> &[(String, String)] {
+        &self.defined_names
     }
 }
 
@@ -306,6 +442,16 @@ pub fn open_workbook(bytes: &[u8]) -> Result<Workbook, XlsxError> {
     // --- shared strings --------------------------------------------------
     let shared_strings = load_shared_strings(&package, &workbook_part)?;
 
+    // --- styles (M4) -----------------------------------------------------
+    // Resolve xl/styles.xml via the workbook's relationships and parse its
+    // numFmts + cellXfs into a StyleTable. A workbook with no styles part is
+    // legal (every cell is General) → an empty table.
+    let style_table = load_styles(&package, &workbook_part)?;
+
+    // --- defined names (M4) ---------------------------------------------
+    // <workbook><definedNames><definedName name=…>ref</definedName></definedNames>
+    let defined_names = read_defined_names(&workbook_root);
+
     // --- sheets ----------------------------------------------------------
     // <workbook><sheets><sheet name=… r:id=…/></sheets></workbook>
     let sheets_el = workbook_root.get_child(Some(SML_NS), "sheets");
@@ -323,12 +469,58 @@ pub fn open_workbook(bytes: &[u8]) -> Result<Workbook, XlsxError> {
                 .resolve(&workbook_part, rid)
                 .ok_or_else(|| XlsxError::MissingSheetPart(rid.to_string()))?;
 
-            let cells = read_sheet_cells(&package, &sheet_part, &shared_strings)?;
-            sheets.push(Sheet { name, cells });
+            let (cells, merged) =
+                read_sheet(&package, &sheet_part, &shared_strings, &style_table)?;
+            sheets.push(Sheet {
+                name,
+                cells,
+                merged,
+            });
         }
     }
 
-    Ok(Workbook { sheets })
+    Ok(Workbook {
+        sheets,
+        defined_names,
+    })
+}
+
+/// Load and parse `xl/styles.xml` into a [`StyleTable`].
+///
+/// We find the styles part by scanning the workbook's relationships for the
+/// [`STYLES_TYPE`]. No styles part → an empty table (every cell is `General`).
+fn load_styles(package: &Package, workbook_part: &str) -> Result<StyleTable, XlsxError> {
+    let rels = package.relationships(workbook_part)?;
+    let styles_part = rels
+        .into_iter()
+        .find(|r| r.rel_type == STYLES_TYPE)
+        .and_then(|r| r.resolved_target);
+
+    let styles_part = match styles_part {
+        Some(p) => p,
+        None => return Ok(StyleTable::empty()), // no styles — legal
+    };
+
+    let root = parse_part(package, &styles_part)?;
+    Ok(StyleTable::from_root(&root))
+}
+
+/// Read the `<definedNames>` from the workbook root into `(name, ref)` pairs.
+///
+/// Each `<definedName name="TaxRate">Report!$B$4</definedName>` becomes
+/// `("TaxRate", "Report!$B$4")`. The reference is the element's text content;
+/// we keep it verbatim and never evaluate it. A workbook with no defined names
+/// yields an empty vector.
+fn read_defined_names(workbook_root: &XmlElement) -> Vec<(String, String)> {
+    let mut names = Vec::new();
+    if let Some(dn) = workbook_root.get_child(Some(SML_NS), "definedNames") {
+        for entry in dn.get_children(Some(SML_NS), "definedName") {
+            if let Some(name) = entry.get_attr(None, "name") {
+                names.push((name.to_string(), entry.text_content()));
+            }
+        }
+    }
+    names
 }
 
 /// Parse a package part as XML, returning its root element. Turns UTF-8 and
@@ -377,31 +569,47 @@ fn load_shared_strings(
     Ok(table)
 }
 
-/// Parse one worksheet part into its populated cells.
-fn read_sheet_cells(
+/// Populated cells keyed by `(row, col)`, both 1-based — the sheet's grid.
+type CellGrid = BTreeMap<(u32, u32), Cell>;
+
+/// Parse one worksheet part into its populated cells **and** its merged ranges.
+///
+/// M4 additions over M3: each `<c>` is decoded *with* the [`StyleTable`] so its
+/// `s=` style index resolves to a [`NumberFormat`], and the worksheet's
+/// `<mergeCells>` are parsed into [`CellRange`]s.
+fn read_sheet(
     package: &Package,
     sheet_part: &str,
     shared_strings: &[String],
-) -> Result<BTreeMap<(u32, u32), Cell>, XlsxError> {
+    styles: &StyleTable,
+) -> Result<(CellGrid, Vec<CellRange>), XlsxError> {
     let root = parse_part(package, sheet_part)?;
     let mut cells = BTreeMap::new();
 
     // <worksheet><sheetData><row><c>…</c></row></sheetData></worksheet>
-    let Some(sheet_data) = root.get_child(Some(SML_NS), "sheetData") else {
-        return Ok(cells); // no data → empty sheet
-    };
-
-    for row_el in sheet_data.get_children(Some(SML_NS), "row") {
-        for c_el in row_el.get_children(Some(SML_NS), "c") {
-            let cell = decode_cell(c_el, shared_strings)?;
-            if let Some((col, row)) = parse_a1_ref(&cell.reference) {
-                cells.insert((row, col), cell);
+    if let Some(sheet_data) = root.get_child(Some(SML_NS), "sheetData") {
+        for row_el in sheet_data.get_children(Some(SML_NS), "row") {
+            for c_el in row_el.get_children(Some(SML_NS), "c") {
+                let cell = decode_cell(c_el, shared_strings, styles)?;
+                if let Some((col, row)) = parse_a1_ref(&cell.reference) {
+                    cells.insert((row, col), cell);
+                }
+                // A <c> without a usable r ref is skipped: we key cells by A1.
             }
-            // A <c> without a usable r ref is skipped: we key cells by A1.
         }
     }
 
-    Ok(cells)
+    // <worksheet><mergeCells><mergeCell ref="A1:B1"/></mergeCells>
+    let mut merged = Vec::new();
+    if let Some(mc) = root.get_child(Some(SML_NS), "mergeCells") {
+        for m in mc.get_children(Some(SML_NS), "mergeCell") {
+            if let Some(range) = m.get_attr(None, "ref").and_then(CellRange::parse) {
+                merged.push(range);
+            }
+        }
+    }
+
+    Ok((cells, merged))
 }
 
 /// Decode a single `<c>` element into a [`Cell`].
@@ -416,9 +624,22 @@ fn read_sheet_cells(
 ///
 /// A `<f>` child means the cell has a formula; we keep its text and treat `<v>`
 /// (or `<is>`) as the *cached* result.
-fn decode_cell(c_el: &XmlElement, shared_strings: &[String]) -> Result<Cell, XlsxError> {
+///
+/// M4: the cell's `s=` attribute is resolved through `styles` into an optional
+/// [`NumberFormat`]. The decoded [`Value`] is **unchanged** from M3 — the format
+/// is attached alongside, never applied to the stored value.
+fn decode_cell(
+    c_el: &XmlElement,
+    shared_strings: &[String],
+    styles: &StyleTable,
+) -> Result<Cell, XlsxError> {
     let reference = c_el.get_attr(None, "r").unwrap_or("").to_string();
     let cell_type = c_el.get_attr(None, "t");
+
+    // The style index (s=) → NumberFormat, if this cell carries a non-General
+    // style. A missing / unparseable / out-of-range index yields None.
+    let style_index = c_el.get_attr(None, "s").and_then(|s| s.parse::<u32>().ok());
+    let number_format = styles.format_for(style_index);
 
     // Formula text, if any. Its presence does not change how we decode <v>;
     // <v> is simply the cached result.
@@ -484,6 +705,7 @@ fn decode_cell(c_el: &XmlElement, shared_strings: &[String]) -> Result<Cell, Xls
         reference,
         value,
         formula,
+        number_format,
     })
 }
 
