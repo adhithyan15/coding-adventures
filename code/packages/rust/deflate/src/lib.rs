@@ -484,7 +484,13 @@ fn length_limited_huffman(freqs: &[u32], max_len: u32) -> Vec<u8> {
     // least 1 bit).  Package-merge with m ≥ 2 guarantees this, but we assert it.
     for (idx, &sym) in present.iter().enumerate() {
         let d = depth[idx];
-        debug_assert!(
+        // Always-on (not debug_assert): a length exceeding `max_len` would be
+        // truncated by `d as u8` and emitted as an INVALID RFC 1951 code. This
+        // is provably unreachable for our fixed alphabet sizes (n ≤ 2^max_len),
+        // but making the check release-time turns any future regression (e.g. a
+        // larger alphabet) into a loud abort rather than a silently-malformed
+        // stream. The cost is one comparison per present symbol — negligible.
+        assert!(
             d >= 1 && d <= max_len,
             "package-merge produced out-of-range length {} for symbol {}",
             d, sym
@@ -493,9 +499,9 @@ fn length_limited_huffman(freqs: &[u32], max_len: u32) -> Vec<u8> {
     }
 
     // Hard invariant: the produced lengths form a valid prefix code (Kraft ≤ 1)
-    // and respect the limit.  If this ever fails we have a bug and must NOT emit
-    // a malformed stream.
-    debug_assert!(
+    // and respect the limit. If this ever fails we have a bug and must NOT emit
+    // a malformed stream — enforce it at release time too (one O(n) pass).
+    assert!(
         kraft_sum_ok(&lengths, max_len),
         "package-merge produced lengths violating Kraft's inequality"
     );
