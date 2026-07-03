@@ -75,7 +75,7 @@ use coding_adventures_javascript_ast::{
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
-    ArrowBody, ArrowFunctionExpression, TemplateLiteral,
+    ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     FunctionDeclaration, FunctionExpression, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
     NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
     ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, UpdateExpression, VarKind,
@@ -1226,6 +1226,24 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
             cv: s.cv.clone(),
             expressions: s.expressions.iter().map(|e| dce_expression(e, st)).collect(),
         }),
+        // `` tag`a${x}b` `` — a tagged template is kept (the tag call may have
+        // side effects); recurse into the tag and each `${…}` substitution.
+        Expression::TaggedTemplateExpression(t) => {
+            Expression::TaggedTemplateExpression(TaggedTemplateExpression {
+                cv: t.cv.clone(),
+                tag: Box::new(dce_expression(&t.tag, st)),
+                quasi: TemplateLiteral {
+                    cv: t.quasi.cv.clone(),
+                    quasis: t.quasi.quasis.clone(),
+                    expressions: t
+                        .quasi
+                        .expressions
+                        .iter()
+                        .map(|e| dce_expression(e, st))
+                        .collect(),
+                },
+            })
+        }
         Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
             cv: m.cv.clone(),
             object: Box::new(dce_expression(&m.object, st)),

@@ -2,6 +2,21 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.20.0] - 2026-07-02
+
+### Added — CLOC12.161: `Expression::TaggedTemplateExpression` (`` tag`...` ``)
+
+New `TaggedTemplateExpression { cv, tag: Box<Expression>, quasi: TemplateLiteral }`
+variant of `Expression` for a tagged template `` tag`abc${x}` `` — the `tag`
+callee is applied to the template literal that directly follows it (no call
+parentheses). The `quasi` field reuses the existing `TemplateLiteral` node
+(CLOC12.154), so no new template shape is introduced. Re-exported from the
+crate root. Atomic node PR (PR1) — the node + `closure-emitter` emit +
+match-arms in all nine downstream passes land in one commit so the workspace
+never breaks. The bridge conversion (PR2) and the CodePrinter conformance
+port (PR3) follow.
+
+
 ## [0.19.0] - 2026-07-02
 
 ### Added — CLOC12.160: `Expression::SequenceExpression` (the comma operator)

@@ -818,6 +818,13 @@ fn count_uses_expr(expr: &Expression, name: &str, count: &mut usize) {
                 count_uses_expr(e, name, count);
             }
         }
+        // Count uses of `name` in the tag callee and each `${…}` insert.
+        Expression::TaggedTemplateExpression(t) => {
+            count_uses_expr(&t.tag, name, count);
+            for e in &t.quasi.expressions {
+                count_uses_expr(e, name, count);
+            }
+        }
     }
 }
 
@@ -1102,6 +1109,13 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         // hold no substitutable reference.
         Expression::TemplateLiteral(t) => {
             for e in &mut t.expressions {
+                changed |= propagate_in_expr(e, cand);
+            }
+        }
+        // Propagate into the tag callee and each `${…}` insert.
+        Expression::TaggedTemplateExpression(t) => {
+            changed |= propagate_in_expr(&mut t.tag, cand);
+            for e in &mut t.quasi.expressions {
                 changed |= propagate_in_expr(e, cand);
             }
         }

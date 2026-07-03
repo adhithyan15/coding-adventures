@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.11.4] - 2026-07-02
+
+### Changed — CLOC12.161: handle `Expression::TaggedTemplateExpression`
+
+Added a `TaggedTemplateExpression` match arm recursing into the `tag` callee
+and each `${…}` insert of the applied template, so this pass keeps
+compiling and traverses the new `javascript-ast` 0.20.0 node. No behaviour
+change for any existing node.
+
 ## [0.11.3] - 2026-07-02
 
 ### Changed — CLOC12.160: handle `Expression::SequenceExpression`

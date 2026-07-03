@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
-    ArrowBody, ArrowFunctionExpression, TemplateLiteral,
+    ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
     LogicalExpression,
     LogicalOperator,
@@ -275,6 +275,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         CallExpression(e) => e.cv.clone(),
         NewExpression(e) => e.cv.clone(),
         SequenceExpression(e) => e.cv.clone(),
+        TaggedTemplateExpression(e) => e.cv.clone(),
         MemberExpression(e) => e.cv.clone(),
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
@@ -1405,6 +1406,24 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             cv: s.cv.clone(),
             expressions: s.expressions.iter().map(|e| fold_expression(e, st)).collect(),
         }),
+        // `` tag`a${x}b` `` — recurse into the tag callee and each `${…}`
+        // substitution; the raw quasi strings are opaque and untouched.
+        Expression::TaggedTemplateExpression(t) => {
+            Expression::TaggedTemplateExpression(TaggedTemplateExpression {
+                cv: t.cv.clone(),
+                tag: Box::new(fold_expression(&t.tag, st)),
+                quasi: TemplateLiteral {
+                    cv: t.quasi.cv.clone(),
+                    quasis: t.quasi.quasis.clone(),
+                    expressions: t
+                        .quasi
+                        .expressions
+                        .iter()
+                        .map(|e| fold_expression(e, st))
+                        .collect(),
+                },
+            })
+        }
         Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
             cv: m.cv.clone(),
             object: Box::new(fold_expression(&m.object, st)),

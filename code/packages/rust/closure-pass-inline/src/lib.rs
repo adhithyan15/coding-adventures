@@ -499,6 +499,13 @@ fn expr_node_count(expr: &Expression) -> usize {
         Expression::TemplateLiteral(t) => {
             t.quasis.len() + t.expressions.iter().map(expr_node_count).sum::<usize>()
         }
+        // A tagged template weighs its tag callee plus the template it applies
+        // (quasis + each `${…}` insert expression).
+        Expression::TaggedTemplateExpression(t) => {
+            expr_node_count(&t.tag)
+                + t.quasi.quasis.len()
+                + t.quasi.expressions.iter().map(expr_node_count).sum::<usize>()
+        }
     }
 }
 
@@ -828,6 +835,9 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // leaf strings. Mirror the arrow arm's non-recursion into sub-bodies
         // (it only records params, and a template has none) — nothing to do.
         Expression::TemplateLiteral(_) => {}
+        // A tagged template introduces no boundary bindings either (the tag is
+        // a callee, the quasi a template) — mirror the template arm.
+        Expression::TaggedTemplateExpression(_) => {}
     }
 }
 
@@ -1115,6 +1125,14 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
         // Quasis are leaf strings — only the insert expressions recurse.
         Expression::TemplateLiteral(t2) => {
             for e in &t2.expressions {
+                tally_expr(e, cand, t);
+            }
+        }
+        // A use of the candidate can hide in the tag callee or inside a `${…}`
+        // insert of the applied template.
+        Expression::TaggedTemplateExpression(t2) => {
+            tally_expr(&t2.tag, cand, t);
+            for e in &t2.quasi.expressions {
                 tally_expr(e, cand, t);
             }
         }
@@ -1415,6 +1433,13 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_expr(e, cand);
             }
         }
+        // Inline candidate calls in the tag callee and each `${…}` insert.
+        Expression::TaggedTemplateExpression(t) => {
+            changed |= inline_in_expr(&mut t.tag, cand);
+            for e in &mut t.quasi.expressions {
+                changed |= inline_in_expr(e, cand);
+            }
+        }
     }
     changed
 }
@@ -1559,6 +1584,14 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         // strings and never contain a substitutable identifier.
         Expression::TemplateLiteral(t) => {
             for e in &mut t.expressions {
+                substitute(e, map);
+            }
+        }
+        // A tagged template binds nothing — substitute through the tag callee
+        // and each `${…}` insert of the applied template.
+        Expression::TaggedTemplateExpression(t) => {
+            substitute(&mut t.tag, map);
+            for e in &mut t.quasi.expressions {
                 substitute(e, map);
             }
         }
@@ -1931,6 +1964,13 @@ fn expr_collect_mutated_params(
         // Quasis are leaf strings and never mutate anything.
         Expression::TemplateLiteral(t) => {
             for e in &t.expressions {
+                expr_collect_mutated_params(e, params, out);
+            }
+        }
+        // The tag callee or a `${…}` insert can mutate an outer param.
+        Expression::TaggedTemplateExpression(t) => {
+            expr_collect_mutated_params(&t.tag, params, out);
+            for e in &t.quasi.expressions {
                 expr_collect_mutated_params(e, params, out);
             }
         }
@@ -3393,6 +3433,14 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         // strings and contain no identifier uses.
         Expression::TemplateLiteral(t) => {
             for e in &mut t.expressions {
+                rename_in_expr(e, map);
+            }
+        }
+        // A tagged template binds nothing — alpha-rename through the tag callee
+        // and each `${…}` insert of the applied template.
+        Expression::TaggedTemplateExpression(t) => {
+            rename_in_expr(&mut t.tag, map);
+            for e in &mut t.quasi.expressions {
                 rename_in_expr(e, map);
             }
         }

@@ -1825,3 +1825,50 @@ round-trips the sequence parenthesised while `1 + 2` folds to `3`.
 
 The **PR3 emit conformance port** — the remaining follow-up — ports upstream
 CodePrinter's comma-operator cases into `closure-emitter/tests/upstream/`.
+
+## CLOC12.161 — `TaggedTemplateExpression` (`` tag`...` ``): atomic node + emit + passes (PR1)
+
+Adds `Expression::TaggedTemplateExpression { cv, tag, quasi }` to `javascript-ast`
+(0.20.0) — a **tagged template**: the `tag` callee is applied to the template
+literal that directly follows it, `` tag`abc${x}` ``, with **no call
+parentheses**. The `quasi` field is a `TemplateLiteral` (the CLOC12.154 node),
+so no new template shape is introduced — a tagged template is "an expression
+applied to a template", nothing more at the AST level. (The runtime semantics —
+the tag receives the cooked/raw strings array plus the substitution values — are
+a call-site concern the minifier never evaluates; structurally it is just the
+two children.)
+
+`closure-emitter` (0.25.0) `emit_tagged_template` prints the `tag` at
+`PREC_PRIMARY` immediately followed by `emit_template_literal(&quasi)` — the
+backtick abuts the tag with no separator seam (`` String.raw`x` ``). The node is
+itself `PREC_PRIMARY` in `expr_prec`, so a member access on a tagged template is
+paren-free (`` a`x`.length ``); a **looser** tag is wrapped by the existing
+`PREC_PRIMARY` object-position rule (a sequence tag becomes `` (a,b)`x` `` so it
+does not tag only its last operand). No new emit-site precedence surgery was
+needed — the `PREC_PRIMARY` classification and the tag callee emitting at
+`PREC_PRIMARY` reuse the machinery the member/call nodes already established.
+
+All nine downstream pass/analysis crates get a `TaggedTemplateExpression` match
+arm recursing into the `tag` callee **and** each `${…}` insert of `quasi`
+(the transforms rebuild the node; `fold-control-flow`'s exhaustive
+`expression_cv` accessor gains its arm) — all in one atomic commit so the
+workspace never has a broken exhaustive `match`.
+
+5 new emitter unit tests (identifier-tag no-substitution, member-chain tag,
+`String.raw` tag with a `${}` substitution, member access on a tagged template,
+sequence tag wrapped). No behaviour change for existing inputs — the bridge
+still declines the tagged-template form (gap-162), so closurec falls back to
+WHITESPACE_ONLY on `` tag`...` `` for now. PR2 (bridge-enable) and PR3
+(conformance port) follow.
+
+### gap-162 — bridge declines tagged templates (`TaggedTemplateExpression`) — **OPEN**
+
+The `javascript-parser` bridge does not yet convert the grammar's
+`tagged_template_expression` (a `member_expression`/`call_expression`-position
+production of the form `<tag> <template_literal>`) into the new
+`Expression::TaggedTemplateExpression` node; it declines to `UnsupportedSyntax`,
+dropping the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.161 PR1)
+lands the node + emit + pass traversals; the **PR2 bridge-enable** — the fix for
+this gap — will build the node from the grammar's tag + template-literal
+children (the template child reusing the existing `template_literal` conversion
+from CLOC12.155), gated by a closurec e2e diff fixture.
