@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Wired the generated Compose Desktop Engram shell to handle Anki import/export
+  `hostIntent` payloads with desktop file choosers and the shared `engram-capi`
+  APKG import/export functions.
 - Wired the generated Electron Engram shell to handle Anki import/export
   `hostIntent` payloads with native Electron dialogs, snapshot persistence,
   and a native `engram-host-cli` sidecar for APKG import/export.

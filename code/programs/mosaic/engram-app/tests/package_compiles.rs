@@ -2598,7 +2598,14 @@ fn source_tree_has_expected_shape() {
     assert_contains(&compose_host, "Native.load");
     assert_contains(&compose_host, "JSONObject(event)");
     assert_contains(&compose_host, "\"hostIntent\"");
+    assert_contains(&compose_host, "\"hostResult\"");
     assert_contains(&compose_host, "\"props\"");
+    assert_contains(&compose_host, "JFileChooser");
+    assert_contains(&compose_host, "FileNameExtensionFilter");
+    assert_contains(&compose_host, "importAnkiPackage");
+    assert_contains(&compose_host, "exportAnkiPackage");
+    assert_contains(&compose_host, "eg_merge_anki_apkg");
+    assert_contains(&compose_host, "eg_export_anki_apkg");
     assert_contains(&compose_host, "ENGRAM_SNAPSHOT_PATH");
     assert_contains(&compose_host, "mosaic-snapshot.v1.json");
     assert_contains(&compose_host, "hydrateSession");

@@ -1,7 +1,10 @@
 import com.sun.jna.Library
 import com.sun.jna.Native
 import com.sun.jna.Pointer
+import java.awt.GraphicsEnvironment
 import java.io.File
+import javax.swing.JFileChooser
+import javax.swing.filechooser.FileNameExtensionFilter
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -33,10 +36,95 @@ class MosaicHost {
         val response = hostResponseFromJson(
             takeCString(api.eg_handle_engram_app_event(handle, eventJson, deckId(), nowMs()), api)
         )
-        if (!response.containsKey("error")) {
+        val handled = if (response.containsKey("error")) response else handleHostIntent(response)
+        if (!handled.containsKey("error")) {
             persistSnapshot()
         }
-        return response
+        return handled
+    }
+
+    private fun handleHostIntent(response: Map<String, Any?>): Map<String, Any?> {
+        val hostIntent = response["hostIntent"] as? Map<*, *> ?: return response
+        return when (hostIntent["type"] as? String) {
+            "importAnki" -> importAnkiPackage(response, hostIntent)
+            "exportAnki" -> exportAnkiPackage(response, hostIntent)
+            else -> response
+        }
+    }
+
+    private fun importAnkiPackage(
+        response: Map<String, Any?>,
+        hostIntent: Map<*, *>
+    ): Map<String, Any?> {
+        val api = capi ?: return hostResultResponse(response, hostIntent, "unavailable")
+        val handle = session ?: return hostResultResponse(response, hostIntent, "unavailable")
+        if (GraphicsEnvironment.isHeadless()) {
+            return hostResultResponse(response, hostIntent, "unsupported")
+        }
+
+        val file = chooseAnkiImportFile(hostIntent)
+            ?: return hostResultResponse(response, hostIntent, "cancelled")
+        val bytes = runCatching { file.readBytes() }.getOrElse {
+            println("Engram Compose MosaicHost could not read Anki package: ${it.message}")
+            return hostResultResponse(response, hostIntent, "read-error", file.path)
+        }
+
+        val imported = hostResponseFromJson(
+            takeCString(api.eg_merge_anki_apkg(handle, bytes, bytes.size.toLong()), api)
+        )
+        if (imported.containsKey("error")) {
+            println("Engram Compose MosaicHost could not import Anki package: ${imported["error"]}")
+            return hostResultResponse(response, hostIntent, "import-error", file.path)
+        }
+
+        persistSnapshot()
+        val refreshed = props().toMutableMap()
+        refreshed["hostIntent"] = jsonMap(hostIntent)
+        refreshed["hostResult"] = mapOf(
+            "status" to "imported",
+            "path" to file.path
+        )
+        return refreshed
+    }
+
+    private fun exportAnkiPackage(
+        response: Map<String, Any?>,
+        hostIntent: Map<*, *>
+    ): Map<String, Any?> {
+        val api = capi ?: return hostResultResponse(response, hostIntent, "unavailable")
+        val handle = session ?: return hostResultResponse(response, hostIntent, "unavailable")
+        if (GraphicsEnvironment.isHeadless()) {
+            return hostResultResponse(response, hostIntent, "unsupported")
+        }
+
+        val file = chooseAnkiExportFile(hostIntent)
+            ?: return hostResultResponse(response, hostIntent, "cancelled")
+        val outputFile = if (file.extension.isBlank()) File("${file.path}.apkg") else file
+        val exported = runCatching { JSONObject(takeCString(api.eg_export_anki_apkg(handle), api)) }
+            .getOrElse {
+                println("Engram Compose MosaicHost could not parse exported Anki package: ${it.message}")
+                return hostResultResponse(response, hostIntent, "export-error", outputFile.path)
+            }
+        if (!exported.optBoolean("ok", true)) {
+            println("Engram Compose MosaicHost could not export Anki package: ${jsonValue(exported.opt("error"))}")
+            return hostResultResponse(response, hostIntent, "export-error", outputFile.path)
+        }
+
+        val bytes = jsonByteArray(exported, "apkg")
+        if (bytes.isEmpty()) {
+            return hostResultResponse(response, hostIntent, "export-error", outputFile.path)
+        }
+
+        val wrote = runCatching {
+            outputFile.parentFile?.mkdirs()
+            outputFile.writeBytes(bytes)
+        }
+        if (wrote.isFailure) {
+            println("Engram Compose MosaicHost could not save Anki package: ${wrote.exceptionOrNull()?.message}")
+            return hostResultResponse(response, hostIntent, "write-error", outputFile.path)
+        }
+
+        return hostResultResponse(response, hostIntent, "exported", outputFile.path)
     }
 
     private fun hydrateSession() {
@@ -134,6 +222,81 @@ class MosaicHost {
             else -> "libengram_capi.so"
         }
     }
+
+    private fun chooseAnkiImportFile(hostIntent: Map<*, *>): File? {
+        val chooser = JFileChooser()
+        chooser.dialogTitle = "Import Anki package"
+        chooser.fileSelectionMode = JFileChooser.FILES_ONLY
+        chooser.fileFilter = ankiFileFilter(
+            hostIntentExtensions(hostIntent, "accept", listOf(".apkg", ".colpkg"))
+        )
+        return if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            chooser.selectedFile
+        } else {
+            null
+        }
+    }
+
+    private fun chooseAnkiExportFile(hostIntent: Map<*, *>): File? {
+        val chooser = JFileChooser(System.getProperty("user.home"))
+        chooser.dialogTitle = "Export Anki package"
+        chooser.fileSelectionMode = JFileChooser.FILES_ONLY
+        chooser.selectedFile = File(System.getProperty("user.home"), suggestedAnkiFileName(hostIntent))
+        chooser.fileFilter = ankiFileFilter(
+            hostIntentExtensions(hostIntent, "extensions", listOf(".apkg"))
+        )
+        return if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            chooser.selectedFile
+        } else {
+            null
+        }
+    }
+
+    private fun hostResultResponse(
+        response: Map<String, Any?>,
+        hostIntent: Map<*, *>,
+        status: String,
+        path: String? = null
+    ): Map<String, Any?> {
+        val out = response.toMutableMap()
+        out["hostIntent"] = jsonMap(hostIntent)
+        val hostResult = mutableMapOf<String, Any?>("status" to status)
+        if (!path.isNullOrBlank()) {
+            hostResult["path"] = path
+        }
+        out["hostResult"] = hostResult
+        return out
+    }
+
+    private fun hostIntentExtensions(
+        hostIntent: Map<*, *>,
+        property: String,
+        fallback: List<String>
+    ): List<String> {
+        val raw = hostIntent[property] as? List<*> ?: return fallback
+        val extensions = raw.mapNotNull { value ->
+            val extension = value?.toString()?.trim().orEmpty()
+            when {
+                extension.isBlank() -> null
+                extension.startsWith(".") -> extension
+                else -> ".$extension"
+            }
+        }
+        return extensions.ifEmpty { fallback }
+    }
+
+    private fun ankiFileFilter(extensions: List<String>): FileNameExtensionFilter =
+        FileNameExtensionFilter(
+            "Anki packages",
+            *extensions.map { it.removePrefix(".") }.toTypedArray()
+        )
+
+    private fun suggestedAnkiFileName(hostIntent: Map<*, *>): String {
+        val raw = hostIntent["deckId"]?.toString()?.trim()?.takeIf { it.isNotEmpty() }
+            ?: "engram-collection"
+        val safe = raw.replace(Regex("""[\/\\:*?"<>|]"""), "-")
+        return if (safe.lowercase().endsWith(".apkg")) safe else "$safe.apkg"
+    }
 }
 
 interface EngramCapi : Library {
@@ -149,6 +312,8 @@ interface EngramCapi : Library {
         deckId: String,
         nowMs: Long
     ): Pointer?
+    fun eg_export_anki_apkg(session: Pointer?): Pointer?
+    fun eg_merge_anki_apkg(session: Pointer?, data: ByteArray, dataLen: Long): Pointer?
 }
 
 private fun jsonObjectToMap(value: JSONObject): Map<String, Any?> =
@@ -164,6 +329,17 @@ private fun jsonValue(value: Any?): Any? =
         is JSONArray -> jsonArrayToList(value)
         else -> value
     }
+
+private fun jsonMap(value: Map<*, *>): Map<String, Any?> =
+    value.entries.mapNotNull { entry ->
+        val key = entry.key as? String ?: return@mapNotNull null
+        key to entry.value
+    }.toMap()
+
+private fun jsonByteArray(root: JSONObject, property: String): ByteArray {
+    val values = root.optJSONArray(property) ?: return ByteArray(0)
+    return ByteArray(values.length()) { index -> values.optInt(index).toByte() }
+}
 
 private fun jsonOk(json: String): Boolean =
     runCatching { JSONObject(json).optBoolean("ok", true) }.getOrDefault(false)

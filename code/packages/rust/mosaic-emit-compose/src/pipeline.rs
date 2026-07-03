@@ -242,6 +242,16 @@ fn emit_composable_function(
     emits: &[EmitDecl],
     part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
+    if should_split_root_sections(layout_root) {
+        return emit_split_composable_function(
+            component_name,
+            slots,
+            layout_root,
+            emits,
+            part_styles,
+        );
+    }
+
     let mut out = String::new();
     writeln!(out, "@Composable").unwrap();
     writeln!(out, "fun {component_name}(").unwrap();
@@ -268,6 +278,150 @@ fn emit_composable_function(
     )?);
     writeln!(out, "}}").unwrap();
     Ok(out)
+}
+
+fn should_split_root_sections(layout_root: &LayoutNode) -> bool {
+    matches!(
+        layout_root.tag.as_str(),
+        "Box"
+            | "Row"
+            | "Column"
+            | "HostTable"
+            | "HostTableHead"
+            | "HostTableBody"
+            | "HostTableFoot"
+    ) && layout_root.children.len() > 1
+}
+
+fn emit_split_composable_function(
+    component_name: &str,
+    slots: &[SlotDecl],
+    layout_root: &LayoutNode,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+) -> Result<String, PipelineEmitError> {
+    let mut out = String::new();
+    let (root_composable, table_context, root_text) =
+        root_container_context(layout_root, part_styles);
+
+    writeln!(out, "@Composable").unwrap();
+    writeln!(out, "fun {component_name}(").unwrap();
+    emit_composable_parameters(&mut out, slots, component_name)?;
+    writeln!(out, ") {{").unwrap();
+
+    let frame = emit_container_frame(
+        layout_root,
+        root_composable,
+        1,
+        part_styles,
+        root_text.as_ref(),
+        None,
+    );
+    out.push_str(&frame.opener);
+    let ranges = child_section_ranges(&layout_root.children);
+    for (index, _) in ranges.iter().enumerate() {
+        write_section_call(&mut out, component_name, index, slots, 2)?;
+    }
+    out.push_str(&frame.closer);
+    writeln!(out, "}}").unwrap();
+
+    for (index, range) in ranges.into_iter().enumerate() {
+        writeln!(out).unwrap();
+        writeln!(out, "@Composable").unwrap();
+        writeln!(out, "private fun {component_name}Section{index}(").unwrap();
+        emit_composable_parameters(&mut out, slots, component_name)?;
+        writeln!(out, ") {{").unwrap();
+        out.push_str(&emit_children_compose(
+            &layout_root.children[range],
+            1,
+            component_name,
+            emits,
+            part_styles,
+            table_context.as_ref(),
+            frame.child_text.as_ref(),
+            None,
+            None,
+        )?);
+        writeln!(out, "}}").unwrap();
+    }
+
+    Ok(out)
+}
+
+fn root_container_context<'a>(
+    layout_root: &'a LayoutNode,
+    part_styles: &'a PartStyleMap,
+) -> (&'static str, Option<TableContext>, Option<TextStyleCtx>) {
+    match layout_root.tag.as_str() {
+        "HostTable" => {
+            let ctx = extract_table_context(layout_root);
+            let sheet_text = layout_root
+                .part_name
+                .as_deref()
+                .map(|p| sheet_text_style(part_styles, p))
+                .unwrap_or_default();
+            ("Column", Some(ctx), Some(sheet_text))
+        }
+        "HostTableHead" | "HostTableBody" | "HostTableFoot" => ("Column", None, None),
+        other => match other {
+            "Box" => ("Box", None, None),
+            "Row" => ("Row", None, None),
+            _ => ("Column", None, None),
+        },
+    }
+}
+
+fn child_section_ranges(children: &[LayoutNode]) -> Vec<std::ops::Range<usize>> {
+    let mut ranges = Vec::new();
+    let mut i = 0;
+    while i < children.len() {
+        let end = if children[i].tag == "If" && children.get(i + 1).is_some_and(|n| n.tag == "Else")
+        {
+            i + 2
+        } else {
+            i + 1
+        };
+        ranges.push(i..end);
+        i = end;
+    }
+    ranges
+}
+
+fn emit_composable_parameters(
+    out: &mut String,
+    slots: &[SlotDecl],
+    component_name: &str,
+) -> Result<(), PipelineEmitError> {
+    for s in slots {
+        let field = to_camel_case_first_lower(&s.name);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        let ty = slot_type_to_kotlin(&s.r#type);
+        // Optional slots in the IR become nullable Kotlin types.
+        let suffix = if s.required { "" } else { "?" };
+        writeln!(out, "    {field}: {ty}{suffix},").unwrap();
+    }
+    writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
+    Ok(())
+}
+
+fn write_section_call(
+    out: &mut String,
+    component_name: &str,
+    index: usize,
+    slots: &[SlotDecl],
+    depth: usize,
+) -> Result<(), PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    writeln!(out, "{pad}{component_name}Section{index}(").unwrap();
+    for s in slots {
+        let field = to_camel_case_first_lower(&s.name);
+        validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+        writeln!(out, "{inner}{field},").unwrap();
+    }
+    writeln!(out, "{inner}dispatch,").unwrap();
+    writeln!(out, "{pad})").unwrap();
+    Ok(())
 }
 
 // =====================================================================
@@ -425,7 +579,9 @@ fn collect_state_layers<'a>(
         }
         let cond_expr = match &prop.value {
             LayoutPropValue::Expr(t) => t.clone(),
-            LayoutPropValue::SlotRef(s) => to_camel_case_first_lower(s),
+            LayoutPropValue::SlotRef(s) => {
+                format!("{} == true", to_camel_case_first_lower(s))
+            }
             LayoutPropValue::Keyword(k) => k.clone(),
             // EmitRef / Number / String don't make sense as boolean
             // predicates — drop the whole layer.
@@ -1093,6 +1249,110 @@ fn emit_compose_tree(
 /// A `Row` inside a HostTable dispatches each child through
 /// [`emit_table_cell`] so a child `For` in cell-position picks up the
 /// threaded column width.
+struct ContainerFrame {
+    opener: String,
+    closer: String,
+    child_text: Option<TextStyleCtx>,
+}
+
+fn emit_container_frame(
+    node: &LayoutNode,
+    composable: &str,
+    depth: usize,
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
+    injected_width: Option<&str>,
+) -> ContainerFrame {
+    let pad = "    ".repeat(depth);
+    let mut opener = String::new();
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style: Option<ComposeStyle> = if let Some(part) = &node.part_name {
+        let base_props = part_styles.get(part).map(|v| v.as_slice()).unwrap_or(&[]);
+        let state_layers = collect_state_layers(node, part, part_styles);
+        if !base_props.is_empty() || !state_layers.is_empty() || injected_width.is_some() {
+            Some(compose_box_style(
+                base_props,
+                &state_layers,
+                injected_width,
+                chain_indent,
+                inherited_color,
+            ))
+        } else {
+            None
+        }
+    } else if injected_width.is_some() {
+        Some(compose_box_style(
+            &[],
+            &[],
+            injected_width,
+            chain_indent,
+            inherited_color,
+        ))
+    } else {
+        None
+    };
+
+    let has_chain = style
+        .as_ref()
+        .map(|s| !s.modifier.is_empty())
+        .unwrap_or(false);
+    let content_alignment = style.as_ref().and_then(|s| s.content_alignment.clone());
+    let child_text: Option<TextStyleCtx> = match &style {
+        Some(s) => {
+            let inherited = text_ctx.cloned().unwrap_or_default();
+            Some(cell_text_style(&inherited, s))
+        }
+        None => text_ctx.cloned(),
+    };
+
+    if has_chain || content_alignment.is_some() {
+        let modifier_pad = "    ".repeat(depth + 1);
+        writeln!(opener, "{pad}{composable}(").unwrap();
+        if has_chain {
+            let chain = style.as_ref().map(|s| s.modifier.as_str()).unwrap_or("");
+            writeln!(opener, "{modifier_pad}modifier = Modifier{chain},").unwrap();
+        } else {
+            writeln!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth(),").unwrap();
+        }
+        if let Some(a) = &content_alignment {
+            writeln!(opener, "{modifier_pad}contentAlignment = {a},").unwrap();
+        }
+        if node.children.is_empty() {
+            writeln!(opener, "{pad}) {{ }}").unwrap();
+            return ContainerFrame {
+                opener,
+                closer: String::new(),
+                child_text,
+            };
+        }
+        writeln!(opener, "{pad}) {{").unwrap();
+    } else if node.children.is_empty() {
+        writeln!(
+            opener,
+            "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{ }}"
+        )
+        .unwrap();
+        return ContainerFrame {
+            opener,
+            closer: String::new(),
+            child_text,
+        };
+    } else {
+        writeln!(
+            opener,
+            "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{"
+        )
+        .unwrap();
+    }
+
+    ContainerFrame {
+        opener,
+        closer: format!("{pad}}}\n"),
+        child_text,
+    }
+}
+
 #[allow(clippy::too_many_arguments)]
 fn emit_container(
     node: &LayoutNode,
@@ -1542,7 +1802,9 @@ fn emit_if_compose(
     }
 
     let cond_expr = match when {
-        Some(LayoutPropValue::SlotRef(s)) => to_camel_case_first_lower(s),
+        Some(LayoutPropValue::SlotRef(s)) => {
+            format!("{} == true", to_camel_case_first_lower(s))
+        }
         Some(LayoutPropValue::Expr(e)) => e.trim().to_string(),
         Some(LayoutPropValue::Keyword(k)) => to_camel_case_first_lower(k),
         Some(LayoutPropValue::String(s)) => format!("\"{s}\""),
@@ -1706,11 +1968,11 @@ fn emit_host_input(
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
     }
 
-    // read-only -> enabled = !readOnly (Compose negates the polarity)
+    // read-only -> enabled when the optional flag is not explicitly true.
     if let Some(slot) = find_slot_ref_prop(node, "read-only") {
         let camel = to_camel_case_first_lower(slot);
         validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        writeln!(out, "{inner}enabled = !{camel},").unwrap();
+        writeln!(out, "{inner}enabled = {camel} != true,").unwrap();
     }
 
     writeln!(out, "{pad})").unwrap();
@@ -2176,7 +2438,7 @@ fn bool_prop_expr(
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            Ok(camel)
+            Ok(format!("{camel} == true"))
         }
         Some(LayoutPropValue::Expr(expr)) => Ok(expr.clone()),
         _ => Ok(default.to_string()),
@@ -2190,7 +2452,7 @@ fn disabled_prop_enabled_expr(node: &LayoutNode) -> Result<Option<String>, Pipel
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            Ok(Some(format!("!{camel}")))
+            Ok(Some(format!("{camel} != true")))
         }
         Some(LayoutPropValue::Expr(expr)) => Ok(Some(format!("!({expr})"))),
         _ => Ok(None),
@@ -2730,6 +2992,41 @@ mod tests {
     }
 
     #[test]
+    fn root_container_children_split_into_private_composables() {
+        let m = component("X", vec![slot("title", SlotType::Text, true)], vec![]);
+        let l = layout(
+            "X",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    node(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::SlotRef("title".into()),
+                        }],
+                        vec![],
+                    ),
+                    node(
+                        "Text",
+                        vec![LayoutProp {
+                            name: "content".into(),
+                            value: LayoutPropValue::String("second".into()),
+                        }],
+                        vec![],
+                    ),
+                ],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("fun X("));
+        assert!(out.contains("XSection0("));
+        assert!(out.contains("private fun XSection0("));
+        assert!(out.contains("private fun XSection1("));
+    }
+
+    #[test]
     fn row_with_text_and_input_emits_expected_kotlin() {
         let m = component(
             "FormulaBar",
@@ -2794,7 +3091,7 @@ mod tests {
             out.contains("FormulaBarEvent.FormulaChange(v)"),
             "expected real dispatch call, got:\n{out}"
         );
-        assert!(out.contains("enabled = !readOnly,"));
+        assert!(out.contains("enabled = readOnly != true,"));
     }
 
     #[test]
@@ -3187,7 +3484,7 @@ mod tests {
         assert!(out.contains("import androidx.compose.material.Checkbox"));
         assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
         assert!(out.contains("Checkbox("));
-        assert!(out.contains("checked = buryNewValue,"));
+        assert!(out.contains("checked = buryNewValue == true,"));
         assert!(out.contains(
             "onCheckedChange = { checked -> dispatch(DeckOptionsEvent.BuryNewSiblingsChange(checked)) },"
         ));
@@ -3247,7 +3544,7 @@ mod tests {
         assert!(out.contains("import androidx.compose.material.RadioButton"));
         assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
         assert!(out.contains("RadioButton("));
-        assert!(out.contains("selected = suspendSelected,"));
+        assert!(out.contains("selected = suspendSelected == true,"));
         assert!(out
             .contains("onClick = { dispatch(DeckOptionsEvent.LeechActionChange(\"suspend\")) },"));
         assert!(out.contains("enabled = true,"));
@@ -3432,6 +3729,30 @@ mod tests {
         assert!(out.contains("} else {"));
         assert!(out.contains("\"yes\""));
         assert!(out.contains("\"no\""));
+    }
+
+    #[test]
+    fn if_when_slot_ref_lowers_to_nullable_safe_kotlin_condition() {
+        let if_node = node(
+            "If",
+            vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::SlotRef("visible".to_string()),
+            }],
+            vec![node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String("shown".to_string()),
+                }],
+                vec![],
+            )],
+        );
+        let l = layout("X", node("Column", vec![], vec![if_node]));
+        let m = component("X", vec![slot("visible", SlotType::Bool, false)], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains("visible: Boolean?,"));
+        assert!(out.contains("if (visible == true) {"));
     }
 
     /// `when: true` literal folds at compile time — the else branch
