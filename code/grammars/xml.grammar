@@ -1,0 +1,101 @@
+# Parser grammar for XML 1.0 (structural subset used by OPC / OOXML)
+# @version 1
+#
+# This grammar describes the *shape* of an XML document as a tree of tokens.
+# It is deliberately structural: it recognises well-formed nesting of tags,
+# attributes, text, comments, CDATA sections, and processing instructions.
+# It does NOT try to enforce that a start tag `<w:p>` is matched by the
+# correct end tag `</w:p>` — a context-free grammar cannot express that
+# ("the two names must be equal" is a context-*sensitive* constraint). That
+# check, along with namespace resolution and entity decoding, is done by the
+# hand-written AST builder in `parser.rs` after this grammar has produced a
+# raw `GrammarASTNode` tree.
+#
+# Format: rule_name = definition ;
+#
+#   UPPERCASE names reference tokens from xml_rust.tokens
+#   lowercase names reference other grammar rules (may be recursive)
+#
+# Notation:
+#   |       alternation (or)
+#   { x }   zero or more repetitions
+#   [ x ]   optional (zero or one)
+#   ( x )   grouping
+#
+# The token stream (produced by the xml-lexer) looks like this for
+# `<w:p class="a">hi</w:p>`:
+#
+#   OPEN_TAG_START("<")  TAG_NAME("w:p")  TAG_NAME("class")  ATTR_EQUALS("=")
+#   ATTR_VALUE("\"a\"")  TAG_CLOSE(">")  TEXT("hi")
+#   CLOSE_TAG_START("</") TAG_NAME("w:p") TAG_CLOSE(">")
+#
+# Note that the lexer emits prefixed names (`w:p`), xmlns declarations
+# (`xmlns:w`), and attribute names all as plain TAG_NAME tokens, and that
+# ATTR_VALUE tokens still carry their surrounding quotes. Splitting prefixes,
+# stripping quotes, and decoding entities are all parser-layer jobs.
+
+# ---------------------------------------------------------------------------
+# document — the top-level entry point.
+#
+# A document is an optional prolog (XML declaration + leading comments /
+# processing instructions), then exactly one root element, then an optional
+# epilogue of trailing comments / processing instructions. Whitespace between
+# these top-level items is skipped by the lexer, so it does not appear here.
+# ---------------------------------------------------------------------------
+document = { misc } element { misc } ;
+
+# misc — the things that may appear before or after the root element: the
+# XML declaration (which is lexed as a processing instruction with target
+# "xml"), ordinary processing instructions, and comments.
+misc = pi | comment ;
+
+# ---------------------------------------------------------------------------
+# element — either a self-closing tag `<x/>` or a start tag / content /
+# end tag triple `<x> ... </x>`.
+#
+# Both alternatives share the same opening: `OPEN_TAG_START TAG_NAME { attribute }`.
+# We list the self-closing form first so the parser commits to SELF_CLOSE
+# when it is present; otherwise it backtracks and takes the TAG_CLOSE branch.
+# ---------------------------------------------------------------------------
+element = empty_element | container_element ;
+
+empty_element = OPEN_TAG_START TAG_NAME { attribute } SELF_CLOSE ;
+
+container_element =
+    OPEN_TAG_START TAG_NAME { attribute } TAG_CLOSE
+    { content }
+    CLOSE_TAG_START TAG_NAME TAG_CLOSE ;
+
+# attribute — a name, then (for XML) a required `= "value"` pair. The lexer
+# reuses the TAG_NAME pattern for attribute names, so `class` and `xmlns:w`
+# both arrive as TAG_NAME tokens.
+attribute = TAG_NAME ATTR_EQUALS ATTR_VALUE ;
+
+# ---------------------------------------------------------------------------
+# content — the sequence of things allowed between a start tag and its
+# matching end tag. Each alternative begins with a distinct token, so the
+# backtracking parser never has to look far ahead:
+#
+#   element     -> OPEN_TAG_START
+#   comment     -> COMMENT_START
+#   cdata       -> CDATA_START
+#   pi          -> PI_START
+#   ENTITY_REF  -> ENTITY_REF     (e.g. &amp;)
+#   CHAR_REF    -> CHAR_REF       (e.g. &#65; or &#x41;)
+#   TEXT        -> TEXT
+# ---------------------------------------------------------------------------
+content = element | comment | cdata | pi | CHAR_REF | ENTITY_REF | TEXT ;
+
+# comment — `<!-- ... -->`. The COMMENT_TEXT is optional so that the empty
+# comment `<!---->` parses.
+comment = COMMENT_START [ COMMENT_TEXT ] COMMENT_END ;
+
+# cdata — `<![CDATA[ ... ]]>`. CDATA_TEXT is optional so an empty section
+# `<![CDATA[]]>` parses. Its contents are verbatim (never entity-decoded).
+cdata = CDATA_START [ CDATA_TEXT ] CDATA_END ;
+
+# pi — a processing instruction `<?target ... ?>`. The XML declaration
+# `<?xml version="1.0"?>` is lexed as a PI with target "xml"; the AST builder
+# recognises that target and lifts version / encoding onto the document
+# rather than storing it as a node. PI_TEXT is optional (`<?target?>`).
+pi = PI_START PI_TARGET [ PI_TEXT ] PI_END ;
