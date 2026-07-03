@@ -1734,14 +1734,29 @@ the bridge still declines `new` (gap-160), so closurec falls back to
 WHITESPACE_ONLY on `new` for now. PR2 (bridge-enable) and PR3 (conformance
 port) follow.
 
-### gap-160 — bridge declines `new_expression` (`new X`)
+### gap-160 — bridge declines `new_expression` (`new X`) — **RESOLVED (javascript-parser 0.24.0, CLOC12.159 PR2)**
 
-The `javascript-parser` typed-AST bridge's `convert_new_expression` passes a
-plain `member_expression` (no `new` keyword) straight through, but returns
-`UnsupportedSyntax { rule: "NewExpression" }` for the actual `"new" X` form —
-so any file containing `new` currently drops to WHITESPACE_ONLY. With the
-`Expression::NewExpression` node now in place (CLOC12.159 PR1), the bridge can
-convert it: PR2 will build `NewExpression { callee, arguments }` from the
-grammar node (the argument list comes from the `member_expression = "new"
-member_expression arguments` production) and add a closurec e2e diff fixture,
-closing this gap.
+The `javascript-parser` typed-AST bridge declined the `new` operator to
+`UnsupportedSyntax`, so any file containing `new` dropped to WHITESPACE_ONLY.
+
+**Fix (CLOC12.159 PR2):** with the `Expression::NewExpression` node in place
+(PR1), the bridge now converts both grammar productions in which `new` appears:
+
+- **argumented** `new X(args)` parses as `member_expression = "new"
+  member_expression arguments` — `convert_member_expression` builds a
+  `NewExpression { callee, arguments }` (arguments via `convert_arguments`) as
+  the base and folds any trailing `.NAME` / `[expr]` suffix onto it, so
+  `new X().y` / `new X()[k]` convert correctly;
+- **bare** `new X` parses as `new_expression = "new" new_expression` —
+  `convert_new_expression` builds a `NewExpression` with an EMPTY argument list
+  (semantically identical to `new X()`; the emitter prints the canonical
+  `new X()`).
+
+A spread argument (`new X(...a)`) still declines (`SpreadElement`, later slice)
+and `new.target` still declines (`NewTarget`, Phase 3). 7 bridge tests + a
+closurec e2e diff fixture (`tests/diff/simple-new-expression/`) proving
+`log(new Widget(1 + 2))` round-trips the construction while `1 + 2` folds to
+`3` (a WHITESPACE_ONLY fallback would leave it unfolded).
+
+The **PR3 emit conformance port** — the remaining follow-up — ports upstream
+CodePrinter's `new`-operator cases into `closure-emitter/tests/upstream/`.
