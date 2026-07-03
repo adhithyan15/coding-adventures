@@ -95,6 +95,7 @@ SELF_CONTAINED_RUNGS = (
     "rung55_fresh_gas_volume",
     "rung56_stroke_work",
     "rung57_renal_count_rate",
+    "rung58_pressor_concentration",
 )
 
 

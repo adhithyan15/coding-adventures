@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 58 \u2014 vasopressor bag concentration from four stated quantities (a NEW panel: critical care / vasopressor infusion). From an amount per ampoule and an ampoule count (their product is the total drug mass) and a drug volume and a diluent volume (their sum is the total fluid), compute the concentration ((amount_per_ampoule*ampoule_count)/(drug_volume+diluent_volume)), the total mass (amount_per_ampoule*ampoule_count), or the total volume (drug_volume+diluent_volume). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT OVER A SUM (a*b)/(c+d), the first on the ladder to divide a product by a sum (distinct from rung-15 product-over-product (a*b)/(c*d) and rung-37 sum-over-sum (a+b)/(c+d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via *, + and / \u2014 no constant leaks, and neither the total mass, the total volume, nor any concentration figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: breaking the grouping so the mass divides only the drug volume ((a*b)/c+d, not (a*b)/(c+d)), and dividing by the diluent volume alone ((a*b)/d). The core confusion tested is dividing a product by a grouped sum.",
+  "items": [
+    {
+      "id": "r58conc-01",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 5 ampoules of 4 mg each, drawn up in 20 mL of drug solution and topped up with 80 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(4)\nobserve ampoule_count(5)\nobserve drug_volume(20)\nobserve diluent_volume(80)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 81.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r58conc-02",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 5 ampoules of 4 mg each, drawn up in 20 mL of drug solution and topped up with 80 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(4)\nobserve ampoule_count(5)\nobserve drug_volume(20)\nobserve diluent_volume(80)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 81.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r58conc-03",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 5 ampoules of 4 mg each, drawn up in 20 mL of drug solution and topped up with 80 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(4)\nobserve ampoule_count(5)\nobserve drug_volume(20)\nobserve diluent_volume(80)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.2,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 81.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.25,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r58conc-04",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 3 ampoules of 8 mg each, drawn up in 12 mL of drug solution and topped up with 88 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(8)\nobserve ampoule_count(3)\nobserve drug_volume(12)\nobserve diluent_volume(88)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.24,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2727272727272727,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r58conc-05",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 3 ampoules of 8 mg each, drawn up in 12 mL of drug solution and topped up with 88 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(8)\nobserve ampoule_count(3)\nobserve drug_volume(12)\nobserve diluent_volume(88)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.2727272727272727,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 24,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r58conc-06",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 3 ampoules of 8 mg each, drawn up in 12 mL of drug solution and topped up with 88 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(8)\nobserve ampoule_count(3)\nobserve drug_volume(12)\nobserve diluent_volume(88)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 24,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 90.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.2727272727272727,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r58conc-07",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 6 ampoules of 2 mg each, drawn up in 10 mL of drug solution and topped up with 40 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(2)\nobserve ampoule_count(6)\nobserve drug_volume(10)\nobserve diluent_volume(40)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.24,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 41.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r58conc-08",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 6 ampoules of 2 mg each, drawn up in 10 mL of drug solution and topped up with 40 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(2)\nobserve ampoule_count(6)\nobserve drug_volume(10)\nobserve diluent_volume(40)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 41.2,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r58conc-09",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 6 ampoules of 2 mg each, drawn up in 10 mL of drug solution and topped up with 40 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(2)\nobserve ampoule_count(6)\nobserve drug_volume(10)\nobserve diluent_volume(40)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.24,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 12,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 41.2,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.3,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r58conc-10",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 4 ampoules of 10 mg each, drawn up in 40 mL of drug solution and topped up with 60 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(10)\nobserve ampoule_count(4)\nobserve drug_volume(40)\nobserve diluent_volume(60)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 61.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.4,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r58conc-11",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 4 ampoules of 10 mg each, drawn up in 40 mL of drug solution and topped up with 60 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(10)\nobserve ampoule_count(4)\nobserve drug_volume(40)\nobserve diluent_volume(60)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 61.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r58conc-12",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 4 ampoules of 10 mg each, drawn up in 40 mL of drug solution and topped up with 60 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(10)\nobserve ampoule_count(4)\nobserve drug_volume(40)\nobserve diluent_volume(60)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 61.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.6666666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r58conc-13",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 8 ampoules of 5 mg each, drawn up in 20 mL of drug solution and topped up with 30 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(5)\nobserve ampoule_count(8)\nobserve drug_volume(20)\nobserve diluent_volume(30)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r58conc-14",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 8 ampoules of 5 mg each, drawn up in 20 mL of drug solution and topped up with 30 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(5)\nobserve ampoule_count(8)\nobserve drug_volume(20)\nobserve diluent_volume(30)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r58conc-15",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 8 ampoules of 5 mg each, drawn up in 20 mL of drug solution and topped up with 30 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(5)\nobserve ampoule_count(8)\nobserve drug_volume(20)\nobserve diluent_volume(30)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 50,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r58conc-16",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 5 ampoules of 6 mg each, drawn up in 30 mL of drug solution and topped up with 70 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(6)\nobserve ampoule_count(5)\nobserve drug_volume(30)\nobserve diluent_volume(70)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 71.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r58conc-17",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 5 ampoules of 6 mg each, drawn up in 30 mL of drug solution and topped up with 70 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(6)\nobserve ampoule_count(5)\nobserve drug_volume(30)\nobserve diluent_volume(70)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 71.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r58conc-18",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 5 ampoules of 6 mg each, drawn up in 30 mL of drug solution and topped up with 70 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(6)\nobserve ampoule_count(5)\nobserve drug_volume(30)\nobserve diluent_volume(70)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.3,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 71.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.42857142857142855,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r58conc-19",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 2 ampoules of 16 mg each, drawn up in 8 mL of drug solution and topped up with 42 mL of diluent. What is the the bag concentration (the total drug mass over the total fluid volume)?",
+      "program": "observe amount_per_ampoule(16)\nobserve ampoule_count(2)\nobserve drug_volume(8)\nobserve diluent_volume(42)\nlet answer = (amount_per_ampoule * ampoule_count) / (drug_volume + diluent_volume)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 46.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.64,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7619047619047619,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r58conc-20",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 2 ampoules of 16 mg each, drawn up in 8 mL of drug solution and topped up with 42 mL of diluent. What is the the total drug mass (amount per ampoule times the number of ampoules)?",
+      "program": "observe amount_per_ampoule(16)\nobserve ampoule_count(2)\nobserve drug_volume(8)\nobserve diluent_volume(42)\nlet answer = amount_per_ampoule * ampoule_count\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 0.64,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 46.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.7619047619047619,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 32,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r58conc-21",
+      "qtype": "pressor_concentration",
+      "stem": "A pressor bag is mixed from 2 ampoules of 16 mg each, drawn up in 8 mL of drug solution and topped up with 42 mL of diluent. What is the the total fluid volume (drug volume plus diluent volume)?",
+      "program": "observe amount_per_ampoule(16)\nobserve ampoule_count(2)\nobserve drug_volume(8)\nobserve diluent_volume(42)\nlet answer = drug_volume + diluent_volume\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 50,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 0.64,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 32,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 46.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.7619047619047619,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
