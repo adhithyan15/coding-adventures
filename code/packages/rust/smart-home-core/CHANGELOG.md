@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_closeout_brief` tool descriptor for read-only Chief closeout
+  packets over existing D23 shift handoff brief primitives.
 - `smart_home.get_shift_handoff_brief` tool descriptor for read-only Chief shift
   handoff packets over existing D23 operator readiness brief primitives.
 - `smart_home.get_operator_readiness_brief` tool descriptor for read-only Chief

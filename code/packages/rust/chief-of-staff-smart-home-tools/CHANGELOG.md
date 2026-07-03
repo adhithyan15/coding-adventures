@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_closeout_brief`, a read-only Chief adapter tool that
+  turns existing D23 shift handoff items into one closeout packet without
+  owning smart-home state.
 - Added `smart_home.get_shift_handoff_brief`, a read-only Chief adapter tool
   that turns existing D23 operator readiness lanes into one shift handoff
   packet without owning smart-home state.
