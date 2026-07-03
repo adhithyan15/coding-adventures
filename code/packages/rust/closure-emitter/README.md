@@ -133,6 +133,12 @@ test-port convention. Each file isolates one printing area:
   (`new X(a).y`, `new X().y`), nested `new new X()()`, and a call on a `new`
   member (`new X().m()`). 10 active `#[test]`s, no `#[ignore]`. Run with
   `cargo test --test upstream_code_printer_new`.
+- `code_printer_sequence_test.rs` — comma-operator (`a, b, c`) printing: the two
+  bare positions (statement `a,b,c`, computed-member key `a[b,c]`) and the
+  assignment-position wraps (call argument `f((a,b),c)`, array element
+  `[(a,b),c]`, assignment RHS `x=(a,b)`, conditional branch `x?(a,b):c`, unary
+  operand `!(a,b)`). 9 active `#[test]`s, no `#[ignore]`. Run with
+  `cargo test --test upstream_code_printer_sequence`.
 
 ## Dependency whitelist
 

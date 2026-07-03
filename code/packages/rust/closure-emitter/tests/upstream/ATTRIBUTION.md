@@ -92,6 +92,22 @@ under the Apache License, Version 2.0:
       (CLOC12.159 PR2, gap-160) is exercised separately in
       `javascript-parser`.
 
+- `code_printer_sequence_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the comma-operator `a, b, c` printing cases — bare positions and the
+      assignment-position wraps)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_sequence` + the `PREC_SEQUENCE` (lowest) classification
+      and the four assignment-position wrap sites that landed with
+      `Expression::SequenceExpression` (CLOC12.160). 9 active `#[test]`s and
+      **0 `#[ignore]`** — the emitter conforms to every covered shape: the two
+      bare positions (statement `a,b,c`, computed-member key `a[b,c]`) and the
+      wrapped positions (sole/multi call argument `f((a,b),c)`, array element
+      `[(a,b),c]`, assignment RHS `x=(a,b)`, conditional branch `x?(a,b):c`,
+      unary operand `!(a,b)`). Inputs are hand-constructed AST; the bridge
+      conversion of the comma operator (CLOC12.160 PR2, gap-161) is exercised
+      separately in `javascript-parser`.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
