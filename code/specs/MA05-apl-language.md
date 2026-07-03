@@ -177,7 +177,16 @@ apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
 - **MA-4c — `apl-lexer`.** Single-codepoint glyph tokens, `⍝` line comments.
 - **MA-4d — `apl-parser`.** The `value_expr`/`function_expr` grammar,
   monadic/dyadic application, reduce/scan/outer-product operator
-  productions.
+  productions. **Acceptance criteria includes a recursion-depth cap**: §3's
+  right-recursive `value_expr = term | term function_expr value_expr` rule
+  recurses once per chained dyadic primitive with no bound as specified, so
+  a long unbroken chain (`1+2+3+4+…`, thousands deep) is a stack-overflow
+  DoS on a naive recursive-descent implementation — the same class of issue
+  already found in this repo's shared grammar parser for another frontend
+  (the `closurec` deep-recursion crash, which lives in the shared parser,
+  not the language-specific bridge). Fix once in the shared `GrammarParser`
+  if not already capped, so every grammar-driven frontend benefits, not
+  just APL.
 - **MA-4e — `apl-runtime` + `apl-repl` + the `apl` binary.** A working REPL:
   right-to-left evaluation, the primitives in §4, `⍴`/`⍳` array
   construction, reduce/scan/outer-product lowered onto AR-2.
