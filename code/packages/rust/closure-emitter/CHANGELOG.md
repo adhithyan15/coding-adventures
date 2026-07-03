@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.25.1] - 2026-07-03
+
+### Added — CLOC12.161 PR3: CodePrinter tagged-template conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_tagged_template_test.rs`
+(registered as the `upstream_code_printer_tagged_template` `[[test]]` target)
+porting the Closure Compiler `CodePrinterTest` tagged-template (`` tag`...` ``)
+printing cases against `emit_tagged_template`. 9 active `#[test]`s, **0
+`#[ignore]`** — no-substitution tags (`` tag`abc` ``, empty `` tag`` ``),
+member-chain tags (`` a.b`x` ``, `` a.b.c`x` ``), `${…}` substitution tags
+(`` String.raw`a${x}b` ``, leading `${x}b`, adjacent `${x}${y}`), and the
+`PREC_PRIMARY` precedence cases (member-on-tagged `` a`x`.length `` stays
+paren-free, a looser sequence tag wraps `` (a,b)`x` ``). Inputs are
+hand-constructed typed AST; the bridge conversion of the tagged-template form
+(PR2, gap-162) is exercised separately in `javascript-parser`. Test-only change
+— no library behaviour change. This completes the CLOC12.161 arc.
+
+
 ## [0.25.0] - 2026-07-02
 
 ### Added — CLOC12.161: emit `Expression::TaggedTemplateExpression`

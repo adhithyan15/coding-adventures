@@ -139,6 +139,13 @@ test-port convention. Each file isolates one printing area:
   `[(a,b),c]`, assignment RHS `x=(a,b)`, conditional branch `x?(a,b):c`, unary
   operand `!(a,b)`). 9 active `#[test]`s, no `#[ignore]`. Run with
   `cargo test --test upstream_code_printer_sequence`.
+- `code_printer_tagged_template_test.rs` — tagged-template (`` tag`...` ``)
+  printing: no-substitution tags (`` tag`abc` ``, empty `` tag`` ``), member-chain
+  tags (`` a.b`x` ``, `` a.b.c`x` ``), `${…}` substitution tags
+  (`` String.raw`a${x}b` ``, leading `${x}b`, adjacent `${x}${y}`), and the
+  `PREC_PRIMARY` precedence cases (member-on-tagged `` a`x`.length `` stays
+  paren-free, a looser sequence tag wraps `` (a,b)`x` ``). 9 active `#[test]`s,
+  no `#[ignore]`. Run with `cargo test --test upstream_code_printer_tagged_template`.
 
 ## Dependency whitelist
 
