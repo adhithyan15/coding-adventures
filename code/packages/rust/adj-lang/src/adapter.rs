@@ -1153,6 +1153,31 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 )),
             ))
         }
+        // `\operatorname{arsinh}(x)` / `\operatorname{arcosh}(x)` / `\operatorname{artanh}(x)` — the
+        // INVERSE hyperbolic (area-hyperbolic) functions, the mirror of the reciprocal-hyperbolic arm
+        // just above. Like `\coth` these have no dedicated engine op, and like `\coth` they arrive as
+        // an operator-name juxtaposition — `Bin(Mul, Text("arsinh"), (x))` for the `\operatorname{…}`
+        // spelling, or `Bin(Mul, Symbol("arsinh"), (x))` for the bare `\arsinh` macro (an unknown
+        // control sequence). But each inverse hyperbolic has a closed-form LOGARITHM identity built
+        // from primitives the engine ALREADY has — the natural log (`NamedFn::Ln`), the power op
+        // (`ArithOp::Pow`, used here for both squaring `^2` and the square root `^0.5`), and plain
+        // arithmetic — so we compose the identity directly, no engine/AST/lowering change (exactly the
+        // `\coth = 1/tanh` trick, one level richer). The identities:
+        //   arsinh(x) = ln( x + (x^2 + 1)^0.5 )   [ all real x ]
+        //   arcosh(x) = ln( x + (x^2 - 1)^0.5 )   [ x >= 1; the engine yields NaN below, matching the
+        //                                           real-valued function's domain ]
+        //   artanh(x) = 0.5 * ln( (1 + x) / (1 - x) )   [ |x| < 1 ]
+        // The argument recurses through the SAME `latex_math_to_expr_ast` the `\sin`/`\coth` arms use
+        // (no new tree-walk, so no new stack-overflow surface), then is CLONED where the identity names
+        // `x` more than once — cloning an already-lowered, already-bounded `ExprAst` adds no recursion.
+        // Common spellings are all accepted (`arsinh`/`arcsinh`/`asinh`, etc.); see
+        // `inverse_hyperbolic_kind`. This finishes the hyperbolic family: direct (`sinh`/`cosh`/`tanh`),
+        // reciprocal (`coth`/`sech`/`csch`), and now inverse (`arsinh`/`arcosh`/`artanh`) all lower.
+        MathExpr::Bin(BinOp::Mul, lhs, rhs) if inverse_hyperbolic_kind(lhs).is_some() => {
+            let kind = inverse_hyperbolic_kind(lhs).expect("guard guarantees Some");
+            let arg = latex_math_to_expr_ast(rhs, source)?;
+            Ok(lower_inverse_hyperbolic(kind, arg))
+        }
         MathExpr::Bin(BinOp::Mul, lhs, rhs) => latex_bin(ArithOp::Mul, lhs, rhs, source),
         MathExpr::Bin(BinOp::Div, lhs, rhs) | MathExpr::Frac(lhs, rhs) => {
             latex_bin(ArithOp::Div, lhs, rhs, source)
@@ -1345,6 +1370,82 @@ fn reciprocal_hyperbolic_den(expr: &MathExpr) -> Option<NamedFn> {
         "sech" => Some(NamedFn::Cosh),
         "csch" => Some(NamedFn::Sinh),
         _ => None,
+    }
+}
+
+/// Which inverse hyperbolic (area-hyperbolic) function `expr` names, if any. Recognised so the
+/// caller can compose the closed-form logarithm identity (see `lower_inverse_hyperbolic`). Matches
+/// the same two spellings the reciprocal-hyperbolic arm handles — the bare macro (`\arsinh` →
+/// `Symbol("arsinh")`, an unknown control sequence) and the operator name (`\operatorname{arsinh}`
+/// / `\mathrm{arsinh}` → `Text("arsinh")`) — across the three common surface spellings of each: the
+/// ISO/area form (`arsinh`), the inverse-notation form (`arcsinh`), and the terse form (`asinh`).
+/// Returns `None` for anything else, so a genuine product falls through to the general
+/// multiplication arm.
+fn inverse_hyperbolic_kind(expr: &MathExpr) -> Option<InverseHyperbolic> {
+    let name = match expr {
+        MathExpr::Symbol(s) => s.as_str(),
+        MathExpr::Text(s) => s.trim(),
+        _ => return None,
+    };
+    match name {
+        "arsinh" | "arcsinh" | "asinh" => Some(InverseHyperbolic::ArSinh),
+        "arcosh" | "arccosh" | "acosh" => Some(InverseHyperbolic::ArCosh),
+        "artanh" | "arctanh" | "atanh" => Some(InverseHyperbolic::ArTanh),
+        _ => None,
+    }
+}
+
+/// The three inverse hyperbolic functions the adapter lowers via logarithm identities.
+#[derive(Clone, Copy)]
+enum InverseHyperbolic {
+    /// `arsinh(x) = ln(x + (x^2 + 1)^0.5)`.
+    ArSinh,
+    /// `arcosh(x) = ln(x + (x^2 - 1)^0.5)`.
+    ArCosh,
+    /// `artanh(x) = 0.5 * ln((1 + x) / (1 - x))`.
+    ArTanh,
+}
+
+/// Compose an inverse hyperbolic function from its closed-form logarithm identity, using only
+/// primitives the engine already evaluates — `NamedFn::Ln`, `ArithOp::Pow` (squaring and square
+/// root), and plain arithmetic. `arg` is the ALREADY-lowered argument expression; it is cloned
+/// where the identity names `x` more than once (arsinh/arcosh use it twice, artanh twice). Cloning
+/// a bounded `ExprAst` introduces no recursion, so this adds no stack-overflow surface. The results
+/// evaluate to the standard real-valued branch, and to NaN outside each function's real domain
+/// (arcosh below 1, artanh at/outside ±1) — the same as the underlying `ln`/root would give.
+fn lower_inverse_hyperbolic(kind: InverseHyperbolic, arg: ExprAst) -> ExprAst {
+    // Small constructors keep the identity trees readable.
+    fn lit(v: f64) -> Box<ExprAst> {
+        Box::new(ExprAst::Lit(v))
+    }
+    fn bin(op: ArithOp, a: Box<ExprAst>, b: Box<ExprAst>) -> Box<ExprAst> {
+        Box::new(ExprAst::Bin(op, a, b))
+    }
+    match kind {
+        // ln( x + (x^2 + 1)^0.5 )
+        InverseHyperbolic::ArSinh => {
+            let x_squared = bin(ArithOp::Pow, Box::new(arg.clone()), lit(2.0));
+            let radicand = bin(ArithOp::Add, x_squared, lit(1.0));
+            let root = bin(ArithOp::Pow, radicand, lit(0.5));
+            let sum = bin(ArithOp::Add, Box::new(arg), root);
+            ExprAst::Call(NamedFn::Ln, sum)
+        }
+        // ln( x + (x^2 - 1)^0.5 )
+        InverseHyperbolic::ArCosh => {
+            let x_squared = bin(ArithOp::Pow, Box::new(arg.clone()), lit(2.0));
+            let radicand = bin(ArithOp::Sub, x_squared, lit(1.0));
+            let root = bin(ArithOp::Pow, radicand, lit(0.5));
+            let sum = bin(ArithOp::Add, Box::new(arg), root);
+            ExprAst::Call(NamedFn::Ln, sum)
+        }
+        // 0.5 * ln( (1 + x) / (1 - x) )
+        InverseHyperbolic::ArTanh => {
+            let numerator = bin(ArithOp::Add, lit(1.0), Box::new(arg.clone()));
+            let denominator = bin(ArithOp::Sub, lit(1.0), Box::new(arg));
+            let ratio = bin(ArithOp::Div, numerator, denominator);
+            let log = Box::new(ExprAst::Call(NamedFn::Ln, ratio));
+            ExprAst::Bin(ArithOp::Mul, lit(0.5), log)
+        }
     }
 }
 

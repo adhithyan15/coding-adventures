@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.45.0] - 2026-07-03 — inverse hyperbolic functions (`arsinh`/`arcosh`/`artanh`) in `latex "…"`
+
+### Added
+
+- `latex "\operatorname{arsinh}(x)"`, `\operatorname{arcosh}(x)`, `\operatorname{artanh}(x)` — the
+  inverse (area) hyperbolic functions — now lower. The mirror of the reciprocal-hyperbolic arm: none
+  is a frontend `Func`, so each arrives as the operator-name juxtaposition
+  `Bin(Mul, Text("arsinh"), (x))` (or `Bin(Mul, Symbol("arsinh"), (x))` for the bare `\arsinh` macro).
+  Each is composed from its closed-form logarithm identity using only primitives the engine already
+  has — the natural log (`NamedFn::Ln`) and the power op (`ArithOp::Pow`, for both squaring `^2` and
+  the square root `^0.5`) — so **no engine op is added**:
+  `arsinh(x) = ln(x + (x²+1)^0.5)`, `arcosh(x) = ln(x + (x²−1)^0.5)`,
+  `artanh(x) = 0.5·ln((1+x)/(1−x))`. Results are the standard real branch (and NaN outside each
+  function's real domain, matching the underlying `ln`/root). This finishes the hyperbolic family:
+  direct (`sinh`/`cosh`/`tanh`), reciprocal (`coth`/`sech`/`csch`), and now inverse
+  (`arsinh`/`arcosh`/`artanh`) all lower.
+- Common surface spellings are all accepted: the area form (`arsinh`), the inverse-notation form
+  (`arcsinh`), and the terse form (`asinh`) — likewise `arcosh`/`arccosh`/`acosh` and
+  `artanh`/`arctanh`/`atanh` — across both the bare-macro and `\operatorname{…}`/`\mathrm{…}` spellings.
+- Adapter-only, no engine/AST change. The argument recurses through the SAME
+  `latex_math_to_expr_ast` the `\sin`/`\coth` arms use (no new tree-walk, no new DoS surface); the
+  identity clones the already-lowered, already-bounded argument where it is named more than once.
+
 ## [0.44.0] - 2026-07-02 — reciprocal hyperbolic functions (`\coth`/`\sech`/`\csch`) in `latex "…"`
 
 ### Added
