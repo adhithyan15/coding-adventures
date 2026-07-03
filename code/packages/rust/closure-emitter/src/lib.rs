@@ -74,7 +74,7 @@ use coding_adventures_javascript_ast::{
     ForStatement,
     FunctionDeclaration, FunctionExpression,
     FunctionParam, Identifier, IfStatement, LabeledStatement, LogicalExpression, LogicalOperator,
-    MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
+    MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem,
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
@@ -1110,6 +1110,7 @@ impl<'a> Emitter<'a> {
             Expression::AssignmentExpression(a) => self.emit_assignment(a),
             Expression::ConditionalExpression(c) => self.emit_conditional(c),
             Expression::CallExpression(c) => self.emit_call(c),
+            Expression::NewExpression(n) => self.emit_new(n),
             Expression::MemberExpression(m) => self.emit_member(m),
             Expression::ArrayExpression(a) => self.emit_array(a),
             Expression::ObjectExpression(o) => self.emit_object(o),
@@ -1441,6 +1442,57 @@ impl<'a> Emitter<'a> {
         self.write_str(")");
     }
 
+    /// Emit a `new` expression — `new Ctor(a, b)`.
+    ///
+    /// ```text
+    ///   new X()          →  new X()
+    ///   new a.b.c()      →  new a.b.c()      member-chain callee, no wrap
+    ///   new (f())()      →  new (f())()      call in the callee spine MUST wrap
+    /// ```
+    ///
+    /// # Two seams to get right
+    ///
+    /// 1. **`new` is a word keyword.** Directly before an identifier or member
+    ///    callee it would fuse (`newX` is one identifier), so a separator is
+    ///    required — exactly like `typeof`/`void`/`delete` in [`emit_unary`].
+    ///    When the callee is instead wrapped in parens (`new(f())()`) the `(`
+    ///    already separates the tokens, so no space is spent.
+    ///
+    /// 2. **The callee cannot end in a call.** The ECMAScript grammar makes the
+    ///    `new` target a `MemberExpression`, which excludes `CallExpression`.
+    ///    So if the callee's member spine bottoms out in a call, emitting it
+    ///    bare would let the `(args)` we append bind to that *inner* call:
+    ///    `new f()()` reparses as `(new f())()`. We parenthesise the callee in
+    ///    that case (`new (f())()`), which is the only shape that needs it — a
+    ///    plain identifier or a pure member chain (`a.b.c`) is a valid target
+    ///    as-is. See [`new_callee_needs_parens`].
+    ///
+    /// The non-wrapped callee is emitted at `PREC_PRIMARY`, which keeps member
+    /// chains paren-free while still wrapping anything looser (a binary,
+    /// conditional, etc. — not valid targets, but handled defensively).
+    fn emit_new(&mut self, n: &NewExpression) {
+        self.maybe_map(&n.cv);
+        self.write_str("new");
+        if new_callee_needs_parens(&n.callee) {
+            self.write_str("(");
+            self.emit_expression(&n.callee);
+            self.write_str(")");
+        } else {
+            // `new`↔callee is a keyword↔word boundary — always separate.
+            self.required_ws();
+            self.emit_expression_inner(&n.callee, PREC_PRIMARY);
+        }
+        self.write_str("(");
+        for (i, a) in n.arguments.iter().enumerate() {
+            if i > 0 {
+                self.write_str(",");
+                self.pretty_ws();
+            }
+            self.emit_expression(a);
+        }
+        self.write_str(")");
+    }
+
     fn emit_member(&mut self, m: &MemberExpression) {
         self.maybe_map(&m.cv);
         // The object must bind at least as tightly as member access, or the
@@ -1760,6 +1812,33 @@ fn logical_prec(op: LogicalOperator) -> u8 {
 /// Resolve the own precedence of any `Expression`. Used by
 /// `emit_expression_inner` to decide whether to wrap a child in
 /// parens given the parent's context precedence.
+/// Does a `new` target need to be wrapped in parens?
+///
+/// The `new` operator's callee is a `MemberExpression` per the grammar, which
+/// **cannot** itself be a call. If the callee's member spine bottoms out in a
+/// [`Expression::CallExpression`], the `(args)` that `emit_new` appends would
+/// otherwise bind to that inner call:
+///
+/// ```text
+///   new f()()      reparses as   (new f())()        WRONG — wrap → new (f())()
+///   new a.b().c()  reparses as   (new a.b()).c()    WRONG — wrap → new (a.b().c)()
+///   new a.b.c()                  new (a.b.c)()      OK   — pure member chain
+///   new X()                      new X()            OK   — plain identifier
+/// ```
+///
+/// We walk only the **member-object spine** (`MemberExpression::object`): a
+/// call reachable there is a call the appended `(args)` could attach to. Calls
+/// nested inside an argument list or a computed-member key (`new a[f()].g()`
+/// where `f()` is a key) are irrelevant — they are already closed off by their
+/// own brackets — so we do not descend into those.
+fn new_callee_needs_parens(callee: &Expression) -> bool {
+    match callee {
+        Expression::CallExpression(_) => true,
+        Expression::MemberExpression(m) => new_callee_needs_parens(&m.object),
+        _ => false,
+    }
+}
+
 fn expr_prec(e: &Expression) -> u8 {
     match e {
         // Atomic / left-associative primaries — never need wrapping
@@ -1786,6 +1865,15 @@ fn expr_prec(e: &Expression) -> u8 {
         // syntax error) and tight enough that a `!`/`typeof` parent does not
         // over-wrap it (`!x++`, `typeof x++` print bare, which is correct).
         Expression::UpdateExpression(_) => PREC_UNARY,
+        // `emit_new` ALWAYS prints the argument parens — a no-argument `new X`
+        // is emitted canonically as `new X()`. In that *argumented* spelling a
+        // `new` is a `MemberExpression` in the grammar and binds at member/call
+        // strength, so it tags at `PREC_PRIMARY` like a call: `new X().y` needs
+        // no extra parens (it already means `(new X()).y`), and as a call
+        // callee `new X().y()` stays paren-free. (Were we ever to drop the
+        // empty parens — a future minification — the no-arg form would need the
+        // looser bare-`NewExpression` precedence; we don't, so one tag suffices.)
+        Expression::NewExpression(_) => PREC_PRIMARY,
         // A function expression is primary-*ish*, but two contexts
         // mis-parse a bare one: as a call callee (`function(){}()` is a
         // syntax error) and as a member object (`function(){}.x`). Tag
@@ -4330,5 +4418,93 @@ mod tests {
             num(2.0),
         );
         assert_eq!(emit_expr(e), "(++x)**2;");
+    }
+
+    // ---- NewExpression (CLOC12.159) ------------------------------------
+
+    fn new_expr(callee: Expression, arguments: Vec<Expression>) -> Expression {
+        Expression::NewExpression(NewExpression {
+            cv: None,
+            callee: Box::new(callee),
+            arguments,
+        })
+    }
+    fn call(callee: Expression, arguments: Vec<Expression>) -> Expression {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(callee),
+            arguments,
+        })
+    }
+
+    /// `new X()` — plain identifier callee, empty args. A space separates the
+    /// `new` keyword from the identifier so they do not fuse into `newX`.
+    #[test]
+    fn new_identifier_no_args() {
+        assert_eq!(emit_expr(new_expr(ident("X"), vec![])), "new X();");
+    }
+
+    /// `new X(a, b)` — arguments are comma-separated, no trailing-space in the
+    /// minified form.
+    #[test]
+    fn new_with_args() {
+        assert_eq!(
+            emit_expr(new_expr(ident("X"), vec![ident("a"), ident("b")])),
+            "new X(a,b);"
+        );
+    }
+
+    /// `new a.b.c()` — a pure member-chain callee is a valid `new` target and
+    /// stays paren-free; the `new` keeps its separating space.
+    #[test]
+    fn new_member_chain_callee_not_wrapped() {
+        let callee = member(member(ident("a"), "b", false), "c", false);
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new a.b.c();");
+    }
+
+    /// `new (f())()` — a call in the callee spine MUST be parenthesised, or the
+    /// appended `()` would bind to the inner call (`new f()()` = `(new f())()`,
+    /// a different program). The wrapping paren also removes the need for the
+    /// `new`-keyword space.
+    #[test]
+    fn new_call_callee_is_wrapped() {
+        let callee = call(ident("f"), vec![]);
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new(f())();");
+    }
+
+    /// `new a.b().c()` — the callee's member spine bottoms out in a call
+    /// (`a.b()`), so the whole target is wrapped: `new (a.b().c)()`.
+    #[test]
+    fn new_callee_with_call_in_member_spine_is_wrapped() {
+        let callee = member(call(member(ident("a"), "b", false), vec![]), "c", false);
+        assert_eq!(emit_expr(new_expr(callee, vec![])), "new(a.b().c)();");
+    }
+
+    /// `(new X()).y` — an *argumented* `new` binds at member strength, so a
+    /// member parent needs NO extra parens (the `new X()` groups on its own):
+    /// `new X().y`.
+    #[test]
+    fn argumented_new_as_member_object_not_wrapped() {
+        let m = member(new_expr(ident("X"), vec![ident("a")]), "y", false);
+        assert_eq!(emit_expr(m), "new X(a).y;");
+    }
+
+    /// A no-argument `new X` is emitted canonically as `new X()` (the parens
+    /// are always printed), so it binds at member strength and as a member
+    /// object needs NO extra wrap: `new X().y`. The always-printed `()` is what
+    /// makes `new X.y` (which would reparse as `new (X.y)`) unreachable.
+    #[test]
+    fn no_arg_new_as_member_object_prints_argumented() {
+        let m = member(new_expr(ident("X"), vec![]), "y", false);
+        assert_eq!(emit_expr(m), "new X().y;");
+    }
+
+    /// `new` nests: the inner `new X()` is a valid target (not a call), so no
+    /// wrap is forced and the outer `new` keeps its keyword space:
+    /// `new new X()()`.
+    #[test]
+    fn nested_new_inner_not_wrapped() {
+        let inner = new_expr(ident("X"), vec![]);
+        assert_eq!(emit_expr(new_expr(inner, vec![])), "new new X()();");
     }
 }

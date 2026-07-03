@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.2] - 2026-07-02
+
+### Changed — CLOC12.159: handle `Expression::NewExpression`
+
+Added a `NewExpression` match arm mirroring `CallExpression` (recurse into the
+callee and each argument) so this crate compiles and traverses the new
+`Expression::NewExpression` variant. No behaviour change until the bridge
+produces `new` nodes (CLOC12.159 PR2).
+
+
 ## [0.12.1] - 2026-07-02
 
 ### Changed — CLOC12.158: exhaustiveness for new `Expression::UpdateExpression`

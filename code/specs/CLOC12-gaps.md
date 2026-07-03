@@ -1695,3 +1695,53 @@ increment/decrement, a member operand (`a.b++`), bare printing under `!` /
 non-fusing `x++*y`). 14 active `#[test]`s, no `#[ignore]` — the emitter
 conforms to every covered shape. This completes the CLOC12.158
 `UpdateExpression` three-PR arc (node+emit → bridge → conformance).
+
+## CLOC12.159 — `NewExpression` (`new X(args)`): atomic node + emit + passes (PR1)
+
+Adds `Expression::NewExpression { cv, callee, arguments }` to `javascript-ast`
+(0.18.0) — the `new` operator, `new Ctor(a, b)`. Structurally a
+`CallExpression` (callee + argument list) but a **separate** node: its
+evaluation semantics are object *construction* (a pass must never rewrite
+`new f()` into `f()`), and its grammar precedence differs (§ below).
+
+`closure-emitter` (0.23.0) `emit_new` prints `new`, the callee, then the
+argument parens. The parens are **always printed**, so a no-argument node is
+emitted canonically as `new X()` (never bare `new X`) — this keeps every
+emitted `new` in the *argumented* form, which binds at member/call strength
+(`PREC_PRIMARY`), so `new X().y` needs no extra parens. Two seams:
+
+  * **keyword space** — `new`↔identifier/member callee is a word↔word boundary
+    (`newX` would fuse), spent via `required_ws` unless the callee is already
+    parenthesised;
+  * **callee-with-call wrap** — the `new` target is a `MemberExpression` per
+    grammar and cannot itself be a call, so a callee whose member spine bottoms
+    out in a call is wrapped: `new (f())()`, `new (a.b().c)()` — otherwise the
+    appended `(args)` binds to the inner call (`new f()()` = `(new f())()`, a
+    different program). `new_callee_needs_parens` decides this.
+
+All nine downstream pass/analysis crates (`constant-fold`, `dce`,
+`fold-control-flow`, `inline`, `inline-variables`, `rename`, `rename-globals`,
+`rename-properties`, `scope-analyzer`) get a `NewExpression` match arm
+mirroring `CallExpression` (recurse callee + args), landed in the same atomic
+commit so the workspace never has a broken exhaustive `match`. The `inline`
+pass explicitly does **not** treat a `new` as an inlinable call (it is a
+construction), so its tally arm recurses without the call-inlining gate.
+
+8 new emitter unit tests (identifier/args/member-chain callee, call-callee and
+member-spine-call wraps, argumented-new as member object, no-arg canonical
+`new X()`, nested `new new X()()`). No behaviour change for existing inputs —
+the bridge still declines `new` (gap-160), so closurec falls back to
+WHITESPACE_ONLY on `new` for now. PR2 (bridge-enable) and PR3 (conformance
+port) follow.
+
+### gap-160 — bridge declines `new_expression` (`new X`)
+
+The `javascript-parser` typed-AST bridge's `convert_new_expression` passes a
+plain `member_expression` (no `new` keyword) straight through, but returns
+`UnsupportedSyntax { rule: "NewExpression" }` for the actual `"new" X` form —
+so any file containing `new` currently drops to WHITESPACE_ONLY. With the
+`Expression::NewExpression` node now in place (CLOC12.159 PR1), the bridge can
+convert it: PR2 will build `NewExpression { callee, arguments }` from the
+grammar node (the argument list comes from the `member_expression = "new"
+member_expression arguments` production) and add a closurec e2e diff fixture,
+closing this gap.

@@ -91,7 +91,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
-    BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
+    BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TemplateLiteral,
@@ -527,6 +527,14 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
             })
         }
         Expression::CallExpression(c) => fold_call(c, st),
+        // `new X(args)` constructs an object — a side-effecting operation, never
+        // a constant. Recurse into the callee and each argument (they may hold
+        // foldable subexpressions) but preserve the construction itself.
+        Expression::NewExpression(n) => Expression::NewExpression(NewExpression {
+            cv: n.cv.clone(),
+            callee: Box::new(fold_expression(&n.callee, st)),
+            arguments: n.arguments.iter().map(|a| fold_expression(a, st)).collect(),
+        }),
         Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),
