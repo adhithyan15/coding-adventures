@@ -2,6 +2,39 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.6.3] - 2026-07-03
+
+### Fixed (FC — sequential local assignments: `x = a` where `a` is an earlier local)
+
+Ruby assignments are SEQUENTIAL (`let*`): `a = 5; b = a + 1` binds `b` using
+`a`'s value. The frontend, however, lowered every first-sighting `name = value`
+to a PARALLEL `Stmt::LetBinding`, and the SIR validator treats a *run* of
+consecutive `LetBinding`s as one parallel-`let` group — every RHS is evaluated
+BEFORE any of the run's names are bound. So `[LetBinding(a); LetBinding(b = a+1)]`
+was rejected with `var-ref scope=local references unknown name 'a'`: any
+`newvar = <expr reading an earlier local>` (`x = a`, `b = a + 1`, `v = h["k"]`,
+destructuring `a, b = arr`, `y = obj.meth`, `y = -x`, a hash/heredoc reading a
+prior local, …) failed to compile on EVERY backend. Discovered while
+investigating the array-index conformance gap.
+
+- New `sequentialize_let_bindings` post-pass: after a block's statements are
+  lowered, a `LetBinding` whose value reads a name bound by an EARLIER statement
+  in the block is rewritten to a `LetStarBinding` (identical fields). `let*` is
+  sequential — the validator binds its name immediately and it breaks the
+  parallel run — so the reference resolves. Independent bindings (`i = 0;
+  sum = 0`) keep `LetBinding`, so nothing else changes. Both variants lower to
+  the same sequential variable declaration on every backend, so the rewrite is
+  behaviour-preserving.
+- Applied at every sequential body: program (main), `if`/`unless`/`case` branch
+  bodies, method (`def`) bodies, and block/lambda bodies.
+- Shape tests that asserted the buggy `LetBinding` form for such programs updated
+  to accept either variant (via new `binding_name`/`binding_value` test helpers);
+  verified end-to-end by the sir-conformance `seq_assign` program.
+
+NOTE: array/hash *index reads* themselves (`a[1]`, `h["k"]`) remain a separate,
+open Ruby-frontend PARSER-precedence gap — `a[1]` still mis-parses as `a` + a
+bare `[1]` array literal; only the assignment-scoping half is fixed here.
+
 ## [0.6.2] - 2026-07-02
 
 ### Added (FC — implicit return of a trailing `case` from a method body)

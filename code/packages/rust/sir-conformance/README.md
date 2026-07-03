@@ -68,6 +68,7 @@ across backends, a separate formatting concern). Current programs:
 | `logical_ops` | short-circuit `||`/`&&` returning the operand | `a\nb\ny` |
 | `multi_when` | multi-value `when 1, 2, 3` (folds through `or`) | `small\nbig` |
 | `string_case` | `String#upcase`/`#downcase`/`#strip` (Ruby→JS renames) | `HELLO\nworld\nhi` |
+| `seq_assign` | sequential assignment reading an earlier local (`b = a + 1`) | `5\n6\n11` |
 
 Adding a program is one `Program { name, ruby, expected }` entry in
 `tests/conformance.rs`.
@@ -79,9 +80,11 @@ backends" bug. Programs that hit an **unfixed** gap are kept *out* of the corpus
 (with a pointer to `lessons.md`) so the suite stays green while the gap stays
 visible. Currently tracked:
 
-- **Array/hash index** (`a[i]`, `h[k]`) — frontend parse + lowering bugs
-  (`puts a[1]` mis-parses, `puts(a[1])` won't parse, `x = a[1]` fails
-  validation).
+- **Array/hash index reads** (`a[i]`, `h[k]`) — a frontend PARSER-precedence
+  gap: `a[1]` mis-parses as `a` followed by a bare `[1]` array literal
+  (`puts a[1]` → `(puts a)[1]`; `puts(a[1])` fails to parse). Needs a grammar
+  fix. (The *scoping* half — `x = a[1]` failing SIR validation — turned out to
+  be the general sequential-assignment bug and is now fixed; see `seq_assign`.)
 
 Fixed since (now IN the suite):
 - The `or`/`and` builtin gap — `||`/`&&` and multi-value `when` threw
