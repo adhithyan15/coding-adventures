@@ -2,6 +2,20 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.3.0] - 2026-07-03
+
+### Added — `logical_ops` + `multi_when` (11 -> 13 programs)
+
+The `or`/`and` cross-backend gap this corpus surfaced is now fixed (JS/Go/Rust
+emitters implement short-circuit `||`/`&&`), so two programs join the suite:
+
+- `logical_ops` — `"a" || "b"` -> `a`, `nil || "b"` -> `b`, `"x" && "y"` -> `y`
+  (short-circuit, returning the deciding operand).
+- `multi_when` — a multi-value `when 1, 2, 3` (folds through the `or` builtin),
+  re-enabled from the tracked-gap list.
+
+Verified: **13 corpus x 4 backends = 52 runs, 0 skipped, all agree.**
+
 ## [0.2.0] - 2026-07-02
 
 ### Added — corpus expansion (6 -> 11 programs) + three latent gaps found

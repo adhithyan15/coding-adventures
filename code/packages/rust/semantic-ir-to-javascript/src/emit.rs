@@ -1064,6 +1064,31 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push(')');
         return;
     }
+    // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or",
+    // [lhs, rhs])` — the frontend folds BOTH the 2-operand `a || b` form and a
+    // multi-value `when 1, 2, 3` chain through them.  They MUST short-circuit
+    // (rhs not evaluated once lhs decides) and use SIR truthiness, returning the
+    // deciding OPERAND (not a bare bool).  So they emit the same truthy-guarded
+    // arrow IIFE as `Expr::LogicalOr`/`LogicalAnd` rather than routing through
+    // the eager `callBuiltin` dispatch — which has no `or`/`and` entry and would
+    // evaluate both operands, losing Ruby semantics.  The `__l` param scopes each
+    // occurrence so nested `&&`/`||` never collide.
+    if name == "and" && args.len() == 2 {
+        out.push_str("((__l) => __Sir.truthy(__l) ? (");
+        emit_expr(out, &args[1], indent);
+        out.push_str(") : __l)(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
+    if name == "or" && args.len() == 2 {
+        out.push_str("((__l) => __Sir.truthy(__l) ? __l : (");
+        emit_expr(out, &args[1], indent);
+        out.push_str("))(");
+        emit_expr(out, &args[0], indent);
+        out.push(')');
+        return;
+    }
     // 2-argument `+` / `*` are POLYMORPHIC in Ruby (numeric add/mul, but
     // also String/Array concat, repeat, and join — see the
     // sir-polymorphic-operators spec).  Native JS infix would be *wrong*
@@ -1955,6 +1980,32 @@ mod tests {
             span: s(),
         };
         assert_eq!(emit_e(&e), r#"((d).get("k") ?? null)"#);
+    }
+
+    #[test]
+    fn emit_or_and_builtins_short_circuit() {
+        // Ruby `a || b` / `a && b` lower to `BuiltinCall("or"/"and", [a, b])` and
+        // must emit the SAME truthy-guarded short-circuit IIFE as
+        // `Expr::LogicalOr`/`LogicalAnd` — NOT the eager `__Sir.callBuiltin`
+        // fallback (which has no `or`/`and` entry and would evaluate both
+        // operands, throwing `unknown builtin` at runtime).
+        let a = Expr::StrLit { value: "a".into(), span: s() };
+        let b = Expr::StrLit { value: "b".into(), span: s() };
+        let or = Expr::BuiltinCall {
+            name: "or".into(),
+            args: vec![a.clone(), b.clone()],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&or), r#"((__l) => __Sir.truthy(__l) ? __l : ("b"))("a")"#);
+        assert!(!emit_e(&or).contains("callBuiltin"));
+        let and = Expr::BuiltinCall {
+            name: "and".into(),
+            args: vec![a, b],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        assert_eq!(emit_e(&and), r#"((__l) => __Sir.truthy(__l) ? ("b") : __l)("a")"#);
     }
 
     #[test]

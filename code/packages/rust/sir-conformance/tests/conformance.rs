@@ -99,6 +99,23 @@ const CORPUS: &[Program] = &[
         ruby: "module Greet\n  def hi\n    \"hi\"\n  end\nend\n\nclass P\n  include Greet\nend\n\nputs P.new.hi\n",
         expected: "hi",
     },
+    // Short-circuit `||` / `&&` returning the deciding OPERAND (Ruby semantics),
+    // exercising both a truthy and a falsy left-hand side. `"a" || "b"` → "a";
+    // `nil || "b"` → "b"; `"x" && "y"` → "y". Previously these lowered to a
+    // `BuiltinCall("or"/"and")` that Go/Rust/JS emitters didn't handle, so any
+    // `||`/`&&` threw `unknown builtin` at runtime on three of five backends.
+    Program {
+        name: "logical_ops",
+        ruby: "puts(\"a\" || \"b\")\nputs(nil || \"b\")\nputs(\"x\" && \"y\")\n",
+        expected: "a\nb\ny",
+    },
+    // A `case` with a multi-value `when` (`when 1, 2, 3`), which folds through
+    // the same `or` builtin. Re-enabled now that `or`/`and` work on all backends.
+    Program {
+        name: "multi_when",
+        ruby: "def sz(n)\n  case n\n  when 1, 2, 3\n    \"small\"\n  else\n    \"big\"\n  end\nend\n\nputs sz(2)\nputs sz(9)\n",
+        expected: "small\nbig",
+    },
 ];
 
 /// Every program must produce its reference output on every available backend.

@@ -1144,6 +1144,30 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         }
         return;
     }
+    // Ruby `&&`/`and` and `||`/`or` lower to `BuiltinCall("and"/"or",
+    // [lhs, rhs])` — the frontend folds BOTH the 2-operand `a || b` form and a
+    // multi-value `when 1, 2, 3` chain through them.  They MUST short-circuit
+    // (rhs not evaluated once lhs decides) and use SIR truthiness, returning the
+    // deciding OPERAND (not a bare bool).  So they emit the same truthy-guarded
+    // IIFE as `Expr::LogicalOr`/`LogicalAnd` rather than routing through the
+    // eager `_sir_call_builtin_by_name` dispatch — which has no `or`/`and` entry
+    // and would evaluate both operands, losing Ruby semantics.
+    if name == "and" && args.len() == 2 {
+        out.push_str("func() Value { __l := ");
+        emit_expr(out, &args[0], indent);
+        out.push_str("; if _sir_truthy(__l) { return ");
+        emit_expr(out, &args[1], indent);
+        out.push_str(" } else { return __l } }()");
+        return;
+    }
+    if name == "or" && args.len() == 2 {
+        out.push_str("func() Value { __l := ");
+        emit_expr(out, &args[0], indent);
+        out.push_str("; if _sir_truthy(__l) { return __l } else { return ");
+        emit_expr(out, &args[1], indent);
+        out.push_str(" } }()");
+        return;
+    }
     // All variadic-ish builtins in the Go runtime take []Value and
     // return Value.  Same calling shape for fixed-arity ones to keep
     // the emitter simple.
@@ -1641,6 +1665,51 @@ mod tests {
             out,
             "func() Value { __l := Value(true); if _sir_truthy(__l) { return Value(int64(5)) } else { return __l } }()"
         );
+    }
+
+    #[test]
+    fn emit_or_and_builtins_short_circuit() {
+        // Ruby `a || b` / `a && b` lower to `BuiltinCall("or"/"and", [a, b])` and
+        // must emit the SAME short-circuit IIFE as `LogicalOr`/`LogicalAnd` — NOT
+        // the eager `_sir_call_builtin_by_name` fallback (which has no `or`/`and`
+        // entry and would panic `unknown builtin` at runtime).
+        let mut and = String::new();
+        emit_expr(
+            &mut and,
+            &Expr::BuiltinCall {
+                name: "and".into(),
+                args: vec![
+                    Expr::BoolLit { value: true, span: s() },
+                    Expr::IntLit { value: 5, span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            and,
+            "func() Value { __l := Value(true); if _sir_truthy(__l) { return Value(int64(5)) } else { return __l } }()"
+        );
+        let mut or = String::new();
+        emit_expr(
+            &mut or,
+            &Expr::BuiltinCall {
+                name: "or".into(),
+                args: vec![
+                    Expr::BoolLit { value: false, span: s() },
+                    Expr::IntLit { value: 7, span: s() },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(
+            or,
+            "func() Value { __l := Value(false); if _sir_truthy(__l) { return __l } else { return Value(int64(7)) } }()"
+        );
+        assert!(!or.contains("_sir_call_builtin_by_name"));
     }
 
     #[test]
