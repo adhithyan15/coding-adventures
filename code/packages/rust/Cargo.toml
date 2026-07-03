@@ -26,6 +26,7 @@ members = [
     "barcode-layout-1d",
     "barcode-1d",
     "bitset",
+    "cfb",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
