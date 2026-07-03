@@ -238,39 +238,68 @@ bit0=1, bit1=0, bit2=1 (LSB first).
 `compress` emits a **standard RFC 1951 raw DEFLATE stream** — the exact bytes a
 ZIP entry or gzip body carries, with no envelope and no private header. This is a
 deliberate choice: an educational codec is only convincing if a real tool
-(`zlib`, `gzip`, `unzip`, a browser) can read its output. We use a single
-**fixed-Huffman block** (BTYPE=01), so the pre-agreed code tables of RFC 1951
-§3.2.6 are used and no table is transmitted:
+(`zlib`, `gzip`, `unzip`, a browser) can read its output. It emits a **single
+final block**, choosing per input between a **fixed-Huffman block** (BTYPE=01,
+pre-agreed §3.2.6 tables, nothing transmitted) and a **dynamic-Huffman block**
+(BTYPE=10, code lengths adapted to the data and transmitted inline) — whichever
+is smaller in exact emitted bits:
 
 ```
 Block header (3 bits, LSB-first):
   bit 0     BFINAL = 1   (this is the only, final block)
-  bits 1–2  BTYPE  = 01  (fixed Huffman)
+  bits 1–2  BTYPE  = 01  (fixed Huffman)  OR  10  (dynamic Huffman)
+
+(dynamic only) Header:
+  HLIT  = read 5 bits = (#LL codes − 257)
+  HDIST = read 5 bits = (#dist codes − 1)
+  HCLEN = read 4 bits = (#CL lengths − 4)
+  CL code lengths in CL_PERMUTATION order          [3 bits each, LSB-first]
+  RLE'd (LL ++ dist) code lengths via CL symbols    [CL code MSB-first + extra LSB]
 
 Token stream (LSB-first packed bits):
   For each LZSS token in sequence:
-    Literal(byte):   fixed LL Huffman code for symbol `byte`   [MSB-first code]
-    Match(off, len): fixed LL code for length_symbol(len)      [MSB-first code]
+    Literal(byte):   LL Huffman code for symbol `byte`         [MSB-first code]
+    Match(off, len): LL code for length_symbol(len)            [MSB-first code]
                    + extra_bits(len)                           [raw, LSB-first]
-                   + fixed 5-bit distance code dist_code(off)  [MSB-first code]
+                   + distance code dist_code(off)              [MSB-first code]
                    + extra_bits(off)                           [raw, LSB-first]
-  At end:            fixed LL code for symbol 256 (end-of-block)
+  At end:            LL code for symbol 256 (end-of-block)
 
 Zero-padded to the next byte boundary.
 ```
 
-The fixed literal/length codes are the canonical assignment of RFC 1951 §3.2.6
-(8-bit codes for symbols 0–143, 9-bit for 144–255, 7-bit for 256–279, 8-bit for
-280–287); distance symbols are 5-bit codes equal to the symbol number. Because
-these are pre-defined, the decoder needs no transmitted table — it is the same
-`fixed Huffman` path `inflate` uses.
+For a **fixed** block the literal/length codes are the canonical assignment of
+RFC 1951 §3.2.6 (8-bit codes for symbols 0–143, 9-bit for 144–255, 7-bit for
+256–279, 8-bit for 280–287) and distance symbols are 5-bit codes equal to the
+symbol number, so no table is transmitted. For a **dynamic** block the LL and
+distance code lengths are computed from the token frequencies and transmitted (as
+above), giving better ratios on skewed data (text, repetitive input) where the
+fixed tables waste 8–9 bits per literal.
 
-Fixed Huffman is correct for every input but not the smallest encoding. **Dynamic
-Huffman** (BTYPE=10) adapts the code lengths to the data for better ratios; it is
-a planned encoder optimisation and requires length-limiting the Huffman trees to
-the RFC's 15-bit maximum. The **decoder** (`inflate`) already reads all three
-block types — stored, fixed, and dynamic — so it decodes `zlib`/`gzip`/Office
-streams today.
+**Length-limiting is mandatory.** RFC 1951 caps codes at 15 bits (LL and
+distance) and 7 bits (the code-length alphabet), but an optimal Huffman tree over
+up to 286 symbols can exceed 15 bits on skewed frequencies. `compress` therefore
+builds its dynamic trees with the **package-merge** algorithm (Larmore–Hirschberg
+1990), which produces the *optimal* code subject to a maximum length and provably
+always yields a valid prefix code (Kraft sum ≤ 1) whenever the alphabet fits in
+`2^max_len` symbols — which all three alphabets do (286 ≤ 2¹⁵, 30 ≤ 2¹⁵,
+19 ≤ 2⁷). A plain (unlimited) Huffman tree could emit a >15-bit code and produce
+an *invalid* stream, so this step is a correctness requirement, not merely an
+optimisation. The implementation asserts `len ≤ max_len` and Kraft ≤ 1 so a
+malformed tree can never reach the wire.
+
+The choice between fixed and dynamic is made by computing the **exact bit length**
+of each encoding of the same LZSS token stream and picking the minimum. Two
+consequences: `compress` never emits a stream *larger* than the old fixed-only
+encoder, and on tiny or near-incompressible inputs — where the dynamic
+code-length header costs more than it saves — it transparently falls back to
+fixed. Edge cases follow RFC 1951 §3.2.7: a block with no matches still emits a
+valid `HDIST` with one dummy distance code of length 1, and single-symbol
+alphabets receive a valid 1-bit code.
+
+The **decoder** (`inflate`) reads all three block types — stored, fixed, and
+dynamic — so it decodes `zlib`/`gzip`/Office streams as well as `compress`'s own
+output.
 
 ### Key Differences from CMP04
 
@@ -294,30 +323,60 @@ function compress(data: bytes,
                   window_size: int = 32768,
                   max_match:   int = 255,
                   min_match:   int = 3) -> bytes:
-    # Emits ONE fixed-Huffman block (BTYPE=01). The literal/length and distance
-    # codes are the pre-defined tables of RFC 1951 §3.2.6, so no Huffman table is
-    # transmitted and the machinery is trivial and always-correct.
-
-    bits ← ""
-    bits += "1"        # BFINAL = 1 (single, final block)
-    bits += "10"       # BTYPE  = 01, written LSB-first → the two bits "1","0"
+    # Tokenize once, then emit ONE final block — fixed (BTYPE=01) or dynamic
+    # (BTYPE=10), whichever is smaller in exact bits.
 
     # ── LZSS tokenization (same algorithm as CMP02) ─────────────────────────
-    for token in lzss_tokenize(data, window_size, max_match, min_match):
-        if token is Literal(byte):
-            bits += fixed_ll_code(byte)                       # MSB-first code
-        else:  # Match(offset, length)
-            sym = length_symbol(token.length)
-            bits += fixed_ll_code(sym)                        # MSB-first code
-            bits += lsb_first(token.length - LENGTH_BASE[sym], LENGTH_EXTRA[sym])
-            dc  = dist_code(token.offset)
-            bits += fixed_dist_code(dc)                       # 5-bit MSB-first code
-            bits += lsb_first(token.offset - DIST_BASE[dc], DIST_EXTRA[dc])
+    tokens ← lzss_tokenize(data, window_size, max_match, min_match)
 
-    bits += fixed_ll_code(256)  # end-of-block
+    # ── Cost both encodings of the SAME token stream, pick the smaller ──────
+    fixed_bits   ← fixed_block_bits(tokens)          # 3 + Σ code widths + EOB
+    plan         ← plan_dynamic(tokens)              # builds length-limited trees
+    if plan.total_bits < fixed_bits:
+        return emit_dynamic_block(tokens, plan)      # BFINAL=1, BTYPE=10
+    else:
+        return emit_fixed_block(tokens)              # BFINAL=1, BTYPE=01
 
-    return pack_bits_lsb_first(bits)   # zero-padded to a byte boundary
 
+# ── Building a dynamic block (RFC 1951 §3.2.7) ──────────────────────────────
+function plan_dynamic(tokens) -> DynamicPlan:
+    # 1. Count LL (286) and distance (30) symbol frequencies; EOB counts once.
+    ll_freq, dist_freq ← count_frequencies(tokens)
+
+    # 2. Length-limited Huffman: LL/dist ≤ 15 bits, via package-merge.
+    ll_len   ← length_limited_huffman(ll_freq,   max_len = 15)
+    dist_len ← length_limited_huffman(dist_freq, max_len = 15)
+    if no distance code present: dist_len[0] ← 1   # RFC needs ≥1 dist code (dummy)
+
+    # 3. Trim to HLIT (≥257) and HDIST (≥1); RLE-encode (LL ++ dist) lengths
+    #    with CL symbols 0–18 (16=repeat 3–6, 17=zeros 3–10, 18=zeros 11–138).
+    rle ← rle_code_lengths(ll_len[:HLIT] ++ dist_len[:HDIST])
+
+    # 4. Length-limited CL Huffman ≤ 7 bits.
+    cl_len ← length_limited_huffman(count(rle.symbols), max_len = 7)
+
+    # 5. total_bits = header + CL lengths (3 bits each, permutation order)
+    #              + Σ (CL code + extra) + Σ token code widths + EOB
+    return DynamicPlan{ ll_len, dist_len, cl_len, rle, total_bits }
+
+
+# ── Length-limited Huffman: package-merge (Larmore–Hirschberg 1990) ─────────
+# Produces the OPTIMAL prefix code with every length ≤ max_len.  Correct because:
+#   • Kraft's inequality: a code is valid iff Σ 2^(−ℓ_i) ≤ 1.  Package-merge
+#     solves the equivalent "coin-collector" problem and provably attains the
+#     minimum-cost length-limited code (Larmore–Hirschberg, JACM 1990).
+#   • It always yields a VALID code whenever n ≤ 2^max_len — true for all our
+#     alphabets (286 ≤ 2¹⁵, 30 ≤ 2¹⁵, 19 ≤ 2⁷) — so no length ever exceeds the cap.
+function length_limited_huffman(freqs, max_len) -> lengths:
+    present ← symbols with freqs > 0
+    if |present| == 1: return length 1 for that symbol   # valid 1-bit code
+    list ← originals (one coin per present symbol, weight = freq), sorted asc.
+    repeat (max_len − 1) times:
+        packages ← pair adjacent items of `list` (sum weights), drop odd tail
+        list     ← merge(originals, packages)  sorted by weight
+    select the 2·|present| − 2 lowest-weight items of `list`
+    lengths[s] ← number of selected items covering symbol s
+    assert every length ∈ [1, max_len]  and  Σ 2^(max_len−ℓ) ≤ 2^max_len
 
 # ── Fixed literal/length codes (RFC 1951 §3.2.6), returned MSB-first ─────────
 function fixed_ll_code(sym: int) -> bitstring:
@@ -374,7 +433,9 @@ window_size=32768 makes every distance code 0–29 reachable (code 29 covers up 
 
 ```
 compress(data: bytes) -> bytes
-  Returns a standard RFC 1951 raw DEFLATE stream (one fixed-Huffman block).
+  Returns a standard RFC 1951 raw DEFLATE stream: one final block, fixed
+  (BTYPE=01) or dynamic (BTYPE=10) Huffman, whichever is smaller in exact bits.
+  Never larger than a fixed-only encoding; usually much smaller on text.
   Decodable by any conforming inflater: this crate's `inflate`, zlib, gzip, unzip.
   compress(b"") -> the 2-byte empty fixed-Huffman block `03 00`.
 
