@@ -581,6 +581,62 @@ fn parse_part_names(json: &str) -> HashSet<String> {
     names
 }
 
+/// A style `part` block whose name doesn't EXACTLY match any part the layout
+/// exports. See [`unmatched_parts`].
+#[derive(Debug, Clone, PartialEq)]
+pub struct UnmatchedPart {
+    /// The part name exactly as written in the `.msl` (e.g. `sheet/cell`).
+    pub name: String,
+    /// If `name` is a sub-path `head/tail` whose `tail` IS itself an exported
+    /// top-level part, the likely intended flat name — the classic stale-naming
+    /// typo. `None` otherwise.
+    pub suggestion: Option<String>,
+}
+
+/// Report style parts whose name is not an EXACT member of the layout's part
+/// map.
+///
+/// This is deliberately stricter than [`validate`], which accepts a sub-path
+/// `a/b` as long as its top-level `a` exists (so it stays primitive-agnostic
+/// about sub-part vocabularies). That leniency is a sharp edge: a stylesheet
+/// that writes `sheet/cell` when the resolved composition exports a FLAT `cell`
+/// passes `validate` cleanly, yet the emitter — which looks up the flat part
+/// name — finds no style and renders the element unstyled. That is exactly how
+/// the VisiCalc light-theme grid lost its gridlines: `Grid.light.msl` used the
+/// legacy `sheet/cell` naming that matched nothing the emitter styled, and
+/// because the light theme was dead code until the web switcher rendered it,
+/// nobody noticed. Callers use this to surface a build-time WARNING (or, under a
+/// strict flag, an error) so the typo can't hide again.
+///
+/// Returns an empty vec when no part map is supplied (nothing to check against).
+pub fn unmatched_parts(def: &StyleDef, part_map_json: Option<&str>) -> Vec<UnmatchedPart> {
+    let json = match part_map_json {
+        Some(j) => j,
+        None => return Vec::new(),
+    };
+    let known = parse_part_names(json);
+    let mut out = Vec::new();
+    for part in &def.parts {
+        if known.contains(&part.name) {
+            continue; // exact match — the emitter will style it.
+        }
+        // Not an exact match. If this is a sub-path `head/tail` and `tail` is
+        // itself an exported part, the author almost certainly meant the flat
+        // `tail` (the post-U29-X1 naming) — surface that as a suggestion.
+        let tail = part.name.rsplit('/').next().unwrap_or(&part.name);
+        let suggestion = if tail != part.name && known.contains(tail) {
+            Some(tail.to_string())
+        } else {
+            None
+        };
+        out.push(UnmatchedPart {
+            name: part.name.clone(),
+            suggestion,
+        });
+    }
+    out
+}
+
 // ===========================================================================
 // Full compile pipeline
 // ===========================================================================
@@ -1147,6 +1203,48 @@ mod tests {
         "#;
         let result = compile(src, None).expect("deep sub-paths should compile");
         assert_eq!(result.def.parts[0].name, "sheet/header/cell");
+    }
+
+    #[test]
+    fn unmatched_parts_flags_stale_subpath_naming() {
+        // A stylesheet that uses the legacy `sheet/cell` sub-path naming while
+        // the resolved layout exposes a FLAT `cell` (post-U29-X1). `validate`
+        // accepts it (the top-level `sheet` exists), but the emitter styles the
+        // flat `cell`, so `sheet/cell` targets nothing — this is exactly how the
+        // VisiCalc light-theme grid lost its gridlines.
+        let src = r#"
+          style Grid {
+            part sheet { background: #ffffff ; }
+            part sheet/cell { background: #000000 ; }
+          }
+        "#;
+        let def = compile(src, None).expect("compiles").def;
+        let part_map = r#"{"component":"Grid","parts":[{"name":"sheet"},{"name":"cell"}]}"#;
+
+        let unmatched = unmatched_parts(&def, Some(part_map));
+        assert_eq!(unmatched.len(), 1, "only sheet/cell is unmatched");
+        assert_eq!(unmatched[0].name, "sheet/cell");
+        assert_eq!(
+            unmatched[0].suggestion.as_deref(),
+            Some("cell"),
+            "the flat tail `cell` is a known part, so it is suggested"
+        );
+
+        // A stylesheet whose parts all match the layout exactly reports nothing.
+        let ok = r#"
+          style Grid {
+            part sheet { background: #ffffff ; }
+            part cell { background: #000000 ; }
+          }
+        "#;
+        let ok_def = compile(ok, None).expect("compiles").def;
+        assert!(
+            unmatched_parts(&ok_def, Some(part_map)).is_empty(),
+            "exactly-matching parts produce no warnings"
+        );
+
+        // With no part map there is nothing to check against → empty.
+        assert!(unmatched_parts(&def, None).is_empty());
     }
 
     #[test]
