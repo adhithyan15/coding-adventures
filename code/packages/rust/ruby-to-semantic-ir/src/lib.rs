@@ -735,6 +735,94 @@ mod tests {
         assert!(result.is_ok(), "validator rejected our output: {:?}", result);
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // Phase FC (cont.) — implicit return of a trailing `case` from a
+    // method body.  `case` (both `case/when` value-matching and `case/in`
+    // pattern-matching) already lowers to a chained `Expr::If`; promoting
+    // it in tail position makes the method return the matched arm's value
+    // instead of `nil`.
+    // ─────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn def_body_ending_in_case_when_returns_the_chained_if() {
+        // `grade` ends in a `case/when` — the whole chain is the method's
+        // return value, landing in `body.value` (a chained `Expr::If`), and
+        // each arm's own tail (`"A"`, `"B"`, `"C"`) promotes to that arm's
+        // block value.
+        let m = lower(
+            "def grade(n)\n  case n\n  when 90\n    \"A\"\n  when 80\n    \"B\"\n  else\n    \"C\"\n  end\nend\n",
+        );
+        let body = fn_body(&m, "grade");
+        let Expr::If { then_branch, else_branch, .. } = &body.value else {
+            panic!("expected body.value = chained Expr::If, got {:?}", body.value);
+        };
+        // First arm value is the string "A".
+        assert!(
+            matches!(&then_branch.value, Expr::StrLit { value, .. } if value == "A"),
+            "first when-arm value should be \"A\", got {:?}",
+            then_branch.value
+        );
+        // The else_branch is itself another If (the `when 80` step), proving
+        // the chain unwound rather than collapsing to nil.
+        assert!(
+            matches!(&else_branch.value, Expr::If { .. }),
+            "case chain should nest in the else branch, got {:?}",
+            else_branch.value
+        );
+        // The tail `case` was promoted, not left dangling as a statement.
+        assert!(
+            !body
+                .stmts
+                .iter()
+                .any(|s| matches!(s, Stmt::ExprStmt { expr: Expr::If { .. }, .. })),
+            "the tail `case` must be promoted to value, not duplicated as a stmt"
+        );
+    }
+
+    #[test]
+    fn def_body_ending_in_case_in_pattern_returns_value() {
+        // `case/in` pattern matching shares the same `case_statement` rule and
+        // lowers to a chained `Expr::If`; a method ending in one returns the
+        // matched arm's value.
+        let m = lower(
+            "def classify(x)\n  case x\n  in 0\n    \"zero\"\n  else\n    \"other\"\n  end\nend\n",
+        );
+        let body = fn_body(&m, "classify");
+        assert!(
+            matches!(&body.value, Expr::If { .. }),
+            "the tail `case/in` must be the body value, got {:?}",
+            body.value
+        );
+    }
+
+    #[test]
+    fn def_body_leading_stmts_then_tail_case_are_both_kept() {
+        // A statement before the tail `case` stays in `stmts`; only the final
+        // `case` is promoted to `value`.
+        let m = lower(
+            "def label(n)\n  m = n + 1\n  case m\n  when 1\n    \"one\"\n  else\n    \"many\"\n  end\nend\n",
+        );
+        let body = fn_body(&m, "label");
+        assert!(
+            !body.stmts.is_empty(),
+            "the `m = n + 1` binding must remain a statement"
+        );
+        assert!(
+            matches!(&body.value, Expr::If { .. }),
+            "the tail `case` must be the body value, got {:?}",
+            body.value
+        );
+    }
+
+    #[test]
+    fn def_body_tail_case_module_passes_sir_validator() {
+        let m = lower(
+            "def grade(n)\n  case n\n  when 90\n    \"A\"\n  else\n    \"C\"\n  end\nend\n",
+        );
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
     #[test]
     fn def_rest_param_lowers_to_kind_rest() {
         // M3: `def f(*r); end` → one Param whose kind is Rest (previously the

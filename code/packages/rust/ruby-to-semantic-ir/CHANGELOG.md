@@ -2,6 +2,30 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.6.2] - 2026-07-02
+
+### Added (FC — implicit return of a trailing `case` from a method body)
+
+Extends the trailing-conditional implicit return (0.6.1's `if`/`unless`) to
+`case`. A Ruby method's value is its last evaluated expression, and `case`
+(both `case/when` value-matching and `case/in` pattern-matching) is an
+expression that already lowers to a chained `Expr::If`. Before this change a
+method body ending in a `case` left it as a discarded statement and returned
+`nil` on every backend; now the `case` is promoted to the block's `value`.
+
+- `lower_tail_value` gains a `case_statement` arm (routing through
+  `lower_case_statement`), so a `def` whose body ends in a `case` returns the
+  matched arm's value; because `case` arms are built with
+  `lower_clause_statements` (which calls `lower_tail_value`), promotion recurses
+  through nested tail conditionals.
+- Verified end to end: `def grade(n); case n; when 90 then "A"; when 80 then
+  "B"; else "C"; end; end` with `puts grade(90/80/50)` prints `A/B/C` on
+  Python, JavaScript, Go, and Rust (was blank/nil before). This is now provable
+  on all backends because the `case_eq` builtin the chain relies on was
+  implemented across Go/Rust/JS in a prior PR.
+- Four new unit tests (tail `case/when`, tail `case/in`,
+  leading-stmts-then-tail-`case`, validator pass). All 427 frontend tests pass.
+
 ## [0.6.1] - 2026-07-02
 
 ### Fixed (FC — implicit return of a trailing `if`/`unless` from a method body)

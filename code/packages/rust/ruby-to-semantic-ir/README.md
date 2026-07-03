@@ -57,12 +57,13 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   a method's value is its **last evaluated expression**.  The tail statement
   of a `def` body (and of each `if`/`unless` branch) is promoted into the SIR
   `Block.value` slot the backends emit as the implicit return.  Besides bare
-  expressions and calls, a trailing **`if`/`unless`** is now promoted too:
-  `def bigger(a, b); if a > b then a else b end; end` returns the winning
+  expressions and calls, a trailing **`if`/`unless`** and **`case`** (both
+  `case/when` and `case/in`, which lower to a chained `if`) are now promoted
+  too: `def bigger(a, b); if a > b then a else b end; end` returns the winning
   branch (previously the conditional was left as a discarded statement and the
-  method returned `nil` on every backend).  Promotion recurses — a branch that
-  itself ends in an `if` carries its own value — so arbitrarily nested tail
-  conditionals all return correctly.  (A *script's* top-level value is not
+  method returned `nil` on every backend).  Promotion recurses — a branch (or
+  `case` arm) that itself ends in a conditional carries its own value — so
+  arbitrarily nested tail conditionals all return correctly.  (A *script's* top-level value is not
   language-visible, so a bare trailing `if` at program scope stays a
   statement; only method/branch bodies implicitly return.)
 
@@ -111,9 +112,9 @@ function).
 ## What's deferred
 
 - Control flow beyond v0 and refinements.
-- Implicit return of a trailing **`case`** or **`begin`/`rescue`** (only
-  `if`/`unless` tail conditionals promote to the block value so far), and of a
-  block/lambda's tail conditional.
+- Implicit return of a trailing **`begin`/`rescue`** (a trailing `if`/`unless`
+  and `case` — both `case/when` and `case/in` — now promote to the block value),
+  and of a block/lambda's tail conditional.
 - The full set of Ruby's literal forms (regex, ranges, arrays,
   hashes, symbols, heredocs as runtime values — heredocs ARE lexed
   per Phase 3c, just not yet lowered to IR shape).
