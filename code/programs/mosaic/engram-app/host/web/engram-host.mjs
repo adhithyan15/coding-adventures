@@ -65,10 +65,16 @@ function withSnapshotPersistence(host, engine) {
         const refreshed = await host.getProps({
           component: request?.component ?? "EngramApp",
         });
+        const resultRecord = recordFrom(result);
+        const hostResult = resultRecord.hostResult;
         return {
           ...recordFrom(refreshed),
-          hostIntent: recordFrom(result).hostIntent,
-          hostResult: recordFrom(result).hostResult,
+          props: {
+            ...recordFrom(recordFrom(refreshed).props),
+            ...hostStatusProps(hostResult),
+          },
+          hostIntent: resultRecord.hostIntent,
+          hostResult,
         };
       }
       return result;
@@ -247,6 +253,93 @@ function hostResultStatus(result) {
   return typeof status === "string" ? status : undefined;
 }
 
+function hostStatusProps(hostResult) {
+  const record = recordFrom(hostResult);
+  const status = typeof record.status === "string" ? record.status : "";
+  if (!status) {
+    return {};
+  }
+  return {
+    hostStatusVisible: true,
+    hostStatusKind: status,
+    hostStatusLabel: hostStatusLabel(status),
+    hostStatusMessage: hostStatusMessage(record, status),
+  };
+}
+
+function hostStatusLabel(status) {
+  switch (status) {
+    case "imported":
+      return "Import complete";
+    case "exported":
+      return "Export complete";
+    case "cancelled":
+      return "Import cancelled";
+    case "read-error":
+    case "import-error":
+      return "Import failed";
+    case "export-error":
+    case "write-error":
+      return "Export failed";
+    case "captured":
+      return "Host action";
+    default:
+      return "Host status";
+  }
+}
+
+function hostStatusMessage(hostResult, status) {
+  const file = hostStatusFile(hostResult);
+  const error = textValue(hostResult.error);
+  switch (status) {
+    case "imported":
+      return file ? `Imported ${file}.` : "Anki package imported.";
+    case "exported":
+      return file ? `Saved ${file}.` : "Anki package exported.";
+    case "cancelled":
+      return "No Anki package was selected.";
+    case "read-error":
+      return error
+        ? `Could not read ${file || "the selected file"}: ${error}`
+        : `Could not read ${file || "the selected file"}.`;
+    case "import-error":
+      return error
+        ? `Could not import ${file || "the selected package"}: ${error}`
+        : `Could not import ${file || "the selected package"}.`;
+    case "export-error":
+      return error ? `Could not export Anki package: ${error}` : "Could not export Anki package.";
+    case "write-error":
+      return error
+        ? `Could not save ${file || "the Anki package"}: ${error}`
+        : `Could not save ${file || "the Anki package"}.`;
+    case "captured":
+      return "Host intent captured.";
+    default:
+      return error || file || status;
+  }
+}
+
+function hostStatusFile(hostResult) {
+  const name = textValue(hostResult.name);
+  const size = Number(hostResult.size);
+  if (name && Number.isFinite(size) && size >= 0) {
+    return `${name} (${formatBytes(size)})`;
+  }
+  return name;
+}
+
+function formatBytes(size) {
+  if (size < 1024) {
+    return `${size} B`;
+  }
+  if (size < 1024 * 1024) {
+    const value = size / 1024;
+    return `${value < 10 ? value.toFixed(1) : value.toFixed(0)} KB`;
+  }
+  const value = size / (1024 * 1024);
+  return `${value < 10 ? value.toFixed(1) : value.toFixed(0)} MB`;
+}
+
 function recordFrom(value) {
   return typeof value === "object" && value !== null ? value : {};
 }
@@ -279,6 +372,13 @@ function suggestedAnkiFileName(intent) {
 
 function errorText(error) {
   return error instanceof Error ? error.message : String(error ?? "unknown error");
+}
+
+function textValue(value) {
+  if (value === undefined || value === null) {
+    return "";
+  }
+  return typeof value === "string" ? value : String(value);
 }
 
 function readStorage(key) {

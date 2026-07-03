@@ -12,6 +12,10 @@ component EngramApp {
   slot show-add-screen : bool = false ;
   slot show-stats-screen : bool = false ;
   slot show-options-screen : bool = false ;
+  slot host-status-visible : bool = false ;
+  slot host-status-kind : text ;
+  slot host-status-label : text ;
+  slot host-status-message : text ;
   slot deck-name : text ;
   slot deck-list-label : text ;
   slot deck-names : list<text> ;

@@ -43,6 +43,7 @@ const initial = await host.getProps({ component: "EngramApp" });
 check("host prop camelCase", initial.props.appTitle, "Engram");
 check("host deck name", initial.props.deckName, "Tamil");
 check("host list prop", initial.props.browserResultCardIds, ["card"]);
+check("host status hidden", initial.props.hostStatusVisible, false);
 
 engine.dispatch({
   type: "startSession",
@@ -59,13 +60,23 @@ let seenIntent = null;
 const intentHost = engine.createMosaicHost({
   onHostIntent: (intent) => {
     seenIntent = intent;
-    return { handled: true };
+    return intent.type === "importAnki"
+      ? { status: "imported", name: "deck.apkg", size: 2048 }
+      : { status: "captured" };
   },
 });
 const imported = await intentHost.handleEvent({ component: "EngramApp", event: "onImportAnki" });
 check("host intent type", imported.hostIntent.type, "importAnki");
 check("host intent callback", seenIntent.type, "importAnki");
-check("host intent result", imported.hostResult, { handled: true });
+check("host intent result", imported.hostResult, {
+  status: "imported",
+  name: "deck.apkg",
+  size: 2048,
+});
+check("host status visible", imported.props.hostStatusVisible, true);
+check("host status kind", imported.props.hostStatusKind, "imported");
+check("host status label", imported.props.hostStatusLabel, "Import complete");
+check("host status message", imported.props.hostStatusMessage, "Imported deck.apkg (2.0 KB).");
 
 const opened = await intentHost.handleEvent({
   component: "EngramApp",

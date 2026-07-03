@@ -2106,6 +2106,16 @@ fn engram_app_props_for_state(
     let props_object = props
         .as_object_mut()
         .expect("Engram app props literal must be a JSON object");
+    props_object.insert("host-status-visible".to_string(), Value::Bool(false));
+    props_object.insert("host-status-kind".to_string(), Value::String(String::new()));
+    props_object.insert(
+        "host-status-label".to_string(),
+        Value::String(String::new()),
+    );
+    props_object.insert(
+        "host-status-message".to_string(),
+        Value::String(String::new()),
+    );
     props_object.insert(
         "type-answer-active".to_string(),
         Value::Bool(type_answer_spec.is_some()),

@@ -82,6 +82,17 @@ layout EngramApp {
       }
     }
 
+    If ( when: slot: host-status-visible ) {
+      Row [ host-status ] {
+        Text [ host-status-label ] (
+          content : slot: host-status-label
+        )
+        Text [ host-status-message ] (
+          content : slot: host-status-message
+        )
+      }
+    }
+
     If ( when: slot: show-decks-screen ) {
       Column [ decks-screen ] {
         Box [ stats-region ] {

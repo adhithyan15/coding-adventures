@@ -186,6 +186,8 @@ fn shared_engram_app_props_match_mosaic_slots() {
     assert_eq!(props["ok"], true);
     assert_eq!(prop_keys, expected_slots);
     assert_eq!(props["props"]["answer-visible"], false);
+    assert_eq!(props["props"]["host-status-visible"], false);
+    assert_eq!(props["props"]["host-status-label"], "");
 }
 
 #[test]
@@ -777,7 +779,10 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&webcomponent_host, "hydrateEngine(engine);");
     assert_contains(&webcomponent_host, "withSnapshotPersistence(host, engine)");
     assert_contains(&webcomponent_host, "persistSnapshot(engine);");
-    assert_contains(&webcomponent_host, "handleHostIntent(engine, intent, result)");
+    assert_contains(
+        &webcomponent_host,
+        "handleHostIntent(engine, intent, result)",
+    );
     assert_contains(&webcomponent_host, "chooseAnkiImportFile(intent)");
     assert_contains(&webcomponent_host, "engine.mergeAnkiApkg(bytes)");
     assert_contains(&webcomponent_host, "engine.exportAnkiApkg()");
@@ -2529,6 +2534,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&web_ts_host, "engine.exportAnkiApkg()");
     assert_contains(&web_ts_host, "downloadBytes(bytes, name)");
     assert_contains(&web_ts_host, "hostResultStatus(result) === \"imported\"");
+    assert_contains(&web_ts_host, "hostStatusProps(hostResult)");
+    assert_contains(&web_ts_host, "hostStatusVisible: true");
 
     let web_mjs_host = fs::read_to_string(package_root().join("host/web/engram-host.mjs"))
         .expect("web mjs host template");
@@ -2540,6 +2547,8 @@ fn source_tree_has_expected_shape() {
     assert_contains(&web_mjs_host, "engine.exportAnkiApkg()");
     assert_contains(&web_mjs_host, "downloadBytes(bytes, name)");
     assert_contains(&web_mjs_host, "hostResultStatus(result) === \"imported\"");
+    assert_contains(&web_mjs_host, "hostStatusProps(hostResult)");
+    assert_contains(&web_mjs_host, "hostStatusVisible: true");
 
     let web_wasm_defs =
         fs::read_to_string(package_root().join("host/web/engram-mosaic-host-wasm.d.ts"))
