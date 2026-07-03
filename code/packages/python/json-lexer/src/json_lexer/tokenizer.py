@@ -63,7 +63,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-JSON_TOKENS_PATH = GRAMMAR_DIR / "json.tokens"
+JSON_TOKENS_PATH = GRAMMAR_DIR / "json" / "json.tokens"
 
 
 def create_json_lexer(source: str) -> GrammarLexer:

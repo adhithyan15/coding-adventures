@@ -39,7 +39,7 @@ from lattice_lexer import tokenize_lattice
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LATTICE_GRAMMAR_PATH = GRAMMAR_DIR / "lattice.grammar"
+LATTICE_GRAMMAR_PATH = GRAMMAR_DIR / "lattice" / "lattice.grammar"
 
 
 def create_lattice_parser(source: str) -> GrammarParser:

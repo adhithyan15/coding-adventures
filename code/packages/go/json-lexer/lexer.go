@@ -59,7 +59,7 @@ func getGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "json.tokens")
+	return filepath.Join(root, "json", "json.tokens")
 }
 
 // CreateJSONLexer loads the JSON token grammar and returns a configured

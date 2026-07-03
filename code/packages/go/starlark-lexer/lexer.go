@@ -65,7 +65,7 @@ func getGrammarPath() string {
 	// then down into grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "starlark.tokens")
+	return filepath.Join(root, "starlark", "starlark.tokens")
 }
 
 // CreateStarlarkLexer loads the Starlark token grammar and returns a configured

@@ -62,7 +62,7 @@ func getGrammarPath(version string) (string, error) {
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 	if version == "" {
-		return filepath.Join(root, "javascript.tokens"), nil
+		return filepath.Join(root, "javascript", "javascript.tokens"), nil
 	}
 	if !validVersions[version] {
 		return "", fmt.Errorf(

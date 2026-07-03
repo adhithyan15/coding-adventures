@@ -8,7 +8,7 @@ require "coding_adventures_excel_lexer"
 module CodingAdventures
   module ExcelParser
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    EXCEL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "excel.grammar")
+    EXCEL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "excel", "excel.grammar")
 
     def self.previous_significant_token(tokens, index)
       (index - 1).downto(0) do |i|

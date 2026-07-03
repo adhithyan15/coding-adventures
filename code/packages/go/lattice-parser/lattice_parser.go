@@ -107,7 +107,7 @@ func getGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(filename)
 	root := filepath.Join(dir, "..", "..", "..", "grammars")
-	return filepath.Join(root, "lattice.grammar")
+	return filepath.Join(root, "lattice", "lattice.grammar")
 }
 
 // CreateLatticeParser tokenizes the Lattice source using the Lattice lexer,

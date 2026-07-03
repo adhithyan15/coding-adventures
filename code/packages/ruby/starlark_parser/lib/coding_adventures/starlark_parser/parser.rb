@@ -61,7 +61,7 @@ module CodingAdventures
     #               starlark_parser/
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    STARLARK_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "starlark.grammar")
+    STARLARK_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "starlark", "starlark.grammar")
 
     # Parse a string of Starlark source code into a generic AST.
     #

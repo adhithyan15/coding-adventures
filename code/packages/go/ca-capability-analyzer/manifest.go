@@ -15,7 +15,7 @@ package main
 //	    {
 //	      "category": "fs",
 //	      "action": "read",
-//	      "target": "../../grammars/json.tokens",
+//	      "target": "../../grammars/json/json.tokens",
 //	      "justification": "Reads grammar file at init time."
 //	    }
 //	  ],
@@ -23,7 +23,7 @@ package main
 //	}
 //
 // The canonical form of a capability string is "category:action:target",
-// e.g., "fs:read:*" or "fs:read:../../grammars/json.tokens".
+// e.g., "fs:read:*" or "fs:read:../../grammars/json/json.tokens".
 //
 // # Absence of Manifest
 //
@@ -34,7 +34,7 @@ package main
 // # Detecting Undeclared Capabilities
 //
 // The analyzer detects capabilities like "fs:read:*" (category:action:wildcard).
-// A manifest that declares "fs:read:../../grammars/json.tokens" does NOT
+// A manifest that declares "fs:read:../../grammars/json/json.tokens" does NOT
 // cover "fs:read:*" because the targets differ. To avoid false positives for
 // packages that declare specific targets but still use os.ReadFile (routed
 // through the Operations system), the analyzer treats detected capabilities
@@ -114,7 +114,7 @@ func canonicalBannedConstructExceptionKey(language, construct string) string {
 //
 // The function also adds "wildcard" entries for each (category:action) pair
 // present in the manifest. This lets the analyzer treat a manifest that
-// declares "fs:read:../../grammars/json.tokens" as covering "fs:read:*" —
+// declares "fs:read:../../grammars/json/json.tokens" as covering "fs:read:*" —
 // because if the package has declared any fs:read target, it has gone through
 // the manifest process, and the specific path enforcement is handled at
 // runtime by the Operations system, not by this static analyzer.

@@ -12,7 +12,7 @@ use lexer::token::{Token, TokenType};
 use mermaid_lexer::tokenize_mermaid;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
-const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid.grammar");
+const PARSER_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.grammar");
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParseError {

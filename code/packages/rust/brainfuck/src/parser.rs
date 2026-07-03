@@ -85,7 +85,7 @@ use parser::grammar_parser::{GrammarParser, GrammarASTNode};
 /// ```
 fn grammar_path() -> String {
     let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/brainfuck.grammar")
+    format!("{manifest_dir}/../../../grammars/brainfuck/brainfuck.grammar")
 }
 
 // ===========================================================================

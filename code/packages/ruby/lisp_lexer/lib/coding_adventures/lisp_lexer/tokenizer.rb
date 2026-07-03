@@ -34,7 +34,7 @@ require "coding_adventures_lexer"
 module CodingAdventures
   module LispLexer
     GRAMMAR_DIR       = File.expand_path("../../../../../../grammars", __dir__)
-    LISP_TOKENS_PATH  = File.join(GRAMMAR_DIR, "lisp.tokens")
+    LISP_TOKENS_PATH  = File.join(GRAMMAR_DIR, "lisp", "lisp.tokens")
 
     # Create a GrammarLexer configured for Lisp.
     # @param source [String] Lisp source code

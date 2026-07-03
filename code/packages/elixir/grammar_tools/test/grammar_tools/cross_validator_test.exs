@@ -54,8 +54,8 @@ defmodule CodingAdventures.GrammarTools.CrossValidatorTest do
       Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
       |> Path.expand()
 
-    {:ok, tg} = TokenGrammar.parse(File.read!(Path.join(grammar_dir, "json.tokens")))
-    {:ok, pg} = ParserGrammar.parse(File.read!(Path.join(grammar_dir, "json.grammar")))
+    {:ok, tg} = TokenGrammar.parse(File.read!(Path.join(grammar_dir, "json", "json.tokens")))
+    {:ok, pg} = ParserGrammar.parse(File.read!(Path.join(grammar_dir, "json", "json.grammar")))
     issues = CrossValidator.validate(tg, pg)
     # No undefined references — all tokens used in grammar should exist
     undefined = Enum.filter(issues, &String.starts_with?(&1, "Undefined"))

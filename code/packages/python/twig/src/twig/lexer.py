@@ -33,7 +33,7 @@ from lexer import GrammarLexer, Token
 #   └─ code/            (parent) → ``grammars/twig.tokens``
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TWIG_TOKENS_PATH = GRAMMAR_DIR / "twig.tokens"
+TWIG_TOKENS_PATH = GRAMMAR_DIR / "twig" / "twig.tokens"
 
 
 def create_twig_lexer(source: str) -> GrammarLexer:

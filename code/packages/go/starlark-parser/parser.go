@@ -70,7 +70,7 @@ func getGrammarPath() string {
 	// Navigate up 3 levels to code/, then down to grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "starlark.grammar")
+	return filepath.Join(root, "starlark", "starlark.grammar")
 }
 
 // CreateStarlarkParser tokenizes the source code using the Starlark lexer,

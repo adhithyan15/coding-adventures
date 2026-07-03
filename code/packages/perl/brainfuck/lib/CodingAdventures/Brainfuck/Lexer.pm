@@ -114,7 +114,7 @@ sub _grammars_dir {
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'brainfuck.tokens' );
+    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'brainfuck', 'brainfuck.tokens' );
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::Brainfuck::Lexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };

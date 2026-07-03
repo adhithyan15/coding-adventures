@@ -107,7 +107,7 @@ def _resolve_tokens_path(version: str | None) -> Path:
             recognized TypeScript version.
     """
     if not version:
-        return _GRAMMAR_ROOT / "typescript.tokens"
+        return _GRAMMAR_ROOT / "typescript" / "typescript.tokens"
     if version not in _VALID_VERSIONS:
         raise ValueError(
             f"Unknown TypeScript version {version!r}. "

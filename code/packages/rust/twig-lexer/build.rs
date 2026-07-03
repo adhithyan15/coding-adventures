@@ -40,7 +40,7 @@ fn main() {
         .expect("CARGO_MANIFEST_DIR must be set by cargo");
     let grammar_path = PathBuf::from(&manifest_dir)
         .join("..").join("..").join("..")
-        .join("grammars").join("twig.tokens");
+        .join("grammars").join("twig").join("twig.tokens");
     let grammar_path = grammar_path
         .canonicalize()
         .unwrap_or_else(|e| panic!("Failed to resolve twig.tokens path {grammar_path:?}: {e}"));

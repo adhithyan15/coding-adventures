@@ -93,7 +93,7 @@ func getGrammarPath() string {
 	// Navigate up 3 levels: lattice-lexer → go → packages → code,
 	// then descend into grammars/.
 	root := filepath.Join(dir, "..", "..", "..", "grammars")
-	return filepath.Join(root, "lattice.tokens")
+	return filepath.Join(root, "lattice", "lattice.tokens")
 }
 
 // stripErrorsSection removes the "errors:" section from a .tokens grammar

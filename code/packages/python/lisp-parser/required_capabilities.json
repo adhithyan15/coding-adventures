@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/lisp.grammar",
+      "target": "../../grammars/lisp/lisp.grammar",
       "justification": "Reads parser grammar definition file to build the parser tables at initialization time."
     }
   ],

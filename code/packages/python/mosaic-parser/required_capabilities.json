@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/mosaic.grammar",
+      "target": "../../grammars/mosaic/mosaic.grammar",
       "justification": "Reads parser grammar definition file to build the parser tables at initialization time."
     }
   ],

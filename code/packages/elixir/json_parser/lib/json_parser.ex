@@ -42,7 +42,7 @@ defmodule CodingAdventures.JsonParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "json.grammar")
+    grammar_path = Path.join(@grammars_dir, "json", "json.grammar")
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end

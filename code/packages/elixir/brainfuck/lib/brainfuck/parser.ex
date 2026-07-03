@@ -92,7 +92,7 @@ defmodule CodingAdventures.Brainfuck.Parser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "brainfuck.grammar")
+    grammar_path = Path.join(@grammars_dir, "brainfuck", "brainfuck.grammar")
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end

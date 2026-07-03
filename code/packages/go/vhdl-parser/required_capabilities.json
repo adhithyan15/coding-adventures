@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/vhdl.grammar",
+      "target": "../../../grammars/vhdl/vhdl.grammar",
       "justification": "Reads VHDL EBNF grammar definition file to configure the parser at initialization time."
     }
   ],

@@ -67,7 +67,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LISP_TOKENS_PATH = GRAMMAR_DIR / "lisp.tokens"
+LISP_TOKENS_PATH = GRAMMAR_DIR / "lisp" / "lisp.tokens"
 
 
 def create_lisp_lexer(source: str) -> GrammarLexer:

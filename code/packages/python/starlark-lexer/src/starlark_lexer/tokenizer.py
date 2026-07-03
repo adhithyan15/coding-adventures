@@ -105,7 +105,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-STARLARK_TOKENS_PATH = GRAMMAR_DIR / "starlark.tokens"
+STARLARK_TOKENS_PATH = GRAMMAR_DIR / "starlark" / "starlark.tokens"
 
 
 def create_starlark_lexer(source: str) -> GrammarLexer:

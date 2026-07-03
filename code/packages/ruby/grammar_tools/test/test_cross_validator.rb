@@ -132,8 +132,8 @@ class TestCrossValidator < Minitest::Test
   # -----------------------------------------------------------------------
 
   def test_real_python_cross_validation
-    tokens_path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python.tokens")
-    grammar_path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python.grammar")
+    tokens_path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python", "python.tokens")
+    grammar_path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python", "python.grammar")
     skip("Grammar files not found") unless File.exist?(tokens_path) && File.exist?(grammar_path)
     tg = GT.parse_token_grammar(File.read(tokens_path))
     pg = GT.parse_parser_grammar(File.read(grammar_path))

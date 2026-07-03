@@ -704,7 +704,7 @@ class TestStarlarkTokens:
         code_dir = os.path.dirname(os.path.dirname(os.path.dirname(
             os.path.dirname(os.path.dirname(
                 os.path.abspath(__file__))))))
-        tokens_path = os.path.join(code_dir, "grammars", "starlark.tokens")
+        tokens_path = os.path.join(code_dir, "grammars", "starlark", "starlark.tokens")
         if not os.path.exists(tokens_path):
             pytest.skip("starlark.tokens not found")
         with open(tokens_path) as f:

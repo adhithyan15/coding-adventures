@@ -12,7 +12,7 @@ func getGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "excel.tokens")
+	return filepath.Join(root, "excel", "excel.tokens")
 }
 
 func CreateExcelLexer(source string) (*lexer.GrammarLexer, error) {

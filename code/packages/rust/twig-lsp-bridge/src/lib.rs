@@ -67,16 +67,16 @@ use grammar_lsp_bridge::{LanguageSpec, LspSemanticTokenType};
 //   ../../../  → packages/
 //   ../../../../  → code/
 //
-// So the include path is "../../../../grammars/twig.tokens".
+// So the include path is "../../../../grammars/twig/twig.tokens".
 // ---------------------------------------------------------------------------
 
 /// Embedded contents of `code/grammars/twig.tokens`.
 const TWIG_TOKENS_SOURCE: &str =
-    include_str!("../../../../grammars/twig.tokens");
+    include_str!("../../../../grammars/twig/twig.tokens");
 
 /// Embedded contents of `code/grammars/twig.grammar`.
 const TWIG_GRAMMAR_SOURCE: &str =
-    include_str!("../../../../grammars/twig.grammar");
+    include_str!("../../../../grammars/twig/twig.grammar");
 
 // ---------------------------------------------------------------------------
 // Token kind map — Twig token names → LSP semantic token types

@@ -54,7 +54,7 @@ module CodingAdventures
     # Path to the grammar files, computed relative to this file.
     # Same 6-level navigation as the lexer.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    TOML_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "toml.grammar")
+    TOML_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "toml", "toml.grammar")
 
     # Parse a string of TOML text into a generic AST.
     #

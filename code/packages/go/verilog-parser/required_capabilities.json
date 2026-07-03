@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/verilog.grammar",
+      "target": "../../../grammars/verilog/verilog.grammar",
       "justification": "Reads Verilog EBNF grammar definition file to configure the parser at initialization time."
     }
   ],

@@ -26,7 +26,7 @@ from twig.lexer import tokenize_twig
 
 # Grammar file location — same walk-up as ``lexer.py``.
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TWIG_GRAMMAR_PATH = GRAMMAR_DIR / "twig.grammar"
+TWIG_GRAMMAR_PATH = GRAMMAR_DIR / "twig" / "twig.grammar"
 
 
 def create_twig_parser(source: str) -> GrammarParser:

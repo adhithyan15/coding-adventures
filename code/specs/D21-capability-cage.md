@@ -173,7 +173,7 @@ Capability
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/json.tokens",
+      "target": "../../grammars/json/json.tokens",
       "justification": "Reads token grammar definition file to build the lexer DFA."
     }
   ],
@@ -267,31 +267,32 @@ purposes:
 3. **Linter hook point.** The linter flags raw stdlib calls and suggests the wrapper.
 
 ```
-SecureFile.read("../../grammars/python.tokens")
+SecureFile.read("../../grammars/python/python.tokens")
 │
 │  Step 1: Check manifest
-│  ┌──────────────────────────────────────────┐
-│  │ manifest.check("fs", "read",             │
-│  │   "../../grammars/python.tokens")        │
-│  │                                          │
-│  │ Walk the capabilities array:              │
-│  │   cap[0]: fs:read:../../grammars/*.tokens │
-│  │   Does "python.tokens" match "*.tokens"?  │
-│  │   YES → capability granted                │
-│  └──────────────────────────────────────────┘
+│  ┌────────────────────────────────────────────────┐
+│  │ manifest.check("fs", "read",                   │
+│  │   "../../grammars/python/python.tokens")        │
+│  │                                                 │
+│  │ Walk the capabilities array:                    │
+│  │   cap[0]: fs:read:../../grammars/*/*.tokens     │
+│  │   Does "python/python.tokens" match             │
+│  │     "*/*.tokens"?                               │
+│  │   YES → capability granted                      │
+│  └────────────────────────────────────────────────┘
 │
 │  Step 2: Delegate to backend
-│  ┌──────────────────────────────────────────┐
-│  │ OpenBackend:                              │
-│  │   return stdlib.read("../../grammars/     │
-│  │     python.tokens")                       │
-│  │                                          │
-│  │ CageBackend (Chief of Staff):            │
-│  │   send JSON-RPC: {"method": "fs.read",   │
-│  │     "params": {"path": "../../grammars/  │
-│  │     python.tokens"}}                     │
-│  │   return response.result                 │
-│  └──────────────────────────────────────────┘
+│  ┌────────────────────────────────────────────────┐
+│  │ OpenBackend:                                    │
+│  │   return stdlib.read("../../grammars/           │
+│  │     python/python.tokens")                      │
+│  │                                                 │
+│  │ CageBackend (Chief of Staff):                  │
+│  │   send JSON-RPC: {"method": "fs.read",         │
+│  │     "params": {"path": "../../grammars/        │
+│  │     python/python.tokens"}}                     │
+│  │   return response.result                       │
+│  └────────────────────────────────────────────────┘
 │
 ▼
 File contents returned to caller
@@ -624,7 +625,7 @@ from capability_cage import SecureFile, Manifest
 
 manifest = Manifest.discover()
 fs = SecureFile(manifest)
-data = fs.read("../../grammars/python.tokens")
+data = fs.read("../../grammars/python/python.tokens")
 ```
 
 **Ruby:**
@@ -633,13 +634,13 @@ require "coding_adventures_capability_cage"
 
 manifest = CodingAdventures::CapabilityCage::Manifest.discover
 fs = CodingAdventures::CapabilityCage::SecureFile.new(manifest)
-data = fs.read("../../grammars/python.tokens")
+data = fs.read("../../grammars/python/python.tokens")
 ```
 
 **Go:**
 ```go
 manifest, _ := capabilitycage.Discover()
-data, err := capabilitycage.ReadFile(manifest, "../../grammars/python.tokens")
+data, err := capabilitycage.ReadFile(manifest, "../../grammars/python/python.tokens")
 ```
 
 **TypeScript:**
@@ -647,7 +648,7 @@ data, err := capabilitycage.ReadFile(manifest, "../../grammars/python.tokens")
 import { SecureFile, Manifest } from "@coding-adventures/capability-cage";
 const manifest = Manifest.discover();
 const fs = new SecureFile(manifest);
-const data = await fs.read("../../grammars/python.tokens");
+const data = await fs.read("../../grammars/python/python.tokens");
 ```
 
 **Rust:**
@@ -655,13 +656,13 @@ const data = await fs.read("../../grammars/python.tokens");
 use coding_adventures_capability_cage::{Manifest, SecureFile};
 let manifest = Manifest::discover()?;
 let fs = SecureFile::new(manifest);
-let data = fs.read("../../grammars/python.tokens")?;
+let data = fs.read("../../grammars/python/python.tokens")?;
 ```
 
 **Elixir:**
 ```elixir
 manifest = CodingAdventures.CapabilityCage.Manifest.discover!()
-data = CodingAdventures.CapabilityCage.SecureFile.read!(manifest, "../../grammars/python.tokens")
+data = CodingAdventures.CapabilityCage.SecureFile.read!(manifest, "../../grammars/python/python.tokens")
 ```
 
 **Lua:**
@@ -669,7 +670,7 @@ data = CodingAdventures.CapabilityCage.SecureFile.read!(manifest, "../../grammar
 local CapabilityCage = require("capability_cage")
 local manifest = CapabilityCage.Manifest.discover()
 local fs = CapabilityCage.SecureFile.new(manifest)
-local data = fs:read("../../grammars/python.tokens")
+local data = fs:read("../../grammars/python/python.tokens")
 ```
 
 ---

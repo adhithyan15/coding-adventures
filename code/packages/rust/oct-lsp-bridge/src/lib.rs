@@ -15,11 +15,11 @@ use grammar_lsp_bridge::{LanguageSpec, LspSemanticTokenType};
 
 /// Embedded contents of `code/grammars/oct.tokens`.
 const OCT_TOKENS_SOURCE: &str =
-    include_str!("../../../../grammars/oct.tokens");
+    include_str!("../../../../grammars/oct/oct.tokens");
 
 /// Embedded contents of `code/grammars/oct.grammar`.
 const OCT_GRAMMAR_SOURCE: &str =
-    include_str!("../../../../grammars/oct.grammar");
+    include_str!("../../../../grammars/oct/oct.grammar");
 
 // ===========================================================================
 // Token kind map

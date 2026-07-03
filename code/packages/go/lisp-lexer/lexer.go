@@ -15,7 +15,7 @@ func grammarRoot() string {
 }
 
 func getTokensPath() string {
-	return filepath.Join(grammarRoot(), "lisp.tokens")
+	return filepath.Join(grammarRoot(), "lisp", "lisp.tokens")
 }
 
 // CreateLispLexer constructs a GrammarLexer configured for Lisp source.

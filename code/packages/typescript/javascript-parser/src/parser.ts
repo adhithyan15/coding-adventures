@@ -66,7 +66,7 @@ const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
  * affect which *lexer* token set is loaded (via `tokenizeJavascript`), keeping
  * the AST shape consistent across ECMAScript editions.
  */
-const JS_GRAMMAR_PATH = join(GRAMMARS_DIR, "javascript.grammar");
+const JS_GRAMMAR_PATH = join(GRAMMARS_DIR, "javascript", "javascript.grammar");
 
 /**
  * Parse JavaScript source code and return an AST.

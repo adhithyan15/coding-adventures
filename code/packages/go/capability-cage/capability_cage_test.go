@@ -98,9 +98,9 @@ func TestEmptyManifest_DeniesAll(t *testing.T) {
 func TestCheck_AllowsDeclaredExactTarget(t *testing.T) {
 	m := cage.NewManifest([]cage.Capability{
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "grammars/verilog.tokens", Justification: "test"},
+			Target: "grammars/verilog/verilog.tokens", Justification: "test"},
 	})
-	if err := m.Check(cage.CategoryFS, cage.ActionRead, "grammars/verilog.tokens"); err != nil {
+	if err := m.Check(cage.CategoryFS, cage.ActionRead, "grammars/verilog/verilog.tokens"); err != nil {
 		t.Errorf("expected nil, got: %v", err)
 	}
 }
@@ -203,12 +203,12 @@ func TestGlob_BareStarMatchesAnything(t *testing.T) {
 func TestGlob_LiteralRequiresExactMatch(t *testing.T) {
 	m := cage.NewManifest([]cage.Capability{
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "grammars/verilog.tokens", Justification: "test"},
+			Target: "grammars/verilog/verilog.tokens", Justification: "test"},
 	})
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog.tokens") {
+	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog/verilog.tokens") {
 		t.Error("literal target should match exact string")
 	}
-	if m.Has(cage.CategoryFS, cage.ActionRead, "grammars/python.tokens") {
+	if m.Has(cage.CategoryFS, cage.ActionRead, "grammars/python/python.tokens") {
 		t.Error("literal target should not match different string")
 	}
 }
@@ -220,9 +220,9 @@ func TestGlob_StarExtensionMatchesSameDirectory(t *testing.T) {
 	})
 	// Should match
 	allowed := []string{
-		"grammars/verilog.tokens",
-		"grammars/python.tokens",
-		"grammars/ruby.tokens",
+		"grammars/verilog/verilog.tokens",
+		"grammars/python/python.tokens",
+		"grammars/ruby/ruby.tokens",
 	}
 	for _, p := range allowed {
 		if !m.Has(cage.CategoryFS, cage.ActionRead, p) {
@@ -246,13 +246,13 @@ func TestGlob_StarPrefixMatchesSameDirectory(t *testing.T) {
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
 			Target: "grammars/verilog*", Justification: "test"},
 	})
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog.tokens") {
+	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog/verilog.tokens") {
 		t.Error("verilog* should match verilog.tokens")
 	}
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog.grammar") {
+	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/verilog/verilog.grammar") {
 		t.Error("verilog* should match verilog.grammar")
 	}
-	if m.Has(cage.CategoryFS, cage.ActionRead, "grammars/python.tokens") {
+	if m.Has(cage.CategoryFS, cage.ActionRead, "grammars/python/python.tokens") {
 		t.Error("verilog* should not match python.tokens")
 	}
 }
@@ -283,14 +283,14 @@ func TestGlob_NoMatchOnEmptyCapabilities(t *testing.T) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 func TestPathNormalization_CleansDotDot(t *testing.T) {
-	// The declared target is "grammars/verilog.tokens".
-	// A caller passing "grammars/../grammars/verilog.tokens" is asking for
+	// The declared target is "grammars/verilog/verilog.tokens".
+	// A caller passing "grammars/../grammars/verilog/verilog.tokens" is asking for
 	// the same file — should be allowed after normalization.
 	m := cage.NewManifest([]cage.Capability{
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "grammars/verilog.tokens", Justification: "test"},
+			Target: "grammars/verilog/verilog.tokens", Justification: "test"},
 	})
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/../grammars/verilog.tokens") {
+	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars/../grammars/verilog/verilog.tokens") {
 		t.Error("normalized path should match after cleaning ..")
 	}
 }
@@ -311,9 +311,9 @@ func TestPathNormalization_PreventsDotDotEscape(t *testing.T) {
 func TestPathNormalization_CleansDotSlash(t *testing.T) {
 	m := cage.NewManifest([]cage.Capability{
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "grammars/verilog.tokens", Justification: "test"},
+			Target: "grammars/verilog/verilog.tokens", Justification: "test"},
 	})
-	if !m.Has(cage.CategoryFS, cage.ActionRead, "./grammars/verilog.tokens") {
+	if !m.Has(cage.CategoryFS, cage.ActionRead, "./grammars/verilog/verilog.tokens") {
 		t.Error("./path should match after normalization")
 	}
 }
@@ -321,7 +321,7 @@ func TestPathNormalization_CleansDotSlash(t *testing.T) {
 func TestPathNormalization_CleansDoubleSlash(t *testing.T) {
 	m := cage.NewManifest([]cage.Capability{
 		{Category: cage.CategoryFS, Action: cage.ActionRead,
-			Target: "grammars/verilog.tokens", Justification: "test"},
+			Target: "grammars/verilog/verilog.tokens", Justification: "test"},
 	})
 	if !m.Has(cage.CategoryFS, cage.ActionRead, "grammars//verilog.tokens") {
 		t.Error("double slash should be cleaned before matching")
@@ -924,7 +924,7 @@ func TestIntegration_ReadFilePipelineAllowed(t *testing.T) {
 	// 2. It calls cage.ReadFile(Manifest, grammarPath).
 	// 3. The cage checks the manifest, then reads the file.
 	tmp := t.TempDir()
-	grammarFile := filepath.Join(tmp, "verilog.tokens")
+	grammarFile := filepath.Join(tmp, "verilog", "verilog.tokens")
 	_ = os.WriteFile(grammarFile, []byte("TOKEN_PATTERN"), 0o644) //nolint:cap
 
 	// Simulates gen_capabilities.go

@@ -157,7 +157,7 @@ GRAMMAR_DIR = (
     / "grammars"
 )
 
-DARTMOUTH_BASIC_TOKENS_PATH = GRAMMAR_DIR / "dartmouth_basic.tokens"
+DARTMOUTH_BASIC_TOKENS_PATH = GRAMMAR_DIR / "dartmouth_basic" / "dartmouth_basic.tokens"
 
 
 # ---------------------------------------------------------------------------

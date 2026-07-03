@@ -43,7 +43,7 @@ func getGrammarPath(version string) (string, error) {
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 	if version == "" {
-		return filepath.Join(root, "typescript.grammar"), nil
+		return filepath.Join(root, "typescript", "typescript.grammar"), nil
 	}
 	if !validVersions[version] {
 		return "", fmt.Errorf("unknown TypeScript version %q: valid versions are ts1.0, ts2.0, ts3.0, ts4.0, ts5.0, ts5.8", version)

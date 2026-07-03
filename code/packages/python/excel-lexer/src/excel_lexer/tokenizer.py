@@ -8,7 +8,7 @@ from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, LexerContext, Token
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-EXCEL_TOKENS_PATH = GRAMMAR_DIR / "excel.tokens"
+EXCEL_TOKENS_PATH = GRAMMAR_DIR / "excel" / "excel.tokens"
 
 
 def _next_non_space_char(ctx: LexerContext) -> str:

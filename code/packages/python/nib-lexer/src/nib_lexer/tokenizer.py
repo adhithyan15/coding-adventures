@@ -187,7 +187,7 @@ from lexer.tokenizer import TokenType
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-NIB_TOKENS_PATH = GRAMMAR_DIR / "nib.tokens"
+NIB_TOKENS_PATH = GRAMMAR_DIR / "nib" / "nib.tokens"
 
 
 def create_nib_lexer(source: str) -> GrammarLexer:

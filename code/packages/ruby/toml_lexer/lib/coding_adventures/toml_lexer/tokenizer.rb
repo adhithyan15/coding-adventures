@@ -64,7 +64,7 @@ module CodingAdventures
     #
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    TOML_TOKENS_PATH = File.join(GRAMMAR_DIR, "toml.tokens")
+    TOML_TOKENS_PATH = File.join(GRAMMAR_DIR, "toml", "toml.tokens")
 
     # Tokenize a string of TOML text into an array of Token objects.
     #

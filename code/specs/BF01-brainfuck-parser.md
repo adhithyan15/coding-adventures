@@ -215,7 +215,7 @@ Error case:
 defmodule Brainfuck.Parser do
   @grammar_path Path.join([
     :code.priv_dir(:brainfuck),
-    "../../grammars/brainfuck.grammar"
+    "../../grammars/brainfuck/brainfuck.grammar"
   ])
 
   def parse(source) do

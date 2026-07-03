@@ -117,7 +117,7 @@ from oct_lexer import tokenize_oct
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-OCT_GRAMMAR_PATH = GRAMMAR_DIR / "oct.grammar"
+OCT_GRAMMAR_PATH = GRAMMAR_DIR / "oct" / "oct.grammar"
 
 
 def create_oct_parser(source: str) -> GrammarParser:

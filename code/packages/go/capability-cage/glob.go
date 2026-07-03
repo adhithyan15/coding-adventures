@@ -13,8 +13,8 @@
 // Path normalization is applied before matching to prevent traversal attacks:
 // both the declared target and the actual path are cleaned via path.Clean
 // (slash-based, not OS-specific) before comparison. This means a caller
-// cannot bypass a restriction by passing "../../../grammars/verilog.tokens"
-// when the manifest declares "grammars/verilog.tokens".
+// cannot bypass a restriction by passing "../../../grammars/verilog/verilog.tokens"
+// when the manifest declares "grammars/verilog/verilog.tokens".
 package capabilitycage
 
 import (
@@ -60,7 +60,7 @@ func matchTarget(pattern, target string) bool {
 //
 // Examples:
 //   - "*.tokens" matches "verilog.tokens" but not "sub/verilog.tokens"
-//   - "grammars/*" matches "grammars/verilog.tokens" but not "grammars/sub/x"
+//   - "grammars/*" matches "grammars/verilog/verilog.tokens" but not "grammars/sub/x"
 //   - "pre*mid*suf" matches "preXmidYsuf" but not "preX/Ymidsuf"
 func matchGlob(pattern, target string) bool {
 	// Base case: empty pattern matches only empty target.

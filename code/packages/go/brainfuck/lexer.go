@@ -82,7 +82,7 @@ func getTokensGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "brainfuck.tokens")
+	return filepath.Join(root, "brainfuck", "brainfuck.tokens")
 }
 
 // CreateBrainfuckLexer loads the Brainfuck token grammar and returns a

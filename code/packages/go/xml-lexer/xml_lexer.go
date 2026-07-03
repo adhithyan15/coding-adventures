@@ -88,7 +88,7 @@ func getGrammarPath() string {
 	// then down into grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "xml.tokens")
+	return filepath.Join(root, "xml", "xml.tokens")
 }
 
 // ---------------------------------------------------------------------------

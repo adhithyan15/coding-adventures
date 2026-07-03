@@ -106,7 +106,7 @@ from lang_parser import ASTNode, GrammarParser
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-BF_GRAMMAR_PATH = GRAMMAR_DIR / "brainfuck.grammar"
+BF_GRAMMAR_PATH = GRAMMAR_DIR / "brainfuck" / "brainfuck.grammar"
 
 
 def create_brainfuck_parser(source: str) -> GrammarParser:

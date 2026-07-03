@@ -13,7 +13,7 @@ func getGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "ruby.grammar")
+	return filepath.Join(root, "ruby", "ruby.grammar")
 }
 
 func CreateRubyParser(source string) (*parser.GrammarParser, error) {

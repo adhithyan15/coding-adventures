@@ -76,7 +76,7 @@ from lexer import GrammarLexer, LexerContext, Token
 GRAMMAR_DIR = (
     Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
 )
-XML_TOKENS_PATH = GRAMMAR_DIR / "xml.tokens"
+XML_TOKENS_PATH = GRAMMAR_DIR / "xml" / "xml.tokens"
 
 
 # ---------------------------------------------------------------------------

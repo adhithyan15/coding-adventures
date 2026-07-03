@@ -58,8 +58,8 @@ let rubyGrammar: TokenGrammar;
 let pythonConfig: LexerConfig;
 
 beforeAll(() => {
-  const pythonTokensPath = join(GRAMMARS_DIR, "python.tokens");
-  const rubyTokensPath = join(GRAMMARS_DIR, "ruby.tokens");
+  const pythonTokensPath = join(GRAMMARS_DIR, "python", "python.tokens");
+  const rubyTokensPath = join(GRAMMARS_DIR, "ruby", "ruby.tokens");
 
   pythonGrammar = parseTokenGrammar(readFileSync(pythonTokensPath, "utf-8"));
   rubyGrammar = parseTokenGrammar(readFileSync(rubyTokensPath, "utf-8"));

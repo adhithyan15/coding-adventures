@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/typescript.grammar",
+      "target": "../../../grammars/typescript/typescript.grammar",
       "justification": "Generic TypeScript parser grammar (no version specified)."
     },
     {

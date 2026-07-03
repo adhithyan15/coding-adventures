@@ -6,7 +6,7 @@ require "coding_adventures_lexer"
 module CodingAdventures
   module NibLexer
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    NIB_TOKENS_PATH = File.join(GRAMMAR_DIR, "nib.tokens")
+    NIB_TOKENS_PATH = File.join(GRAMMAR_DIR, "nib", "nib.tokens")
 
     def self.create_nib_lexer(source)
       grammar = CodingAdventures::GrammarTools.parse_token_grammar(

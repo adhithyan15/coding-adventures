@@ -89,13 +89,13 @@ mod tests {
         let cap = Capability::new(
             Category::Fs,
             Action::Read,
-            "./grammars/json.tokens",
+            "./grammars/json/json.tokens",
             "load lexer DFA",
         )
         .unwrap();
         assert_eq!(cap.category, Category::Fs);
         assert_eq!(cap.action, Action::Read);
-        assert_eq!(cap.target, "./grammars/json.tokens");
+        assert_eq!(cap.target, "./grammars/json/json.tokens");
         assert_eq!(cap.justification, "load lexer DFA");
         assert_eq!(cap.flavor, None);
         assert_eq!(cap.trust, None);

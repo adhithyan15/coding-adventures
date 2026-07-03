@@ -67,7 +67,7 @@ const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
  * affect which *lexer* token set is loaded (via `tokenizeTypescript`), keeping
  * the AST shape consistent across TypeScript versions.
  */
-const TS_GRAMMAR_PATH = join(GRAMMARS_DIR, "typescript.grammar");
+const TS_GRAMMAR_PATH = join(GRAMMARS_DIR, "typescript", "typescript.grammar");
 
 /**
  * Parse TypeScript source code and return an AST.

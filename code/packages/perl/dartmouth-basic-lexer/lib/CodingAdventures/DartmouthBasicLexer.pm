@@ -200,7 +200,7 @@ sub _grammars_dir {
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'dartmouth_basic.tokens' );
+    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'dartmouth_basic', 'dartmouth_basic.tokens' );
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::DartmouthBasicLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };

@@ -30,7 +30,7 @@ local function get_grammar()
         return grammar_cache
     end
 
-    local grammar_path = up(get_script_dir(), 6) .. "/grammars/nib.grammar"
+    local grammar_path = up(get_script_dir(), 6) .. "/grammars/nib/nib.grammar"
     local file, open_err = io.open(grammar_path, "r")
     if not file then
         error("nib_parser: cannot open grammar file: " .. grammar_path .. " (" .. (open_err or "unknown error") .. ")")

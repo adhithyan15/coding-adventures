@@ -9,7 +9,7 @@ import { tokenizeLisp } from "@coding-adventures/lisp-lexer";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const LISP_GRAMMAR_PATH = join(GRAMMARS_DIR, "lisp.grammar");
+const LISP_GRAMMAR_PATH = join(GRAMMARS_DIR, "lisp", "lisp.grammar");
 
 function loadGrammar() {
   return parseParserGrammar(readFileSync(LISP_GRAMMAR_PATH, "utf-8"));

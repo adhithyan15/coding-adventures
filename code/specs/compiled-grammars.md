@@ -70,7 +70,9 @@ non-Rust language outputs until those generators are also moved into native prog
 
 ## Grammar coverage
 
-30 grammar files in `code/grammars/` cover 15 grammars/formats:
+As of this PR, 30 grammar files in `code/grammars/` covered 15 grammars/formats
+(each has since been moved into its own `code/grammars/<name>/` subdirectory —
+see "Directory layout" below):
 
 | Grammar    | .tokens | .grammar | Languages with packages          |
 |------------|---------|----------|----------------------------------|
@@ -93,6 +95,16 @@ non-Rust language outputs until those generators are also moved into native prog
 
 Elixir and Lua do not yet have grammar-dependent packages; those will gain `_grammar.{ext}` files
 when the packages are created.
+
+## Directory layout
+
+Every grammar or format lives in its own `code/grammars/<name>/` subdirectory — no flat
+`code/grammars/<name>.tokens` files at the top level. This is uniform whether the grammar
+has one version (`code/grammars/css/css.grammar`) or many
+(`code/grammars/python/python3.12.grammar`, `code/grammars/python/python3.12.tokens`, ...).
+Where a grammar previously had both a minimal "toy" default and a set of versioned files
+(Python, TypeScript), the toy default lives alongside the versioned files in the same
+directory (`code/grammars/python/python.grammar` next to `code/grammars/python/python3.12.grammar`).
 
 ## What comes next (PR 4)
 

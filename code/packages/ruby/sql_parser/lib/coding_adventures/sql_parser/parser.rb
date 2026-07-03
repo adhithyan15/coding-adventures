@@ -84,7 +84,7 @@ module CodingAdventures
     #               sql_parser/
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    SQL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "sql.grammar")
+    SQL_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "sql", "sql.grammar")
 
     # Create a GrammarDrivenParser configured for SQL text.
     #

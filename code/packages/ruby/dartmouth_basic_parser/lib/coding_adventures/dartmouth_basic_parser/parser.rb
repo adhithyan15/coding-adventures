@@ -121,7 +121,7 @@ module CodingAdventures
     #               dartmouth_basic_parser/
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    DARTMOUTH_BASIC_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "dartmouth_basic.grammar")
+    DARTMOUTH_BASIC_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "dartmouth_basic", "dartmouth_basic.grammar")
 
     # Parse a string of Dartmouth BASIC 1964 source code into a generic AST.
     #

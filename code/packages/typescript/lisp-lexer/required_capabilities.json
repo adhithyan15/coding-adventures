@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/lisp.tokens",
+      "target": "../../grammars/lisp/lisp.tokens",
       "justification": "Reads the Lisp token grammar definition file to build the lexer at initialization time."
     }
   ],

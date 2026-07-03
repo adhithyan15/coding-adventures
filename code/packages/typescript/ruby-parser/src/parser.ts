@@ -27,7 +27,7 @@ import { tokenizeRuby } from "@coding-adventures/ruby-lexer";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const RUBY_GRAMMAR_PATH = join(GRAMMARS_DIR, "ruby.grammar");
+const RUBY_GRAMMAR_PATH = join(GRAMMARS_DIR, "ruby", "ruby.grammar");
 
 /**
  * Parse Ruby source code and return an AST.

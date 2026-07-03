@@ -109,7 +109,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TOML_TOKENS_PATH = GRAMMAR_DIR / "toml.tokens"
+TOML_TOKENS_PATH = GRAMMAR_DIR / "toml" / "toml.tokens"
 
 
 def create_toml_lexer(source: str) -> GrammarLexer:

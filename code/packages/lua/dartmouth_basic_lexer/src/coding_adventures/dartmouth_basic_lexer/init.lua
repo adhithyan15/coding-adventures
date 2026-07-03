@@ -171,7 +171,7 @@ local function get_grammar()
     -- Total: 6 levels up lands us at `code/`, the repo root.
     local script_dir  = get_script_dir()
     local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/dartmouth_basic.tokens"
+    local tokens_path = repo_root .. "/grammars/dartmouth_basic/dartmouth_basic.tokens"
 
     local f, open_err = io.open(tokens_path, "r")
     if not f then

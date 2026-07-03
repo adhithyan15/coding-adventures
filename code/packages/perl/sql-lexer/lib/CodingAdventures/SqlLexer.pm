@@ -134,7 +134,7 @@ sub _grammars_dir {
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'sql.tokens' );
+    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'sql', 'sql.tokens' );
     open my $fh, '<', $tokens_file
         or die "CodingAdventures::SqlLexer: cannot open '$tokens_file': $!";
     my $content = do { local $/; <$fh> };

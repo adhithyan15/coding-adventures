@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/sql.grammar",
+      "target": "../../../grammars/sql/sql.grammar",
       "justification": "Reads SQL EBNF grammar definition file to configure the parser at initialization time."
     }
   ],

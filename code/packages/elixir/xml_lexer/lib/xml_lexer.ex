@@ -221,7 +221,7 @@ defmodule CodingAdventures.XmlLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join(@grammars_dir, "xml.tokens")
+    tokens_path = Path.join(@grammars_dir, "xml", "xml.tokens")
     {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
     grammar
   end

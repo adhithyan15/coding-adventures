@@ -121,7 +121,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const TOML_TOKENS_PATH = join(GRAMMARS_DIR, "toml.tokens");
+const TOML_TOKENS_PATH = join(GRAMMARS_DIR, "toml", "toml.tokens");
 
 /**
  * Tokenize TOML text and return an array of tokens.

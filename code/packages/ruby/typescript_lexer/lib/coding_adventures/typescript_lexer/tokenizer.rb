@@ -58,7 +58,7 @@ module CodingAdventures
     COMPILED_GRAMMAR_DIR = __dir__
 
     # The generic typescript.tokens file (no version qualifier).
-    TS_TOKENS_PATH = File.join(GRAMMAR_DIR, "typescript.tokens")
+    TS_TOKENS_PATH = File.join(GRAMMAR_DIR, "typescript", "typescript.tokens")
 
     # All valid TypeScript grammar versions supported by the versioned grammar
     # files in code/grammars/typescript/.  Versions correspond to official
@@ -78,7 +78,7 @@ module CodingAdventures
     # @raise [ArgumentError] if version is not in VALID_VERSIONS
     def self.resolve_tokens_path(version)
       if version.nil? || version.empty?
-        File.join(GRAMMAR_DIR, "typescript.tokens")
+        File.join(GRAMMAR_DIR, "typescript", "typescript.tokens")
       elsif VALID_VERSIONS.include?(version)
         File.join(GRAMMAR_DIR, "typescript", "#{version}.tokens")
       else

@@ -185,7 +185,7 @@ The implementation delegates to the shared grammar-driven lexer infrastructure, 
 defmodule Brainfuck.Lexer do
   @grammar_path Path.join([
     :code.priv_dir(:brainfuck),
-    "../../grammars/brainfuck.tokens"
+    "../../grammars/brainfuck/brainfuck.tokens"
   ])
 
   def tokenize(source) do

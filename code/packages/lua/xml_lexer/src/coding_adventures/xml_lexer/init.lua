@@ -116,7 +116,7 @@ local function get_grammar()
     --           → xml_lexer_pkg/ (4) → lua/ (5) → packages/ (6) → code/
     local script_dir  = get_script_dir()
     local repo_root   = up(script_dir, 6)
-    local tokens_path = repo_root .. "/grammars/xml_lua.tokens"
+    local tokens_path = repo_root .. "/grammars/xml/xml_lua.tokens"
 
     local f, open_err = io.open(tokens_path, "r")
     if not f then

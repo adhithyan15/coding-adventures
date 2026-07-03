@@ -81,7 +81,7 @@ use lexer::token::Token;
 /// `../../../grammars/brainfuck.tokens`
 fn grammar_path() -> String {
     let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    format!("{manifest_dir}/../../../grammars/brainfuck.tokens")
+    format!("{manifest_dir}/../../../grammars/brainfuck/brainfuck.tokens")
 }
 
 // ===========================================================================

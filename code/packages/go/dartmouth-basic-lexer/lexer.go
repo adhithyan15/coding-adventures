@@ -95,7 +95,7 @@ func getGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "dartmouth_basic.tokens")
+	return filepath.Join(root, "dartmouth_basic", "dartmouth_basic.tokens")
 }
 
 // relabelLineNumbers is a post-tokenize hook that reclassifies NUMBER tokens

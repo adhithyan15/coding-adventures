@@ -32,7 +32,8 @@ const ROOT = findRoot();
 const GRAMMARS = join(ROOT, "code", "grammars");
 
 function grammarPath(name: string): string {
-  return join(GRAMMARS, name);
+  const stem = name.split(".")[0];
+  return join(GRAMMARS, stem, name);
 }
 
 function exists(name: string): boolean {

@@ -86,7 +86,7 @@ defmodule CodingAdventures.SqlParser do
           {:ok, ParserGrammar.t()} | {:error, String.t()}
   def create_sql_parser(grammars_dir \\ nil) do
     dir = grammars_dir || @default_grammars_dir
-    grammar_path = Path.join(dir, "sql.grammar")
+    grammar_path = Path.join(dir, "sql", "sql.grammar")
 
     case File.read(grammar_path) do
       {:ok, text} ->

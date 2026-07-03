@@ -181,7 +181,7 @@ const __dirname = dirname(__filename);
  *     + grammars = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const TOKENS_PATH = join(GRAMMARS_DIR, "dartmouth_basic.tokens");
+const TOKENS_PATH = join(GRAMMARS_DIR, "dartmouth_basic", "dartmouth_basic.tokens");
 
 // ---------------------------------------------------------------------------
 // Post-Tokenize Hook 0: normalizeCase

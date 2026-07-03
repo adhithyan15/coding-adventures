@@ -52,7 +52,8 @@ local cli = require("main")
 -- ---------------------------------------------------------------------------
 
 local function grammar_path(name)
-    return GRAMMARS .. sep .. name
+    local stem = name:match("^([^.]+)")
+    return GRAMMARS .. sep .. stem .. sep .. name
 end
 
 local function exists(name)

@@ -88,7 +88,7 @@ from sql_lexer import tokenize_sql
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-SQL_GRAMMAR_PATH = GRAMMAR_DIR / "sql.grammar"
+SQL_GRAMMAR_PATH = GRAMMAR_DIR / "sql" / "sql.grammar"
 
 # Module-level override for testing. When set to a non-empty string, that
 # path is used instead of the auto-discovered SQL_GRAMMAR_PATH above.

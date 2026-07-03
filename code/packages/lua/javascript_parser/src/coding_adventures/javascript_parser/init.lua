@@ -203,7 +203,7 @@ local function resolve_grammar_path(version)
     local repo_root  = up(script_dir, 6)
 
     if not version or version == "" then
-        return repo_root .. "/grammars/javascript.grammar"
+        return repo_root .. "/grammars/javascript/javascript.grammar"
     end
 
     if not VALID_JS_VERSIONS[version] then

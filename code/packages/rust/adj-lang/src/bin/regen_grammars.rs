@@ -25,12 +25,12 @@ fn main() {
     let grammars = manifest.join("../../../grammars");
     let src = manifest.join("src");
 
-    let toks = fs::read_to_string(grammars.join("adj_lang.tokens")).expect("read adj_lang.tokens");
+    let toks = fs::read_to_string(grammars.join("adj_lang").join("adj_lang.tokens")).expect("read adj_lang.tokens");
     let tg = parse_token_grammar(&toks).expect("parse adj_lang.tokens");
     fs::write(src.join("_lexer_grammar.rs"), compile_token_grammar(&tg, "adj_lang.tokens"))
         .expect("write _lexer_grammar.rs");
 
-    let gram = fs::read_to_string(grammars.join("adj_lang.grammar")).expect("read adj_lang.grammar");
+    let gram = fs::read_to_string(grammars.join("adj_lang").join("adj_lang.grammar")).expect("read adj_lang.grammar");
     let pg = parse_parser_grammar(&gram).expect("parse adj_lang.grammar");
     fs::write(src.join("_parser_grammar.rs"), compile_parser_grammar(&pg, "adj_lang.grammar"))
         .expect("write _parser_grammar.rs");

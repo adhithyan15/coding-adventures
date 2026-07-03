@@ -8,10 +8,11 @@ how the Python language evolved across its major milestones. Each version pair
 of Python's syntax at that point in time, written in the same EBNF-like
 notation used throughout the coding-adventures grammar infrastructure.
 
-The existing `code/grammars/python.grammar` and `python.tokens` files describe
-a minimal Python subset (assignments, arithmetic, a handful of keywords). The
-versioned files replace that toy subset with real, comprehensive grammar
-definitions that track the actual language as it shipped.
+The existing `code/grammars/python/python.grammar` and `python.tokens` files
+describe a minimal Python subset (assignments, arithmetic, a handful of
+keywords). The versioned files replace that toy subset with real,
+comprehensive grammar definitions that track the actual language as it
+shipped.
 
 ## Why Versioned Grammars?
 
@@ -76,12 +77,16 @@ code/grammars/python/
     python3.12.grammar      python3.12.tokens
 ```
 
-The existing top-level files remain as-is:
+The minimal MVP files live alongside the versioned ones, in their own
+per-language directories (every grammar in `code/grammars/` follows this
+one-directory-per-language layout):
 
 ```
-code/grammars/
+code/grammars/python/
     python.grammar          (minimal MVP subset — unchanged)
     python.tokens           (minimal MVP subset — unchanged)
+
+code/grammars/starlark/
     starlark.grammar        (Starlark — updated to cross-reference)
     starlark.tokens         (Starlark — updated to cross-reference)
 ```

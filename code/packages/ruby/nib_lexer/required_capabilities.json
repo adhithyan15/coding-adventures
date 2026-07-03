@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/nib.tokens",
+      "target": "../../grammars/nib/nib.tokens",
       "justification": "Reads the shared Nib token grammar to configure the grammar-driven lexer."
     }
   ],

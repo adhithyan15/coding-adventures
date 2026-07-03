@@ -83,7 +83,7 @@ func getGrammarPath() string {
 	// then down into grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "toml.tokens")
+	return filepath.Join(root, "toml", "toml.tokens")
 }
 
 // CreateTOMLLexer loads the TOML token grammar and returns a configured

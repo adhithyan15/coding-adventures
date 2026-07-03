@@ -106,7 +106,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const BF_GRAMMAR_PATH = join(GRAMMARS_DIR, "brainfuck.grammar");
+const BF_GRAMMAR_PATH = join(GRAMMARS_DIR, "brainfuck", "brainfuck.grammar");
 
 /**
  * Parse Brainfuck source text and return an AST.

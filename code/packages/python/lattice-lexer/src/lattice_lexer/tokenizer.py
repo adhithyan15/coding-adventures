@@ -44,7 +44,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LATTICE_TOKENS_PATH = GRAMMAR_DIR / "lattice.tokens"
+LATTICE_TOKENS_PATH = GRAMMAR_DIR / "lattice" / "lattice.tokens"
 
 
 def create_lattice_lexer(source: str) -> GrammarLexer:

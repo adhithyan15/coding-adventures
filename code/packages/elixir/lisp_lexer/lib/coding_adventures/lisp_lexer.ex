@@ -29,7 +29,7 @@ defmodule CodingAdventures.LispLexer do
   def create_lexer do
     case :persistent_term.get({__MODULE__, :grammar}, nil) do
       nil ->
-        tokens_path = Path.join(@grammars_dir, "lisp.tokens")
+        tokens_path = Path.join(@grammars_dir, "lisp", "lisp.tokens")
         {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
         :persistent_term.put({__MODULE__, :grammar}, grammar)
         grammar

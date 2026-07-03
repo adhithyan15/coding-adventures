@@ -86,11 +86,11 @@ const VALID_TS_VERSIONS = new Set([
  *   // => ".../code/grammars/typescript/ts5.8.tokens"
  *
  *   resolveTokensPath()
- *   // => ".../code/grammars/typescript.tokens"
+ *   // => ".../code/grammars/typescript/typescript.tokens"
  */
 function resolveTokensPath(version?: string): string {
   if (!version) {
-    return join(GRAMMARS_DIR, "typescript.tokens");
+    return join(GRAMMARS_DIR, "typescript", "typescript.tokens");
   }
 
   if (!VALID_TS_VERSIONS.has(version)) {

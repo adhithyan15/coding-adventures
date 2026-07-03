@@ -93,7 +93,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const JSON_GRAMMAR_PATH = join(GRAMMARS_DIR, "json.grammar");
+const JSON_GRAMMAR_PATH = join(GRAMMARS_DIR, "json", "json.grammar");
 
 /**
  * Parse JSON text and return an AST.
