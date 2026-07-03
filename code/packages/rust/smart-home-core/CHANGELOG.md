@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_continuity_brief` tool descriptor for read-only Chief
+  continuity handoff plans over existing D23 morning and escalation brief
+  primitives.
 - `smart_home.get_escalation_brief` tool descriptor for read-only Chief
   escalation queues over existing D23 morning, platform, operations, safety,
   readiness, maintenance, incident, and recovery brief primitives.

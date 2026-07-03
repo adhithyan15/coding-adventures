@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_continuity_brief`, a read-only Chief adapter tool that
+  turns existing D23 morning and escalation brief signals into one operator
+  continuity handoff plan without owning smart-home state.
 - Added `smart_home.get_escalation_brief`, a read-only Chief adapter tool that
   turns the existing D23 morning, platform, operations, safety, readiness,
   maintenance, incident, and recovery brief signals into one ordered escalation

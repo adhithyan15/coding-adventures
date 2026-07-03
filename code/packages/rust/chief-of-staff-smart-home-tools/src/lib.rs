@@ -320,6 +320,7 @@ pub const SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID: &str = "smart_home.get_incident
 pub const SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID: &str = "smart_home.get_recovery_brief";
 pub const SMART_HOME_GET_MORNING_BRIEF_TOOL_ID: &str = "smart_home.get_morning_brief";
 pub const SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID: &str = "smart_home.get_escalation_brief";
+pub const SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID: &str = "smart_home.get_continuity_brief";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2444,6 +2445,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_escalation_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_continuity_brief_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6565,6 +6570,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_recovery_brief_definition(),
         get_morning_brief_definition(),
         get_escalation_brief_definition(),
+        get_continuity_brief_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -7888,6 +7894,60 @@ fn get_escalation_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "escalation_queue",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_continuity_brief_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID,
+        "Get smart-home continuity brief",
+        "Turn existing D23 smart-home morning and escalation briefs into an operator continuity handoff plan without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("continuity_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("continuity_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("blocked_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("handoff_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("monitor_lane_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "continuity_plan",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "continuity_ready",
+                "requires_human_review",
+                "has_blockers",
+                "continuity_lane_count",
+                "blocked_lane_count",
+                "handoff_lane_count",
+                "monitor_lane_count",
+                "summary",
+                "decision",
+                "continuity_plan",
                 "source_tools",
             ],
             false,
@@ -45313,6 +45373,50 @@ fn get_escalation_brief_output_handler_output(
     ))
 }
 
+fn get_continuity_brief_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let morning = get_morning_brief_output_handler_output(runtime, principal_id, now_ms)?.output;
+    let escalation = escalation_brief_output_json(now_ms, &morning);
+    let output = continuity_brief_output_json(now_ms, &morning, &escalation);
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let continuity_ready = morning_brief_bool_at(&output, &["continuity_ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let continuity_lane_count =
+        morning_brief_integer_at(&output, &["continuity_lane_count"]).unwrap_or(0);
+    let blocked_lane_count =
+        morning_brief_integer_at(&output, &["blocked_lane_count"]).unwrap_or(0);
+    let handoff_lane_count =
+        morning_brief_integer_at(&output, &["handoff_lane_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_continuity_brief")),
+            ("status", string(&status)),
+            ("continuity_ready", JsonValue::Bool(continuity_ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("continuity_lane_count", integer(continuity_lane_count)),
+            ("blocked_lane_count", integer(blocked_lane_count)),
+            ("handoff_lane_count", integer(handoff_lane_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -49884,6 +49988,314 @@ fn escalation_brief_next_action(next_item: Option<&EscalationBriefItem>) -> &str
 fn escalation_brief_next_owner_lane(next_item: Option<&EscalationBriefItem>) -> &str {
     next_item
         .map(|item| item.owner_lane.as_str())
+        .unwrap_or("chief")
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct ContinuityBriefLane {
+    lane_id: String,
+    section_id: String,
+    label: String,
+    status: String,
+    severity: String,
+    continuity_action: &'static str,
+    handoff_required: bool,
+    priority: i64,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    source_summary: JsonValue,
+}
+
+fn continuity_brief_output_json(
+    now_ms: u64,
+    morning: &JsonValue,
+    escalation: &JsonValue,
+) -> JsonValue {
+    let lanes = continuity_brief_lanes_from_escalation(escalation);
+    let generated_at_ms = morning_brief_integer_at(escalation, &["generated_at_ms"])
+        .or_else(|| morning_brief_integer_at(morning, &["generated_at_ms"]))
+        .unwrap_or(now_ms as i64);
+    let blocked_lane_count = lanes
+        .iter()
+        .filter(|lane| lane.severity == "blocker")
+        .count();
+    let handoff_lane_count = lanes.iter().filter(|lane| lane.handoff_required).count();
+    let monitor_lane_count = lanes.iter().filter(|lane| !lane.handoff_required).count();
+    let has_blockers = blocked_lane_count > 0;
+    let requires_human_review = handoff_lane_count > 0;
+    let continuity_ready = lanes.is_empty()
+        && morning_brief_bool_at(morning, &["ready"]).unwrap_or(false)
+        && morning_brief_bool_at(escalation, &["ready"]).unwrap_or(false);
+    let status = continuity_brief_status(
+        continuity_ready,
+        has_blockers,
+        requires_human_review,
+        monitor_lane_count,
+    );
+    let next_lane = lanes.first();
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(continuity_ready)),
+        ("continuity_ready", JsonValue::Bool(continuity_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("continuity_lane_count", integer(lanes.len() as i64)),
+        ("blocked_lane_count", integer(blocked_lane_count as i64)),
+        ("handoff_lane_count", integer(handoff_lane_count as i64)),
+        ("monitor_lane_count", integer(monitor_lane_count as i64)),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "morning_brief_status",
+                    string(morning_brief_string_at(morning, &["status"]).unwrap_or("unknown")),
+                ),
+                (
+                    "escalation_brief_status",
+                    string(
+                        morning_brief_string_at(escalation, &["status"]).unwrap_or("unknown"),
+                    ),
+                ),
+                ("continuity_lane_count", integer(lanes.len() as i64)),
+                ("blocked_lane_count", integer(blocked_lane_count as i64)),
+                ("handoff_lane_count", integer(handoff_lane_count as i64)),
+                (
+                    "next_tool",
+                    string(continuity_brief_next_tool(next_lane)),
+                ),
+                (
+                    "next_action",
+                    string(continuity_brief_next_action(next_lane)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(continuity_brief_next_owner_lane(next_lane)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            continuity_brief_decision_json(
+                status,
+                has_blockers,
+                requires_human_review,
+                next_lane,
+            ),
+        ),
+        (
+            "continuity_plan",
+            JsonValue::Array(lanes.iter().map(continuity_brief_lane_json).collect()),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn continuity_brief_lanes_from_escalation(escalation: &JsonValue) -> Vec<ContinuityBriefLane> {
+    let mut lanes = match optional_field(escalation, "escalation_queue") {
+        Some(JsonValue::Array(items)) => items
+            .iter()
+            .map(continuity_brief_lane_from_escalation_item)
+            .collect::<Vec<_>>(),
+        _ => Vec::new(),
+    };
+    lanes.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.section_id.cmp(&right.section_id))
+    });
+    lanes
+}
+
+fn continuity_brief_lane_from_escalation_item(item: &JsonValue) -> ContinuityBriefLane {
+    let section_id = morning_brief_string_at(item, &["section_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let severity = morning_brief_string_at(item, &["severity"])
+        .unwrap_or("monitor")
+        .to_string();
+    let priority = morning_brief_integer_at(item, &["priority"])
+        .unwrap_or_else(|| continuity_brief_priority(&severity));
+    let continuity_action = continuity_brief_action(&severity);
+    let handoff_required = matches!(severity.as_str(), "blocker" | "review");
+
+    ContinuityBriefLane {
+        lane_id: format!("continuity:{}:{}", severity, section_id),
+        section_id,
+        label: morning_brief_string_at(item, &["label"])
+            .unwrap_or("Unknown")
+            .to_string(),
+        status: morning_brief_string_at(item, &["status"])
+            .unwrap_or("unknown")
+            .to_string(),
+        severity,
+        continuity_action,
+        handoff_required,
+        priority,
+        recommended_tool: morning_brief_string_at(item, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(item, &["recommended_action"])
+            .unwrap_or("inspect_escalation_brief")
+            .to_string(),
+        owner_lane: morning_brief_string_at(item, &["owner_lane"])
+            .unwrap_or("chief")
+            .to_string(),
+        source_summary: morning_brief_field_clone(item, "source_summary"),
+    }
+}
+
+fn continuity_brief_lane_json(lane: &ContinuityBriefLane) -> JsonValue {
+    object([
+        ("lane_id", string(&lane.lane_id)),
+        ("section_id", string(&lane.section_id)),
+        ("label", string(&lane.label)),
+        ("status", string(&lane.status)),
+        ("severity", string(&lane.severity)),
+        ("continuity_action", string(lane.continuity_action)),
+        ("handoff_required", JsonValue::Bool(lane.handoff_required)),
+        ("priority", integer(lane.priority)),
+        ("recommended_tool", string(&lane.recommended_tool)),
+        ("recommended_action", string(&lane.recommended_action)),
+        ("owner_lane", string(&lane.owner_lane)),
+        ("source_summary", lane.source_summary.clone()),
+    ])
+}
+
+fn continuity_brief_status(
+    continuity_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    monitor_lane_count: usize,
+) -> &'static str {
+    if has_blockers {
+        "hold"
+    } else if requires_human_review {
+        "handoff_required"
+    } else if monitor_lane_count > 0 {
+        "coordinate"
+    } else if continuity_ready {
+        "ready"
+    } else {
+        "monitor"
+    }
+}
+
+fn continuity_brief_priority(severity: &str) -> i64 {
+    match severity {
+        "blocker" => 0,
+        "review" => 1,
+        "attention" => 2,
+        _ => 3,
+    }
+}
+
+fn continuity_brief_action(severity: &str) -> &'static str {
+    match severity {
+        "blocker" => "pause_and_recover",
+        "review" => "handoff_for_review",
+        "attention" => "coordinate_owner_lane",
+        _ => "monitor_owner_lane",
+    }
+}
+
+fn continuity_brief_decision_json(
+    status: &str,
+    has_blockers: bool,
+    requires_human_review: bool,
+    next_lane: Option<&ContinuityBriefLane>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(continuity_brief_decision_label(
+                status,
+                has_blockers,
+                requires_human_review,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(continuity_brief_next_tool(next_lane)),
+        ),
+        (
+            "recommended_action",
+            string(continuity_brief_next_action(next_lane)),
+        ),
+        (
+            "owner_lane",
+            string(continuity_brief_next_owner_lane(next_lane)),
+        ),
+        (
+            "reason",
+            string(
+                next_lane
+                    .map(|lane| lane.section_id.as_str())
+                    .unwrap_or("no_open_continuity_lanes"),
+            ),
+        ),
+    ])
+}
+
+fn continuity_brief_decision_label(
+    status: &str,
+    has_blockers: bool,
+    requires_human_review: bool,
+) -> &'static str {
+    if has_blockers || status == "hold" {
+        "hold_for_recovery"
+    } else if requires_human_review {
+        "handoff"
+    } else if status == "coordinate" {
+        "coordinate"
+    } else {
+        "continue"
+    }
+}
+
+fn continuity_brief_next_tool(next_lane: Option<&ContinuityBriefLane>) -> &str {
+    next_lane
+        .map(|lane| lane.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID)
+}
+
+fn continuity_brief_next_action(next_lane: Option<&ContinuityBriefLane>) -> &str {
+    next_lane
+        .map(|lane| lane.continuity_action)
+        .unwrap_or("monitor_continuity")
+}
+
+fn continuity_brief_next_owner_lane(next_lane: Option<&ContinuityBriefLane>) -> &str {
+    next_lane
+        .map(|lane| lane.owner_lane.as_str())
         .unwrap_or("chief")
 }
 
@@ -84559,7 +84971,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 299);
+        assert_eq!(definitions.len(), 300);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -84616,6 +85028,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -85421,7 +85836,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            291
+            292
         );
         assert_eq!(
             export
@@ -86125,6 +86540,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_MORNING_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
@@ -87202,6 +87618,138 @@ mod tests {
     }
 
     #[test]
+    fn continuity_brief_turns_escalations_into_operator_handoff_plan() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-continuity-brief-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-continuity-brief",
+            SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "continuity_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "continuity_lane_count").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "blocked_lane_count").unwrap()).unwrap() >= 1);
+        assert!(integer_value(field(output, "handoff_lane_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(
+            field(summary, "morning_brief_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(summary, "escalation_brief_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("pause_and_recover"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(
+            field(decision, "recommendation"),
+            Some(&string("hold_for_recovery"))
+        );
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("pause_and_recover"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("incident")));
+
+        let plan = field(output, "continuity_plan").unwrap();
+        assert!(array_len(plan).unwrap() >= 4);
+        let first = array_item(plan, 0).unwrap();
+        assert_eq!(field(first, "severity"), Some(&string("blocker")));
+        assert_eq!(
+            field(first, "continuity_action"),
+            Some(&string("pause_and_recover"))
+        );
+        assert_eq!(
+            field(first, "handoff_required"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(first, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(first, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(first, "source_summary").and_then(|summary| field(summary, "next_tool")),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(13));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -87703,11 +88251,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(299))
+            Some(&integer(300))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(291))
+            Some(&integer(292))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),

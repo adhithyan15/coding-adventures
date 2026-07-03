@@ -43,6 +43,7 @@ Chief of Staff job/session/agent
   -> recovery brief over incident, policy, runtime, state, and validation
      handoff signals
   -> escalation brief over morning, blocker, review, and owner-lane signals
+  -> continuity brief over escalation, recovery, and operator handoff signals
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
   -> primitive coverage gap list and summary reads for backlog planning
@@ -98,8 +99,8 @@ Chief of Staff job/session/agent
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, morning-brief, platform-brief, pending-work, attention-overview,
      remediation-plan, operations-brief, safety-brief, readiness-brief,
-     maintenance-brief, incident-brief, recovery-brief, escalation-brief, desired-state, and
-     pairing-session inventory reads
+     maintenance-brief, incident-brief, recovery-brief, escalation-brief,
+     continuity-brief, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
   -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation/closeout reads
@@ -286,6 +287,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_recovery_brief`
 - `smart_home.get_morning_brief`
 - `smart_home.get_escalation_brief`
+- `smart_home.get_continuity_brief`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
