@@ -2456,15 +2456,7 @@ impl Compiler {
             "expr_cmp" | "relation" => self.emit_binary_or_child(node, BinaryFamily::Comparison),
             "expr_add" | "simple_arith" => self.emit_binary_or_child(node, BinaryFamily::Additive),
             "expr_mul" | "term" => self.emit_binary_or_child(node, BinaryFamily::Multiplicative),
-            "expr_pow" | "factor" => {
-                if pieces(node)
-                    .iter()
-                    .any(|p| matches!(p, Piece::Op(op) if op == "^" || op == "**"))
-                {
-                    return Err(CompileError::Unsupported("exponentiation".into()));
-                }
-                self.emit_single_child_expr(node)
-            }
+            "expr_pow" | "factor" => self.emit_pow(node),
             "expr_atom" | "primary" | "bool_primary" => self.emit_atom(node),
             other => {
                 if let Some(token) = single_token_recursive(node) {
@@ -2765,6 +2757,132 @@ impl Compiler {
             acc = self.emit_binary(&op, acc, rhs)?;
         }
         Ok(acc)
+    }
+
+    /// Lower ALGOL 60's exponentiation operator `↑` (§3.3.4; spelled `^` or `**`
+    /// in our grammar) — LANG-FULL **AL-pow**.
+    ///
+    /// The `factor` / `expr_pow` node is `base [ ^ exp [ ^ exp … ] ]`.  With no
+    /// `^` operator it is a plain pass-through to the single child.  Otherwise we
+    /// fold left-to-right, raising the accumulator to each successive exponent.
+    ///
+    /// Two exponent shapes are in this slice, both reusing IIR the code-gen
+    /// backends already run (no new op):
+    ///
+    /// | exponent            | lowering                          | result type |
+    /// |---------------------|-----------------------------------|-------------|
+    /// | nonneg integer literal `k` | `k−1` repeated `mul`s (`x*x*…`); `x↑0 = 1` | **base's type** — `integer↑k` stays `integer`, `real↑k` stays `real` |
+    /// | `real` (base also `real`) | `f64_pow` (libm `pow`, the same op BASIC's BA-pow proved on all 7 backends) | `real` |
+    ///
+    /// The integer-literal path keeps ALGOL's typing (`2 ↑ 10` = the *integer*
+    /// 1024), unlike BASIC which always widens to `real`.  A non-literal exponent
+    /// on an `integer` base, or a negative literal, is a clean `Unsupported` —
+    /// those need int→real coercion / reciprocals not in this slice.
+    fn emit_pow(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        let seq = pieces(node);
+        let has_pow = seq
+            .iter()
+            .any(|p| matches!(p, Piece::Op(op) if op == "^" || op == "**"));
+        if !has_pow {
+            return self.emit_single_child_expr(node);
+        }
+
+        let mut idx = 0;
+        let first = match seq.first() {
+            Some(Piece::Node(n)) => *n,
+            _ => {
+                return Err(CompileError::Malformed(
+                    "exponentiation missing a base expression".into(),
+                ))
+            }
+        };
+        idx += 1;
+        let mut acc = self.emit_expr(first)?;
+
+        while idx < seq.len() {
+            match seq.get(idx) {
+                Some(Piece::Op(op)) if op == "^" || op == "**" => {}
+                _ => {
+                    return Err(CompileError::Malformed(
+                        "exponentiation expected `^` between operands".into(),
+                    ))
+                }
+            }
+            idx += 1;
+            let exp_node = match seq.get(idx) {
+                Some(Piece::Node(n)) => *n,
+                _ => {
+                    return Err(CompileError::Malformed(
+                        "exponentiation missing an exponent expression".into(),
+                    ))
+                }
+            };
+            idx += 1;
+            acc = self.emit_power_step(acc, exp_node)?;
+        }
+        Ok(acc)
+    }
+
+    /// Raise `base` to a single exponent expression (see [`emit_pow`]).
+    fn emit_power_step(
+        &mut self,
+        base: ExprValue,
+        exp_node: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        // Fast path: a bare nonnegative integer literal exponent unrolls to
+        // repeated multiplication, preserving the base's numeric type.
+        if let Some(k) = literal_nonneg_integer_exponent(exp_node) {
+            return Ok(self.emit_pow_unroll(base, k));
+        }
+
+        // General path: `real ↑ real` via the `f64_pow` IIR op (libm `pow`).
+        let exp = self.emit_expr(exp_node)?;
+        if base.ty == ScalarType::Real && exp.ty == ScalarType::Real {
+            let dest = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "f64_pow",
+                Some(dest.clone()),
+                vec![Operand::Var(base.slot), Operand::Var(exp.slot)],
+                "f64",
+            ));
+            return Ok(ExprValue {
+                slot: dest,
+                ty: ScalarType::Real,
+            });
+        }
+
+        Err(CompileError::Unsupported(format!(
+            "exponentiation with a {} base and a {} exponent — this slice supports a \
+             nonnegative integer-literal exponent (any base) or `real ↑ real` (via pow)",
+            base.ty.name(),
+            exp.ty.name()
+        )))
+    }
+
+    /// Unroll `base ↑ k` (compile-time `k ≥ 0`) into `k − 1` multiplies,
+    /// preserving the base's type.  `base ↑ 0` is the type-appropriate `1`.
+    fn emit_pow_unroll(&mut self, base: ExprValue, k: u32) -> ExprValue {
+        let ty = base.ty;
+        if k == 0 {
+            let one = match ty {
+                ScalarType::Real => self.emit_const(ScalarType::Real, Operand::Float(1.0)),
+                _ => self.emit_const(ScalarType::Integer, Operand::Int(1)),
+            };
+            return ExprValue { slot: one, ty };
+        }
+        let base_slot = base.slot.clone();
+        let mut acc = base.slot;
+        for _ in 1..k {
+            let dest = self.fresh_temp();
+            self.emit(IIRInstr::new(
+                "mul",
+                Some(dest.clone()),
+                vec![Operand::Var(acc), Operand::Var(base_slot.clone())],
+                ty.iir(),
+            ));
+            acc = dest;
+        }
+        ExprValue { slot: acc, ty }
     }
 
     /// Require both operands of a numeric operator to be the **same** numeric
@@ -3374,6 +3492,29 @@ fn ident_list_names(node: &GrammarASTNode) -> Vec<String> {
 fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
     let tokens = recursive_tokens(node);
     (tokens.len() == 1).then_some(tokens[0])
+}
+
+/// Largest exponent AL-pow will unroll into repeated multiplication.  Beyond
+/// this the fixed-instruction expansion would bloat the IIR; a bigger exponent
+/// falls through to the `real ↑ real` `f64_pow` path (or a clean `Unsupported`
+/// for an integer base).  64 mirrors BASIC's BA-pow cap.
+const MAX_POW_UNROLL_EXPONENT: u32 = 64;
+
+/// If `node` is a **bare nonnegative integer literal** (an `INTEGER_LIT` token,
+/// possibly wrapped in single-child expression nodes) no larger than
+/// [`MAX_POW_UNROLL_EXPONENT`], return its value — the exponents AL-pow unrolls.
+/// A `real`, negative, oversized, or non-literal exponent returns `None`.
+fn literal_nonneg_integer_exponent(node: &GrammarASTNode) -> Option<u32> {
+    let token = single_token_recursive(node)?;
+    if token.effective_type_name() != "INTEGER_LIT" {
+        return None;
+    }
+    let value = token.value.parse::<i64>().ok()?;
+    if (0..=MAX_POW_UNROLL_EXPONENT as i64).contains(&value) {
+        Some(value as u32)
+    } else {
+        None
+    }
 }
 
 fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
@@ -4725,6 +4866,62 @@ mod tests {
         let src = "begin real array A[1:2]; real result; \
                    A[1] := 2.5; result := A[1] end";
         assert_eq!(run_f64(src), 2.5);
+    }
+
+    // ── AL-pow: ALGOL 60 `↑` exponentiation (spelled `^`) ───────────────────
+
+    /// `integer ↑ integer-literal` unrolls to repeated integer multiply and
+    /// keeps the `integer` type: `2 ↑ 10` = the integer 1024.
+    #[test]
+    fn integer_power_literal_exponent() {
+        assert_eq!(run_i64("begin integer result; result := 2 ^ 10 end"), 1024);
+    }
+
+    /// The common `x ↑ 2` (square) case.
+    #[test]
+    fn integer_power_squared() {
+        assert_eq!(run_i64("begin integer result; result := 5 ^ 2 end"), 25);
+    }
+
+    /// `x ↑ 0` is `1` (of the base's type) with no multiply emitted.
+    #[test]
+    fn power_of_zero_is_one() {
+        assert_eq!(run_i64("begin integer result; result := 7 ^ 0 end"), 1);
+    }
+
+    /// `x ↑ 1` is `x` itself (zero multiplies).
+    #[test]
+    fn power_of_one_is_identity() {
+        assert_eq!(run_i64("begin integer result; result := 9 ^ 1 end"), 9);
+    }
+
+    /// Exponentiation binds tighter than `*`: `3 * 2 ↑ 3` = `3 * 8` = 24.
+    #[test]
+    fn power_binds_tighter_than_multiply() {
+        assert_eq!(run_i64("begin integer result; result := 3 * 2 ^ 3 end"), 24);
+    }
+
+    /// A `real` base with an integer-literal exponent unrolls with f64 multiply
+    /// and stays `real`: `2.5 ↑ 2` = 6.25.
+    #[test]
+    fn real_base_integer_literal_exponent() {
+        assert_eq!(run_f64("begin real result; result := 2.5 ^ 2 end"), 6.25);
+    }
+
+    /// `real ↑ real` lowers to the `f64_pow` op (libm `pow`): `2.0 ↑ 3.0` = 8.0.
+    #[test]
+    fn real_power_real_via_pow() {
+        assert_eq!(run_f64("begin real result; result := 2.0 ^ 3.0 end"), 8.0);
+    }
+
+    /// An `integer` base with a `real` exponent is a clean `Unsupported` — it
+    /// would need int→real coercion not in this slice.
+    #[test]
+    fn rejects_integer_base_real_exponent() {
+        let err = compile_source(
+            "begin integer result; result := 2 ^ 3.0 end", "test").unwrap_err();
+        assert!(matches!(err, CompileError::Unsupported(_)),
+            "integer↑real should be Unsupported, got {err:?}");
     }
 
     /// A 2-D **`real`** array (AL-multidim-real): the multidim flat-index path
