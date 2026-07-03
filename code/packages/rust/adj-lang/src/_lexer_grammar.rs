@@ -6,9 +6,7 @@
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
 #[allow(unused_imports)]
-use grammar_tools::token_grammar::{
-    ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction,
-};
+use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
 #[allow(unused_imports)]
 use std::collections::HashMap;
 
@@ -184,27 +182,7 @@ pub fn token_grammar() -> TokenGrammar {
                 alias: None,
             },
         ],
-        keywords: vec![
-            r#"prior"#.to_string(),
-            r#"for"#.to_string(),
-            r#"contributes"#.to_string(),
-            r#"from"#.to_string(),
-            r#"to"#.to_string(),
-            r#"interacts"#.to_string(),
-            r#"when"#.to_string(),
-            r#"and"#.to_string(),
-            r#"observe"#.to_string(),
-            r#"uncertain"#.to_string(),
-            r#"source"#.to_string(),
-            r#"trust"#.to_string(),
-            r#"locator"#.to_string(),
-            r#"cites"#.to_string(),
-            r#"consensus"#.to_string(),
-            r#"authoritative"#.to_string(),
-            r#"empirical"#.to_string(),
-            r#"inferred"#.to_string(),
-            r#"unattributed"#.to_string(),
-        ],
+        keywords: vec![r#"prior"#.to_string(), r#"for"#.to_string(), r#"contributes"#.to_string(), r#"from"#.to_string(), r#"to"#.to_string(), r#"interacts"#.to_string(), r#"when"#.to_string(), r#"and"#.to_string(), r#"observe"#.to_string(), r#"uncertain"#.to_string(), r#"source"#.to_string(), r#"trust"#.to_string(), r#"locator"#.to_string(), r#"cites"#.to_string(), r#"consensus"#.to_string(), r#"authoritative"#.to_string(), r#"empirical"#.to_string(), r#"inferred"#.to_string(), r#"unattributed"#.to_string()],
         mode: None,
         skip_definitions: vec![
             TokenDefinition {

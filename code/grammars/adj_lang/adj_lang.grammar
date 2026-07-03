@@ -150,7 +150,7 @@ expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
 
 term_expr = factor { ( STAR | SLASH ) factor } ;
 
-factor    = latex_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+factor    = latex_expr | asciimath_expr | agg | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 
@@ -160,6 +160,17 @@ agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 # the same ExprAst used by ASCII formulas. Unsupported math is a compile error,
 # not a host-language fallback.
 latex_expr = "latex" STRING ;
+
+# Native AsciiMath math input — a SECOND math frontend behind the same neutral
+# `MathExpr` tree the LaTeX frontend produces (the pluggable-frontends thesis,
+# PFE01). A math-tuned model that prefers AsciiMath may write `asciimath "(a+b)/c"`
+# anywhere an ADJ arithmetic expression is accepted; the adj-lang frontend parses
+# the string with the repo's AsciiMath `MathFrontend` and lowers it through the
+# EXACT SAME `MathExpr -> ExprAst` lowering used for `latex "..."`. So the whole
+# arithmetic subset (fractions, products, sums, the named-function surface, ...)
+# is available for free — no new lowering, no new engine op. Unsupported math is
+# a compile error, not a host-language fallback, exactly as for `latex`.
+asciimath_expr = "asciimath" STRING ;
 
 # ----------------------------------------------------------------
 # Constraint sublanguage (ADJ constraints track B1). The model

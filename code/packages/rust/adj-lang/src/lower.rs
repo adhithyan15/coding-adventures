@@ -1768,6 +1768,57 @@ contributes 1000000 from answer == 60 to correct
         assert!(d.ranked[0].posterior > 0.99, "{d:?}");
     }
 
+    // --- AsciiMath: a SECOND math frontend on the same neutral pipeline (PFE01) ---
+    // These prove that `asciimath "..."` reaches the identical `MathExpr -> ExprAst`
+    // lowering the `latex "..."` surface uses: the ONLY difference is which
+    // MathFrontend parses the string. So the whole arithmetic subset computes
+    // through `compile_and_decide` for free, with no new lowering or engine op.
+
+    #[test]
+    fn native_asciimath_expr_computes_inside_let() {
+        // `(3+4)*2` = 14. AsciiMath `*` is the same Mul the LaTeX `\times`/`\cdot`
+        // lowered to, so the engine derives the same scalar.
+        let d = crate::compile_and_decide(
+            "let answer = asciimath \"(3+4)*2\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 14 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_asciimath_fraction_reuses_the_latex_frac_lowering() {
+        // AsciiMath `(3+4)/2` parses to the SAME `MathExpr::Frac` that LaTeX
+        // `\frac{3+4}{2}` produces, so it flows through the identical lowering and
+        // computes 7/2 = 3.5 — the clearest demonstration that the second frontend
+        // is consumed for free by the existing neutral-tree path.
+        let d = crate::compile_and_decide(
+            "let answer = asciimath \"(3+4)/2\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 3.5 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
+    #[test]
+    fn native_asciimath_observed_symbol_binds() {
+        // An observed slot referenced from inside an AsciiMath expression binds
+        // exactly as it does for LaTeX: with x=2 observed, `x*x` = 4.
+        let d = crate::compile_and_decide(
+            "observe x(2)\n\
+             let answer = asciimath \"x*x\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 4 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(d.ranked[0].posterior > 0.99, "{d:?}");
+    }
+
     #[test]
     fn native_latex_relation_lowers_to_constraint() {
         let lowered =
