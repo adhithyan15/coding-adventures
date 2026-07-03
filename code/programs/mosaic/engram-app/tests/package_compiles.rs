@@ -1559,6 +1559,8 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&qml, "signal browserAddTagSelected()");
     assert_contains(&qml, "signal browserRemoveTagSelected()");
     let qt_main = fs::read_to_string(tmp.path().join("qt").join("main.cpp")).expect("qt/main.cpp");
+    assert_contains(&qt_main, "#include <QApplication>");
+    assert_contains(&qt_main, "QApplication app(argc, argv);");
     assert_contains(&qt_main, "#if __has_include(\"MosaicHost.h\")");
     assert_contains(&qt_main, "MosaicHost mosaicHost;");
     assert_contains(&qt_main, "root->setProperty(\"mosaicHost\"");
@@ -1571,6 +1573,14 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(
         &qt_cmake,
         "target_sources(EngramApp PRIVATE MosaicHost.cpp MosaicHost.h)",
+    );
+    assert_contains(
+        &qt_cmake,
+        "find_package(Qt6 6.7 REQUIRED COMPONENTS Quick QmlImportScanner Widgets)",
+    );
+    assert_contains(
+        &qt_cmake,
+        "target_link_libraries(EngramApp PRIVATE Qt6::Quick Qt6::Widgets)",
     );
     assert_contains(
         &qt_cmake,
@@ -2531,6 +2541,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_host, "mosaicPropName");
     assert_contains(&qt_host, "hostResponseFromJson");
     assert_contains(&qt_host, "hostIntent");
+    assert_contains(&qt_host, "QFileDialog");
+    assert_contains(&qt_host, "handleHostIntent");
+    assert_contains(&qt_host, "importAnkiPackage");
+    assert_contains(&qt_host, "exportAnkiPackage");
+    assert_contains(&qt_host, "eg_merge_anki_apkg");
+    assert_contains(&qt_host, "eg_export_anki_apkg");
     assert_contains(&qt_host, "props");
     assert_contains(&qt_host, "ENGRAM_SNAPSHOT_PATH");
     assert_contains(&qt_host, "mosaic-snapshot.v1.json");

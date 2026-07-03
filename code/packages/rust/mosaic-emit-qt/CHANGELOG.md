@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Changed - Qt project shells support host file dialogs
+
+Generated Qt project shells now use `QApplication` and link `Qt6::Widgets` in
+addition to `Qt6::Quick`, allowing optional `MosaicHost.h/.cpp` adapters to
+open native file dialogs for platform-owned host intents without hand-patching
+generated CMake or `main.cpp`.
+
 ### Added - optional MosaicHost bridge for Qt project shells
 
 Generated Qt project shells now compile with or without an installed
