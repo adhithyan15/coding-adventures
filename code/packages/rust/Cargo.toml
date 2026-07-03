@@ -27,6 +27,7 @@ members = [
     "barcode-1d",
     "bitset",
     "cfb",
+    "ppt",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",

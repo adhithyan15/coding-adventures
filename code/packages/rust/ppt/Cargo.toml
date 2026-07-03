@@ -1,0 +1,9 @@
+[package]
+name = "ppt"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-dependency reader for legacy .ppt (PowerPoint 97-2003 binary / [MS-PPT]) files, extracting per-slide text. Layered on the `cfb` compound-file reader."
+license = "MIT"
+
+[dependencies]
+cfb = { path = "../cfb" }
