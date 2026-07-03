@@ -295,6 +295,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_shift_handoff_brief`
 - `smart_home.get_closeout_brief`
 - `smart_home.get_closeout_receipt`
+- `smart_home.get_closeout_audit_trail`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
