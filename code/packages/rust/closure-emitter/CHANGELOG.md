@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.23.0] - 2026-07-02
+
+### Added — CLOC12.159: emit `NewExpression` (`new X(args)`)
+
+`emit_new` prints the new `Expression::NewExpression` node: `new`, the callee,
+then the argument parens (always printed, so a no-argument node is emitted
+canonically as `new X()`). Two seams are handled: (1) a keyword-space
+separates `new` from an identifier/member callee (`newX` would fuse), spent
+only when the callee is not already parenthesised; (2) a callee whose member
+spine bottoms out in a **call** is wrapped (`new (f())()`, `new (a.b().c)()`),
+or the appended `(args)` would bind to the inner call (`new f()()` reparses as
+`(new f())()`). Classified at `PREC_PRIMARY` (the always-argumented form binds
+at member/call strength). 8 new unit tests. No behaviour change for existing
+inputs — the bridge does not yet produce `new` nodes (PR2).
+
+
 ## [0.22.1] - 2026-07-02
 
 ### Added — CLOC12.158 PR3: CodePrinter update-operator conformance port

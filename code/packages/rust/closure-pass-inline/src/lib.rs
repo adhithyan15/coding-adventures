@@ -459,6 +459,9 @@ fn expr_node_count(expr: &Expression) -> usize {
         Expression::CallExpression(ce) => {
             expr_node_count(&ce.callee) + ce.arguments.iter().map(expr_node_count).sum::<usize>()
         }
+        Expression::NewExpression(ne) => {
+            expr_node_count(&ne.callee) + ne.arguments.iter().map(expr_node_count).sum::<usize>()
+        }
         Expression::MemberExpression(m) => {
             expr_node_count(&m.object) + expr_node_count(&m.property)
         }
@@ -766,6 +769,12 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_binding_idents_expr(a, out);
             }
         }
+        Expression::NewExpression(ne) => {
+            collect_binding_idents_expr(&ne.callee, out);
+            for a in &ne.arguments {
+                collect_binding_idents_expr(a, out);
+            }
+        }
         Expression::MemberExpression(m) => {
             collect_binding_idents_member(&m.object, &m.property, m.computed, out)
         }
@@ -1041,6 +1050,16 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
             }
             tally_expr(&ce.callee, cand, t);
             for a in &ce.arguments {
+                tally_expr(a, cand, t);
+            }
+        }
+        // A `new X(args)` is a *construction*, not a function call the inliner
+        // can substitute — it never adds to `inlinable` / `arity_calls`. Its
+        // callee and arguments are still ordinary uses of the candidate, so
+        // recurse (mirrors the CallExpression tail without the call gate).
+        Expression::NewExpression(ne) => {
+            tally_expr(&ne.callee, cand, t);
+            for a in &ne.arguments {
                 tally_expr(a, cand, t);
             }
         }
@@ -1328,6 +1347,14 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
         }
         // CallExpression handled above.
         Expression::CallExpression(_) => unreachable!("CallExpression handled before this match"),
+        // `new X(args)` is not an inlinable function call — recurse into the
+        // callee and arguments so a nested inlinable call is still reached.
+        Expression::NewExpression(ne) => {
+            changed |= inline_in_expr(&mut ne.callee, cand);
+            for a in &mut ne.arguments {
+                changed |= inline_in_expr(a, cand);
+            }
+        }
         Expression::MemberExpression(m) => changed |= inline_in_member(m, cand),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
@@ -1441,6 +1468,12 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         Expression::CallExpression(ce) => {
             substitute(&mut ce.callee, map);
             for a in &mut ce.arguments {
+                substitute(a, map);
+            }
+        }
+        Expression::NewExpression(ne) => {
+            substitute(&mut ne.callee, map);
+            for a in &mut ne.arguments {
                 substitute(a, map);
             }
         }
@@ -1811,6 +1844,12 @@ fn expr_collect_mutated_params(
         Expression::CallExpression(ce) => {
             expr_collect_mutated_params(&ce.callee, params, out);
             for a in &ce.arguments {
+                expr_collect_mutated_params(a, params, out);
+            }
+        }
+        Expression::NewExpression(ne) => {
+            expr_collect_mutated_params(&ne.callee, params, out);
+            for a in &ne.arguments {
                 expr_collect_mutated_params(a, params, out);
             }
         }
@@ -3254,6 +3293,12 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::CallExpression(ce) => {
             rename_in_expr(&mut ce.callee, map);
             for a in &mut ce.arguments {
+                rename_in_expr(a, map);
+            }
+        }
+        Expression::NewExpression(ne) => {
+            rename_in_expr(&mut ne.callee, map);
+            for a in &mut ne.arguments {
                 rename_in_expr(a, map);
             }
         }

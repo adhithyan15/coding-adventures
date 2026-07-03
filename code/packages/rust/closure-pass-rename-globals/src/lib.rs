@@ -667,6 +667,12 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_expr(a, out);
             }
         }
+        Expression::NewExpression(ne) => {
+            collect_all_idents_expr(&ne.callee, out);
+            for a in &ne.arguments {
+                collect_all_idents_expr(a, out);
+            }
+        }
         Expression::MemberExpression(m) => {
             collect_all_idents_member(&m.object, &m.property, m.computed, out)
         }
@@ -966,6 +972,12 @@ fn rename_apply_expr(expr: &mut Expression, map: &HashMap<String, String>) {
         Expression::CallExpression(ce) => {
             rename_apply_expr(&mut ce.callee, map);
             for a in &mut ce.arguments {
+                rename_apply_expr(a, map);
+            }
+        }
+        Expression::NewExpression(ne) => {
+            rename_apply_expr(&mut ne.callee, map);
+            for a in &mut ne.arguments {
                 rename_apply_expr(a, map);
             }
         }

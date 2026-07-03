@@ -61,6 +61,13 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   from `x++` (yield the old value). Node + `closure-emitter` + all pass
   traversals land in one atomic PR; the bridge-enable + conformance port
   follow (gap-159).
+- `NewExpression` (CLOC12.159) — the `new` operator: `new Ctor(a, b)`.
+  `NewExpression { callee: Box<Expression>, arguments: Vec<Expression> }`.
+  Structurally a `CallExpression` but a distinct node: its semantics are object
+  *construction* (a pass must never rewrite `new f()` into `f()`), and its
+  callee excludes a trailing call (`new (f())()` needs the parens). Node +
+  `closure-emitter` + all pass traversals land in one atomic PR; the
+  bridge-enable + conformance port follow (gap-160).
 
 ## What's coming (follow-up PRs)
 
