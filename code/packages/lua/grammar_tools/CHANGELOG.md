@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- F10 declarative lexer mode transitions (see `code/specs/F10-declarative-lexer-modes.md`):
+  `start_mode:` directive and `TokenGrammar.start_mode` field
+  `transitions:` section with `on TOKENS [in MODE] -> ACTION [, ACTION ...]` rules
+  `ModeTransition`/`TransitionAction` data on `TokenGrammar.transitions`
+  `set-mode`/`push`/`pop`/`enable-skip`/`disable-skip` actions, `in MODE` guard, `KEYWORD="value"` guard
+  `MAX_TRANSITIONS` cap (4096) and `start_mode`/transition-target validation
+  Ports the existing Python/Go/Ruby/TypeScript/Rust implementations of this feature to Lua
+
 ## [0.3.0] - 2026-04-04
 
 ### Added
