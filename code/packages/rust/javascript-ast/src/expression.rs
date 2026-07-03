@@ -59,6 +59,7 @@ pub enum Expression {
     TemplateLiteral(TemplateLiteral),
     UpdateExpression(UpdateExpression),
     NewExpression(NewExpression),
+    SequenceExpression(SequenceExpression),
 }
 
 // ---------------------------------------------------------------------
@@ -417,6 +418,40 @@ pub struct NewExpression {
     pub cv: Option<CvId>,
     pub callee: Box<Expression>,
     pub arguments: Vec<Expression>,
+}
+
+/// `a, b, c` — the **comma operator**. Evaluates each expression left to right
+/// and yields the value of the **last** one; the earlier expressions are
+/// evaluated only for their side effects. `expressions` holds the operands in
+/// source order and always has length ≥ 2 (a single expression is just that
+/// expression, not a sequence).
+///
+/// # Precedence — the loosest expression there is
+///
+/// The comma operator binds **looser than assignment** (it is the entry
+/// production `Expression : AssignmentExpression { , AssignmentExpression }`).
+/// A sequence used as a *sub-expression* almost always needs parentheses, or
+/// the surrounding operator captures only one arm:
+///
+/// ```text
+///   x = (a, b)     without parens `x = a, b` parses as `(x = a), b`
+///   f((a, b), c)   without parens `f(a, b, c)` is a THREE-argument call
+///   [(a, b), c]    without parens `[a, b, c]` is a THREE-element array
+///   return (a, b)  a bare `return a, b` still works (statement position)
+/// ```
+///
+/// The two places a sequence needs **no** parens are a statement-position
+/// expression (`a, b, c;`) and a computed-member key (`obj[a, b]` — the `[ ]`
+/// already delimits a full `Expression`). The emitter encodes this by tagging
+/// `SequenceExpression` at the lowest precedence and emitting the four
+/// assignment-position operands (call/`new` arguments, array elements,
+/// assignment RHS) at assignment precedence so a sequence there wraps.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SequenceExpression {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub expressions: Vec<Expression>,
 }
 
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the

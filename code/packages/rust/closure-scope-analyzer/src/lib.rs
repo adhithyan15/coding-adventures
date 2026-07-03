@@ -899,6 +899,11 @@ fn walk_expression(
                 walk_expression(arg, ctx, analysis, pending);
             }
         }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                walk_expression(e, ctx, analysis, pending);
+            }
+        }
         Expression::MemberExpression(me) => {
             walk_member_expression_inner(&me.object, &me.property, me.computed, ctx, analysis, pending);
         }

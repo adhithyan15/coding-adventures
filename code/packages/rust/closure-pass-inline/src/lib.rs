@@ -462,6 +462,7 @@ fn expr_node_count(expr: &Expression) -> usize {
         Expression::NewExpression(ne) => {
             expr_node_count(&ne.callee) + ne.arguments.iter().map(expr_node_count).sum::<usize>()
         }
+        Expression::SequenceExpression(se) => se.expressions.iter().map(expr_node_count).sum(),
         Expression::MemberExpression(m) => {
             expr_node_count(&m.object) + expr_node_count(&m.property)
         }
@@ -775,6 +776,11 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_binding_idents_expr(a, out);
             }
         }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                collect_binding_idents_expr(e, out);
+            }
+        }
         Expression::MemberExpression(m) => {
             collect_binding_idents_member(&m.object, &m.property, m.computed, out)
         }
@@ -1061,6 +1067,11 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
             tally_expr(&ne.callee, cand, t);
             for a in &ne.arguments {
                 tally_expr(a, cand, t);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                tally_expr(e, cand, t);
             }
         }
         Expression::MemberExpression(m) => {
@@ -1355,6 +1366,11 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_expr(a, cand);
             }
         }
+        Expression::SequenceExpression(se) => {
+            for e in &mut se.expressions {
+                changed |= inline_in_expr(e, cand);
+            }
+        }
         Expression::MemberExpression(m) => changed |= inline_in_member(m, cand),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
@@ -1475,6 +1491,11 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             substitute(&mut ne.callee, map);
             for a in &mut ne.arguments {
                 substitute(a, map);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &mut se.expressions {
+                substitute(e, map);
             }
         }
         Expression::MemberExpression(m) => {
@@ -1851,6 +1872,11 @@ fn expr_collect_mutated_params(
             expr_collect_mutated_params(&ne.callee, params, out);
             for a in &ne.arguments {
                 expr_collect_mutated_params(a, params, out);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                expr_collect_mutated_params(e, params, out);
             }
         }
         Expression::MemberExpression(m) => {
@@ -3300,6 +3326,11 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             rename_in_expr(&mut ne.callee, map);
             for a in &mut ne.arguments {
                 rename_in_expr(a, map);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &mut se.expressions {
+                rename_in_expr(e, map);
             }
         }
         Expression::MemberExpression(m) => {

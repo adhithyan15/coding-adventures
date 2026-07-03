@@ -951,6 +951,11 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_expr(a, out);
             }
         }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                collect_all_idents_expr(e, out);
+            }
+        }
         Expression::MemberExpression(m) => {
             collect_all_idents_member(&m.object, &m.property, m.computed, out)
         }
@@ -1241,6 +1246,11 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
             rewrite_uses_expr(&mut ne.callee, map);
             for a in &mut ne.arguments {
                 rewrite_uses_expr(a, map);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &mut se.expressions {
+                rewrite_uses_expr(e, map);
             }
         }
         Expression::MemberExpression(m) => {

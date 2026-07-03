@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.19.0] - 2026-07-02
+
+### Added — CLOC12.160: `Expression::SequenceExpression` (the comma operator)
+
+New `SequenceExpression { cv, expressions: Vec<Expression> }` variant of
+`Expression` for the comma operator `a, b, c` — evaluate each operand left to
+right, yield the last. It is the **loosest** expression (below assignment),
+so a sequence sub-operand almost always needs parentheses. Re-exported from
+the crate root. Atomic node PR (PR1); the bridge conversion (PR2) and the
+CodePrinter conformance port (PR3) follow.
+
+
 ## [0.18.0] - 2026-07-02
 
 ### Added — CLOC12.159: `Expression::NewExpression` (`new X(args)`)

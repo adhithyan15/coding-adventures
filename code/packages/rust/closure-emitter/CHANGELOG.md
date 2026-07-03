@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.24.0] - 2026-07-02
+
+### Added — CLOC12.160: emit `SequenceExpression` (the comma operator)
+
+`emit_sequence` prints the new `Expression::SequenceExpression` node —
+comma-joined operands (`a,b,c`), each at `PREC_ASSIGNMENT`. The sequence
+itself is classified at the new lowest precedence `PREC_SEQUENCE` (0), so a
+parent that emits its child above statement level wraps the whole sequence.
+
+To make that wrapping correct, the four **assignment-position** emit sites now
+emit their child at `PREC_ASSIGNMENT` instead of the parent-precedence-0
+sentinel: call arguments, `new` arguments, array elements, and the assignment
+RHS. A sequence there wraps (`f((a,b),c)`, `[(a,b),c]`, `x=(a,b)`) — never the
+arity-changing `f(a,b,c)` / `[a,b,c]` or the mis-parsed `x=a,b`. This is a
+**no-op for every existing node** (all bind at `PREC_ASSIGNMENT` or higher, so
+nothing new wraps) — the full closurec suite is unchanged. A computed-member
+key keeps parent-precedence 0, so `a[b,c]` prints bare (a sequence is legal
+unparenthesised inside `[ ]`). 8 new unit tests. No bridge output yet (PR2).
+
+
 ## [0.23.1] - 2026-07-02
 
 ### Added — CLOC12.159 PR3: CodePrinter new-operator conformance port

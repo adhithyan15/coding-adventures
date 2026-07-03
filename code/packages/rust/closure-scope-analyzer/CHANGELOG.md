@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.12.3] - 2026-07-02
+
+### Changed — CLOC12.160: handle `Expression::SequenceExpression`
+
+Added a `SequenceExpression` match arm recursing into each operand so this
+crate compiles and traverses the new `Expression::SequenceExpression`
+variant. No behaviour change until the bridge produces sequence nodes
+(CLOC12.160 PR2).
+
+
 ## [0.12.2] - 2026-07-02
 
 ### Changed — CLOC12.159: handle `Expression::NewExpression`

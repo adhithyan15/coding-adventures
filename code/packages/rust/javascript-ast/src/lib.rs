@@ -139,6 +139,7 @@ pub use expression::{
     LogicalOperator, MemberExpression,
     NewExpression,
     NullLiteral, NumericLiteral, ObjectExpression, Property, PropertyKey, PropertyKind,
+    SequenceExpression,
     StringLiteral, TemplateElement, TemplateLiteral, UnaryExpression, UnaryOperator,
     UndefinedLiteral, UpdateExpression, UpdateOperator,
 };
