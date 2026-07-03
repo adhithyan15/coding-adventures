@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.23.1] - 2026-07-02
+
+### Added — CLOC12.159 PR3: CodePrinter new-operator conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_new_test.rs`
+(registered as the `upstream_code_printer_new` `[[test]]` target) porting the
+Closure Compiler `CodePrinterTest` `new`-operator (`new Ctor(args)`) printing
+cases against `emit_new`. 10 active `#[test]`s, **0 `#[ignore]`** — identifier
+and member-chain callees (`new X()`, `new a.b.c()`), argument lists
+(`new X(a,b)`, `new X(a.b)`), the callee-with-call wraps (`new (f())()`,
+`new (a.b().c)()`), the `PREC_PRIMARY` member-object cases (`new X(a).y`,
+`new X().y`), nested `new new X()()`, and a call on a `new` member
+(`new X().m()`). Inputs are hand-constructed typed AST; the bridge conversion
+of `new` (PR2, gap-160) is exercised separately in `javascript-parser`.
+Test-only change — no library behaviour change. This completes the CLOC12.159
+`NewExpression` three-PR arc (node+emit → bridge → conformance).
+
 ## [0.23.0] - 2026-07-02
 
 ### Added — CLOC12.159: emit `NewExpression` (`new X(args)`)

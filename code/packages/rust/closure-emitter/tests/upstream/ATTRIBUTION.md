@@ -75,6 +75,23 @@ under the Apache License, Version 2.0:
       (CLOC12.158 PR2, gap-159) is exercised separately in
       `javascript-parser`.
 
+- `code_printer_new_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the `new`-operator `new Ctor(args)` printing cases — argument lists,
+      precedence, and the callee-with-call wrapping)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_new` + the `PREC_PRIMARY` classification, the
+      `new`-keyword space, and the callee-with-call wrap that landed with
+      `Expression::NewExpression` (CLOC12.159). 10 active `#[test]`s and
+      **0 `#[ignore]`** — the emitter conforms to every covered shape
+      (identifier / member-chain callee, argument lists, member argument,
+      the callee-with-call wraps `new (f())()` / `new (a.b().c)()`, the
+      argumented-`new`-as-member-object cases `new X(a).y` / `new X().y`,
+      nested `new new X()()`, and a call on a `new` member `new X().m()`).
+      Inputs are hand-constructed AST; the bridge conversion of `new`
+      (CLOC12.159 PR2, gap-160) is exercised separately in
+      `javascript-parser`.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

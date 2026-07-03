@@ -127,6 +127,12 @@ test-port convention. Each file isolates one printing area:
   `(++x)**2`), and the token-fusion seams (`a- --b`, `a+ ++b`, `x++ +y`,
   `x-- -y`, plus the non-fusing `x++*y`). 14 active `#[test]`s, no `#[ignore]`.
   Run with `cargo test --test upstream_code_printer_update`.
+- `code_printer_new_test.rs` — `new`-operator (`new Ctor(args)`) printing:
+  identifier / member-chain callees, argument lists, the callee-with-call wraps
+  (`new (f())()`, `new (a.b().c)()`), the `PREC_PRIMARY` member-object cases
+  (`new X(a).y`, `new X().y`), nested `new new X()()`, and a call on a `new`
+  member (`new X().m()`). 10 active `#[test]`s, no `#[ignore]`. Run with
+  `cargo test --test upstream_code_printer_new`.
 
 ## Dependency whitelist
 

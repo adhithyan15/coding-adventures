@@ -1758,5 +1758,14 @@ closurec e2e diff fixture (`tests/diff/simple-new-expression/`) proving
 `log(new Widget(1 + 2))` round-trips the construction while `1 + 2` folds to
 `3` (a WHITESPACE_ONLY fallback would leave it unfolded).
 
-The **PR3 emit conformance port** — the remaining follow-up — ports upstream
-CodePrinter's `new`-operator cases into `closure-emitter/tests/upstream/`.
+The **PR3 emit conformance port** (closure-emitter 0.23.1, CLOC12.159 PR3)
+ports upstream CodePrinter's `new`-operator cases into
+`closure-emitter/tests/upstream/code_printer_new_test.rs` (registered as the
+`upstream_code_printer_new` `[[test]]` target): identifier / member-chain
+callees (`new X()`, `new a.b.c()`), argument lists (`new X(a,b)`, `new X(a.b)`),
+the callee-with-call wraps (`new (f())()`, `new (a.b().c)()`), the
+`PREC_PRIMARY` member-object cases (`new X(a).y`, `new X().y`), nested
+`new new X()()`, and a call on a `new` member (`new X().m()`). 10 active
+`#[test]`s, no `#[ignore]` — the emitter conforms to every covered shape. This
+completes the CLOC12.159 `NewExpression` three-PR arc (node+emit → bridge →
+conformance).
