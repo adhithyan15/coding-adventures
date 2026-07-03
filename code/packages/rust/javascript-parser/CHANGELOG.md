@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.26.0] - 2026-07-03
+
+### Added — CLOC12.161 PR2: bridge tagged templates → `TaggedTemplateExpression` (closes gap-162)
+
+`convert_member_expression`'s suffix walk now converts a `template_literal`
+node that follows a base expression into an
+`Expression::TaggedTemplateExpression` (the accumulated base becomes the `tag`,
+the template the `quasi`) instead of declining to `UnsupportedSyntax` — which
+had dragged the whole file to WHITESPACE_ONLY (gap-162, now closed). The quasi
+reuses the existing `convert_template_literal` (CLOC12.155), so no new parsing
+is introduced; the wrap continues the suffix walk, so `` a`x`.length `` and
+`` a`x`() `` chain naturally. 4 new bridge tests (identifier tag, member-chain
+tag, member-access-on-tagged chaining, and the guard that an *untagged*
+template still bridges to a bare `TemplateLiteral`). Scope note: substitution
+templates `` `a${x}b` `` still do not parse in the grammar (`convert_template_literal`
+handles no-substitution only), so the tagged form is enabled no-substitution —
+matching the template bridge's scope. Handles the `javascript-ast` 0.20.0
+`TaggedTemplateExpression` variant (PR1, #7495).
+
+
 ## [0.25.0] - 2026-07-02
 
 ### Added — CLOC12.160 PR2: bridge the comma operator → `SequenceExpression` (closes gap-161)

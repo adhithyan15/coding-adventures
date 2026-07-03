@@ -1,0 +1,4 @@
+--js
+tests/diff/simple-tagged-template/input/a.js
+--compilation_level
+SIMPLE
