@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.2] - 2026-07-03
+
+### Added — CLOC12.162 PR2: spread end-to-end fixture
+
+New `tests/diff/simple-spread/` fixture (+ `diff_simple_spread.rs` driver)
+proving a spread `...arg` now flows through the full SIMPLE pipeline via the
+javascript-parser 0.27.0 bridge (closes gap-163). The input
+`log(...a, 1 + 2);` minifies to `log(...a,3);`: the spread `...a` round-trips
+(the bridge produced a real `SpreadElement` rather than declining) while the
+sibling `1 + 2` folds to `3` — proving the whole file ran through SIMPLE rather
+than falling back to WHITESPACE_ONLY. Version bumped to 0.234.2 with
+`cli.spec.json` and the `help-markdown` fixture kept in sync.
+
 ## [0.234.1] - 2026-07-03
 
 ### Added — CLOC12.161 PR2: tagged-template end-to-end fixture

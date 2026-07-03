@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.27.0] - 2026-07-03
+
+### Added — CLOC12.162 PR2: bridge spread `...arg` → `SpreadElement` (closes gap-163)
+
+`convert_argument` (call / `new` argument lists) and `convert_array_literal`
+(array elements) now recognise the grammar's `spread_element` node — whose
+children are `[ Token("..."), Node(assignment_expression) ]` — and wrap the
+converted inner expression as `Expression::SpreadElement` instead of returning
+`UnsupportedSyntax`. Previously any `f(...a)`, `new X(...a)`, or `[...a]`
+dragged the whole file to WHITESPACE_ONLY. The parse shape was confirmed by
+dumping the tree: the `...` sits directly under `spread_element`, so
+`has_token(node, "...")` gates exactly the spread case and `node_children`
+(which strips the token) yields the single inner expression. 6 new bridge unit
+tests (call spread, interleaved-call arity, `new` spread, array spread,
+interleaved-array count, and a guard that a plain non-spread argument is *not*
+wrapped). The AST node + emit landed in CLOC12.162 PR1 (#7515); the CodePrinter
+conformance port follows in PR3.
+
 ## [0.26.0] - 2026-07-03
 
 ### Added — CLOC12.161 PR2: bridge tagged templates → `TaggedTemplateExpression` (closes gap-162)
