@@ -149,15 +149,30 @@ two literals still folds), so nothing regresses; the runtime path is what's new.
    (The VM/JIT already execute runtime `str_concat` over registers — e.g. BASIC
    variable concat — so those semantics were already proven; this PR is the
    static-backend substrate.) *(blocks 2–5)*
-2. **E4d-2 — LLVM runtime strings.** Relax the `iir-to-llvm` validator; lower
-   non-literal `str_concat`/`str_slice`/`str_index`/`str_len`/`str_cmp`/`print_str`
-   to the heap-block helpers + guarded loads. Matrix cell adds `Llvm`. *(needs 1)*
+1a. **E4d-foothold — first runtime-string matrix cell.** ✅ **Landed**
+   (`lang-aot` 0.171.0). A BASIC branch-selected string (`INPUT N` picks
+   `"HI"`/`"LO"`, so the value is non-foldable) proven on the **four
+   already-dynamic backends** `Vm`/`Jit`/`Jvm`/`Clr`. **This is the shared cell
+   the backend PRs below extend** — it resolves the ordering constraint that a
+   static-backend runtime-string lowering can't be matrix-proven until a frontend
+   emits a non-foldable string. (Discovered during E4d-2 scoping: iir-to-llvm
+   string support is pure compile-time literal folding, and no frontend emitted a
+   runtime string to the static columns, so those columns had nothing to prove
+   against. The foothold supplies it.)
+2. **E4d-2 — LLVM runtime strings.** Relax the `iir-to-llvm` validator so a
+   `str`-typed **register** (not just `Operand::Str`) is legal; give each str
+   slot a runtime path (when it carries no compile-time `str_values`/`str_lens`
+   metadata) that lowers `str_concat`/`str_slice`/`str_index`/`str_len`/`str_cmp`/
+   `print_str` to the E4d-1 `__twig_str_*` helpers + guarded loads over the
+   `[i64 len][i8]` block (mirror how the file lowers E5 `array_*`). Keep literal
+   folding as the fast path. **Extend the E4d-foothold cell's `backends` with
+   `Llvm`.** *(needs 1, 1a)*
 3. **E4d-3 — WASM runtime strings.** Same for `iir-to-wasm`, inlined over linear
-   memory (mirror E5 `array_*`). Matrix cell adds `Wasm`. *(needs 1)*
+   memory (mirror E5 `array_*`). Extend the foothold cell with `Wasm`. *(needs 1, 1a)*
 4. **E4d-4 — native runtime strings.** `aarch64-backend` + `x86_64-backend` lower
    the ops to `__twig_alloc_bytes` blocks + `bl/call` helpers + `udf/ud2` bounds
-   traps (mirror E5 arrays). Run-verify aarch64 locally + x86_64 on CI. Matrix
-   cell reaches **all 7 backends**. *(needs 1)*
+   traps (mirror E5 arrays). Run-verify aarch64 locally + x86_64 on CI. Extend the
+   foothold cell with `NativeAot` → **all 7 backends**. *(needs 1, 1a)*
 5. **Frontend payoffs** *(each needs 1–4 for the backends it targets)*:
    - **E4d-AL — ALGOL string procedures.** Lift the `string procedures`
      `Unsupported` (algol-iir-compiler:886): a `string procedure` returns a
