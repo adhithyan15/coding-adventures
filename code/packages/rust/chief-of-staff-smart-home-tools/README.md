@@ -45,6 +45,8 @@ Chief of Staff job/session/agent
   -> escalation brief over morning, blocker, review, and owner-lane signals
   -> continuity brief over escalation, recovery, and operator handoff signals
   -> operator readiness brief over continuity lanes and handoff decisions
+  -> shift handoff, closeout, and closeout-receipt briefs over existing
+     operator lanes without owning smart-home state
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
   -> primitive coverage gap list and summary reads for backlog planning
@@ -104,7 +106,7 @@ Chief of Staff job/session/agent
      continuity-brief, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
-  -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation/closeout reads
+  -> supervision remediation and runtime maintenance-window/action/plan/ticket/work-order/guardrail/evidence/review/disposition/action/outcome/readiness/handoff/reconciliation/closeout reads plus closeout-receipt briefs
   -> authorized desired-state reconciliation and supervision ticks
   -> supervised worker inventory and heartbeat schedule reads
   -> device command acceptance
@@ -292,6 +294,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_operator_readiness_brief`
 - `smart_home.get_shift_handoff_brief`
 - `smart_home.get_closeout_brief`
+- `smart_home.get_closeout_receipt`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`

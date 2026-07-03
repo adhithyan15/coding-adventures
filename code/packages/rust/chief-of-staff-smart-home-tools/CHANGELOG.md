@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Added `smart_home.get_closeout_receipt`, a read-only Chief adapter tool that
+  turns the existing D23 closeout brief into one acknowledgement receipt without
+  owning smart-home state.
 - Added `smart_home.get_closeout_brief`, a read-only Chief adapter tool that
   turns existing D23 shift handoff items into one closeout packet without
   owning smart-home state.
