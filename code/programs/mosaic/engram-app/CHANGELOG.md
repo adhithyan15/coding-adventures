@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Wired the generated XAML Engram shell to handle Anki import/export
+  `hostIntent` payloads with WinUI file pickers and the shared `engram-capi`
+  APKG import/export functions, so package files round-trip through the native
+  Rust core instead of stopping at status text.
 - Persisted Engram Mosaic SwiftUI, Qt, XAML, Flutter, and Compose native host
   snapshots through `engram-capi`, matching the web/Electron snapshot behavior
   with an `ENGRAM_SNAPSHOT_PATH` override and a shared home-directory fallback.

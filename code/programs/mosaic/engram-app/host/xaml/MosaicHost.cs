@@ -6,6 +6,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
+using WinRT.Interop;
 
 namespace Mosaic.Generated;
 
@@ -30,6 +36,19 @@ public static class MosaicHost
     static MosaicHost()
     {
         AppDomain.CurrentDomain.ProcessExit += (_, _) => FreeSession();
+    }
+
+    public static async Task<MosaicHostResult> HandleHostIntent(
+        Window owner,
+        EngramApp component,
+        MosaicHostIntent hostIntent)
+    {
+        return hostIntent.Type switch
+        {
+            "importAnki" => await ImportAnkiPackage(owner, component, hostIntent),
+            "exportAnki" => await ExportAnkiPackage(owner, hostIntent),
+            _ => new MosaicHostResult($"Status: host intent captured: {hostIntent.Type}", hostIntent),
+        };
     }
 
     public static MosaicHostResult ApplyProps(EngramApp component)
@@ -241,6 +260,210 @@ public static class MosaicHost
         return builder.ToString();
     }
 
+    private static async Task<MosaicHostResult> ImportAnkiPackage(
+        Window owner,
+        EngramApp component,
+        MosaicHostIntent hostIntent)
+    {
+        var file = await PickAnkiImportFile(owner, hostIntent);
+        if (file is null)
+        {
+            return new MosaicHostResult("Status: Anki import cancelled", hostIntent);
+        }
+
+        var buffer = await FileIO.ReadBufferAsync(file);
+        var data = BufferToBytes(buffer);
+
+        lock (SessionLock)
+        {
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(
+                    Native.eg_merge_anki_apkg(session, data, (UIntPtr)data.LongLength));
+                using var document = JsonDocument.Parse(json);
+                if (IsErrorRoot(document.RootElement))
+                {
+                    return new MosaicHostResult(
+                        $"Status: Anki import failed: {JsonString(document.RootElement, "error", "unknown error")}",
+                        hostIntent);
+                }
+
+                PersistSnapshot(session);
+                var propsJson = Native.TakeString(
+                    Native.eg_engram_app_props(session, CurrentDeckId(), CurrentTimeMillis()));
+                return ApplyPropsFromJson(
+                    component,
+                    propsJson,
+                    $"Status: Imported Anki package {file.Name}");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
+        }
+    }
+
+    private static async Task<MosaicHostResult> ExportAnkiPackage(
+        Window owner,
+        MosaicHostIntent hostIntent)
+    {
+        var file = await PickAnkiExportFile(owner, hostIntent);
+        if (file is null)
+        {
+            return new MosaicHostResult("Status: Anki export cancelled", hostIntent);
+        }
+
+        byte[] data;
+        lock (SessionLock)
+        {
+            if (!TryGetSession(out var session, out var unavailable))
+            {
+                return HostUnavailable(unavailable);
+            }
+
+            try
+            {
+                var json = Native.TakeString(Native.eg_export_anki_apkg(session));
+                using var document = JsonDocument.Parse(json);
+                if (IsErrorRoot(document.RootElement))
+                {
+                    return new MosaicHostResult(
+                        $"Status: Anki export failed: {JsonString(document.RootElement, "error", "unknown error")}",
+                        hostIntent);
+                }
+
+                data = JsonByteArray(document.RootElement, "apkg");
+            }
+            catch (Exception ex) when (IsNativeAvailabilityFailure(ex))
+            {
+                LoadError = Describe(ex);
+                Session = IntPtr.Zero;
+                return HostUnavailable(LoadError);
+            }
+        }
+
+        await FileIO.WriteBytesAsync(file, data);
+        return new MosaicHostResult($"Status: Exported Anki package {file.Name}");
+    }
+
+    private static async Task<StorageFile?> PickAnkiImportFile(Window owner, MosaicHostIntent hostIntent)
+    {
+        var picker = new FileOpenPicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+        };
+        foreach (var extension in HostIntentExtensions(
+            hostIntent,
+            "accept",
+            new List<string> { ".apkg", ".colpkg" }))
+        {
+            picker.FileTypeFilter.Add(extension);
+        }
+        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(owner));
+        return await picker.PickSingleFileAsync();
+    }
+
+    private static async Task<StorageFile?> PickAnkiExportFile(Window owner, MosaicHostIntent hostIntent)
+    {
+        var picker = new FileSavePicker
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+            SuggestedFileName = SuggestedAnkiFileName(hostIntent),
+        };
+        picker.FileTypeChoices.Add(
+            "Anki package",
+            HostIntentExtensions(hostIntent, "extensions", new List<string> { ".apkg" }));
+        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(owner));
+        return await picker.PickSaveFileAsync();
+    }
+
+    private static IList<string> HostIntentExtensions(
+        MosaicHostIntent hostIntent,
+        string property,
+        IList<string> fallback)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(hostIntent.Json);
+            if (!document.RootElement.TryGetProperty(property, out var array)
+                || array.ValueKind != JsonValueKind.Array)
+            {
+                return fallback;
+            }
+
+            var values = new List<string>();
+            foreach (var item in array.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.String)
+                {
+                    continue;
+                }
+                var extension = item.GetString();
+                if (string.IsNullOrWhiteSpace(extension))
+                {
+                    continue;
+                }
+                values.Add(extension.StartsWith('.') ? extension : $".{extension}");
+            }
+            return values.Count == 0 ? fallback : values;
+        }
+        catch (JsonException)
+        {
+            return fallback;
+        }
+    }
+
+    private static string SuggestedAnkiFileName(MosaicHostIntent hostIntent)
+    {
+        var name = "engram-collection";
+        try
+        {
+            using var document = JsonDocument.Parse(hostIntent.Json);
+            name = JsonString(document.RootElement, "deckId", name);
+        }
+        catch (JsonException)
+        {
+        }
+
+        foreach (var ch in Path.GetInvalidFileNameChars())
+        {
+            name = name.Replace(ch, '-');
+        }
+        return string.IsNullOrWhiteSpace(name) ? "engram-collection" : name;
+    }
+
+    private static byte[] BufferToBytes(IBuffer buffer)
+    {
+        var data = new byte[checked((int)buffer.Length)];
+        using var reader = DataReader.FromBuffer(buffer);
+        reader.ReadBytes(data);
+        return data;
+    }
+
+    private static byte[] JsonByteArray(JsonElement root, string property)
+    {
+        if (!root.TryGetProperty(property, out var array) || array.ValueKind != JsonValueKind.Array)
+        {
+            throw new JsonException($"missing byte array property '{property}'");
+        }
+
+        var bytes = new byte[array.GetArrayLength()];
+        var index = 0;
+        foreach (var item in array.EnumerateArray())
+        {
+            bytes[index] = item.GetByte();
+            index += 1;
+        }
+        return bytes;
+    }
+
     private static string CurrentDeckId()
     {
         return Environment.GetEnvironmentVariable("ENGRAM_DECK_ID") ?? "";
@@ -431,6 +654,15 @@ public static class MosaicHost
             [MarshalAs(UnmanagedType.LPUTF8Str)] string eventJson,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string deckId,
             ulong now);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_export_anki_apkg", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_export_anki_apkg(IntPtr session);
+
+        [DllImport(NativeLibrary, EntryPoint = "eg_merge_anki_apkg", CallingConvention = CallingConvention.Cdecl)]
+        internal static extern IntPtr eg_merge_anki_apkg(
+            IntPtr session,
+            [In] byte[] data,
+            UIntPtr dataLen);
 
         internal static string TakeString(IntPtr value)
         {
