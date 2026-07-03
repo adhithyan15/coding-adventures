@@ -290,6 +290,7 @@ Chief of Staff job/session/agent
 - `smart_home.get_escalation_brief`
 - `smart_home.get_continuity_brief`
 - `smart_home.get_operator_readiness_brief`
+- `smart_home.get_shift_handoff_brief`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.set_desired_state`
