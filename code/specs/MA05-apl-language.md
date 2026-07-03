@@ -1,0 +1,204 @@
+# MA05 — APL: the array-programming root, on `array-runtime`
+
+## Status
+
+Active spec. Wave 4 of the historical math-languages roadmap
+([`HML00`](HML00-historical-math-languages-roadmap.md) §7) — the first
+kickoff item after MATLAB/Octave (Wave 2) and Wolfram (Wave 3). This is
+**MA-4a**, the design item (mirroring how [`MA01`](MA01-matlab-language.md)
+was MATLAB's MA-3a): it fixes the language scope and — critically — the two
+places APL's grammar and substrate genuinely differ from every array
+frontend built so far, before any lexer/parser/runtime code lands.
+
+## §1 Why APL, and why it is not "MATLAB with different spelling"
+
+APL (Kenneth Iverson, IBM, notation 1957–62, implemented 1966) is the root
+of the entire array-programming family MATLAB/Octave/Scilab/J/K/Q all
+descend from. It fits [`array-runtime`](MA00-array-runtime.md) for the same
+reason MATLAB does — arrays are the only data type — but two of its defining
+properties have **no precedent** in this repo's existing array or symbolic
+frontends and must be designed up front:
+
+1. **Functions are values, and operators act on them.** In MATLAB/Wolfram, an
+   operator (`+`, `/@`, …) combines *value* expressions. In APL, `/` (reduce),
+   `\` (scan), `¨` (each), and `∘.` (outer product) are **operators**: they
+   take a *function* — a primitive glyph like `+` or a user-defined one — and
+   produce a **derived function**, which is then applied to values. `+/v`
+   means "reduce `v` with `+`"; the `/` never sees `v` directly, it sees the
+   function `+` as its left operand. No existing frontend's grammar has a
+   "function-valued expression" nonterminal — MATLAB/Wolfram grammars only
+   ever combine *value* expressions.
+2. **No operator precedence: every expression is parsed right-to-left.**
+   `2×3+4` is `2×(3+4) = 14`, not `(2×3)+4`. Every dyadic function has
+   *equal, right-associative* precedence — there is no precedence table to
+   climb. This is actually **simpler** to express in a grammar than MATLAB's
+   multi-level precedence cascade (it is one right-recursive rule, not a
+   dozen precedence tiers) — see §3.
+
+Neither property requires a new value substrate: APL's core data model —
+dense, rectangular, numeric arrays — is exactly
+[`array-runtime::Array`](MA00-array-runtime.md). The gap is entirely in the
+**grammar shape** (§3) and, as §2 found, in **array-runtime's operation set**,
+which today has no generalized reduce/scan/outer-product.
+
+## §2 Substrate gap: `array-runtime` needs generalized reduce/scan/outer-product first
+
+Checked against the current `array-runtime` public API
+(`accel::Kernel`, `exec::execute`/`execute_sum`, `ops::{matmul, transpose}`):
+today's substrate has `Kernel::{Elementwise(BinOp), MatMul}` plus one
+**fixed** whole-array `execute_sum`. APL's three defining primitives need
+operations that do not exist yet:
+
+- **Reduce** (`F/v`) — fold `v` along an axis with an *arbitrary* dyadic
+  function `F` (not just `+`), producing a rank-reduced result. `execute_sum`
+  is the `F = +`, whole-array special case of this.
+- **Scan** (`F\v`) — the same fold, but keeping every intermediate result
+  (a running-total analogue), same rank as `v`.
+- **Outer product** (`v ∘.F w`) — apply `F` to every pair `(vᵢ, wⱼ)`,
+  producing a result of rank `rank(v) + rank(w)`. `Kernel::MatMul` is the
+  `F = ×` **and-then-sum-reduce** special case (matrix product *is*
+  `+/¨ v∘.×w` in APL terms) — outer product alone (no summing) is new.
+
+This is a genuine **substrate** extension, not an APL-specific hack, and
+belongs in `array-runtime` (or `array-runtime` + `matrix-ir`/`matrix-runtime`
+if the reduction should also be GPU-dispatchable), so J and K/Q — which have
+the *same* three primitives — inherit it for free, exactly how MATLAB/Octave
+share one frontend today. This is item **AR-2** in the rollout (§6),
+sequenced *before* the APL frontend itself.
+
+`BinOp` (the existing elementwise-op enum) already enumerates the algebraic
+operations reduce/scan/outer-product need to be generic over
+(`Add`/`Sub`/`Mul`/`Div`, extendable to `Max`/`Min`/comparison ops as APL
+requires them) — `AR-2` parameterizes the new kernels over `BinOp`, it does
+not invent a second operation-naming scheme.
+
+## §3 Grammar design: two mutually-recursive nonterminals, one precedence tier
+
+Per [`feedback_no_handwritten_lexers_parsers`], APL still wraps the shared
+`GrammarLexer`/`GrammarParser` — the grammar-tools format is expressive
+enough for both of APL's novel properties without a hand-written parser:
+
+- **Two nonterminals, not one.** `value_expr` (arrays/scalars) and
+  `function_expr` (primitive glyphs, derived functions, user-defined dfns).
+  An **operator** production takes a `function_expr` and produces a
+  `function_expr` (`reduce = function_expr "/"`, `outer = function_expr
+  "∘." function_expr`). An **application** production takes a
+  `function_expr` and one or two `value_expr`s (monadic: `function_expr
+  value_expr`; dyadic: `value_expr function_expr value_expr`) and produces a
+  `value_expr`. This is an ordinary two-nonterminal CFG — no parser
+  generator changes needed, just a grammar shaped differently from
+  MATLAB/Wolfram's single-nonterminal expression grammars.
+- **Right-to-left, one precedence tier.** A dyadic chain is right-recursive
+  with **no** precedence levels between different glyphs: `value_expr =
+  term | term function_expr value_expr`. This is simpler than MATLAB's
+  cascade (§ in `MA01`), not harder — the entire "operator precedence"
+  problem MATLAB/Wolfram both need is *absent* in APL by design.
+- **Monadic/dyadic dispatch is a runtime concern, not a lexer concern.**
+  Unlike MATLAB's `'` (transpose-vs-string, resolved by the *lexer* from the
+  preceding token), whether `+` means "conjugate" (monadic) or "add"
+  (dyadic) is resolved by the **parser production actually taken** (which of
+  the two application rules matched) — no lexer-level context hook is
+  needed, unlike [`MA01`](MA01-matlab-language.md) §3's `'` problem.
+- **Glyph tokenization is easy.** Every APL primitive is a single dedicated
+  Unicode code point (the APL block, e.g. `⍴ ⍳ ⌈ ⌊ ∘ ¨ ⌿ ⍀ ←`) — no ASCII
+  character is overloaded the way MATLAB's `'` or `.` are, so each glyph is
+  an unambiguous single-token regex rule (`RHO = "⍴"`, `IOTA = "⍳"`, …). This
+  repo's frontend takes **native UTF-8 glyph source** (no keyboard-mapping
+  layer — that concern is a historical editor/input-method problem, out of
+  scope for a source-string-in frontend).
+
+## §4 Language scope (the historical core)
+
+In scope for the first cut — a faithful, textbook-session subset, following
+the same "honesty about subsets" convention as every other language here
+([`MA01`](MA01-matlab-language.md), [`MA04`](MA04-wolfram-language.md)):
+
+- **Arrays only.** Dense, rectangular, numeric. A scalar is a rank-0 array.
+  Built on `array-runtime::Array` — same value model as MATLAB, no new
+  substrate needed for the *data*.
+- **Primitive functions** (glyph, monadic / dyadic meaning):
+  `+` (conjugate / add), `-` (negate / subtract), `×` (sign / multiply),
+  `÷` (reciprocal / divide), `⌈`/`⌊` (ceiling·floor / max·min), `⍴` (shape /
+  reshape), `⍳` (index generator / index-of), `,` (ravel / catenate),
+  `=` `≠` `<` `≤` `≥` `>` (dyadic comparison, boolean 0/1 result).
+- **Operators**: `/` (reduce), `\` (scan), `∘.` (outer product) — the three
+  primitives motivating AR-2 (§2).
+- **Assignment** `←`, right-to-left evaluation with no precedence (§3),
+  parenthesized grouping `( )`.
+- **Comments** `⍝` (line comment, to end of line).
+
+**Deferred (post-MA-4):** nested/ragged arrays, mixed numeric+character
+arrays in one array, user-defined functions/dfns (`∇`, `{…}`), axis-specific
+reduce/scan (`⌿`/`⍀`), the `¨` (each) operator, `⍉` transpose with axis
+permutation, complex numbers, and the wider IBM/Dyalog builtin library. Each
+is a follow-on item exactly as MATLAB deferred cells/structs/`function`/
+`switch` at its own MA-3 stage.
+
+## §5 Reuse strategy
+
+- **Lexer/parser**: the `grammar-tools` frontend, exactly as MATLAB/Wolfram —
+  `code/grammars/apl/apl.tokens` + `apl.grammar` compile to committed
+  `_grammar.rs` in `apl-lexer`/`apl-parser` via the grammar-tools CLI. Two
+  nonterminals (§3) live entirely inside the `.grammar` file; no lexer or
+  parser *generator* change is needed.
+- **Runtime**: `apl-runtime` walks the parse tree and computes over
+  `array-runtime::Array`, lowering `+/`/`+\`/`∘.×` through the new AR-2
+  kernels and everything else through the existing `Elementwise`/`MatMul`
+  kernels — the value model and GPU dispatch are shared, not reinvented,
+  exactly as MATLAB's `matlab-runtime` today.
+- **REPL & binary**: `apl-repl` + an `apl` binary, mirroring `matlab-repl`.
+- Per [`HML01`](HML01-math-to-semantic-ir.md) §2's amended per-language
+  pattern, `apl-to-semantic-ir` is built **alongside** the runtime in this
+  same wave, not bolted on afterward — APL is the first language to follow
+  that standing convention from day one, lowering onto
+  [`SIR22`](SIR22-array-matrix-semantic-ir.md)'s array/matrix domain (reduce/
+  scan/outer-product will need their own SIR22 `Expr` variants, added when
+  `apl-to-semantic-ir` lands — tracked as a SIR22 follow-up, not scope creep
+  into this spec).
+
+## §6 Crate layout and rollout (one item = one PR)
+
+```
+array-runtime/    (existing)         ← AR-2 adds generalized reduce/scan/
+                                        outer-product kernels
+apl-lexer/    src/{lib.rs, _grammar.rs}   ← MA-4c (+ code/grammars/apl/apl.tokens)
+apl-parser/   src/{lib.rs, _grammar.rs}   ← MA-4d (+ code/grammars/apl/apl.grammar)
+apl-runtime/  src/{lib.rs, eval.rs, value.rs, builtins.rs}   ← MA-4e
+apl-repl/     src/{lib.rs, main.rs}       ← MA-4e (the `apl` binary)
+```
+
+- **MA-4a — this spec.** Language scope, the function/operator grammar
+  design (§3), and the substrate gap (§2).
+- **AR-2 — `array-runtime`: generalized reduce/scan/outer-product kernels**,
+  parameterized over the existing `BinOp` enum. Prerequisite for MA-4e;
+  benefits every future array-family language (J, K/Q) for free.
+- **MA-4b — `apl.tokens`/`apl.grammar`**: the two-nonterminal grammar (§3),
+  validated with `grammar-tools validate`.
+- **MA-4c — `apl-lexer`.** Single-codepoint glyph tokens, `⍝` line comments.
+- **MA-4d — `apl-parser`.** The `value_expr`/`function_expr` grammar,
+  monadic/dyadic application, reduce/scan/outer-product operator
+  productions.
+- **MA-4e — `apl-runtime` + `apl-repl` + the `apl` binary.** A working REPL:
+  right-to-left evaluation, the primitives in §4, `⍴`/`⍳` array
+  construction, reduce/scan/outer-product lowered onto AR-2.
+- **MA-4f — `apl-to-semantic-ir`**, per [`HML01`](HML01-math-to-semantic-ir.md)
+  §2 — built in this same wave rather than as a later retrofit.
+- **Next**: J (shares APL's function/operator grammar shape almost
+  wholesale, ASCII-spelled instead of glyph-spelled — the R/S-style "second
+  frontend, same shared grammar shape" reuse), then K/Q per
+  [`HML00`](HML00-historical-math-languages-roadmap.md) Wave 6.
+
+## §7 References
+
+Internal: [`HML00`](HML00-historical-math-languages-roadmap.md) (§5 survey,
+§7 Wave 4), [`HML01`](HML01-math-to-semantic-ir.md) (the `-to-semantic-ir`
+standing convention this spec adopts from the start),
+[`MA00`](MA00-array-runtime.md) (the substrate; §2's gap analysis is against
+this spec's current API), [`MA01`](MA01-matlab-language.md) and
+[`MA04`](MA04-wolfram-language.md) (the frontend-on-shared-substrate
+playbook this mirrors, and the "hard problem gets its own spec item"
+precedent for §3).
+External: Iverson, *A Programming Language* (1962) — the notation; IBM APL\360
+(1966) — the first implementation; Dyalog APL documentation — the modern
+reference for glyph semantics used to check this spec's scope against a
+living implementation.
