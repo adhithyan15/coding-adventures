@@ -349,6 +349,7 @@ members = [
     "opc",
     "spreadsheetml",
     "wordprocessingml",
+    "presentationml",
     "arm1-gatelevel",
     "arm1-simulator",
     "immutable-list",
