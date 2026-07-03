@@ -1134,14 +1134,20 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
             // `x^n` lowers to a single native power node (`ArithOp::Pow` →
             // `ComputeOp::Pow`), not the old parse-time `x*x*…` expansion — so
             // there is no integer-exponent cap and the derivation tree shows one
-            // `^` step. The exponent must still be a non-negative integer literal
-            // (a symbolic exponent like `x^y` is a later slice); the engine
-            // computes it and enforces its own dimensional/overflow rules.
-            let n = latex_power_exponent(exponent, source)?;
+            // `^` step. BOTH the base AND the exponent lower as general expressions,
+            // so the exponent may be a literal (`x^{2}`), a SYMBOLIC/observed value
+            // (`x^y` with `y` observed → `x` raised to `y`), or itself computed
+            // (`x^{a+b}`). The engine's `ComputeOp::Pow` evaluates the exponent at
+            // run time and enforces its own rules — the exponent must be
+            // dimensionless (you cannot raise to a `3 dollars` power) and finite,
+            // and a non-integer exponent on a dimensioned base is rejected (no
+            // fractional dimension) — so a symbolic exponent computes for the
+            // dimensionless (Scalar) case and is cleanly rejected otherwise, with no
+            // adapter-side literal restriction.
             Ok(ExprAst::Bin(
                 ArithOp::Pow,
                 Box::new(latex_math_to_expr_ast(base, source)?),
-                Box::new(ExprAst::Lit(n)),
+                Box::new(latex_math_to_expr_ast(exponent, source)?),
             ))
         }
         // A square root `\sqrt{x}` (a `Root` with no explicit degree) lowers to
@@ -1606,35 +1612,6 @@ fn number_to_lit(number: &Number, source: &str) -> Result<ExprAst, AdapterError>
     Ok(ExprAst::Lit(value))
 }
 
-/// Validate a LaTeX power exponent and return it as a whole-number `f64` (for a
-/// `ExprAst::Lit`). The exponent must be a **non-negative integer literal** — a
-/// symbolic exponent (`x^y`) is not yet supported on the `latex "…"` surface. No
-/// upper bound is imposed now that the base lowers to a single native
-/// `ComputeOp::Pow` node (rather than an `x*x*…` expansion whose tree size grew
-/// with the exponent); the engine computes the power and applies its own
-/// dimensional and overflow (`NonFinite`) guards.
-fn latex_power_exponent(expr: &MathExpr, source: &str) -> Result<f64, AdapterError> {
-    let MathExpr::Number(n) = expr else {
-        return Err(AdapterError::UnsupportedLatexMath {
-            source: source.to_string(),
-            detail: "only non-negative integer exponents are supported in ADJ arithmetic".into(),
-        });
-    };
-    let Some(v) = n.to_f64() else {
-        return Err(AdapterError::UnsupportedLatexMath {
-            source: source.to_string(),
-            detail: format!("exponent is outside f64 range: {}", n.as_written()),
-        });
-    };
-    if !(v.is_finite() && v.fract() == 0.0 && v >= 0.0) {
-        return Err(AdapterError::UnsupportedLatexMath {
-            source: source.to_string(),
-            detail: "only non-negative integer exponents are supported".into(),
-        });
-    }
-    Ok(v)
-}
-
 /// Peel a variadic named-function argument (`\min(a, b)`, `\max(a, b, c)`, …) into
 /// its operand list. The latex frontend parses the parenthesised comma-list as a
 /// `Sequence([a, b, …])`, usually wrapped in a `Group`/`Fenced` (the `(…)`), so we
@@ -1693,9 +1670,11 @@ fn latex_nary_fold(
 /// whole-number `f64`, so the caller can build the reciprocal exponent `1/n`. The
 /// degree must be a **positive integer literal** (`\sqrt[3]{…}`, `\sqrt[4]{…}`): a
 /// symbolic degree (`\sqrt[k]{…}`) has no numeric value, and a zero or negative
-/// degree has no root meaning (a `1/0` exponent is undefined). We reuse the same
-/// finite/integer discipline as `latex_power_exponent`, but exclude `0` (the
-/// exponent's denominator) — `n ≥ 1`, so `\sqrt[1]{x}` degenerates cleanly to
+/// degree has no root meaning (a `1/0` exponent is undefined). The degree must be
+/// a finite positive integer literal (unlike the general `x^y` power exponent,
+/// which may be symbolic/computed, a root DEGREE must be a concrete integer to form
+/// the reciprocal `1/n`), excluding `0` (the exponent's denominator) — `n ≥ 1`, so
+/// `\sqrt[1]{x}` degenerates cleanly to
 /// `x^1 = x`, and `\sqrt[3]{27}` becomes `27^(1/3) = 3`.
 fn latex_root_degree(expr: &MathExpr, source: &str) -> Result<f64, AdapterError> {
     let MathExpr::Number(n) = expr else {

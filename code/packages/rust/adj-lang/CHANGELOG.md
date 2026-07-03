@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.42.0] - 2026-07-02 — symbolic / computed power exponents (`x^y`, `x^{a+b}`) in `latex "…"`
+
+### Changed
+
+- The `latex "x^n"` power exponent may now be **symbolic or computed**, not just a non-negative integer
+  literal: `x^y` (with `y` observed) computes `x` raised to `y`, and `x^{a+b}` raises to a computed
+  exponent. Both the base and the exponent lower as general expressions to a single native
+  `ComputeOp::Pow`; the engine evaluates the exponent at run time and enforces its own rules — the
+  exponent must be dimensionless and finite, and a non-integer exponent on a dimensioned base is
+  rejected (no fractional dimension) — so a symbolic exponent computes for the dimensionless case and
+  is cleanly rejected otherwise. Numeric exponents (`x^{2}`, `x^{10}`) are unchanged. (Root DEGREES
+  `\sqrt[n]{x}` still require a concrete positive integer, since a symbolic degree cannot form the
+  reciprocal `1/n`.) Removed the now-unused `latex_power_exponent` literal-only validator.
+
 ## [0.41.0] - 2026-07-02 — finite `\sum` / `\prod` unroll in `latex "…"`
 
 ### Added
