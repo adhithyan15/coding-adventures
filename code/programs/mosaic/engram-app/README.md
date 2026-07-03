@@ -73,7 +73,10 @@ editing, and save/delete/cancel controls.
 - The generated Compose Desktop shell has an optional reflection-based
   `MosaicHost` hook. Engram's `host/compose/MosaicHost.kt` implements it with
   `engram-capi` through JNA, hydrating Compose slot props and routing generated
-  Mosaic event envelopes back into the same core.
+  Mosaic event envelopes back into the same core. It also handles Anki
+  import/export host intents with desktop file choosers, merging `.apkg` /
+  `.colpkg` packages and saving current collection state through the native C
+  ABI.
 - The generated Flutter shell has an optional `MosaicHost` hook. Engram's
   `host/flutter/mosaic_host.dart` implements it with Dart FFI and
   `engram-capi`, hydrating Flutter slot props and routing generated Mosaic

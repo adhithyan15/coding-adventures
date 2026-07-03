@@ -11,6 +11,13 @@ This project follows [Semantic Versioning](https://semver.org/).
   `mosaicEnvelope`, giving Compose hosts the same target-neutral event map used
   by the HTML, Electron, SwiftUI, XAML, Qt, and Flutter shells.
 
+### Fixed
+
+- Generated optional boolean slot predicates now compile as nullable-safe Kotlin
+  conditions, and large root containers split their direct children into private
+  composables so generated Compose Desktop projects avoid JVM method-size
+  limits.
+
 ## [0.1.0] - 2026-06-02
 
 ### Added
