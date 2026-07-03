@@ -626,6 +626,11 @@ latest-entry metadata, committed/deferred entry counts, deterministic summary
 steps, nested `embedRuntimeActivationReceiptJournal`, and summary capability
 metadata so WebAssembly-backed product shells can render compact activation
 receipt journal status without re-walking journal entries.
+Embed runtime activation receipt journal summary handoffs add stable handoff
+IDs, publish/defer dispositions, handoff actions, deterministic handoff steps,
+nested `embedRuntimeActivationReceiptJournalSummary`, and handoff capability
+metadata so WebAssembly-backed product shells can render or defer compact
+activation receipt journal summaries without recomputing summary payloads.
 Persisted editor-state snapshots resolve saved selection and active-command IDs
 against the current deck, repairing stale UI state after source edits. Host
 surfaces turn those snapshots into stable source, diagnostics, analysis, table,
