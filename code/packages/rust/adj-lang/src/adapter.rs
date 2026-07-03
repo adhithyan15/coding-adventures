@@ -147,6 +147,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "let_decl" => adapt_let(child),
         "symbol_decl" => adapt_symbol(child),
         "constrain_latex_decl" => adapt_constrain_latex(child),
+        "constrain_asciimath_decl" => adapt_constrain_asciimath(child),
         "constrain_decl" => adapt_constrain(child),
         "solve_decl" => adapt_solve(child),
         "check_decl" => Ok(Statement::Check),
@@ -157,7 +158,7 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "use_decl" => adapt_use(child),
         "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_latex_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl / import_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_latex_decl / constrain_asciimath_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl / import_decl",
             actual: other.to_string(),
         }),
     }
@@ -542,6 +543,38 @@ fn adapt_constrain_latex(node: &GrammarASTNode) -> Result<Statement, AdapterErro
         return Err(AdapterError::UnsupportedLatexMath {
             source,
             detail: "expected a LaTeX relation such as x^2 = 4".into(),
+        });
+    };
+    let op = lower_latex_relop(*op, &source)?;
+    Ok(Statement::Constrain {
+        lhs: latex_math_to_expr_ast(lhs, &source)?,
+        op,
+        rhs: latex_math_to_expr_ast(rhs, &source)?,
+    })
+}
+
+/// Lower `constrain asciimath "x^2 = 4"` to a `Statement::Constrain`.
+///
+/// This is the exact mirror of [`adapt_constrain_latex`]: the ONLY difference is
+/// which frontend parses the string. The AsciiMath frontend yields the SAME
+/// neutral `MathExpr::Rel(op, lhs, rhs)`, so the relation operator lowers through
+/// the same `lower_latex_relop` and both sides through the same
+/// `latex_math_to_expr_ast` used by every other math surface. No new relation
+/// semantics, no new tree-walker — one constraint code path, one frontend swap.
+fn adapt_constrain_asciimath(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // constrain_asciimath_decl = "constrain" asciimath_relation
+    // asciimath_relation = "asciimath" STRING
+    let relation =
+        first_named_child(node, "asciimath_relation").ok_or(AdapterError::MissingChild {
+            rule: "constrain_asciimath_decl".into(),
+            position: "asciimath relation",
+        })?;
+    let source = latex_string_from_node(relation, "asciimath_relation")?;
+    let math = parse_asciimath_math(&source)?;
+    let MathExpr::Rel(op, lhs, rhs) = &math else {
+        return Err(AdapterError::UnsupportedLatexMath {
+            source,
+            detail: "expected an AsciiMath relation such as x^2 = 4".into(),
         });
     };
     let op = lower_latex_relop(*op, &source)?;

@@ -32,6 +32,7 @@ statement   = prior_decl
             | let_decl
             | symbol_decl
             | constrain_latex_decl
+            | constrain_asciimath_decl
             | constrain_decl
             | solve_decl
             | check_decl
@@ -208,9 +209,21 @@ symbol_decl    = "symbol" IDENT COLON term ;
 
 constrain_latex_decl = "constrain" latex_relation ;
 
+# The AsciiMath counterpart of `constrain_latex_decl`. A model that writes its
+# equations in AsciiMath (`x^2 = 4`, `a <= b`) may state the constraint in that
+# surface: `constrain asciimath "x^2 = 4"`. The adapter parses the string with
+# the SAME AsciiMath `MathFrontend` already used for `asciimath "..."` factors,
+# yielding the neutral `MathExpr::Rel(op, lhs, rhs)`, and lowers both sides
+# through the EXACT `latex_math_to_expr_ast` lowering `constrain latex` uses — so
+# the two constraint surfaces are one code path with one frontend swapped, no new
+# tree-walker and no new relation semantics.
+constrain_asciimath_decl = "constrain" asciimath_relation ;
+
 constrain_decl = "constrain" expr relop expr ;
 
 latex_relation = "latex" STRING ;
+
+asciimath_relation = "asciimath" STRING ;
 
 relop          = GE | LE | GT | LT | EQEQ | EQUALS | NE ;
 
