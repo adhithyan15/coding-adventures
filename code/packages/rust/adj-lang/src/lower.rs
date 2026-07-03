@@ -2428,6 +2428,36 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_accent_wrapped_operands_are_transparent() {
+        // `\hat{x}` / `\bar{x}` / … — an accent is a notational decoration, not an operation. A
+        // model that writes a statistics formula (`\hat{p}(1-\hat{p})`, `\bar{x} - \bar{y}`) means
+        // the accented symbol to carry its operand's value; the adapter lowers `Accent` transparently
+        // to its inner body. `\hat{a}(b - \hat{a})` with a=3, b=10 → 3*(10-3) = 21 (and the SAME `a`
+        // appears accented twice, confirming the decoration is stripped everywhere).
+        let h = crate::compile_and_decide(
+            "observe a(3)\n\
+             observe b(10)\n\
+             let answer = latex \"$\\hat{a}(b - \\hat{a})$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 21 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(h.ranked[0].posterior > 0.99, "{h:?}");
+        // A different accent (`\bar`) over each operand of a sum: bar(x) + bar(y) with x=4, y=6 → 10.
+        let b = crate::compile_and_decide(
+            "observe x(4)\n\
+             observe y(6)\n\
+             let answer = latex \"$\\bar{x} + \\bar{y}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 10 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(b.ranked[0].posterior > 0.99, "{b:?}");
+    }
+
+    #[test]
     fn native_latex_symbolic_root_degree_is_rejected() {
         // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
         // exponent `1/k` cannot be formed. It must be rejected, not silently

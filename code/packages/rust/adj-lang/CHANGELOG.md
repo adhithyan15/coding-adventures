@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.38.0] - 2026-07-02 — accent-wrapped operands (`\hat{x}`, `\bar{x}`, …) compute transparently in `latex "…"`
+
+### Added
+
+- `latex "\hat{x}"`, `\bar{x}`, `\vec{x}`, `\tilde{x}` and any other **accent** over an operand now
+  compute, lowering **transparently to the accented operand**. In arithmetic an accent is a
+  notational decoration, not an operation: a model that writes a statistics formula like
+  `\hat{p}(1 - \hat{p})` (estimated-variance numerator) or `\bar{x} - \bar{y}` (difference of means)
+  means the accented symbol to carry its operand's value — the hat/bar just marks it as an
+  estimate/mean in prose. The adapter recognises `MathExpr::Accent { body, .. }` and lowers to
+  `latex_math_to_expr_ast(body, …)`, so `\hat{a}(b - \hat{a})` computes as `a·(b − a)` with dimension
+  and value flowing through the decoration unchanged (previously an `UnsupportedLatexMath` error).
+  This is the first **non-function** LaTeX construct consumed after the named-operator surface
+  saturated. Pure **adapter** recognition: no engine, AST, or lowering change. +1 e2e unit test
+  (`\hat{a}(b − \hat{a})` = 21; `\bar{x} + \bar{y}` = 10).
+
 ## [0.37.0] - 2026-07-02 — `\operatorname{sin/cos/…}` trig-family word spellings in `latex "…"`
 
 ### Added

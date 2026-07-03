@@ -1211,6 +1211,15 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
                 Box::new(latex_math_to_expr_ast(arg, source)?),
             ))
         }
+        // `\hat{x}` / `\bar{x}` / `\vec{x}` / `\tilde{x}` / … — an accent over an operand. In
+        // arithmetic an accent is a NOTATIONAL decoration, not an operation: a model that writes a
+        // statistics formula like `\hat{p}(1 - \hat{p})` (estimated-variance numerator) or
+        // `\bar{x} - \bar{y}` (difference of means) means the accented symbol to carry the value of
+        // its operand — the hat/bar just marks it as an estimate/mean in prose. So we lower an
+        // `Accent` TRANSPARENTLY to its inner body: `\hat{a}(b - \hat{a})` computes as `a·(b − a)`,
+        // dimension and value flowing through the decoration unchanged. Pure adapter recognition:
+        // no engine, AST, or lowering change — the accent simply disappears at adapt time.
+        MathExpr::Accent { body, .. } => latex_math_to_expr_ast(body, source),
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),
