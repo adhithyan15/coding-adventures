@@ -10,6 +10,10 @@
   Real-world producers — Microsoft Office writing OOXML (`.xlsx`/`.docx`/`.pptx`), `zlib`, `gzip`, Python `zipfile`, Java `jar` — routinely use these symbols, so any stream from them previously failed with `inflate: invalid length symbol 285` or `inflate: invalid distance symbol 24`. The decoder was only ever complete for our own 4 KB-window output.
 - Added `inflate_full_window_real_stream` regression test built from a Python-`zlib` raw DEFLATE fixture that deliberately exercises symbol 285 (a 600-byte run) and far distance codes (a repeat ~6000 bytes back).
 
+### Security
+
+- `inflate` now caps decompressed output at 256 MB (`MAX_INFLATE_OUTPUT`) across all three block types, guarding against decompression bombs (tiny hostile inputs that expand to gigabytes and exhaust memory). Enforced in the literal, back-reference, and stored-block paths. This matches the guard the `zip` crate's former inline decompressor had, and now protects every `inflate` consumer.
+
 ## 0.2.0 — 2026-05-24
 
 ### Added

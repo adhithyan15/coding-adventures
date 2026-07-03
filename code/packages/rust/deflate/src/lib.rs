@@ -828,6 +828,14 @@ fn fixed_dist_lengths() -> Vec<u8> {
 //
 // This is intentional in DEFLATE — it compresses runs cheaply.
 
+/// Upper bound on decompressed output, guarding against "decompression bombs":
+/// tiny inputs that expand to enormous outputs (a highly compressible stream can
+/// reach ~1000:1, so a few KB of malicious `.xlsx`/`.gz` could otherwise exhaust
+/// memory). 256 MB comfortably exceeds any legitimate OOXML part while capping
+/// the blast radius of hostile input. Callers that legitimately need more should
+/// stream rather than inflate whole.
+const MAX_INFLATE_OUTPUT: usize = 256 * 1024 * 1024;
+
 fn copy_back_ref(output: &mut Vec<u8>, dist: usize, length: usize) -> Result<(), String> {
     let out_len = output.len();
     if dist > out_len {
@@ -835,6 +843,9 @@ fn copy_back_ref(output: &mut Vec<u8>, dist: usize, length: usize) -> Result<(),
             "inflate: back-reference distance {} exceeds output length {}",
             dist, out_len
         ));
+    }
+    if out_len + length > MAX_INFLATE_OUTPUT {
+        return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
     }
     let start = out_len - dist;
     for i in 0..length {
@@ -937,6 +948,9 @@ fn decode_block(
 
         if sym < 256 {
             // Plain literal byte.
+            if output.len() >= MAX_INFLATE_OUTPUT {
+                return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
+            }
             output.push(sym as u8);
         } else if sym == 256 {
             // End-of-block marker — done with this block.
@@ -1000,6 +1014,9 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
                 let nlen = reader.read_u16_le()? as usize;
                 if (len ^ 0xFFFF) != nlen {
                     return Err("inflate: stored block LEN/NLEN mismatch".to_string());
+                }
+                if output.len() + len > MAX_INFLATE_OUTPUT {
+                    return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
                 }
                 for _ in 0..len {
                     output.push(reader.read_byte()?);
