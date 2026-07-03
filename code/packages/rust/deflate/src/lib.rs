@@ -94,11 +94,23 @@ const LENGTH_TABLE: &[LengthEntry] = &[
     LengthEntry { symbol: 282, base: 163, extra_bits: 5 },
     LengthEntry { symbol: 283, base: 195, extra_bits: 5 },
     LengthEntry { symbol: 284, base: 227, extra_bits: 5 },
+    // Symbol 285 is the special "maximum match" code: length 258 exactly, with
+    // NO extra bits.  RFC 1951 reserves it precisely so the top length has a
+    // one-code encoding; producers with a full 32 KB window (Office, zlib, gzip)
+    // emit it routinely.  Our own 4 KB-window encoder never reaches length 258,
+    // but the DECODER must recognise it to read real-world streams.
+    LengthEntry { symbol: 285, base: 258, extra_bits: 0 },
 ];
 
 // ---------------------------------------------------------------------------
-// Distance code table (codes 0–23)
+// Distance code table (codes 0–29)
 // ---------------------------------------------------------------------------
+//
+// Codes 0–23 cover offsets up to 4096 — the reach of our own 4 KB-window
+// encoder.  Codes 24–29 extend the reach to the full RFC 1951 window of
+// 32768 bytes.  Real-world producers (zlib, gzip, Microsoft Office writing
+// OOXML) use the full 32 KB window, so the DECODER must understand every
+// distance code even though our encoder only ever emits 0–23.
 
 struct DistEntry {
     code: u16,
@@ -131,6 +143,12 @@ const DIST_TABLE: &[DistEntry] = &[
     DistEntry { code: 21, base: 1537, extra_bits:  9 },
     DistEntry { code: 22, base: 2049, extra_bits: 10 },
     DistEntry { code: 23, base: 3073, extra_bits: 10 },
+    DistEntry { code: 24, base:  4097, extra_bits: 11 },
+    DistEntry { code: 25, base:  6145, extra_bits: 11 },
+    DistEntry { code: 26, base:  8193, extra_bits: 12 },
+    DistEntry { code: 27, base: 12289, extra_bits: 12 },
+    DistEntry { code: 28, base: 16385, extra_bits: 13 },
+    DistEntry { code: 29, base: 24577, extra_bits: 13 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -810,6 +828,14 @@ fn fixed_dist_lengths() -> Vec<u8> {
 //
 // This is intentional in DEFLATE — it compresses runs cheaply.
 
+/// Upper bound on decompressed output, guarding against "decompression bombs":
+/// tiny inputs that expand to enormous outputs (a highly compressible stream can
+/// reach ~1000:1, so a few KB of malicious `.xlsx`/`.gz` could otherwise exhaust
+/// memory). 256 MB comfortably exceeds any legitimate OOXML part while capping
+/// the blast radius of hostile input. Callers that legitimately need more should
+/// stream rather than inflate whole.
+const MAX_INFLATE_OUTPUT: usize = 256 * 1024 * 1024;
+
 fn copy_back_ref(output: &mut Vec<u8>, dist: usize, length: usize) -> Result<(), String> {
     let out_len = output.len();
     if dist > out_len {
@@ -817,6 +843,9 @@ fn copy_back_ref(output: &mut Vec<u8>, dist: usize, length: usize) -> Result<(),
             "inflate: back-reference distance {} exceeds output length {}",
             dist, out_len
         ));
+    }
+    if out_len + length > MAX_INFLATE_OUTPUT {
+        return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
     }
     let start = out_len - dist;
     for i in 0..length {
@@ -919,6 +948,9 @@ fn decode_block(
 
         if sym < 256 {
             // Plain literal byte.
+            if output.len() >= MAX_INFLATE_OUTPUT {
+                return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
+            }
             output.push(sym as u8);
         } else if sym == 256 {
             // End-of-block marker — done with this block.
@@ -982,6 +1014,9 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
                 let nlen = reader.read_u16_le()? as usize;
                 if (len ^ 0xFFFF) != nlen {
                     return Err("inflate: stored block LEN/NLEN mismatch".to_string());
+                }
+                if output.len() + len > MAX_INFLATE_OUTPUT {
+                    return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
                 }
                 for _ in 0..len {
                     output.push(reader.read_byte()?);
@@ -1389,5 +1424,51 @@ mod tests {
         ];
         let out = zlib_decompress(zlib_bytes).expect("inflate dynamic Huffman failed");
         assert_eq!(out, b"abcabcabcabc");
+    }
+
+    // A raw DEFLATE stream produced by Python's zlib at level 9 with a full
+    // 32 KB window (`zlib.compressobj(9, DEFLATED, -15)`).  It deliberately
+    // exercises the parts of RFC 1951 our own 4 KB-window encoder never emits
+    // but real-world producers (Office/zlib/gzip) do:
+    //   • a 600-byte run of 'Z' → length-258 matches → LL symbol 285
+    //   • a 400-byte repeat ~6000 bytes back → distance codes 24–29 (>4 KB)
+    // Before the LENGTH_TABLE/DIST_TABLE completeness fix, `inflate` rejected
+    // this with "invalid length symbol 285" / "invalid distance symbol 24".
+    const REAL_DEFLATE_STREAM: &[u8] = &[
+        0x8b, 0x8a, 0x1a, 0x05, 0xa3, 0x80, 0xfa, 0x80, 0xdb, 0x20, 0xb4, 0x6a, 0xfe, 0x91, 0x97, 0x7c,
+        0xc6, 0x11, 0xb5, 0x8b, 0x8e, 0xbf, 0x11, 0x34, 0x8b, 0x6e, 0x58, 0x7a, 0xea, 0xbd, 0x88, 0x65,
+        0x5c, 0xf3, 0x8a, 0xb3, 0x9f, 0xc4, 0x6d, 0x12, 0xdb, 0x56, 0x5f, 0xf8, 0x2a, 0x65, 0x9f, 0xd2,
+        0xb9, 0xee, 0xf2, 0x0f, 0x59, 0xa7, 0xf4, 0x9e, 0x8d, 0xd7, 0x7e, 0x2b, 0xb8, 0x66, 0xf5, 0x6f,
+        0xb9, 0xf9, 0x4f, 0xd9, 0x23, 0x77, 0xd2, 0xf6, 0x3b, 0x8c, 0x6a, 0xde, 0x05, 0x53, 0x77, 0xdd,
+        0x67, 0xd1, 0xf4, 0x2b, 0x9e, 0xb1, 0xf7, 0x11, 0xbb, 0x4e, 0x60, 0xd9, 0xec, 0x03, 0x4f, 0xb9,
+        0xf4, 0x43, 0x2a, 0xe7, 0x1d, 0x7e, 0xc1, 0x6b, 0x14, 0x5e, 0xb3, 0xf0, 0xd8, 0x6b, 0x01, 0xd3,
+        0xa8, 0xfa, 0x25, 0x27, 0xdf, 0x09, 0x5b, 0xc4, 0x36, 0x2d, 0x3f, 0xf3, 0x51, 0xcc, 0x3a, 0xa1,
+        0x75, 0xd5, 0xf9, 0x2f, 0x92, 0x76, 0xc9, 0x1d, 0x6b, 0x2f, 0x7d, 0x97, 0x71, 0x4c, 0xeb, 0xde,
+        0x70, 0xf5, 0x97, 0xbc, 0x4b, 0x66, 0xdf, 0xe6, 0x1b, 0x7f, 0x95, 0xdc, 0x73, 0x26, 0x6e, 0xbb,
+        0xcd, 0xa0, 0xea, 0x95, 0x3f, 0x65, 0xe7, 0x3d, 0x66, 0x0d, 0xdf, 0xa2, 0xe9, 0x7b, 0x1e, 0xb2,
+        0x69, 0x07, 0x94, 0xce, 0xda, 0xff, 0x84, 0x53, 0x2f, 0xb8, 0x62, 0xee, 0xa1, 0xe7, 0x3c, 0x86,
+        0x61, 0xd5, 0x0b, 0x8e, 0xbe, 0xe2, 0x37, 0x89, 0xac, 0x5b, 0x7c, 0xe2, 0xad, 0x90, 0x79, 0x4c,
+        0xe3, 0xb2, 0xd3, 0x1f, 0x44, 0xad, 0xe2, 0x5b, 0x56, 0x9e, 0xfb, 0x2c, 0x61, 0x9b, 0xd4, 0xbe,
+        0xe6, 0xe2, 0x37, 0x69, 0x87, 0xd4, 0xae, 0xf5, 0x57, 0x7e, 0xca, 0x39, 0x67, 0xf4, 0x6e, 0xba,
+        0xfe, 0x47, 0xd1, 0x2d, 0x7b, 0xc2, 0xd6, 0x5b, 0xff, 0x55, 0x3c, 0xf3, 0x26, 0xef, 0xb8, 0xcb,
+        0xa4, 0xee, 0x53, 0x38, 0x6d, 0xf7, 0x03, 0x56, 0x2d, 0xff, 0x92, 0x99, 0xfb, 0x1e, 0x73, 0xe8,
+        0x06, 0x95, 0xcf, 0x39, 0xf8, 0x6c, 0xd4, 0xff, 0xa3, 0xfe, 0x1f, 0xf5, 0xff, 0xa8, 0xff, 0x47,
+        0xfd, 0x3f, 0xea, 0xff, 0x51, 0xff, 0x8f, 0xfa, 0x7f, 0xd4, 0xff, 0xa3, 0xfe, 0x1f, 0xf5, 0xff,
+        0xa8, 0xff, 0x47, 0xfd, 0x3f, 0xea, 0xff, 0x51, 0xff, 0x8f, 0xfa, 0x7f, 0xd4, 0xff, 0xa3, 0xfe,
+        0x1f, 0xf5, 0xff, 0xa8, 0xff, 0x47, 0xfd, 0x3f, 0xea, 0x7f, 0x6a, 0xf8, 0x7f, 0x34, 0xbc, 0x07,
+        0x97, 0xff, 0x01,
+    ];
+
+    #[test]
+    fn inflate_full_window_real_stream() {
+        // Reconstruct the exact payload the fixture was compressed from.
+        let mut expected = vec![b'Z'; 600];
+        let body: Vec<u8> = (0..6000u32).map(|i| ((i * 37 + 11) & 0xFF) as u8).collect();
+        expected.extend_from_slice(&body);
+        expected.extend_from_slice(&body[..400]);
+
+        let out = inflate(REAL_DEFLATE_STREAM).expect("inflate full-window stream");
+        assert_eq!(out.len(), expected.len());
+        assert_eq!(out, expected);
     }
 }

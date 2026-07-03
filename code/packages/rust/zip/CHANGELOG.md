@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.1.1] — 2026-07-02
+
+### Changed
+
+- `ZipReader::read` now delegates method-8 (DEFLATE) decompression to
+  `deflate::inflate`, which decodes all three RFC 1951 block types — stored
+  (BTYPE=00), fixed Huffman (BTYPE=01), and **dynamic Huffman (BTYPE=10)**. The
+  previous inline `deflate_decompress` only handled stored and fixed-Huffman
+  blocks and explicitly rejected dynamic-Huffman entries. Because virtually
+  every real-world producer emits dynamic-Huffman blocks — Microsoft Office
+  writing `.xlsx`/`.docx`/`.pptx`, `zip`(1), Python `zipfile`, Java `jar` — the
+  reader could not open archives people actually have. This is the foundational
+  fix for reading OOXML packages.
+
+### Removed
+
+- The inline `deflate_decompress` (fixed-Huffman only) and its exclusive helpers
+  (`BitReader`, `fixed_ll_decode`), now redundant with the `deflate` crate. The
+  writer's round-trip tests were rerouted to `deflate::inflate`, which also
+  proves our fixed-Huffman output is standard RFC 1951 any decoder can read.
+
+### Added
+
+- `deflate` path dependency (for the RFC 1951 `inflate` decoder).
+- `test_read_dynamic_huffman_entry` — reads a real ZIP produced by Python's
+  `zipfile` whose single entry uses a dynamic-Huffman block, exercising the full
+  path through `unzip`/`ZipReader::read` including the CRC-32 check.
+
 ## [0.1.0] — 2026-04-23
 
 ### Added

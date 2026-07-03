@@ -209,59 +209,6 @@ impl BitWriter {
     }
 }
 
-/// Reads bits from a byte slice, LSB-first.
-struct BitReader<'a> {
-    data: &'a [u8],
-    pos: usize,
-    buf: u64,
-    bits: u32,
-}
-
-impl<'a> BitReader<'a> {
-    fn new(data: &'a [u8]) -> Self {
-        Self { data, pos: 0, buf: 0, bits: 0 }
-    }
-
-    /// Fill the buffer with more bytes until we have at least `need` bits.
-    fn fill(&mut self, need: u32) -> bool {
-        while self.bits < need {
-            if self.pos >= self.data.len() {
-                return false; // exhausted
-            }
-            self.buf |= (self.data[self.pos] as u64) << self.bits;
-            self.pos += 1;
-            self.bits += 8;
-        }
-        true
-    }
-
-    /// Read `nbits` bits, returns them LSB-first. Returns None on EOF.
-    fn read_lsb(&mut self, nbits: u32) -> Option<u32> {
-        if nbits == 0 { return Some(0); }
-        if !self.fill(nbits) { return None; }
-        let mask = (1u64 << nbits) - 1;
-        let val = (self.buf & mask) as u32;
-        self.buf >>= nbits;
-        self.bits -= nbits;
-        Some(val)
-    }
-
-    /// Read `nbits` bits and reverse them (for decoding Huffman codes MSB-first).
-    fn read_msb(&mut self, nbits: u32) -> Option<u32> {
-        let v = self.read_lsb(nbits)?;
-        Some(v.reverse_bits() >> (32 - nbits))
-    }
-
-    /// Discard any partial byte, aligning to the next byte boundary.
-    fn align(&mut self) {
-        let discard = self.bits % 8;
-        if discard > 0 {
-            self.buf >>= discard;
-            self.bits -= discard;
-        }
-    }
-}
-
 // =============================================================================
 // RFC 1951 DEFLATE — Fixed Huffman Tables
 // =============================================================================
@@ -288,34 +235,6 @@ fn fixed_ll_encode(sym: u16) -> (u32, u32) {
         256..=279 => (sym as u32 - 256,                 7),
         280..=287 => (0b1100_0000 + (sym as u32 - 280), 8),
         _ => panic!("fixed_ll_encode: invalid LL symbol {}", sym),
-    }
-}
-
-/// Decode a Huffman code from `br` using the RFC 1951 fixed LL table.
-///
-/// We read bits incrementally — first 7, then up to 9 — and decode in order
-/// of increasing code length per the canonical Huffman property.
-fn fixed_ll_decode(br: &mut BitReader<'_>) -> Option<u16> {
-    // Read 7 bits (enough for the shortest codes: 7-bit range 256-279).
-    let v7 = br.read_msb(7)?;
-    if v7 <= 23 {
-        // 7-bit code: symbols 256-279.
-        return Some(v7 as u16 + 256);
-    }
-    // Need one more bit for 8-bit codes.
-    let v8 = (v7 << 1) | br.read_lsb(1)?;
-    match v8 {
-        48..=191 => Some((v8 - 48) as u16),            // literals 0-143
-        192..=199 => Some((v8 + 88) as u16),            // symbols 280-287  (192+88=280)
-        _ => {
-            // Need one more bit for 9-bit codes (literals 144-255).
-            let v9 = (v8 << 1) | br.read_lsb(1)?;
-            if (400..=511).contains(&v9) {
-                Some((v9 - 256) as u16)                  // literals 144-255 (400-256=144)
-            } else {
-                None // malformed
-            }
-        }
     }
 }
 
@@ -440,118 +359,6 @@ pub(crate) fn deflate_compress(data: &[u8]) -> Vec<u8> {
     bw.write_huffman(eob_code, eob_bits);
 
     bw.finish()
-}
-
-// =============================================================================
-// RFC 1951 DEFLATE — Decompress
-// =============================================================================
-//
-// Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-// Dynamic Huffman blocks (BTYPE=10) return an error — we only produce BTYPE=01,
-// but we must be able to decompress stored blocks written by other tools.
-
-/// Decompress a raw RFC 1951 DEFLATE bit-stream into its original bytes.
-/// Returns `Err` on malformed or unsupported (BTYPE=10) input.
-pub(crate) fn deflate_decompress(data: &[u8]) -> Result<Vec<u8>, String> {
-    let mut br = BitReader::new(data);
-    let mut out: Vec<u8> = Vec::new();
-
-    loop {
-        let bfinal = br.read_lsb(1)
-            .ok_or("deflate: unexpected EOF reading BFINAL")?;
-        let btype = br.read_lsb(2)
-            .ok_or("deflate: unexpected EOF reading BTYPE")?;
-
-        match btype {
-            0b00 => {
-                // ── Stored block ──────────────────────────────────────────
-                // Discard partial byte to align to byte boundary.
-                br.align();
-                let len = br.read_lsb(16)
-                    .ok_or("deflate: EOF reading stored LEN")? as usize;
-                let nlen = br.read_lsb(16)
-                    .ok_or("deflate: EOF reading stored NLEN")?;
-                // Validate: NLEN must be one's complement of LEN.
-                if (nlen ^ 0xFFFF) != len as u32 {
-                    return Err(format!(
-                        "deflate: stored block LEN/NLEN mismatch: {} vs {}", len, nlen
-                    ));
-                }
-                // Guard against decompression bombs (256 MB limit).
-                if out.len() + len > 256 * 1024 * 1024 {
-                    return Err("deflate: output size limit exceeded".into());
-                }
-                for _ in 0..len {
-                    let b = br.read_lsb(8)
-                        .ok_or("deflate: EOF inside stored block data")?;
-                    out.push(b as u8);
-                }
-            }
-            0b01 => {
-                // ── Fixed Huffman block ───────────────────────────────────
-                loop {
-                    let sym = fixed_ll_decode(&mut br)
-                        .ok_or("deflate: EOF decoding fixed Huffman symbol")?;
-                    match sym {
-                        0..=255 => {
-                            // Guard against decompression bombs.
-                            if out.len() >= 256 * 1024 * 1024 {
-                                return Err("deflate: output size limit exceeded".into());
-                            }
-                            out.push(sym as u8);
-                        }
-                        256 => break, // end-of-block
-                        257..=285 => {
-                            // Back-reference: decode length + distance.
-                            let idx = (sym - 257) as usize;
-                            if idx >= LENGTH_TABLE.len() {
-                                return Err(format!("deflate: invalid length sym {}", sym));
-                            }
-                            let (base_len, extra_len_bits) = LENGTH_TABLE[idx];
-                            let extra_len = br.read_lsb(extra_len_bits)
-                                .ok_or("deflate: EOF reading length extra bits")?;
-                            let length = (base_len + extra_len) as usize;
-
-                            // Distance code: 5-bit fixed, read MSB-first.
-                            let dist_code = br.read_msb(5)
-                                .ok_or("deflate: EOF reading distance code")? as usize;
-                            if dist_code >= DIST_TABLE.len() {
-                                return Err(format!("deflate: invalid dist code {}", dist_code));
-                            }
-                            let (base_dist, extra_dist_bits) = DIST_TABLE[dist_code];
-                            let extra_dist = br.read_lsb(extra_dist_bits)
-                                .ok_or("deflate: EOF reading distance extra bits")?;
-                            let offset = (base_dist + extra_dist) as usize;
-
-                            // Bounds check: offset must not exceed decoded output.
-                            if offset > out.len() {
-                                return Err(format!(
-                                    "deflate: back-reference offset {} > output len {}",
-                                    offset, out.len()
-                                ));
-                            }
-                            if out.len() + length > 256 * 1024 * 1024 {
-                                return Err("deflate: output size limit exceeded".into());
-                            }
-                            // Copy byte-by-byte to handle overlapping matches
-                            // (e.g. offset=1, length=10 encodes a run of one byte × 10).
-                            for _ in 0..length {
-                                let src = out.len() - offset;
-                                let b = out[src];
-                                out.push(b);
-                            }
-                        }
-                        _ => return Err(format!("deflate: invalid LL symbol {}", sym)),
-                    }
-                }
-            }
-            0b10 => return Err("deflate: dynamic Huffman blocks (BTYPE=10) not supported".into()),
-            _    => return Err("deflate: reserved BTYPE=11".into()),
-        }
-
-        if bfinal == 1 { break; }
-    }
-    Ok(out)
 }
 
 // =============================================================================
@@ -906,9 +713,17 @@ impl<'a> ZipReader<'a> {
         let compressed = &self.data[data_start..data_end];
 
         // Decompress according to method.
+        //
+        // Method 8 (DEFLATE) is delegated to the `deflate` crate's `inflate`,
+        // which decodes ALL three RFC 1951 block types: stored (BTYPE=00),
+        // fixed Huffman (BTYPE=01), and — crucially — dynamic Huffman
+        // (BTYPE=10).  Real-world producers (Microsoft Office when writing
+        // .docx/.xlsx/.pptx, `zip`(1), Python's zipfile, Java's jar) almost
+        // always emit dynamic-Huffman blocks, so a reader that only understands
+        // fixed Huffman cannot open the files people actually have.
         let decompressed = match entry.method {
             0 => compressed.to_vec(), // Stored — verbatim copy
-            8 => deflate_decompress(compressed)
+            8 => deflate::inflate(compressed)
                     .map_err(|e| format!("zip: entry '{}': {}", entry.name, e))?,
             m => return Err(format!("zip: unsupported compression method {} for '{}'", m, entry.name)),
         };
@@ -1052,8 +867,11 @@ mod tests {
     // ── DEFLATE round-trips ────────────────────────────────────────────────
 
     fn deflate_rt(data: &[u8]) {
+        // Compress with our writer, then decode with the canonical `deflate`
+        // inflater — proving our fixed-Huffman output is standard RFC 1951 that
+        // any conforming decoder reads (not just a private round-trip).
         let compressed   = deflate_compress(data);
-        let decompressed = deflate_decompress(&compressed).expect("deflate_decompress failed");
+        let decompressed = deflate::inflate(&compressed).expect("inflate failed");
         assert_eq!(decompressed, data, "DEFLATE round-trip mismatch");
     }
 
@@ -1069,7 +887,7 @@ mod tests {
     fn test_deflate_repetitive() {
         let data: Vec<u8> = b"ABCABCABC".repeat(100);
         let compressed = deflate_compress(&data);
-        let decompressed = deflate_decompress(&compressed).unwrap();
+        let decompressed = deflate::inflate(&compressed).unwrap();
         assert_eq!(decompressed, data);
         assert!(compressed.len() < data.len(), "DEFLATE must compress repetitive data");
     }
@@ -1273,6 +1091,56 @@ mod tests {
         let reader  = ZipReader::new(&archive).unwrap();
         assert_eq!(reader.read_by_name("beta.txt").unwrap(), b"BBB");
         assert!(reader.read_by_name("nope.txt").is_err());
+    }
+
+    // ── ZIP: real-world dynamic-Huffman entry ─────────────────────────────
+    //
+    // A ZIP produced by Python's `zipfile` (zlib level 9). Its single entry
+    // `sheet1.xml` is stored with method 8 (DEFLATE) and — like virtually every
+    // real-world producer, including Microsoft Office writing .xlsx/.docx/.pptx —
+    // uses a DYNAMIC Huffman block (BTYPE=10), not the fixed-Huffman blocks our
+    // own writer emits. This is the exact case the previous inline decompressor
+    // rejected; `ZipReader::read` now delegates method 8 to `deflate::inflate`,
+    // which decodes all three RFC 1951 block types. This fixture is the
+    // load-bearing proof that we can open files people actually have.
+    const DYNAMIC_HUFFMAN_ZIP: &[u8] = &[
+        0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x00, 0x00, 0x08, 0x00, 0x90, 0x88, 0xe2, 0x5c, 0x50, 0x87,
+        0x66, 0x1d, 0x7f, 0x00, 0x00, 0x00, 0xdc, 0x05, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x73, 0x68,
+        0x65, 0x65, 0x74, 0x31, 0x2e, 0x78, 0x6d, 0x6c, 0xed, 0xcd, 0xb1, 0x0a, 0xc2, 0x30, 0x14, 0x85,
+        0xe1, 0x57, 0x39, 0xa3, 0x2e, 0x25, 0xcd, 0xa8, 0x74, 0x08, 0x58, 0x41, 0x68, 0xa9, 0x10, 0x05,
+        0x71, 0xbb, 0xb4, 0xb7, 0x18, 0x08, 0x69, 0xb8, 0x89, 0xfa, 0xfa, 0x16, 0x17, 0x9f, 0xc0, 0x2d,
+        0xeb, 0xcf, 0xe1, 0x7c, 0x36, 0x0a, 0xd3, 0x94, 0x1e, 0xcc, 0xb9, 0xef, 0x30, 0xb2, 0xf7, 0x30,
+        0xf5, 0x0e, 0xc2, 0x2f, 0x0e, 0x4f, 0x6e, 0x6a, 0xa5, 0xd4, 0x1e, 0x46, 0xff, 0x8a, 0xfe, 0x96,
+        0xbc, 0x64, 0xf2, 0x8d, 0xbd, 0xf6, 0x9b, 0x75, 0x6d, 0xf4, 0xb6, 0xc2, 0x30, 0xcf, 0x6e, 0x64,
+        0x0c, 0x91, 0x03, 0x6e, 0xeb, 0x55, 0x24, 0xc9, 0x09, 0x24, 0x0c, 0xa1, 0x37, 0x0e, 0xed, 0xb1,
+        0x33, 0x97, 0x16, 0x2e, 0x24, 0x37, 0x31, 0x08, 0xf7, 0xd3, 0xb9, 0x82, 0x2d, 0x78, 0xc1, 0x0b,
+        0x5e, 0xf0, 0x82, 0xff, 0x03, 0xff, 0x00, 0x50, 0x4b, 0x01, 0x02, 0x14, 0x03, 0x14, 0x00, 0x00,
+        0x00, 0x08, 0x00, 0x90, 0x88, 0xe2, 0x5c, 0x50, 0x87, 0x66, 0x1d, 0x7f, 0x00, 0x00, 0x00, 0xdc,
+        0x05, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
+        0x01, 0x00, 0x00, 0x00, 0x00, 0x73, 0x68, 0x65, 0x65, 0x74, 0x31, 0x2e, 0x78, 0x6d, 0x6c, 0x50,
+        0x4b, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x38, 0x00, 0x00, 0x00, 0xa7,
+        0x00, 0x00, 0x00, 0x00, 0x00,
+    ];
+
+    #[test]
+    fn test_read_dynamic_huffman_entry() {
+        // The payload the fixture was built from: 12 repetitions of a short
+        // spreadsheet-flavoured line.
+        let expected = "SpreadsheetML cell A1: revenue=1000; \
+                        A2: revenue=2000; total=SUM(A1:A2). \
+                        Office Open XML parts are raw DEFLATE inside a ZIP. "
+            .repeat(12);
+
+        // Via the high-level unzip() helper.
+        let files = unzip(DYNAMIC_HUFFMAN_ZIP).expect("unzip dynamic-Huffman zip");
+        assert_eq!(files.len(), 1);
+        assert_eq!(files[0].0, "sheet1.xml");
+        assert_eq!(files[0].1, expected.as_bytes());
+
+        // And via the low-level reader (also exercises the CRC-32 check on the
+        // decompressed bytes, so a wrong inflate would fail here).
+        let reader = ZipReader::new(DYNAMIC_HUFFMAN_ZIP).expect("open zip");
+        assert_eq!(reader.read_by_name("sheet1.xml").unwrap(), expected.as_bytes());
     }
 
     // ── ZIP: dos_datetime ─────────────────────────────────────────────────
