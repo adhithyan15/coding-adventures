@@ -1928,18 +1928,28 @@ showing no over-wrap). No behaviour change for existing inputs — the bridge
 still declines spread (gap-163), so closurec falls back to WHITESPACE_ONLY on
 `...` for now. PR2 (bridge-enable) and PR3 (conformance port) follow.
 
-### gap-163 — bridge declines spread (`SpreadElement`) — **OPEN (planned: javascript-parser PR2)**
+### gap-163 — bridge declines spread (`SpreadElement`) — **RESOLVED (javascript-parser 0.27.0, CLOC12.162 PR2)**
 
-The `javascript-parser` bridge does not yet convert a `...` spread appearing in
-a call/`new` argument list or an array element into
-`Expression::SpreadElement`; it returns `UnsupportedSyntax` and drops the whole
-file to WHITESPACE_ONLY. The atomic node PR (CLOC12.162 PR1) lands the node +
-emit + pass traversals so the typed AST and every downstream pass can already
-represent and print a spread.
+The `javascript-parser` bridge declined a `...` spread appearing in a call/`new`
+argument list or an array element, returning `UnsupportedSyntax` and dropping
+the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.162 PR1, #7515)
+landed the node + emit + pass traversals so the typed AST and every downstream
+pass can already represent and print a spread.
 
-**Planned fix (CLOC12.162 PR2):** the argument/element converters recognise a
-`spread_element` grammar node and wrap the converted inner expression as
-`SpreadElement`, mirroring the anticipation already noted for `new X(...a)` in
-gap-160. A closurec e2e diff fixture will prove a spread call round-trips while
-a foldable sibling operand still folds — proving the file ran through SIMPLE
-rather than WHITESPACE_ONLY.
+**Fix (CLOC12.162 PR2):** dumping the parse tree showed spread parses to a
+dedicated `spread_element` node whose children are
+`[ Token("..."), Node(assignment_expression) ]`, and that node appears as a
+`Node` child of both `argument_list` (calls / `new`) and `element_list`
+(arrays). `convert_argument` and `convert_array_literal`'s `has_token(_, "...")`
+branch now convert the inner expression (via `node_children`, which strips the
+ELLIPSIS token) and wrap it as `Expression::SpreadElement` rather than
+declining. 6 bridge unit tests (call spread, interleaved-call arity, `new`
+spread, array spread, interleaved-array count, and a non-spread guard), plus a
+closurec e2e diff fixture (`tests/diff/simple-spread/`) proving
+`log(...a, 1 + 2)` → `log(...a,3)`: the spread round-trips while the sibling
+`1 + 2` folds to `3`, proving the whole file ran through SIMPLE rather than
+WHITESPACE_ONLY.
+
+**Scope:** object-spread `{...o}` in an object literal (`convert_property_definition`,
+gap tracked as `SpreadProperty`) remains declined — it is a *property*, a
+separate later slice; this PR is the call/array/`new` spread only.

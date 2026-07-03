@@ -59,7 +59,7 @@ use coding_adventures_javascript_ast::{
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
-        PropertyKey, PropertyKind, SequenceExpression, StringLiteral, TaggedTemplateExpression,
+        PropertyKey, PropertyKind, SequenceExpression, SpreadElement, StringLiteral, TaggedTemplateExpression,
         TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
         UndefinedLiteral, UpdateExpression, UpdateOperator,
@@ -2016,11 +2016,23 @@ fn convert_arguments(node: &GrammarASTNode) -> Result<Vec<Expression>, BridgeErr
 
 fn convert_argument(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // argument = [ ELLIPSIS ] assignment_expression
+    //
+    // A spread argument `f(...a)` parses to a `spread_element` node whose
+    // children are `[ Token("..."), Node(assignment_expression) ]` — the
+    // ELLIPSIS token sits directly under `spread_element` (confirmed by dumping
+    // the parse tree), so `has_token(node, "...")` fires on exactly this shape.
+    // Convert the inner expression and wrap it as `SpreadElement` (CLOC12.162
+    // PR2, closes gap-163). `node_children` strips the ELLIPSIS token, leaving
+    // the single assignment_expression Node.
     if has_token(node, "...") {
-        return Err(BridgeError::UnsupportedSyntax {
-            rule: "SpreadElement".to_string(),
-            location: loc(node),
-        });
+        let inner = node_children(node)
+            .into_iter()
+            .next()
+            .ok_or_else(|| internal(node, "spread argument: missing expression"))?;
+        return Ok(Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(convert_expression(inner)?),
+        }));
     }
     // The parser collapses the single-alternative `argument` production, so the
     // node we receive here IS the `assignment_expression` itself. For an
@@ -2413,10 +2425,23 @@ fn convert_array_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErro
                         ASTNodeOrToken::Token(_) => { /* stray token: ignore */ }
                         ASTNodeOrToken::Node(elem) => {
                             if has_token(elem, "...") {
-                                return Err(BridgeError::UnsupportedSyntax {
-                                    rule: "SpreadElement".to_string(),
-                                    location: loc(elem),
-                                });
+                                // Spread element `[...x]` (CLOC12.162 PR2, closes
+                                // gap-163). The `spread_element` node wraps the
+                                // ELLIPSIS token and the inner
+                                // assignment_expression; `node_children` strips
+                                // the token, leaving the single expression Node.
+                                let inner = node_children(elem)
+                                    .into_iter()
+                                    .next()
+                                    .ok_or_else(|| {
+                                        internal(elem, "spread element: missing expression")
+                                    })?;
+                                elements.push(Some(Expression::SpreadElement(SpreadElement {
+                                    cv: None,
+                                    argument: Box::new(convert_expression(inner)?),
+                                })));
+                                expect_element = false;
+                                continue;
                             }
                             // `elem` is the `assignment_expression` for this
                             // slot. Convert it WHOLE: the previous code unwrapped
@@ -4269,16 +4294,100 @@ mod tests {
         }
     }
 
-    /// A spread argument is still declined (SpreadElement is a later slice), so
-    /// `new X(...a)` gracefully falls back rather than dropping the spread.
+    // ---- SpreadElement (CLOC12.162 PR2, closes gap-163) ----------------
+
+    /// `f(...a)` bridges to a `CallExpression` whose sole argument is a
+    /// `SpreadElement` wrapping the identifier `a` (no longer declined).
     #[test]
-    fn new_with_spread_arg_declines() {
-        // The whole file falls back to WHITESPACE_ONLY; `bridge` returns the raw
-        // `Result`, so assert the decline directly (rather than `bridge_ok`).
-        assert!(
-            bridge("new X(...a);").is_err(),
-            "spread argument in `new` should decline (SpreadElement not yet supported)"
-        );
+    fn call_with_spread_arg() {
+        match sole_expr("f(...a);") {
+            Expression::CallExpression(c) => {
+                assert_eq!(c.arguments.len(), 1, "one (spread) argument");
+                match &c.arguments[0] {
+                    Expression::SpreadElement(s) => {
+                        assert!(matches!(&*s.argument, Expression::Identifier(i) if i.name == "a"));
+                    }
+                    other => panic!("expected SpreadElement argument, got {other:?}"),
+                }
+            }
+            other => panic!("expected CallExpression, got {other:?}"),
+        }
+    }
+
+    /// `f(a, ...b, c)` preserves arity and position — a plain arg, a spread, a
+    /// plain arg, in order.
+    #[test]
+    fn call_spread_interleaved_preserves_arity() {
+        match sole_expr("f(a, ...b, c);") {
+            Expression::CallExpression(c) => {
+                assert_eq!(c.arguments.len(), 3, "three arguments in order");
+                assert!(matches!(&c.arguments[0], Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(&c.arguments[1], Expression::SpreadElement(s)
+                    if matches!(&*s.argument, Expression::Identifier(i) if i.name == "b")));
+                assert!(matches!(&c.arguments[2], Expression::Identifier(i) if i.name == "c"));
+            }
+            other => panic!("expected CallExpression, got {other:?}"),
+        }
+    }
+
+    /// `new X(...a)` bridges to a `NewExpression` whose sole argument is a
+    /// `SpreadElement` (the `new` argument list reuses `convert_arguments`).
+    #[test]
+    fn new_with_spread_arg() {
+        match sole_expr("new X(...a);") {
+            Expression::NewExpression(n) => {
+                assert_eq!(n.arguments.len(), 1, "one (spread) argument");
+                assert!(matches!(&n.arguments[0], Expression::SpreadElement(s)
+                    if matches!(&*s.argument, Expression::Identifier(i) if i.name == "a")));
+            }
+            other => panic!("expected NewExpression, got {other:?}"),
+        }
+    }
+
+    /// `[...a]` bridges to an `ArrayExpression` whose sole element is a
+    /// `SpreadElement` wrapping `a`.
+    #[test]
+    fn array_with_spread_element() {
+        match sole_expr("[...a];") {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 1, "one (spread) element");
+                match &a.elements[0] {
+                    Some(Expression::SpreadElement(s)) => {
+                        assert!(matches!(&*s.argument, Expression::Identifier(i) if i.name == "a"));
+                    }
+                    other => panic!("expected Some(SpreadElement), got {other:?}"),
+                }
+            }
+            other => panic!("expected ArrayExpression, got {other:?}"),
+        }
+    }
+
+    /// `[1, ...a, 2]` keeps element count and order: literal, spread, literal.
+    #[test]
+    fn array_spread_interleaved_preserves_count() {
+        match sole_expr("[1, ...a, 2];") {
+            Expression::ArrayExpression(a) => {
+                assert_eq!(a.elements.len(), 3, "three elements in order");
+                assert!(matches!(&a.elements[0], Some(Expression::NumericLiteral(n)) if n.value == 1.0));
+                assert!(matches!(&a.elements[1], Some(Expression::SpreadElement(s))
+                    if matches!(&*s.argument, Expression::Identifier(i) if i.name == "a")));
+                assert!(matches!(&a.elements[2], Some(Expression::NumericLiteral(n)) if n.value == 2.0));
+            }
+            other => panic!("expected ArrayExpression, got {other:?}"),
+        }
+    }
+
+    /// Guard: a NON-spread argument still bridges to a bare expression, not a
+    /// `SpreadElement` (the `has_token("...")` gate is spread-specific).
+    #[test]
+    fn plain_call_arg_is_not_spread() {
+        match sole_expr("f(a);") {
+            Expression::CallExpression(c) => {
+                assert_eq!(c.arguments.len(), 1);
+                assert!(matches!(&c.arguments[0], Expression::Identifier(i) if i.name == "a"));
+            }
+            other => panic!("expected CallExpression, got {other:?}"),
+        }
     }
 
     // ---- SequenceExpression (CLOC12.160 PR2, closes gap-161) -----------
