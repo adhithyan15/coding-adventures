@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `smart_home.get_closeout_receipt` tool descriptor for read-only Chief
+  acknowledgement receipts over existing D23 closeout brief primitives.
 - `smart_home.get_closeout_brief` tool descriptor for read-only Chief closeout
   packets over existing D23 shift handoff brief primitives.
 - `smart_home.get_shift_handoff_brief` tool descriptor for read-only Chief shift

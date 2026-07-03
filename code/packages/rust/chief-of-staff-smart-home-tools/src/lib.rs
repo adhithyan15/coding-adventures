@@ -325,6 +325,7 @@ pub const SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID: &str =
     "smart_home.get_operator_readiness_brief";
 pub const SMART_HOME_GET_SHIFT_HANDOFF_BRIEF_TOOL_ID: &str = "smart_home.get_shift_handoff_brief";
 pub const SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID: &str = "smart_home.get_closeout_brief";
+pub const SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID: &str = "smart_home.get_closeout_receipt";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_DESIRED_STATE_DRIFT_AUDIT_TOOL_ID: &str =
@@ -2473,6 +2474,10 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     get_closeout_brief_output_handler_output(&mut runtime, principal_id, now_ms)
+                }
+                SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    get_closeout_receipt_output_handler_output(&mut runtime, principal_id, now_ms)
                 }
                 SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -6598,6 +6603,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_operator_readiness_brief_definition(),
         get_shift_handoff_brief_definition(),
         get_closeout_brief_definition(),
+        get_closeout_receipt_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
         list_desired_state_drift_audit_definition(),
@@ -8141,6 +8147,62 @@ fn get_closeout_brief_definition() -> ToolDefinition {
                 "summary",
                 "decision",
                 "closeout_items",
+                "source_tools",
+            ],
+            false,
+        ),
+    )
+}
+
+fn get_closeout_receipt_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID,
+        "Get smart-home closeout receipt",
+        "Turn the existing D23 smart-home closeout brief into a final acknowledgement receipt without owning smart-home state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("ready", JsonSchema::Boolean),
+                SchemaProperty::new("receipt_ready", JsonSchema::Boolean),
+                SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+                SchemaProperty::new("has_blockers", JsonSchema::Boolean),
+                SchemaProperty::new("receipt_item_count", JsonSchema::Integer),
+                SchemaProperty::new("blocker_item_count", JsonSchema::Integer),
+                SchemaProperty::new("review_item_count", JsonSchema::Integer),
+                SchemaProperty::new("action_item_count", JsonSchema::Integer),
+                SchemaProperty::new("acknowledged_item_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("decision", JsonSchema::Any),
+                SchemaProperty::new(
+                    "receipt_items",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "source_tools",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec![
+                "generated_at_ms",
+                "status",
+                "ready",
+                "receipt_ready",
+                "requires_human_review",
+                "has_blockers",
+                "receipt_item_count",
+                "blocker_item_count",
+                "review_item_count",
+                "action_item_count",
+                "acknowledged_item_count",
+                "summary",
+                "decision",
+                "receipt_items",
                 "source_tools",
             ],
             false,
@@ -45745,6 +45807,50 @@ fn get_closeout_brief_output_handler_output(
     ))
 }
 
+fn get_closeout_receipt_output_handler_output(
+    runtime: &mut SmartHomeRuntime,
+    principal_id: AgentId,
+    now_ms: u64,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let closeout = get_closeout_brief_output_handler_output(runtime, principal_id, now_ms)?.output;
+    let output = closeout_receipt_output_json(now_ms, &closeout);
+    let status = morning_brief_string_at(&output, &["status"])
+        .unwrap_or("unknown")
+        .to_string();
+    let receipt_ready = morning_brief_bool_at(&output, &["receipt_ready"]).unwrap_or(false);
+    let requires_human_review =
+        morning_brief_bool_at(&output, &["requires_human_review"]).unwrap_or(false);
+    let has_blockers = morning_brief_bool_at(&output, &["has_blockers"]).unwrap_or(false);
+    let receipt_item_count =
+        morning_brief_integer_at(&output, &["receipt_item_count"]).unwrap_or(0);
+    let blocker_item_count =
+        morning_brief_integer_at(&output, &["blocker_item_count"]).unwrap_or(0);
+    let review_item_count = morning_brief_integer_at(&output, &["review_item_count"]).unwrap_or(0);
+    let action_item_count = morning_brief_integer_at(&output, &["action_item_count"]).unwrap_or(0);
+    let next_tool = morning_brief_string_at(&output, &["decision", "recommended_tool"])
+        .unwrap_or(SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID)
+        .to_string();
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_closeout_receipt")),
+            ("status", string(&status)),
+            ("receipt_ready", JsonValue::Bool(receipt_ready)),
+            (
+                "requires_human_review",
+                JsonValue::Bool(requires_human_review),
+            ),
+            ("has_blockers", JsonValue::Bool(has_blockers)),
+            ("receipt_item_count", integer(receipt_item_count)),
+            ("blocker_item_count", integer(blocker_item_count)),
+            ("review_item_count", integer(review_item_count)),
+            ("action_item_count", integer(action_item_count)),
+            ("next_tool", string(&next_tool)),
+        ]),
+    ))
+}
+
 fn get_controller_handoff_summary_output_handler_output(
     runtime: &mut SmartHomeRuntime,
     principal_id: AgentId,
@@ -51701,6 +51807,398 @@ fn closeout_next_action(next_item: Option<&CloseoutItem>) -> &str {
 }
 
 fn closeout_next_owner_lane(next_item: Option<&CloseoutItem>) -> &str {
+    next_item
+        .map(|item| item.owner_lane.as_str())
+        .unwrap_or("chief")
+}
+
+struct CloseoutReceiptItem {
+    item_id: String,
+    closeout_item_id: String,
+    handoff_item_id: String,
+    lane_id: String,
+    section_id: String,
+    label: String,
+    status: String,
+    severity: String,
+    closeout_state: String,
+    receipt_state: &'static str,
+    receipt_action: &'static str,
+    closeout_action: String,
+    handoff_action: String,
+    readiness_action: String,
+    continuity_action: String,
+    handoff_required: bool,
+    priority: i64,
+    recommended_tool: String,
+    recommended_action: String,
+    owner_lane: String,
+    source_summary: JsonValue,
+}
+
+fn closeout_receipt_output_json(now_ms: u64, closeout: &JsonValue) -> JsonValue {
+    let items = closeout_receipt_items_from_closeout(closeout);
+    let generated_at_ms =
+        morning_brief_integer_at(closeout, &["generated_at_ms"]).unwrap_or(now_ms as i64);
+    let blocker_item_count = items
+        .iter()
+        .filter(|item| item.receipt_state == "blocked")
+        .count();
+    let review_item_count = items
+        .iter()
+        .filter(|item| item.receipt_state == "review_required")
+        .count();
+    let action_item_count = items
+        .iter()
+        .filter(|item| item.receipt_state == "action_required")
+        .count();
+    let acknowledged_item_count = items
+        .iter()
+        .filter(|item| item.receipt_state == "acknowledged")
+        .count();
+    let has_blockers = blocker_item_count > 0
+        || morning_brief_bool_at(closeout, &["has_blockers"]).unwrap_or(false);
+    let requires_human_review = review_item_count > 0
+        || morning_brief_bool_at(closeout, &["requires_human_review"]).unwrap_or(false);
+    let closeout_ready = morning_brief_bool_at(closeout, &["closeout_ready"]).unwrap_or(false);
+    let receipt_ready =
+        closeout_ready && items.is_empty() && !has_blockers && !requires_human_review;
+    let status = closeout_receipt_status(
+        receipt_ready,
+        has_blockers,
+        requires_human_review,
+        action_item_count,
+        acknowledged_item_count,
+    );
+    let next_item = items.first();
+
+    object([
+        ("generated_at_ms", integer(generated_at_ms)),
+        ("status", string(status)),
+        ("ready", JsonValue::Bool(receipt_ready)),
+        ("receipt_ready", JsonValue::Bool(receipt_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(requires_human_review),
+        ),
+        ("has_blockers", JsonValue::Bool(has_blockers)),
+        ("receipt_item_count", integer(items.len() as i64)),
+        ("blocker_item_count", integer(blocker_item_count as i64)),
+        ("review_item_count", integer(review_item_count as i64)),
+        ("action_item_count", integer(action_item_count as i64)),
+        (
+            "acknowledged_item_count",
+            integer(acknowledged_item_count as i64),
+        ),
+        (
+            "summary",
+            object([
+                (
+                    "boundary",
+                    string(
+                        "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state.",
+                    ),
+                ),
+                (
+                    "closeout_status",
+                    string(morning_brief_string_at(closeout, &["status"]).unwrap_or("unknown")),
+                ),
+                ("closeout_ready", JsonValue::Bool(closeout_ready)),
+                ("receipt_ready", JsonValue::Bool(receipt_ready)),
+                ("receipt_item_count", integer(items.len() as i64)),
+                ("blocker_item_count", integer(blocker_item_count as i64)),
+                ("review_item_count", integer(review_item_count as i64)),
+                ("action_item_count", integer(action_item_count as i64)),
+                (
+                    "acknowledged_item_count",
+                    integer(acknowledged_item_count as i64),
+                ),
+                ("next_tool", string(closeout_receipt_next_tool(next_item))),
+                (
+                    "next_action",
+                    string(closeout_receipt_next_action(next_item)),
+                ),
+                (
+                    "next_owner_lane",
+                    string(closeout_receipt_next_owner_lane(next_item)),
+                ),
+            ]),
+        ),
+        (
+            "decision",
+            closeout_receipt_decision_json(
+                status,
+                receipt_ready,
+                has_blockers,
+                requires_human_review,
+                action_item_count,
+                acknowledged_item_count,
+                next_item,
+            ),
+        ),
+        (
+            "receipt_items",
+            JsonValue::Array(items.iter().map(closeout_receipt_item_json).collect()),
+        ),
+        (
+            "source_tools",
+            attention_string_array(&[
+                SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SHIFT_HANDOFF_BRIEF_TOOL_ID,
+                SMART_HOME_GET_OPERATOR_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_CONTINUITY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_ESCALATION_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MORNING_BRIEF_TOOL_ID,
+                SMART_HOME_GET_PLATFORM_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+                SMART_HOME_GET_PENDING_WORK_SUMMARY_TOOL_ID,
+                SMART_HOME_GET_ATTENTION_OVERVIEW_TOOL_ID,
+                SMART_HOME_GET_REMEDIATION_PLAN_TOOL_ID,
+                SMART_HOME_GET_OPERATIONS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_SAFETY_BRIEF_TOOL_ID,
+                SMART_HOME_GET_READINESS_BRIEF_TOOL_ID,
+                SMART_HOME_GET_MAINTENANCE_BRIEF_TOOL_ID,
+                SMART_HOME_GET_INCIDENT_BRIEF_TOOL_ID,
+                SMART_HOME_GET_RECOVERY_BRIEF_TOOL_ID,
+            ]),
+        ),
+    ])
+}
+
+fn closeout_receipt_items_from_closeout(closeout: &JsonValue) -> Vec<CloseoutReceiptItem> {
+    let mut items = match optional_field(closeout, "closeout_items") {
+        Some(JsonValue::Array(items)) => items
+            .iter()
+            .map(closeout_receipt_item_from_closeout_item)
+            .collect::<Vec<_>>(),
+        _ => Vec::new(),
+    };
+    items.sort_by(|left, right| {
+        left.priority
+            .cmp(&right.priority)
+            .then_with(|| left.section_id.cmp(&right.section_id))
+    });
+    items
+}
+
+fn closeout_receipt_item_from_closeout_item(item: &JsonValue) -> CloseoutReceiptItem {
+    let closeout_item_id = morning_brief_string_at(item, &["item_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let section_id = morning_brief_string_at(item, &["section_id"])
+        .unwrap_or("unknown")
+        .to_string();
+    let closeout_state = morning_brief_string_at(item, &["closeout_state"])
+        .unwrap_or("monitor")
+        .to_string();
+    let receipt_state = closeout_receipt_state(&closeout_state);
+    let priority = morning_brief_integer_at(item, &["priority"])
+        .unwrap_or_else(|| closeout_receipt_priority(receipt_state));
+
+    CloseoutReceiptItem {
+        item_id: format!("closeout-receipt:{}:{}", receipt_state, section_id),
+        closeout_item_id,
+        handoff_item_id: morning_brief_string_at(item, &["handoff_item_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        lane_id: morning_brief_string_at(item, &["lane_id"])
+            .unwrap_or("unknown")
+            .to_string(),
+        section_id,
+        label: morning_brief_string_at(item, &["label"])
+            .unwrap_or("Unknown")
+            .to_string(),
+        status: morning_brief_string_at(item, &["status"])
+            .unwrap_or("unknown")
+            .to_string(),
+        severity: morning_brief_string_at(item, &["severity"])
+            .unwrap_or("monitor")
+            .to_string(),
+        closeout_state,
+        receipt_state,
+        receipt_action: closeout_receipt_action(receipt_state),
+        closeout_action: morning_brief_string_at(item, &["closeout_action"])
+            .unwrap_or("monitor_closeout_item")
+            .to_string(),
+        handoff_action: morning_brief_string_at(item, &["handoff_action"])
+            .unwrap_or("monitor_shift_lane")
+            .to_string(),
+        readiness_action: morning_brief_string_at(item, &["readiness_action"])
+            .unwrap_or("monitor_operator_readiness")
+            .to_string(),
+        continuity_action: morning_brief_string_at(item, &["continuity_action"])
+            .unwrap_or("monitor_owner_lane")
+            .to_string(),
+        handoff_required: morning_brief_bool_at(item, &["handoff_required"]).unwrap_or(false),
+        priority,
+        recommended_tool: morning_brief_string_at(item, &["recommended_tool"])
+            .unwrap_or(SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID)
+            .to_string(),
+        recommended_action: morning_brief_string_at(item, &["recommended_action"])
+            .unwrap_or("inspect_closeout_brief")
+            .to_string(),
+        owner_lane: morning_brief_string_at(item, &["owner_lane"])
+            .unwrap_or("chief")
+            .to_string(),
+        source_summary: morning_brief_field_clone(item, "source_summary"),
+    }
+}
+
+fn closeout_receipt_item_json(item: &CloseoutReceiptItem) -> JsonValue {
+    object([
+        ("item_id", string(&item.item_id)),
+        ("closeout_item_id", string(&item.closeout_item_id)),
+        ("handoff_item_id", string(&item.handoff_item_id)),
+        ("lane_id", string(&item.lane_id)),
+        ("section_id", string(&item.section_id)),
+        ("label", string(&item.label)),
+        ("status", string(&item.status)),
+        ("severity", string(&item.severity)),
+        ("closeout_state", string(&item.closeout_state)),
+        ("receipt_state", string(item.receipt_state)),
+        ("receipt_action", string(item.receipt_action)),
+        ("closeout_action", string(&item.closeout_action)),
+        ("handoff_action", string(&item.handoff_action)),
+        ("readiness_action", string(&item.readiness_action)),
+        ("continuity_action", string(&item.continuity_action)),
+        ("handoff_required", JsonValue::Bool(item.handoff_required)),
+        ("priority", integer(item.priority)),
+        ("recommended_tool", string(&item.recommended_tool)),
+        ("recommended_action", string(&item.recommended_action)),
+        ("owner_lane", string(&item.owner_lane)),
+        ("source_summary", item.source_summary.clone()),
+    ])
+}
+
+fn closeout_receipt_status(
+    receipt_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_item_count: usize,
+    acknowledged_item_count: usize,
+) -> &'static str {
+    if has_blockers {
+        "hold"
+    } else if requires_human_review {
+        "review_required"
+    } else if action_item_count > 0 {
+        "action_required"
+    } else if receipt_ready {
+        "ready"
+    } else if acknowledged_item_count > 0 {
+        "acknowledged"
+    } else {
+        "monitor"
+    }
+}
+
+fn closeout_receipt_state(closeout_state: &str) -> &'static str {
+    match closeout_state {
+        "blocked" => "blocked",
+        "handoff_required" => "review_required",
+        "action_required" => "action_required",
+        _ => "acknowledged",
+    }
+}
+
+fn closeout_receipt_action(receipt_state: &str) -> &'static str {
+    match receipt_state {
+        "blocked" => "hold_closeout_receipt",
+        "review_required" => "confirm_receipt_owner",
+        "action_required" => "complete_receipt_action",
+        _ => "acknowledge_closeout_item",
+    }
+}
+
+fn closeout_receipt_priority(receipt_state: &str) -> i64 {
+    match receipt_state {
+        "blocked" => 0,
+        "review_required" => 1,
+        "action_required" => 2,
+        _ => 3,
+    }
+}
+
+fn closeout_receipt_decision_json(
+    status: &str,
+    receipt_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_item_count: usize,
+    acknowledged_item_count: usize,
+    next_item: Option<&CloseoutReceiptItem>,
+) -> JsonValue {
+    object([
+        (
+            "recommendation",
+            string(closeout_receipt_decision_label(
+                status,
+                receipt_ready,
+                has_blockers,
+                requires_human_review,
+                action_item_count,
+                acknowledged_item_count,
+            )),
+        ),
+        (
+            "recommended_tool",
+            string(closeout_receipt_next_tool(next_item)),
+        ),
+        (
+            "recommended_action",
+            string(closeout_receipt_next_action(next_item)),
+        ),
+        (
+            "owner_lane",
+            string(closeout_receipt_next_owner_lane(next_item)),
+        ),
+        (
+            "reason",
+            string(
+                next_item
+                    .map(|item| item.section_id.as_str())
+                    .unwrap_or("no_open_closeout_receipt_items"),
+            ),
+        ),
+    ])
+}
+
+fn closeout_receipt_decision_label(
+    status: &str,
+    receipt_ready: bool,
+    has_blockers: bool,
+    requires_human_review: bool,
+    action_item_count: usize,
+    acknowledged_item_count: usize,
+) -> &'static str {
+    if has_blockers || status == "hold" {
+        "hold_closeout_receipt"
+    } else if requires_human_review {
+        "prepare_receipt_review"
+    } else if action_item_count > 0 {
+        "complete_receipt_actions"
+    } else if receipt_ready {
+        "receipt_ready"
+    } else if acknowledged_item_count > 0 {
+        "acknowledge_closeout_items"
+    } else {
+        "monitor"
+    }
+}
+
+fn closeout_receipt_next_tool(next_item: Option<&CloseoutReceiptItem>) -> &str {
+    next_item
+        .map(|item| item.recommended_tool.as_str())
+        .unwrap_or(SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID)
+}
+
+fn closeout_receipt_next_action(next_item: Option<&CloseoutReceiptItem>) -> &str {
+    next_item
+        .map(|item| item.receipt_action)
+        .unwrap_or("monitor_closeout_receipt")
+}
+
+fn closeout_receipt_next_owner_lane(next_item: Option<&CloseoutReceiptItem>) -> &str {
     next_item
         .map(|item| item.owner_lane.as_str())
         .unwrap_or("chief")
@@ -86378,7 +86876,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 303);
+        assert_eq!(definitions.len(), 304);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -86447,6 +86945,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_CLOSEOUT_BRIEF_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID));
@@ -87252,7 +87753,7 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_MAINTENANCE_CLOSEOUT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            295
+            296
         );
         assert_eq!(
             export
@@ -89588,6 +90089,144 @@ mod tests {
     }
 
     #[test]
+    fn closeout_receipt_turns_closeout_items_into_acknowledgement_packet() {
+        let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool-only"),
+                AgentId::trusted(AGENT_ID),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_000,
+            ),
+        );
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
+        let mut tool_runtime = InMemoryToolRuntime::new();
+        bridge.register_all(&mut tool_runtime).unwrap();
+
+        let denied_command = tool_runtime.invoke_with_events(&request(
+            "call-closeout-receipt-denied-command",
+            SMART_HOME_COMMAND_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                ("command_type", string("turn_on")),
+            ]),
+            2_000,
+        ));
+        assert!(!denied_command.result.ok);
+
+        runtime.borrow_mut().registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-smart-home-read"),
+                AgentId::trusted(AGENT_ID),
+                PrivilegeTier::HumanApproval,
+                "user:test",
+                2_001,
+            ),
+        );
+
+        let request = request(
+            "call-closeout-receipt",
+            SMART_HOME_GET_CLOSEOUT_RECEIPT_TOOL_ID,
+            object([]),
+            2_002,
+        );
+        let trace = tool_runtime.invoke_with_events(&request);
+        assert!(trace.result.ok);
+        assert_eq!(trace.summary().progress_event_count, 1);
+
+        let output = trace.result.output.as_ref().unwrap();
+        assert_eq!(field(output, "status"), Some(&string("hold")));
+        assert_eq!(field(output, "ready"), Some(&JsonValue::Bool(false)));
+        assert_eq!(
+            field(output, "receipt_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(output, "requires_human_review"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(field(output, "has_blockers"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(output, "receipt_item_count").unwrap()).unwrap() >= 4);
+        assert!(integer_value(field(output, "blocker_item_count").unwrap()).unwrap() >= 1);
+
+        let summary = field(output, "summary").unwrap();
+        assert_eq!(
+            field(summary, "boundary"),
+            Some(&string(
+                "Chief reads D23 runtime and platform primitives; it does not own smart-home controller state."
+            ))
+        );
+        assert_eq!(field(summary, "closeout_status"), Some(&string("hold")));
+        assert_eq!(
+            field(summary, "closeout_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(summary, "next_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(summary, "next_action"),
+            Some(&string("hold_closeout_receipt"))
+        );
+        assert_eq!(field(summary, "next_owner_lane"), Some(&string("policy")));
+
+        let decision = field(output, "decision").unwrap();
+        assert_eq!(
+            field(decision, "recommendation"),
+            Some(&string("hold_closeout_receipt"))
+        );
+        assert_eq!(
+            field(decision, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(decision, "recommended_action"),
+            Some(&string("hold_closeout_receipt"))
+        );
+        assert_eq!(field(decision, "owner_lane"), Some(&string("policy")));
+        assert_eq!(field(decision, "reason"), Some(&string("incident")));
+
+        let items = field(output, "receipt_items").unwrap();
+        assert!(array_len(items).unwrap() >= 4);
+        let first = array_item(items, 0).unwrap();
+        assert_eq!(field(first, "severity"), Some(&string("blocker")));
+        assert_eq!(field(first, "closeout_state"), Some(&string("blocked")));
+        assert_eq!(field(first, "receipt_state"), Some(&string("blocked")));
+        assert_eq!(
+            field(first, "receipt_action"),
+            Some(&string("hold_closeout_receipt"))
+        );
+        assert_eq!(
+            field(first, "closeout_action"),
+            Some(&string("hold_closeout"))
+        );
+        assert_eq!(
+            field(first, "handoff_action"),
+            Some(&string("hold_shift_handoff"))
+        );
+        assert_eq!(
+            field(first, "handoff_required"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(first, "recommended_tool"),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(
+            field(first, "recommended_action"),
+            Some(&string("draft_capability_grant_update"))
+        );
+        assert_eq!(
+            field(first, "source_summary").and_then(|summary| field(summary, "next_tool")),
+            Some(&string(SMART_HOME_LIST_AUTHORIZATION_GAP_AUDIT_TOOL_ID))
+        );
+        assert_eq!(array_len(field(output, "source_tools").unwrap()), Some(17));
+    }
+
+    #[test]
     fn readiness_brief_rolls_up_handoff_runtime_safety_and_catalog_phases() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
@@ -90089,11 +90728,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(303))
+            Some(&integer(304))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(295))
+            Some(&integer(296))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
