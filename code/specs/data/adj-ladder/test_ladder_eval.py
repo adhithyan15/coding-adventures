@@ -88,6 +88,7 @@ SELF_CONTAINED_RUNGS = (
     "rung48_infusion_delivered_volume",
     "rung49_fractionated_dose",
     "rung50_insulin_correction",
+    "rung51_dispensing_quantity",
 )
 
 
