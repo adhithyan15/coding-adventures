@@ -115,29 +115,64 @@ pub fn xml_escape(s: &str) -> String {
             '>' => out.push_str("&gt;"),
             '"' => out.push_str("&quot;"),
             '\'' => out.push_str("&apos;"),
+            // Characters that are ILLEGAL in XML 1.0 cannot be rescued by
+            // entity-escaping (`&#0;` is itself illegal), so the only way to keep
+            // the package openable is to DROP them. This matters when text
+            // originates from untrusted data: a NUL or 0x01 in a pasted cell
+            // value would otherwise make the whole part unparseable, and readers
+            // disagree on how to recover — an integrity hazard. The legal control
+            // characters tab/newline/carriage-return are preserved. (XML 1.0 §2.2)
+            c if is_illegal_xml_char(c) => {}
             other => out.push(other),
         }
     }
     out
 }
 
+/// True for code points not permitted anywhere in an XML 1.0 document: the C0
+/// control characters except `\t` `\n` `\r`, plus the non-characters U+FFFE and
+/// U+FFFF. Such characters are dropped by [`xml_escape`] so the package stays
+/// well-formed regardless of what untrusted text a caller supplies.
+fn is_illegal_xml_char(c: char) -> bool {
+    let u = c as u32;
+    (u < 0x20 && c != '\t' && c != '\n' && c != '\r') || u == 0xFFFE || u == 0xFFFF
+}
+
 // ===========================================================================
 // Part-name normalization
 // ===========================================================================
 
-/// Turn an OPC logical part name into its ZIP member name.
+/// Normalize an OPC logical part name into a **safe relative** path.
 ///
-/// OPC part names are absolute (`/xl/workbook.xml`); ZIP member names have no
-/// leading slash (`xl/workbook.xml`). We accept either spelling from the caller
-/// and always store the ZIP form. Any accidental leading slashes are stripped.
-fn zip_member_name(part_name: &str) -> String {
-    part_name.trim_start_matches('/').to_string()
+/// A part name may reach us from untrusted data (this is a generic packaging
+/// layer whose whole point is reuse), and whatever string we hand to the ZIP
+/// writer is written verbatim into the archive's member name. An unsanitized
+/// name like `/../../evil.xml` would become the member `../../evil.xml`, and a
+/// naive extractor would then write *outside* the target directory (Zip-Slip).
+///
+/// So we normalize defensively and structurally: backslashes become forward
+/// slashes, then we split on `/` and drop every empty, `.`, or `..` segment.
+/// The result can never be absolute and can never traverse upward, whatever the
+/// input. Well-formed OPC names (`/xl/workbook.xml`) are unaffected.
+fn normalize_part_name(part_name: &str) -> String {
+    part_name
+        .replace('\\', "/")
+        .split('/')
+        .filter(|seg| !seg.is_empty() && *seg != "." && *seg != "..")
+        .collect::<Vec<_>>()
+        .join("/")
 }
 
-/// Turn an OPC logical part name into the canonical `/`-prefixed form used in
-/// `[Content_Types].xml` `<Override PartName="…">`.
+/// The safe ZIP member name (no leading slash) for a part.
+fn zip_member_name(part_name: &str) -> String {
+    normalize_part_name(part_name)
+}
+
+/// The canonical `/`-prefixed form used in `[Content_Types].xml`
+/// `<Override PartName="…">`, derived from the SAME normalization as the ZIP
+/// member so the manifest and the archive always agree.
 fn override_part_name(part_name: &str) -> String {
-    format!("/{}", part_name.trim_start_matches('/'))
+    format!("/{}", normalize_part_name(part_name))
 }
 
 // ===========================================================================

@@ -187,3 +187,28 @@ fn round_trips_through_opc_reader() {
     // Part bytes survive the round-trip.
     assert_eq!(read.read_part("/xl/worksheets/sheet1.xml"), Some(&b"<worksheet/>"[..]));
 }
+
+// --- Security regressions (from the C1 security review) --------------------
+
+#[test]
+fn xml_escape_drops_illegal_control_chars() {
+    // NUL and 0x01 are illegal in XML 1.0 and cannot be entity-escaped; they
+    // must be dropped so the package stays parseable.
+    assert_eq!(xml_escape("ab\u{0}cd\u{1}ef"), "abcdef");
+    // But the three legal control chars are preserved.
+    assert_eq!(xml_escape("a\tb\nc\rd"), "a\tb\nc\rd");
+    // And the ordinary specials still escape.
+    assert_eq!(xml_escape("x&<>\"'y"), "x&amp;&lt;&gt;&quot;&apos;y");
+}
+
+#[test]
+fn part_names_cannot_traverse_out_of_the_package() {
+    // A hostile part name must not become a Zip-Slip member name.
+    assert_eq!(zip_member_name("/../../evil.xml"), "evil.xml");
+    assert_eq!(zip_member_name("xl\\..\\..\\evil"), "xl/evil");
+    assert_eq!(zip_member_name("//a///b/./c"), "a/b/c");
+    // A normal name is unchanged (minus the leading slash).
+    assert_eq!(zip_member_name("/xl/workbook.xml"), "xl/workbook.xml");
+    // Override form stays consistent with the member form.
+    assert_eq!(override_part_name("/../../evil.xml"), "/evil.xml");
+}
