@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.43.0] - 2026-07-02 — binomial coefficients (`\binom{n}{k}`) in `latex "…"`
+
+### Added
+
+- `latex "\binom{n}{k}"` (and the `\dbinom` / `\tbinom` display/text-style spellings, which the
+  frontend normalises to the same `MathExpr::Binom`) now lowers to the concrete value of the
+  binomial coefficient "n choose k" — `C(n, k) = n! / (k!·(n−k)!)`. This is DISTINCT from
+  `\frac{n}{k}`: it is the combinatorial COUNT, not the ratio `n/k`. Example: `\binom{5}{2}` = 10,
+  `\binom{9}{7}` = `\binom{9}{2}` = 36, `\binom{4}{0}` = 1, and it composes with surrounding
+  arithmetic (`\binom{4}{2} + \binom{3}{1}` = 9).
+- Only the decidable case is evaluated — both arguments CONCRETE non-negative integers with
+  `k ≤ n ≤ 1000`. The value is computed with the **multiplicative product formula**
+  `∏_{i=1}^{min(k,n−k)} (n−k+i)/i`, which is exact (integer-valued at every step) and needs at most
+  `n/2` multiply/divide operations. A symbolic argument (`\binom{n}{k}` with variables), a negative
+  argument, `k > n`, an `n` beyond the cap, or a coefficient too large to represent exactly as an
+  f64 integer (e.g. `\binom{60}{30}`) is an explicit `UnsupportedLatexMath` — never a guess, an
+  approximation, or a silently-rounded literal.
+- Adapter-only, no engine/AST change. Both arguments are read with the existing NON-recursive
+  `number_as_i64`, so a pathological argument like `\binom{aaaa…}{2}` (a deep `Bin(Mul)`
+  juxtaposition spine in the `n` slot) is rejected on the outermost node WITHOUT walking the spine
+  — no new unbounded tree-walk, no stack-overflow DoS surface (regression-tested with a
+  20,000-letter braced argument).
+
 ## [0.42.0] - 2026-07-02 — symbolic / computed power exponents (`x^y`, `x^{a+b}`) in `latex "…"`
 
 ### Changed

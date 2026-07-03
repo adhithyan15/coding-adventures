@@ -2588,6 +2588,105 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_binomial_coefficient_computes() {
+        // `\binom{5}{2}` = "5 choose 2" = 10 — the COUNT C(n,k), distinct from the ratio 5/2.
+        let basic = crate::compile_and_decide(
+            "let answer = latex \"$\\binom{5}{2}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 10 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(basic.ranked[0].posterior > 0.99, "{basic:?}");
+        // `\dbinom{6}{3}` — the display-style spelling lowers to the same Binom = 20.
+        let dbinom = crate::compile_and_decide(
+            "let answer = latex \"$\\dbinom{6}{3}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 20 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(dbinom.ranked[0].posterior > 0.99, "{dbinom:?}");
+        // Symmetry C(9,7) = C(9,2) = 36: the loop iterates over min(k, n-k)=2, not 7.
+        let symm = crate::compile_and_decide(
+            "let answer = latex \"$\\binom{9}{7}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 36 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(symm.ranked[0].posterior > 0.99, "{symm:?}");
+        // Edge: C(4,0) = 1 (the empty-subset count) — the loop runs zero steps.
+        let edge = crate::compile_and_decide(
+            "let answer = latex \"$\\binom{4}{0}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(edge.ranked[0].posterior > 0.99, "{edge:?}");
+        // Composes with surrounding arithmetic: \binom{4}{2} + \binom{3}{1} = 6 + 3 = 9.
+        let composed = crate::compile_and_decide(
+            "let answer = latex \"$\\binom{4}{2} + \\binom{3}{1}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 9 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(composed.ranked[0].posterior > 0.99, "{composed:?}");
+    }
+
+    #[test]
+    fn native_latex_undecidable_binomials_are_rejected() {
+        // A symbolic argument has no concrete count — cannot evaluate, must reject (never guess n/k).
+        let symbolic = compile(
+            "observe n(6)\n\
+             observe k(2)\n\
+             let answer = latex \"$\\binom{n}{k}$\"\n\
+             ? answer\n",
+        );
+        assert!(symbolic.is_err(), "symbolic binomial must reject: {symbolic:?}");
+        // k > n is out of the supported domain (\binom{3}{5}) — reject rather than emit 0.
+        let inverted = compile(
+            "let answer = latex \"$\\binom{3}{5}$\"\n\
+             ? answer\n",
+        );
+        assert!(inverted.is_err(), "k>n binomial must reject: {inverted:?}");
+        // A result beyond the f64 exact-integer range (C(60,30) ≈ 1.18e17) is rejected rather than
+        // emitting a silently-rounded literal.
+        let too_large = compile(
+            "let answer = latex \"$\\binom{60}{30}$\"\n\
+             ? answer\n",
+        );
+        assert!(too_large.is_err(), "too-large binomial must reject: {too_large:?}");
+        // An upper argument beyond BINOM_N_CAP is rejected before looping.
+        let oversized = compile(
+            "let answer = latex \"$\\binom{2000}{2}$\"\n\
+             ? answer\n",
+        );
+        assert!(oversized.is_err(), "oversized-n binomial must reject: {oversized:?}");
+    }
+
+    #[test]
+    fn native_latex_deep_binomial_argument_does_not_overflow() {
+        // A binomial argument that is a very deep juxtaposition forms a `Bin(Mul)` spine the latex
+        // parser's MAX_DEPTH does not bound. Braces make the whole juxtaposition the binomial's
+        // `n` slot (`\binom{aaaa…}{2}`). The adapter reads that slot with the NON-recursive
+        // `number_as_i64`, which returns `None` on the outermost `Bin` WITHOUT descending — so the
+        // binomial is rejected without ever walking the spine, and compilation must RETURN (an
+        // error) rather than overflow the thread stack. A 20,000-letter braced argument.
+        let deep = "a".repeat(20_000);
+        let src = format!(
+            "let answer = latex \"$\\binom{{{deep}}}{{2}}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n"
+        );
+        // Either outcome is acceptable — the guarantee is that it returns instead of aborting.
+        let _ = compile(&src);
+    }
+
+    #[test]
     fn native_latex_subscripts_bind_as_distinct_variables() {
         // `x_i` / `x_1` / `V_{max}` — a subscript names a DISTINCT variable, not a computation.
         // The adapter mangles the subscript into a flat `base_sub` identifier that binds to a
