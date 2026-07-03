@@ -59,7 +59,7 @@ use coding_adventures_javascript_ast::{
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
-        PropertyKey, PropertyKind, StringLiteral, TemplateElement, TemplateLiteral,
+        PropertyKey, PropertyKind, SequenceExpression, StringLiteral, TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
         UndefinedLiteral, UpdateExpression, UpdateOperator,
     },
@@ -1350,18 +1350,25 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
 
 fn convert_expression_rule(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     // expression = assignment_expression { COMMA assignment_expression }
-    // Phase 1: only single-expression form. Multi-expression (sequence) is Phase 5.
     let nodes = node_children(node);
     if nodes.len() == 1 {
         convert_expression(nodes[0])
     } else if nodes.is_empty() {
         Err(internal(node, "expression: no children"))
     } else {
-        // Multiple expressions separated by comma = SequenceExpression (not in Phase 1).
-        Err(BridgeError::UnsupportedSyntax {
-            rule: "SequenceExpression".to_string(),
-            location: loc(node),
-        })
+        // `a, b, c` — the comma operator (CLOC12.160 PR2). The `COMMA` tokens
+        // are already dropped by `node_children`, so `nodes` is exactly the
+        // `assignment_expression` operand list in source order. Convert each
+        // into a `SequenceExpression` operand. (A single failed operand
+        // propagates its error, dropping the whole file to WHITESPACE_ONLY.)
+        let expressions = nodes
+            .iter()
+            .map(|n| convert_expression(n))
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions,
+        }))
     }
 }
 
@@ -4165,5 +4172,55 @@ mod tests {
             bridge("new X(...a);").is_err(),
             "spread argument in `new` should decline (SpreadElement not yet supported)"
         );
+    }
+
+    // ---- SequenceExpression (CLOC12.160 PR2, closes gap-161) -----------
+
+    /// `a, b, c` bridges to a `SequenceExpression` holding the three operands
+    /// in source order — no longer declined to `UnsupportedSyntax`.
+    #[test]
+    fn sequence_three_operands() {
+        match sole_expr("a, b, c;") {
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 3);
+                assert!(matches!(&s.expressions[0], Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(&s.expressions[1], Expression::Identifier(i) if i.name == "b"));
+                assert!(matches!(&s.expressions[2], Expression::Identifier(i) if i.name == "c"));
+            }
+            other => panic!("expected SequenceExpression, got {other:?}"),
+        }
+    }
+
+    /// A two-operand sequence with a foldable operand keeps both operands (the
+    /// bridge does not fold — that is a pass's job): `a, 1 + 2`.
+    #[test]
+    fn sequence_two_operands_preserved() {
+        match sole_expr("a, 1 + 2;") {
+            Expression::SequenceExpression(s) => {
+                assert_eq!(s.expressions.len(), 2);
+                assert!(matches!(&s.expressions[0], Expression::Identifier(i) if i.name == "a"));
+                assert!(matches!(&s.expressions[1], Expression::BinaryExpression(_)));
+            }
+            other => panic!("expected SequenceExpression, got {other:?}"),
+        }
+    }
+
+    /// A parenthesised sequence `(a, b)` inside an expression bridges to a
+    /// `SequenceExpression` — here as the RHS of an assignment `x = (a, b)`.
+    #[test]
+    fn parenthesised_sequence_as_assignment_rhs() {
+        match sole_expr("x = (a, b);") {
+            Expression::AssignmentExpression(a) => {
+                assert!(matches!(&*a.right, Expression::SequenceExpression(s) if s.expressions.len() == 2));
+            }
+            other => panic!("expected AssignmentExpression with a sequence RHS, got {other:?}"),
+        }
+    }
+
+    /// A single expression is NOT wrapped in a sequence — the one-operand path
+    /// still passes the operand through unchanged.
+    #[test]
+    fn single_operand_not_a_sequence() {
+        assert!(matches!(sole_expr("a;"), Expression::Identifier(i) if i.name == "a"));
     }
 }
