@@ -915,6 +915,32 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
     match expr {
         MathExpr::Number(n) => number_to_lit(n, source),
         MathExpr::Symbol(name) => Ok(ExprAst::Ref(name.clone())),
+        // `x_i` / `x_1` / `V_{max}` — a SUBSCRIPTED variable. A subscript does not compute:
+        // `x_1` and `x_2` are two DISTINCT observed quantities, and `V_{max}` / `C_{peak}` are
+        // named readings, not `V` times something. So the adapter mangles the subscript into a
+        // single flat identifier `base_sub` (`x_i` -> `Ref("x_i")`, `V_{max}` -> `Ref("V_max")`),
+        // which binds to a matching `observe x_i(...)` / `observe V_max(...)` exactly like any
+        // underscored name (`tidal_volume`). The frontend parses the subscript body per its own
+        // rules — a single letter/number is a `Symbol`/`Number`, but a BRACED multi-letter
+        // subscript `{max}` becomes a juxtaposition chain of single-letter `Symbol`s
+        // (`Bin(Mul, Bin(Mul, m, a), x)`) — so `subscript_ident_part` flattens either shape back
+        // into the word it spells. Anything the helper cannot name (e.g. an arithmetic subscript
+        // `x_{i+1}`) returns an explicit `UnsupportedLatexMath` — never a silent mis-binding.
+        MathExpr::Subscript(base, sub) => {
+            let base_name = subscript_ident_part(base).ok_or_else(|| {
+                AdapterError::UnsupportedLatexMath {
+                    source: source.to_string(),
+                    detail: "subscript base is not a plain identifier".to_string(),
+                }
+            })?;
+            let sub_name = subscript_ident_part(sub).ok_or_else(|| {
+                AdapterError::UnsupportedLatexMath {
+                    source: source.to_string(),
+                    detail: "subscript index is not a plain identifier or number".to_string(),
+                }
+            })?;
+            Ok(ExprAst::Ref(format!("{base_name}_{sub_name}")))
+        }
         MathExpr::Group(inner) => latex_math_to_expr_ast(inner, source),
         // A delimited group (`(x)`, `[x]`, `|x|`) unwraps the same as a plain group for arithmetic
         // lowering — the fence delimiters are presentation, not an operation. (latex now lowers a
@@ -1238,6 +1264,60 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
 /// `\operatorname{trunc}` and `\operatorname{ trunc }` both count.
 fn operator_name_is(expr: &MathExpr, name: &str) -> bool {
     matches!(expr, MathExpr::Text(s) if s.trim() == name)
+}
+
+/// Flatten a subscript base or index `MathExpr` into the identifier fragment it names, or `None`
+/// if it is not a plain name/number. Used by the `MathExpr::Subscript` arm to mangle `x_i` /
+/// `V_{max}` into a single `base_sub` identifier. A single-letter subscript is a `Symbol` and a
+/// digit subscript a `Number` (`x_1` -> `"1"` via `as_written`), while a BRACED multi-letter
+/// subscript `{max}` is parsed by the frontend as a juxtaposition chain of single-letter `Symbol`s
+/// (`Bin(Mul, Bin(Mul, m, a), x)`), so the `Bin(Mul, ..)` arm concatenates the fragments back into
+/// the word ("max") — no separator, since juxtaposed letters spell ONE name. A nested subscript
+/// (`x_{i_j}`) joins with `_`. Anything else (an arithmetic subscript like `x_{i+1}`, a fraction, …)
+/// returns `None`, so the caller reports `UnsupportedLatexMath` rather than inventing a binding.
+///
+/// **Iterative, not recursive, on purpose.** A subscript body can be an ARBITRARILY deep
+/// left-associative `Bin(Mul)` spine: the frontend builds juxtaposition chains (`x_{aaaa…a}`) in a
+/// loop that does NOT charge the latex parser's `MAX_DEPTH`, so the tree depth is unbounded by input
+/// length (the `latex` crate parses 50 000-term chains in its own tests). A naive recursion here
+/// would overflow the thread stack on adversarial input — an *uncatchable* abort (a DoS). So we
+/// walk the tree with an explicit heap work-stack (mirroring the `latex` crate's own iterative
+/// `lower`): stack depth is heap-bounded by input length, call depth is O(1).
+fn subscript_ident_part(expr: &MathExpr) -> Option<String> {
+    // A work item is either a subtree still to flatten, or a literal separator to emit. We push
+    // children in REVERSE so the LIFO stack pops them left-to-right.
+    enum Work<'a> {
+        Node(&'a MathExpr),
+        Sep,
+    }
+    let mut out = String::new();
+    let mut stack: Vec<Work> = vec![Work::Node(expr)];
+    while let Some(item) = stack.pop() {
+        match item {
+            Work::Sep => out.push('_'),
+            Work::Node(node) => match node {
+                MathExpr::Symbol(s) => out.push_str(s),
+                MathExpr::Text(s) => out.push_str(s.trim()),
+                MathExpr::Number(n) => out.push_str(n.as_written()),
+                MathExpr::Group(inner) => stack.push(Work::Node(inner)),
+                // `{max}` -> juxtaposed letters spell ONE word: emit left then right, no separator.
+                MathExpr::Bin(BinOp::Mul, l, r) => {
+                    stack.push(Work::Node(r));
+                    stack.push(Work::Node(l));
+                }
+                // Nested subscript `x_{i_j}` -> base `_` index.
+                MathExpr::Subscript(b, s) => {
+                    stack.push(Work::Node(s));
+                    stack.push(Work::Sep);
+                    stack.push(Work::Node(b));
+                }
+                // Anything else is not a plain name — abort the whole flatten (the caller then
+                // reports `UnsupportedLatexMath`, never inventing a partial binding).
+                _ => return None,
+            },
+        }
+    }
+    Some(out)
 }
 
 /// If `expr` is a trigonometric operator-name text (`\operatorname{sin}`, `\operatorname{arctan}`,
