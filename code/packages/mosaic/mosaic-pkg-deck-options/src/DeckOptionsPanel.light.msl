@@ -1,0 +1,505 @@
+// DeckOptionsPanel.light.msl - light deck options theme.
+
+style DeckOptionsPanel {
+  part deck-options-panel {
+    background : "#f8fafc" ;
+    border-color : "#b45309" ;
+    border-width : 1 ;
+    padding : 14 ;
+  }
+
+  part settings-title {
+    color : "#92400e" ;
+    font-size : 18 ;
+    font-weight : 700 ;
+    padding-bottom : 10 ;
+  }
+
+  part learning-step-options {
+    padding-bottom : 10 ;
+  }
+
+  part deck-option-limits {
+    padding-bottom : 10 ;
+  }
+
+  part graduation-options {
+    padding-bottom : 10 ;
+  }
+
+  part review-factor-options {
+    padding-bottom : 10 ;
+  }
+
+  part fsrs-options {
+    padding-bottom : 10 ;
+  }
+
+  part fsrs-filter-options {
+    padding-bottom : 10 ;
+  }
+
+  part leech-options {
+    padding-bottom : 10 ;
+  }
+
+  part sibling-bury-options {
+    padding-bottom : 4 ;
+  }
+
+  part learning-steps-field {
+    padding : 6 ;
+  }
+
+  part relearning-steps-field {
+    padding : 6 ;
+  }
+
+  part new-cards-field {
+    padding : 6 ;
+  }
+
+  part reviews-field {
+    padding : 6 ;
+  }
+
+  part graduating-interval-field {
+    padding : 6 ;
+  }
+
+  part easy-interval-field {
+    padding : 6 ;
+  }
+
+  part maximum-interval-field {
+    padding : 6 ;
+  }
+
+  part initial-ease-field {
+    padding : 6 ;
+  }
+
+  part interval-modifier-field {
+    padding : 6 ;
+  }
+
+  part hard-multiplier-field {
+    padding : 6 ;
+  }
+
+  part easy-bonus-field {
+    padding : 6 ;
+  }
+
+  part lapse-multiplier-field {
+    padding : 6 ;
+  }
+
+  part leech-threshold-field {
+    padding : 6 ;
+  }
+
+  part desired-retention-field {
+    padding : 6 ;
+  }
+
+  part historical-retention-field {
+    padding : 6 ;
+  }
+
+  part fsrs-parameters-field {
+    padding : 6 ;
+  }
+
+  part fsrs-search-field {
+    padding : 6 ;
+  }
+
+  part ignore-review-history-before-field {
+    padding : 6 ;
+  }
+
+  part easy-days-percentages-field {
+    padding : 6 ;
+  }
+
+  part leech-action-field {
+    padding : 6 ;
+  }
+
+  part leech-action-choices {
+    padding-top : 4 ;
+  }
+
+  part bury-new-siblings-field {
+    padding : 6 ;
+  }
+
+  part bury-review-siblings-field {
+    padding : 6 ;
+  }
+
+  part bury-interday-learning-siblings-field {
+    padding : 6 ;
+  }
+
+  part learning-steps-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part relearning-steps-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part new-cards-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part reviews-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part graduating-interval-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part easy-interval-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part maximum-interval-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part initial-ease-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part interval-modifier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part hard-multiplier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part easy-bonus-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part lapse-multiplier-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part leech-threshold-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part desired-retention-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part historical-retention-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part fsrs-parameters-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part fsrs-search-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part ignore-review-history-before-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part easy-days-percentages-input {
+    padding : 8 ;
+    border-radius : 4 ;
+    background : "#ffffff" ;
+    color : "#0f172a" ;
+    border-width : 1 ;
+    border-color : "#e2e8f0" ;
+    font-size : 14 ;
+  }
+
+  part learning-steps-label {
+    color : "#92400e" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part relearning-steps-label {
+    color : "#92400e" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part new-cards-label {
+    color : "#92400e" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part reviews-label {
+    color : "#115e59" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part graduating-interval-label {
+    color : "#1e40af" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part easy-interval-label {
+    color : "#5b21b6" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part maximum-interval-label {
+    color : "#9f1239" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part initial-ease-label {
+    color : "#1e40af" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part interval-modifier-label {
+    color : "#155e75" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part hard-multiplier-label {
+    color : "#9f1239" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part easy-bonus-label {
+    color : "#166534" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part lapse-multiplier-label {
+    color : "#5b21b6" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-threshold-label {
+    color : "#9f1239" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part desired-retention-label {
+    color : "#1e40af" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part historical-retention-label {
+    color : "#166534" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part fsrs-parameters-label {
+    color : "#92400e" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part fsrs-search-label {
+    color : "#155e75" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part ignore-review-history-before-label {
+    color : "#5b21b6" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part easy-days-percentages-label {
+    color : "#9f1239" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-action-label {
+    color : "#5b21b6" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+    padding-bottom : 4 ;
+  }
+
+  part leech-action-suspend-radio {
+    color : "#9f1239" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part leech-action-tag-only-radio {
+    color : "#5b21b6" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part bury-new-siblings-checkbox {
+    color : "#92400e" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part bury-review-siblings-checkbox {
+    color : "#1e40af" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+
+  part bury-interday-learning-siblings-checkbox {
+    color : "#166534" ;
+    font-size : 12 ;
+    font-weight : 700 ;
+  }
+}

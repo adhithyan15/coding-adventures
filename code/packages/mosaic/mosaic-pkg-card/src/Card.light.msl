@@ -1,0 +1,49 @@
+// Card.light.msl — light-theme stylesheet for the Card component.
+//
+// Targets the four parts declared by Card.mll:
+//
+//   card-root    the outer Column wrapper — owns the surface fill,
+//                border, and padding around the whole card
+//   card-title   bold, darker, larger — the visual anchor of the card
+//   card-body    body copy — softer, comfortable reading colour
+//   card-footer  muted caption-style metadata — quietest part of the card
+//
+// Palette
+// -------
+//   #ffffff  surface fill, a clean elevated light card surface
+//   #e2e8f0  hairline border, a soft slate edge on light panels
+//   #0f172a  primary title text — maximum contrast against #ffffff
+//   #334155  body text — comfortable for paragraphs without being harsh
+//   #64748b  caption / footer — clearly subordinate to body copy
+//
+// All units are explicit px values.  The Mosaic style grammar requires a
+// unit suffix on length values; bare numbers are reserved for unitless
+// properties (line-height, flex, etc.).
+
+style Card {
+  part card-root {
+    background:   #ffffff ;
+    border-width: 1px ;
+    border-style: solid ;
+    border-color: #e2e8f0 ;
+    padding:      12px ;
+  }
+
+  part card-title {
+    color:          #0f172a ;
+    font-weight:    bold ;
+    font-size:      16px ;
+    padding-bottom: 8px ;
+  }
+
+  part card-body {
+    color:          #334155 ;
+    font-size:      13px ;
+    padding-bottom: 8px ;
+  }
+
+  part card-footer {
+    color:     #64748b ;
+    font-size: 11px ;
+  }
+}

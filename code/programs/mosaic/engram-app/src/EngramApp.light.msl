@@ -1,0 +1,235 @@
+// EngramApp.light.msl - light app-shell style for the Engram Mosaic app.
+
+style EngramApp {
+  part app-shell {
+    background  : "#f8fafc" ;
+    color       : "#0f172a" ;
+    font-family : "system-ui, sans-serif" ;
+    padding     : 24 ;
+    gap         : 18 ;
+  }
+
+  part app-header {
+    align-items     : center ;
+    background      : "#ffffff" ;
+    border-color    : "#e2e8f0" ;
+    border-radius   : 8 ;
+    border-width    : 1 ;
+    flex-wrap       : wrap ;
+    gap             : 16 ;
+    justify-content : space-between ;
+    padding         : 12 ;
+  }
+
+  part app-title {
+    color          : "#0f172a" ;
+    font-size      : 28 ;
+    font-weight    : 700 ;
+  }
+
+  part app-nav {
+    flex-wrap : wrap ;
+    gap       : 8 ;
+  }
+
+  part host-status {
+    align-items   : center ;
+    background    : "#cffafe" ;
+    border-color  : "#0891b2" ;
+    border-radius : 8 ;
+    border-width  : 1 ;
+    flex-wrap     : wrap ;
+    gap           : 8 ;
+    max-width     : "980px" ;
+    padding       : 10 ;
+  }
+
+  part host-status-label {
+    color       : "#155e75" ;
+    font-weight : 800 ;
+  }
+
+  part host-status-message {
+    color : "#0f172a" ;
+  }
+
+  part nav-decks-button {
+    background    : "#ffffff" ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#334155" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part nav-study-button {
+    background    : "#ffffff" ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#334155" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part nav-browse-button {
+    background    : "#ffffff" ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#334155" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part nav-add-button {
+    background    : "#ffffff" ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#334155" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part nav-stats-button {
+    background    : "#ffffff" ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#334155" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part nav-options-button {
+    background    : "#ffffff" ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#334155" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part nav-decks-active {
+    background    : "#dbeafe" ;
+    border-color  : "#1e40af" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#1e40af" ;
+    font-weight   : 800 ;
+    padding       : 8 ;
+  }
+
+  part nav-study-active {
+    background    : "#dbeafe" ;
+    border-color  : "#1e40af" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#1e40af" ;
+    font-weight   : 800 ;
+    padding       : 8 ;
+  }
+
+  part nav-browse-active {
+    background    : "#dbeafe" ;
+    border-color  : "#1e40af" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#1e40af" ;
+    font-weight   : 800 ;
+    padding       : 8 ;
+  }
+
+  part nav-add-active {
+    background    : "#dbeafe" ;
+    border-color  : "#1e40af" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#1e40af" ;
+    font-weight   : 800 ;
+    padding       : 8 ;
+  }
+
+  part nav-stats-active {
+    background    : "#dbeafe" ;
+    border-color  : "#1e40af" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#1e40af" ;
+    font-weight   : 800 ;
+    padding       : 8 ;
+  }
+
+  part nav-options-active {
+    background    : "#dbeafe" ;
+    border-color  : "#1e40af" ;
+    border-radius : 6 ;
+    border-width  : 1 ;
+    color         : "#1e40af" ;
+    font-weight   : 800 ;
+    padding       : 8 ;
+  }
+
+  part decks-screen {
+    gap       : 14 ;
+    max-width : "980px" ;
+  }
+
+  part study-screen {
+    gap       : 14 ;
+    max-width : "760px" ;
+  }
+
+  part browse-screen {
+    max-width : "1100px" ;
+  }
+
+  part add-screen {
+    max-width : "860px" ;
+  }
+
+  part stats-screen {
+    max-width : "860px" ;
+  }
+
+  part options-screen {
+    gap       : 14 ;
+    max-width : "960px" ;
+  }
+
+  part stats-region {
+    padding-bottom : 0 ;
+  }
+
+  part deck-options-region {
+    padding-bottom : 0 ;
+  }
+
+  part review-history-region {
+    padding-bottom : 0 ;
+  }
+
+  part collection-region {
+    padding-bottom : 0 ;
+  }
+
+  part browser-region {
+    padding-bottom : 0 ;
+  }
+
+  part note-editor-region {
+    padding-bottom : 0 ;
+  }
+
+  part note-type-editor-region {
+    padding-bottom : 0 ;
+  }
+
+  part review-region {
+    padding-top : 16 ;
+    padding : 4 ;
+  }
+}
