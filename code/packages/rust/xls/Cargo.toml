@@ -1,0 +1,10 @@
+[package]
+name = "xls"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-dependency reader for legacy .xls (BIFF8 / [MS-XLS]) workbooks, layered on the `cfb` OLE2 container reader — decodes a workbook into a typed Workbook → Sheet → Cell model."
+license = "MIT"
+
+[dependencies]
+# The only dependency is our own zero-dependency OLE2/CFB container reader.
+cfb = { path = "../cfb" }
