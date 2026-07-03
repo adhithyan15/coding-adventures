@@ -1552,6 +1552,27 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — *three-dimensional integer array* (LANG-FULL AL-multidim-3D).
+    // Proves the multidim lowering is genuinely **N-dimensional**, not hardcoded
+    // to 2-D.  For `M[1:2, 1:2, 1:2]` the `algol-iir-compiler` computes strides
+    // right-to-left at declaration: `stride[2] = 1` (elided), `stride[1] = size[2]
+    // = 2`, `stride[0] = size[1]*stride[1] = 4`.  Subscript `M[i,j,k]` lowers to
+    // the flat 0-based index `(i−1)*4 + (j−1)*2 + (k−1)` — a single flat
+    // `alloc_array` of length 8.  Three corner cells with **distinct** flat
+    // indices are stored to exercise every stride: `M[1,1,1]=6` (flat 0),
+    // `M[2,1,1]=16` (flat 4, proves stride[0]), `M[1,2,1]=20` (flat 2, proves
+    // stride[1]); summed = 42.  The emitted IIR is still only `alloc_array`/
+    // `array_set`/`array_get` with flat indices — **no backend change** — so it
+    // runs on **all 7 backends** identically to the 1-D/2-D cells.  Exit 42.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer array M[1:2, 1:2, 1:2]; integer result; \
+               M[1, 1, 1] := 6; M[2, 1, 1] := 16; M[1, 2, 1] := 20; \
+               result := M[1, 1, 1] + M[2, 1, 1] + M[1, 2, 1] end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
     // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)

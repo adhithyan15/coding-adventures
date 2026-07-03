@@ -658,6 +658,10 @@ backend immediately) come before the enabler-dependent items.
   **AL-multidim-real ✅**: `real array M[1:2, 1:2]` (fractional f64 elements) runs on **all 7
   backends** — same flat-index machinery carrying `ScalarType::Real` elements on the E5 8-byte
   slots, summed and floored via `entier`; `algol-iir-compiler` 0.24.0 / `lang-aot` 0.166.0.
+  **AL-multidim-3D ✅**: `integer array M[1:2, 1:2, 1:2]` (3D) runs on **all 7 backends** —
+  proves the lowering is genuinely N-dimensional (stride product `stride[0]=size[1]*size[2]=4`,
+  `stride[1]=2`, `stride[2]=1`); no compiler change (the right-to-left stride loop just walks one
+  more iteration); `algol-iir-compiler` 0.25.0 / `lang-aot` 0.167.0.
 - ✅ **AL3** — typed procedures with value parameters. `integer procedure sq(x);
   value x; integer x; sq := x*x; result := sq(7)` ⇒ exit 49, **verified by running**
   across native/LLVM/WASM/JVM/CLR/VM/JIT (`lang-aot` `lang_matrix.rs`). Lowered to a

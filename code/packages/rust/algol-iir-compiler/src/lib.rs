@@ -4642,6 +4642,46 @@ mod tests {
         assert_eq!(run_i64(src), 14);
     }
 
+    /// A 3-D integer array (AL-multidim-3D): exercises the **N-dimensional**
+    /// generality of the multidim code — nothing is hardcoded to 2-D.  For
+    /// `M[1:2, 1:2, 1:2]` the strides are computed right-to-left:
+    ///   stride[2] = 1 (elided), stride[1] = size[2] = 2,
+    ///   stride[0] = size[1] * stride[1] = 2 * 2 = 4.
+    /// Flat index of `M[i,j,k]` = (i−1)*4 + (j−1)*2 + (k−1).
+    /// `M[2,2,2]` → 1*4 + 1*2 + 1 = flat index 7 (the last of 8 cells).
+    #[test]
+    fn three_d_array_store_and_load() {
+        let src = "begin integer array M[1:2, 1:2, 1:2]; integer result; \
+                   M[2,2,2] := 42; result := M[2,2,2] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    /// All eight cells of a 2×2×2 array are independently addressable: store the
+    /// flat index into each cell via a nested triple loop, then read three
+    /// corner cells whose flat indices are 0, 4, and 7 → 0 + 4 + 7 = 11.
+    #[test]
+    fn three_d_array_all_eight_cells() {
+        let src = "begin integer array M[1:2, 1:2, 1:2]; \
+                   integer i, j, k, result; \
+                   for i := 1 step 1 until 2 do \
+                     for j := 1 step 1 until 2 do \
+                       for k := 1 step 1 until 2 do \
+                         M[i,j,k] := (i-1)*4 + (j-1)*2 + (k-1); \
+                   result := M[1,1,1] + M[2,1,1] + M[2,2,2] end";
+        assert_eq!(run_i64(src), 11);
+    }
+
+    /// A non-cubic 3-D array `M[1:2, 1:3, 1:4]` proves the general stride
+    /// product: stride[2]=1, stride[1]=4, stride[0]=3*4=12; 24 elements total.
+    /// `M[2,3,4]` is the final cell: flat = 1*12 + 2*4 + 3 = 23.
+    #[test]
+    fn three_d_array_non_cubic() {
+        let src = "begin integer array M[1:2, 1:3, 1:4]; integer result; \
+                   M[1,1,1] := 100; M[2,3,4] := 42; \
+                   result := M[2,3,4] end";
+        assert_eq!(run_i64(src), 42);
+    }
+
     /// Wrong number of subscripts for a 2-D array is a type error.
     #[test]
     fn rejects_wrong_subscript_count_for_2d_array() {
