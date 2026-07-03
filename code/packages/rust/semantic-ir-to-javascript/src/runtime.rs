@@ -441,6 +441,24 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // Number
     "toFixed", "toString",
   ]);
+  // Ruby method names whose spelling differs from the JS-native equivalent.
+  // Applied in `callMethod` BEFORE the security allowlist check, so a Ruby
+  // spelling like `upcase` normalises to `toUpperCase` — which IS on the
+  // allowlist — while the allowlist itself stays a fixed set of native names
+  // (the reflective-gadget gate is unchanged).  ONLY unambiguous 1:1 renames
+  // belong here; semantics-diverging pairs (e.g. Ruby `gsub` vs JS `replaceAll`,
+  // whose replacement/global rules differ) are deliberately omitted.  Every
+  // value below already appears in `METHOD_ALLOWLIST`.
+  const RUBY_METHOD_ALIASES = {
+    "upcase": "toUpperCase",
+    "downcase": "toLowerCase",
+    "strip": "trim",
+    "lstrip": "trimStart",
+    "rstrip": "trimEnd",
+    "start_with?": "startsWith",
+    "end_with?": "endsWith",
+    "include?": "includes",
+  };
   function callMethod(recv, name, ...rawArgs) {
     const args = rawArgs.map(unwrapArg);
     // ── user-defined-class dispatch (O3) ─────────────────────────
@@ -509,6 +527,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       // A `.fetch` on any other receiver has no Ruby-collection meaning
       // here; fall through to the unknown-method NoMethodError below.
     }
+    // Normalise a differently-spelled Ruby method name to its JS-native
+    // equivalent (`upcase` → `toUpperCase`).  Unknown names pass through
+    // unchanged and simply miss the allowlist below.  This is a fixed table
+    // lookup, never a reflective transform of a source-derived name.
+    const native = Object.prototype.hasOwnProperty.call(RUBY_METHOD_ALIASES, name)
+      ? RUBY_METHOD_ALIASES[name]
+      : name;
     // SECURITY gate: refuse any name outside the allowlist so reflective
     // gadgets (`constructor`, `__proto__`, `apply`, …) can never be reached.
     // An allowlist miss is a *genuinely unknown* method, so — matching Ruby
@@ -516,12 +541,13 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // NoMethodError`) rather than a JS-native `TypeError` (which a `rescue`
     // would either miss or, worse, catch as an over-broad StandardError).
     // The reflective gadgets never appear in the allowlist, so they still
-    // land here and are rejected before any property is looked up.
-    if (!METHOD_ALLOWLIST.has(name)) {
+    // land here and are rejected before any property is looked up.  The error
+    // message reports the ORIGINAL Ruby name the source wrote.
+    if (!METHOD_ALLOWLIST.has(native)) {
       raiseError("NoMethodError",
         "undefined method `" + name + "` for " + classDescription(recv));
     }
-    const m = recv == null ? undefined : recv[name];
+    const m = recv == null ? undefined : recv[native];
     if (typeof m !== "function") {
       raiseError("NoMethodError",
         "undefined method `" + name + "` for " + classDescription(recv));
@@ -1016,6 +1042,35 @@ mod tests {
         ] {
             assert!(RUNTIME.contains(needed), "runtime missing `{needed}`");
         }
+    }
+
+    #[test]
+    fn runtime_aliases_ruby_string_method_names_to_native() {
+        // Ruby spellings that differ from JS natives must normalise to a native
+        // name that is ITSELF on the allowlist, so the security gate is unchanged
+        // while `"x".upcase` etc. dispatch.  (Regression guard for the gap where
+        // `upcase`/`downcase`/`strip` raised NoMethodError on the JS backend.)
+        assert!(RUNTIME.contains("const RUBY_METHOD_ALIASES"));
+        for (ruby, native) in [
+            ("upcase", "toUpperCase"),
+            ("downcase", "toLowerCase"),
+            ("strip", "trim"),
+            ("start_with?", "startsWith"),
+            ("include?", "includes"),
+        ] {
+            assert!(
+                RUNTIME.contains(&format!("\"{ruby}\": \"{native}\"")),
+                "runtime missing Ruby→native alias `{ruby}`→`{native}`"
+            );
+            // The native target must be on the allowlist — the alias only
+            // normalises the spelling; it never widens the gate.
+            assert!(
+                RUNTIME.contains(&format!("\"{native}\"")),
+                "alias target `{native}` must be an allowlisted native method"
+            );
+        }
+        // The alias is resolved BEFORE the allowlist check (not bypassing it).
+        assert!(RUNTIME.contains("METHOD_ALLOWLIST.has(native)"));
     }
 
     #[test]

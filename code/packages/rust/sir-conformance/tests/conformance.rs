@@ -116,6 +116,16 @@ const CORPUS: &[Program] = &[
         ruby: "def sz(n)\n  case n\n  when 1, 2, 3\n    \"small\"\n  else\n    \"big\"\n  end\nend\n\nputs sz(2)\nputs sz(9)\n",
         expected: "small\nbig",
     },
+    // Ruby String methods whose names differ from JS natives (`upcase` →
+    // `toUpperCase`, `downcase` → `toLowerCase`, `strip` → `trim`). Python/Go/Rust
+    // dispatch Ruby names in a runtime catalog; the JS backend renames Ruby names
+    // to native JS — previously the case/strip renames were missing, so these
+    // raised `NoMethodError` on JS only.
+    Program {
+        name: "string_case",
+        ruby: "puts(\"hello\".upcase)\nputs(\"WORLD\".downcase)\nputs(\"  hi  \".strip)\n",
+        expected: "HELLO\nworld\nhi",
+    },
 ];
 
 /// Every program must produce its reference output on every available backend.

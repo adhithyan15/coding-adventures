@@ -67,6 +67,7 @@ across backends, a separate formatting concern). Current programs:
 | `mixin_include` | `module` mixed into a class via `include` | `hi` |
 | `logical_ops` | short-circuit `||`/`&&` returning the operand | `a\nb\ny` |
 | `multi_when` | multi-value `when 1, 2, 3` (folds through `or`) | `small\nbig` |
+| `string_case` | `String#upcase`/`#downcase`/`#strip` (Ruby→JS renames) | `HELLO\nworld\nhi` |
 
 Adding a program is one `Program { name, ruby, expected }` entry in
 `tests/conformance.rs`.
@@ -81,12 +82,14 @@ visible. Currently tracked:
 - **Array/hash index** (`a[i]`, `h[k]`) — frontend parse + lowering bugs
   (`puts a[1]` mis-parses, `puts(a[1])` won't parse, `x = a[1]` fails
   validation).
-- **`String#upcase`/`#downcase` on JavaScript** — the JS backend's emit-time
-  Ruby→native method rename is missing the case pair.
 
-Fixed since (now IN the suite): the `or`/`and` builtin gap — `||`/`&&` and
-multi-value `when` threw `unknown builtin` on Go/Rust/JS; the emitters now emit
-the short-circuit form. Covered by `logical_ops` + `multi_when`.
+Fixed since (now IN the suite):
+- The `or`/`and` builtin gap — `||`/`&&` and multi-value `when` threw
+  `unknown builtin` on Go/Rust/JS; the emitters now emit the short-circuit form.
+  Covered by `logical_ops` + `multi_when`.
+- The JS `String#upcase`/`#downcase` rename gap — the JS runtime now aliases
+  Ruby method names to their native equivalents before the allowlist check.
+  Covered by `string_case`.
 
 ## Usage
 

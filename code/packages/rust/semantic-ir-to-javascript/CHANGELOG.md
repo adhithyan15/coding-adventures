@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.11.3
+
+### Fixed — Ruby String methods whose names differ from JS natives (`upcase`/…)
+
+The JS backend dispatches a method call by checking the name against a fixed
+allowlist of NATIVE JS method names and then invoking `recv[name]`.  Ruby method
+names that happen to match JS (`push`, `map`, `split`, …) worked, but ones that
+differ (`upcase` vs `toUpperCase`) missed the allowlist and raised a spurious
+`NoMethodError` on JS — while Python/Go/Rust, which dispatch Ruby names in a
+runtime catalog, handled them.
+
+- Added a `RUBY_METHOD_ALIASES` table (Ruby spelling → native name) resolved in
+  `callMethod` BEFORE the allowlist check, so `upcase` → `toUpperCase` etc.
+  dispatch while the allowlist stays a fixed set of native names — the
+  reflective-gadget security gate is UNCHANGED (every alias target is itself on
+  the allowlist; lookup is a fixed table, never a reflective transform of a
+  source name; the `NoMethodError` message still reports the original Ruby name).
+- Aliases (unambiguous 1:1 only): `upcase`→`toUpperCase`, `downcase`→
+  `toLowerCase`, `strip`→`trim`, `lstrip`→`trimStart`, `rstrip`→`trimEnd`,
+  `start_with?`→`startsWith`, `end_with?`→`endsWith`, `include?`→`includes`.
+  Semantics-diverging pairs (e.g. `gsub`/`replaceAll`) are deliberately omitted.
+- Runtime shape test; verified end-to-end via the sir-conformance `string_case`
+  program (14 corpus x 4 backends, all agree).
+
+
 ## 0.11.2
 
 ### Fixed — `or`/`and` builtins (Ruby `||`/`&&`) were unimplemented
