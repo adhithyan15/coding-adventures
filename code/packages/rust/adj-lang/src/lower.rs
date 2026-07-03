@@ -1800,6 +1800,36 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_symbolic_exponent_binds() {
+        // `x^y` — a SYMBOLIC exponent now lowers (base AND exponent are general
+        // expressions): with x=2, y=3 observed, `x^y` = 2^3 = 8. Previously the
+        // adapter required a non-negative integer literal exponent and rejected
+        // `x^y`; the engine's ComputeOp::Pow evaluates the exponent at run time.
+        let sy = crate::compile_and_decide(
+            "observe x(2)\n\
+             observe y(3)\n\
+             let answer = latex \"$x^y$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 8 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(sy.ranked[0].posterior > 0.99, "{sy:?}");
+        // A COMPUTED exponent: `x^{a+b}` with x=2, a=1, b=2 → 2^3 = 8.
+        let comp = crate::compile_and_decide(
+            "observe x(2)\n\
+             observe a(1)\n\
+             observe b(2)\n\
+             let answer = latex \"$x^{a+b}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 8 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(comp.ranked[0].posterior > 0.99, "{comp:?}");
+    }
+
+    #[test]
     fn native_latex_square_root_computes() {
         // `\sqrt{9}` lowers to `9 ^ 0.5` (reusing ComputeOp::Pow) and computes 3
         // for a dimensionless base.
