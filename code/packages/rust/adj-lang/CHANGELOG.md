@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.41.0] - 2026-07-02 — finite `\sum` / `\prod` unroll in `latex "…"`
+
+### Added
+
+- `latex "\sum_{i=1}^{3} …"` and `\prod_{k=1}^{4} …` with **concrete finite integer bounds** now compute
+  by **unrolling**: for each `k` in `lo..=hi` the loop variable is substituted into the body and the
+  terms are folded with `+` (sum) or `·` (product). `\sum_{i=1}^{3} i` = 1+2+3 = 6; `\prod_{k=1}^{4} k`
+  = 24. Composes with subscripts — `\sum_{i=1}^{3} x_i` expands to `x_1 + x_2 + x_3`, each `x_k` binding
+  to its own `observe`. A **symbolic** bound (`\sum_{i=1}^{n}`), an **integral** (`\int`), an inverted
+  range, or a range beyond the 256-term unroll cap is an explicit `UnsupportedLatexMath` — never
+  approximated. The index-substitution walker is **depth-budgeted** (rejects rather than recursing
+  without limit), so a deeply-nested braced body cannot overflow the stack. Pure adapter recognition —
+  no engine, AST, or lowering change.
+
 ## [0.40.0] - 2026-07-02 — over/under annotations (`\overset`, `\underset`, `\overbrace`, `\underbrace`) compute transparently in `latex "…"`
 
 ### Added

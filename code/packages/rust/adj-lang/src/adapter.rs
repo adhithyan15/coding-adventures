@@ -28,7 +28,7 @@
 //! program.
 
 use lexer::token::TokenType;
-use math_frontend::{BinOp, Func, MathExpr, Number, RelOp as MathRelOp, UnaryOp};
+use math_frontend::{BigOp, BinOp, Func, MathExpr, Number, RelOp as MathRelOp, UnaryOp};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
@@ -1259,6 +1259,20 @@ fn latex_math_to_expr_ast(expr: &MathExpr, source: &str) -> Result<ExprAst, Adap
         MathExpr::Overset { base, .. } | MathExpr::Underset { base, .. } => {
             latex_math_to_expr_ast(base, source)
         }
+        // `\sum_{i=1}^{3} body` / `\prod_{k=1}^{4} body` — a big operator with CONCRETE finite
+        // integer bounds. A summation/product isn't a single arithmetic op; it iterates the body
+        // over the index. We handle the decidable case — both bounds concrete integers — by
+        // UNROLLING: substitute `i := lo, lo+1, …, hi` into the body and fold the resulting terms
+        // with `+` (sum) or `·` (product). Composes with subscripts: `\sum_{i=1}^{3} x_i` expands to
+        // `x_1 + x_2 + x_3` (each `x_k` then binds to its own `observe`). A symbolic bound
+        // (`\sum_{i=1}^{n}`), an integral (`\int`), or an over-large range is an explicit
+        // `UnsupportedLatexMath` — never a guess. See `lower_bigop`.
+        MathExpr::BigOp {
+            op,
+            lower,
+            upper,
+            body,
+        } => lower_bigop(op, lower.as_deref(), upper.as_deref(), body, source),
         MathExpr::Rel(_, _, _) => Err(AdapterError::UnsupportedLatexMath {
             source: source.to_string(),
             detail: "relation-valued LaTeX is only valid in `constrain latex`".into(),
@@ -1331,6 +1345,192 @@ fn subscript_ident_part(expr: &MathExpr) -> Option<String> {
         }
     }
     Some(out)
+}
+
+/// The largest number of terms a `\sum`/`\prod` may unroll to. A finite summation is expanded into
+/// that many `+`/`·` operands; the cap bounds the work (and the emitted AST size) so an adversarial
+/// `\sum_{i=1}^{100000000}` is rejected rather than exploded.
+const BIGOP_UNROLL_CAP: i64 = 256;
+
+/// The recursion budget for `substitute_index`. A subscript/juxtaposition body can be an arbitrarily
+/// deep `Bin` spine that the latex parser's `MAX_DEPTH` does NOT bound, so the substitution walker is
+/// depth-budgeted: it returns `None` (→ `UnsupportedLatexMath`) rather than recursing without limit
+/// and overflowing the stack. 96 comfortably covers any realistic summation body.
+const SUBST_DEPTH_BUDGET: u32 = 96;
+
+/// A short constructor for the adapter's catch-all "not supported" error.
+fn unsupported_latex(source: &str, detail: &str) -> AdapterError {
+    AdapterError::UnsupportedLatexMath {
+        source: source.to_string(),
+        detail: detail.to_string(),
+    }
+}
+
+/// Extract a concrete non-negative-magnitude integer from a numeric `MathExpr` (a `Number`, or a
+/// `Group`/`Fenced` wrapping one). Returns `None` for a symbol, a fraction, or a non-integral /
+/// out-of-range value — the caller then rejects the summation rather than guessing a bound.
+fn number_as_i64(expr: &MathExpr) -> Option<i64> {
+    match expr {
+        MathExpr::Number(n) => {
+            let v = n.to_f64()?;
+            // Reject non-finite, non-integral, or magnitudes beyond exact f64 integer range.
+            if v.is_finite() && v.fract() == 0.0 && v.abs() < 9.0e15 {
+                Some(v as i64)
+            } else {
+                None
+            }
+        }
+        MathExpr::Group(inner) | MathExpr::Fenced { body: inner, .. } => number_as_i64(inner),
+        _ => None,
+    }
+}
+
+/// Lower a big operator (`\sum`/`\prod`) with CONCRETE finite integer bounds by unrolling. The lower
+/// bound must be `index = <integer>` and the upper bound a concrete integer; for each `k` in
+/// `lo..=hi` the loop variable is substituted into the body and the terms are folded with `+`
+/// (`Sum`) or `·` (`Prod`). Symbolic bounds (`\sum_{i=1}^{n}`), integrals, or ranges beyond
+/// `BIGOP_UNROLL_CAP` are rejected as `UnsupportedLatexMath` — never approximated.
+fn lower_bigop(
+    op: &BigOp,
+    lower: Option<&MathExpr>,
+    upper: Option<&MathExpr>,
+    body: &MathExpr,
+    source: &str,
+) -> Result<ExprAst, AdapterError> {
+    let fold_op = match op {
+        BigOp::Sum => ArithOp::Add,
+        BigOp::Prod => ArithOp::Mul,
+        _ => {
+            return Err(unsupported_latex(
+                source,
+                "only finite \\sum and \\prod with concrete integer bounds are supported",
+            ))
+        }
+    };
+    // The lower bound carries the index variable: `\sum_{i=1}^{…}` parses its subscript as
+    // `Rel(Eq, Symbol("i"), Number(1))`.
+    let (index, lo) = match lower {
+        Some(MathExpr::Rel(MathRelOp::Eq, lhs, rhs)) => {
+            let index = match lhs.as_ref() {
+                MathExpr::Symbol(s) => s.clone(),
+                _ => {
+                    return Err(unsupported_latex(
+                        source,
+                        "summation index must be a plain variable",
+                    ))
+                }
+            };
+            let lo = number_as_i64(rhs).ok_or_else(|| {
+                unsupported_latex(source, "summation lower bound must be a concrete integer")
+            })?;
+            (index, lo)
+        }
+        _ => {
+            return Err(unsupported_latex(
+                source,
+                "summation needs a lower bound of the form `index = <integer>`",
+            ))
+        }
+    };
+    let hi = match upper {
+        Some(u) => number_as_i64(u).ok_or_else(|| {
+            unsupported_latex(source, "summation upper bound must be a concrete integer")
+        })?,
+        None => {
+            return Err(unsupported_latex(
+                source,
+                "summation needs an explicit integer upper bound",
+            ))
+        }
+    };
+    if hi < lo {
+        return Err(unsupported_latex(
+            source,
+            "summation upper bound is below the lower bound",
+        ));
+    }
+    if hi - lo + 1 > BIGOP_UNROLL_CAP {
+        return Err(unsupported_latex(
+            source,
+            "summation range is too large to expand",
+        ));
+    }
+    // Unroll: substitute `index := k` into the body for each k and fold the terms. `hi >= lo` so at
+    // least one term is produced and `acc` ends up `Some`.
+    let mut acc: Option<ExprAst> = None;
+    let mut k = lo;
+    while k <= hi {
+        let substituted = substitute_index(body, &index, k, SUBST_DEPTH_BUDGET).ok_or_else(|| {
+            unsupported_latex(
+                source,
+                "summation body is too deeply nested or not a plain arithmetic term",
+            )
+        })?;
+        let term = latex_math_to_expr_ast(&substituted, source)?;
+        acc = Some(match acc {
+            None => term,
+            Some(prev) => ExprAst::Bin(fold_op, Box::new(prev), Box::new(term)),
+        });
+        k += 1;
+    }
+    acc.ok_or_else(|| unsupported_latex(source, "summation produced no terms"))
+}
+
+/// Return a copy of `expr` with every free occurrence of the loop variable `idx` replaced by the
+/// integer `k`, or `None` if the body contains a construct that cannot be a plain arithmetic term
+/// (so the whole summation is rejected rather than mis-expanded). Substituting `i := 2` into
+/// `Subscript(Symbol("x"), Symbol("i"))` yields `Subscript(Symbol("x"), Number(2))`, which the
+/// subscript arm then mangles to `x_2` — that is how `\sum_{i=1}^{3} x_i` becomes `x_1 + x_2 + x_3`.
+///
+/// **Depth-budgeted, not unbounded.** `budget` is decremented per level and exhaustion returns
+/// `None`: a body whose `Bin` spine is deeper than the budget is rejected, so an adversarial deep
+/// juxtaposition body cannot overflow the stack (the same DoS class the latex crate's `MAX_DEPTH`
+/// does not cover for left-associative spines).
+fn substitute_index(expr: &MathExpr, idx: &str, k: i64, budget: u32) -> Option<MathExpr> {
+    let budget = budget.checked_sub(1)?;
+    let sub = |e: &MathExpr| substitute_index(e, idx, k, budget);
+    Some(match expr {
+        MathExpr::Symbol(s) if s == idx => MathExpr::Number(Number::from_i64(k)),
+        MathExpr::Symbol(s) => MathExpr::Symbol(s.clone()),
+        MathExpr::Number(n) => MathExpr::Number(n.clone()),
+        MathExpr::Bin(op, l, r) => MathExpr::Bin(*op, Box::new(sub(l)?), Box::new(sub(r)?)),
+        MathExpr::Unary(op, inner) => MathExpr::Unary(*op, Box::new(sub(inner)?)),
+        MathExpr::Frac(a, b) => MathExpr::Frac(Box::new(sub(a)?), Box::new(sub(b)?)),
+        MathExpr::Binom(a, b) => MathExpr::Binom(Box::new(sub(a)?), Box::new(sub(b)?)),
+        MathExpr::Group(inner) => MathExpr::Group(Box::new(sub(inner)?)),
+        MathExpr::Fenced { open, body, close } => MathExpr::Fenced {
+            open: open.clone(),
+            body: Box::new(sub(body)?),
+            close: close.clone(),
+        },
+        MathExpr::Subscript(b, s) => MathExpr::Subscript(Box::new(sub(b)?), Box::new(sub(s)?)),
+        MathExpr::Call { func, arg } => MathExpr::Call {
+            func: func.clone(),
+            arg: Box::new(sub(arg)?),
+        },
+        MathExpr::Root { degree, radicand } => MathExpr::Root {
+            degree: match degree {
+                Some(d) => Some(Box::new(sub(d)?)),
+                None => None,
+            },
+            radicand: Box::new(sub(radicand)?),
+        },
+        MathExpr::Accent { accent, body } => MathExpr::Accent {
+            accent: accent.clone(),
+            body: Box::new(sub(body)?),
+        },
+        MathExpr::Overset { over, base } => MathExpr::Overset {
+            over: Box::new(sub(over)?),
+            base: Box::new(sub(base)?),
+        },
+        MathExpr::Underset { under, base } => MathExpr::Underset {
+            under: Box::new(sub(under)?),
+            base: Box::new(sub(base)?),
+        },
+        // Text, Rel, Matrix, Sequence, a nested BigOp — not a plain arithmetic term. Reject the
+        // whole unroll rather than substitute into something we cannot faithfully expand.
+        _ => return None,
+    })
 }
 
 /// If `expr` is a trigonometric operator-name text (`\operatorname{sin}`, `\operatorname{arctan}`,

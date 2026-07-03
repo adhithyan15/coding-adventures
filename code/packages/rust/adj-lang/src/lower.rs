@@ -2487,6 +2487,77 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_finite_sum_and_product_unroll() {
+        // `\sum_{i=1}^{3} i` = 1 + 2 + 3 = 6 (bare index body).
+        let s = crate::compile_and_decide(
+            "let answer = latex \"$\\sum_{i=1}^{3} i$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 6 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(s.ranked[0].posterior > 0.99, "{s:?}");
+        // `\sum_{i=1}^{3} x_i` = x_1 + x_2 + x_3 (composes with subscripts): 2 + 3 + 4 = 9.
+        let sx = crate::compile_and_decide(
+            "observe x_1(2)\n\
+             observe x_2(3)\n\
+             observe x_3(4)\n\
+             let answer = latex \"$\\sum_{i=1}^{3} x_i$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 9 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(sx.ranked[0].posterior > 0.99, "{sx:?}");
+        // `\prod_{k=1}^{4} k` = 1 · 2 · 3 · 4 = 24.
+        let p = crate::compile_and_decide(
+            "let answer = latex \"$\\prod_{k=1}^{4} k$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 24 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(p.ranked[0].posterior > 0.99, "{p:?}");
+    }
+
+    #[test]
+    fn native_latex_symbolic_and_integral_bigops_are_rejected() {
+        // A symbolic upper bound (`n`) has no concrete count — cannot unroll, must reject.
+        let symbolic = compile(
+            "observe n(3)\n\
+             let answer = latex \"$\\sum_{i=1}^{n} i$\"\n\
+             ? answer\n",
+        );
+        assert!(symbolic.is_err(), "symbolic-bound sum must reject: {symbolic:?}");
+        // A definite integral is not a finite sum/product — must reject, never approximate.
+        let integral = compile(
+            "observe x(5)\n\
+             let answer = latex \"$\\int_0^1 x$\"\n\
+             ? answer\n",
+        );
+        assert!(integral.is_err(), "integral must reject: {integral:?}");
+    }
+
+    #[test]
+    fn native_latex_deep_sum_body_does_not_overflow() {
+        // A summation BODY that is a very deep juxtaposition forms a `Bin(Mul)` spine the latex
+        // parser's MAX_DEPTH does not bound. Braces make the whole juxtaposition the sum's body
+        // (`\sum_{i=1}^{2} {aaaa…}`), so it routes through the depth-budgeted `substitute_index`,
+        // which must REJECT it (return an error) rather than overflow the thread stack. A
+        // 20,000-letter braced body: this must return instead of aborting.
+        let deep_body = "a".repeat(20_000);
+        let src = format!(
+            "observe a(1)\n\
+             let answer = latex \"$\\sum_{{i=1}}^{{2}} {{{deep_body}}}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n"
+        );
+        // Either outcome is acceptable — the guarantee is that it returns instead of aborting.
+        let _ = compile(&src);
+    }
+
+    #[test]
     fn native_latex_subscripts_bind_as_distinct_variables() {
         // `x_i` / `x_1` / `V_{max}` — a subscript names a DISTINCT variable, not a computation.
         // The adapter mangles the subscript into a flat `base_sub` identifier that binds to a
