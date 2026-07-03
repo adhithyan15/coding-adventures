@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.11.1
+
+### Fixed — `case_eq` builtin (Ruby case-equality `===`) was unimplemented
+
+Ruby's `case`/`when` (and `case`/`in`) lowers, in the frontend, to a chain of
+`if`s whose conditions are `BuiltinCall("case_eq", [pattern, scrutinee])`. The
+JS runtime's builtin table had no `case_eq`, so **every** `case` program threw
+`TypeError: unknown builtin: case_eq` **at runtime** — `case` was unusable on
+the JavaScript backend (no compile-time gate catches a missing builtin).
+
+- Added `"case_eq"` to the inlined `builtins` table. The emitter already routes
+  unknown builtins through `__Sir.callBuiltin`, so no emitter change was needed.
+  Ruby keys `===` to the *pattern*'s type (Range → membership, Regexp → match,
+  else `==`); `when SomeClass` is lowered to `.is_a?` at the frontend and never
+  reaches here. This backend has no Range/Regexp value, so `case_eq` is native
+  `===` — the same equality its `=` builtin uses.
+- New `compile_and_run_case_eq` exec proof: a `when`-style `if case_eq(…)` chain
+  emits self-contained JS, runs under `node`, and matches the expected output.
+
+
 All notable changes to `semantic-ir-to-javascript` are documented here.
 
 ## 0.11.0 — mixins: `include` / `extend` module method resolution (MX4)

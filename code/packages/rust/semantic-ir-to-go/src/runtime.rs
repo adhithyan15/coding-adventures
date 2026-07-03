@@ -454,6 +454,30 @@ func _sir_value_eq(a Value, b Value) bool {
 	return _sir_value_eq_d(a, b, make(map[[2]Value]bool))
 }
 
+// _sir_case_eq implements Ruby case-equality (`pattern === value`) — the test a
+// `when` (or `in`) arm runs.  Unlike `==`, Ruby keys `===` to the PATTERN's
+// type:
+//
+//	| pattern kind | semantics                          |
+//	|--------------|------------------------------------|
+//	| Range        | membership (`value` falls in range)|
+//	| Regexp       | the regex matches `value`          |
+//	| anything else| value equality (`==`)              |
+//
+// A `when SomeClass` is lowered to `value.is_a?(SomeClass)` at the FRONTEND
+// (`__method__` dispatch), so a class pattern never reaches here.  This
+// backend's Value model has no Range or Regexp variant yet, so the only
+// patterns that reach `case_eq` are ordinary values and the operation is
+// exactly structural equality — matching the Python reference in
+// `sir-runtime-oop`.  When Range/Regexp values are added, extend this with the
+// membership/match arms (dispatching on the pattern, args[0]).
+func _sir_case_eq(args []Value) Value {
+	if len(args) < 2 {
+		return false
+	}
+	return _sir_value_eq(args[0], args[1])
+}
+
 func _sir_value_eq_d(a Value, b Value, pending map[[2]Value]bool) bool {
 	// Defensive: the MISSING sentinel (SIR19 default params) never reaches
 	// `=` in a well-formed program (a defaulted param is replaced by its
@@ -1080,6 +1104,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_divide(args)
 	case "=":
 		return _sir_eq(args)
+	case "case_eq":
+		return _sir_case_eq(args)
 	case "<":
 		return _sir_lt(args)
 	case ">":
