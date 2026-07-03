@@ -126,6 +126,16 @@ const CORPUS: &[Program] = &[
         ruby: "puts(\"hello\".upcase)\nputs(\"WORLD\".downcase)\nputs(\"  hi  \".strip)\n",
         expected: "HELLO\nworld\nhi",
     },
+    // Sequential local assignments where a later binding READS an earlier one
+    // (`b = a + 1`, `c = b + a`). Ruby is sequential (`let*`); the frontend
+    // previously lowered these to parallel `LetBinding`s, which the SIR
+    // validator rejected ("var-ref ... unknown name `a`") — so `newvar =
+    // existing_local` failed to compile on every backend. Now fixed.
+    Program {
+        name: "seq_assign",
+        ruby: "a = 5\nb = a + 1\nc = b + a\nputs a\nputs b\nputs c\n",
+        expected: "5\n6\n11",
+    },
 ];
 
 /// Every program must produce its reference output on every available backend.

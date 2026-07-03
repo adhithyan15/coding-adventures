@@ -2,6 +2,14 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.5.0] - 2026-07-03
+
+### Added — `seq_assign` (14 -> 15 programs)
+
+Sequential local assignments that read an earlier local (`a = 5; b = a + 1;
+c = b + a`) — previously rejected by the SIR validator as a parallel-`let`
+violation, now fixed in the frontend. Verified across all four backends.
+
 ## [0.4.0] - 2026-07-03
 
 ### Added — `string_case` (13 -> 14 programs)

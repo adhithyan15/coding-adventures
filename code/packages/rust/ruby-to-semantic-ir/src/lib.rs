@@ -76,6 +76,27 @@ mod tests {
         &f.body
     }
 
+    /// Name bound by a first-sighting assignment — a `LetBinding` (parallel
+    /// `let`) OR a `LetStarBinding` (sequential `let*`).  The frontend emits
+    /// `let*` when the RHS reads an earlier local in the same block (Ruby
+    /// assignments are sequential); both are "a binding" for shape assertions.
+    fn binding_name(s: &Stmt) -> Option<&str> {
+        match s {
+            Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
+                Some(name.as_str())
+            }
+            _ => None,
+        }
+    }
+
+    /// The RHS value of a `LetBinding` / `LetStarBinding` (see [`binding_name`]).
+    fn binding_value(s: &Stmt) -> Option<&Expr> {
+        match s {
+            Stmt::LetBinding { value, .. } | Stmt::LetStarBinding { value, .. } => Some(value),
+            _ => None,
+        }
+    }
+
     // -----------------------------------------------------------------
     // Phase P7 (Ruby 1.0) — default / optional parameters.
     //
@@ -487,17 +508,11 @@ mod tests {
         let m = lower("x = 1\ny = 2\nz = x + y\n");
         let b = main_body(&m);
         assert_eq!(b.stmts.len(), 3);
-        let names: Vec<&str> = b
-            .stmts
-            .iter()
-            .filter_map(|s| match s {
-                Stmt::LetBinding { name, .. } => Some(name.as_str()),
-                _ => None,
-            })
-            .collect();
+        let names: Vec<&str> = b.stmts.iter().filter_map(binding_name).collect();
         assert_eq!(names, vec!["x", "y", "z"]);
-        // The third RHS references x and y as locals.
-        if let Stmt::LetBinding { value, .. } = &b.stmts[2] {
+        // The third RHS references x and y as locals, so it is a sequential
+        // `LetStarBinding` (`let*`), not a parallel `LetBinding`.
+        if let Some(value) = binding_value(&b.stmts[2]) {
             match value {
                 Expr::BuiltinCall { name, args, .. } => {
                     assert_eq!(name, "+");
@@ -2804,7 +2819,8 @@ mod tests {
         let m = lower("x = 1\ny = -x\n");
         let b = main_body(&m);
         match &b.stmts[1] {
-            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
+            Stmt::LetBinding { value: Expr::BuiltinCall { name, args, .. }, .. }
+            | Stmt::LetStarBinding { value: Expr::BuiltinCall { name, args, .. }, .. } => {
                 assert_eq!(name, "neg");
                 assert!(matches!(
                     &args[0],
@@ -2902,7 +2918,7 @@ mod tests {
         let b = main_body(&m);
         // Second stmt = `x = foo.bar`
         match &b.stmts[1] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "x");
                 match value {
                     Expr::BuiltinCall { name, args, .. } => {
@@ -2930,7 +2946,7 @@ mod tests {
         let m = lower("foo = 1\ny = foo.bar.baz\n");
         let b = main_body(&m);
         let value = match &b.stmts[1] {
-            Stmt::LetBinding { value, .. } => value,
+            Stmt::LetBinding { value, .. } | Stmt::LetStarBinding { value, .. } => value,
             other => panic!("expected LetBinding, got {:?}", other),
         };
         match value {
@@ -2966,7 +2982,7 @@ mod tests {
         let m = lower("obj = 1\nr = obj.add(1, 2)\n");
         let b = main_body(&m);
         let value = match &b.stmts[1] {
-            Stmt::LetBinding { value, .. } => value,
+            Stmt::LetBinding { value, .. } | Stmt::LetStarBinding { value, .. } => value,
             other => panic!("expected LetBinding, got {:?}", other),
         };
         match value {
@@ -4468,7 +4484,7 @@ mod tests {
         );
         // Stmt[3] binds `a` to temp 0 (= IntLit 1).
         match &body.stmts[3] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "a");
                 assert!(
                     matches!(value, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
@@ -4480,7 +4496,7 @@ mod tests {
         }
         // Stmt[4] binds `b` to SeqLit of temps 1..3.
         match &body.stmts[4] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "b");
                 match value {
                     Expr::SeqLit { items, .. } => {
@@ -4508,7 +4524,7 @@ mod tests {
         assert_eq!(body.stmts.len(), 5);
         // Stmt[3] binds `a` to SeqLit of temps 0..2.
         match &body.stmts[3] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "a");
                 match value {
                     Expr::SeqLit { items, .. } => {
@@ -4521,7 +4537,7 @@ mod tests {
         }
         // Stmt[4] binds `b` to temp 2 (the last temp).
         match &body.stmts[4] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "b");
                 assert!(
                     matches!(value, Expr::VarRef { name: n, .. } if n.starts_with("__multi_assign_t")),
@@ -4539,10 +4555,10 @@ mod tests {
         // 4 temps + 3 LHS bindings = 7 stmts.
         assert_eq!(body.stmts.len(), 7);
         // Stmt[4] binds `a` to temp 0.
-        assert!(matches!(&body.stmts[4], Stmt::LetBinding { name, .. } if name == "a"));
+        assert!(matches!(&body.stmts[4], Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } if name == "a"));
         // Stmt[5] binds `b` to SeqLit of 2 items (the middle 2 temps).
         match &body.stmts[5] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "b");
                 match value {
                     Expr::SeqLit { items, .. } => assert_eq!(items.len(), 2),
@@ -4552,7 +4568,7 @@ mod tests {
             other => panic!("expected LetBinding(b, SeqLit), got {:?}", other),
         }
         // Stmt[6] binds `c` to the last temp.
-        assert!(matches!(&body.stmts[6], Stmt::LetBinding { name, .. } if name == "c"));
+        assert!(matches!(&body.stmts[6], Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } if name == "c"));
     }
 
     #[test]
@@ -4648,7 +4664,7 @@ mod tests {
         }
         // Stmt[2] binds `a` to `temp[0]`.
         match &body.stmts[2] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "a");
                 match value {
                     Expr::SeqIndex { seq, index, .. } => {
@@ -4672,7 +4688,7 @@ mod tests {
         }
         // Stmt[3] binds `b` to `temp[1]`.
         match &body.stmts[3] {
-            Stmt::LetBinding { name, value, .. } => {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
                 assert_eq!(name, "b");
                 match value {
                     Expr::SeqIndex { index, .. } => assert!(
@@ -4698,7 +4714,8 @@ mod tests {
         for (i, expected) in expected_indices.iter().enumerate() {
             // body.stmts[i + 2] is the i-th LHS binding.
             match &body.stmts[i + 2] {
-                Stmt::LetBinding { value: Expr::SeqIndex { index, .. }, .. } => {
+                Stmt::LetBinding { value: Expr::SeqIndex { index, .. }, .. }
+                | Stmt::LetStarBinding { value: Expr::SeqIndex { index, .. }, .. } => {
                     match index.as_ref() {
                         Expr::IntLit { value: v, .. } => assert_eq!(
                             v, expected,
@@ -4739,7 +4756,8 @@ mod tests {
             other => panic!("expected LetStarBinding(temp, rhs), got {:?}", other),
         }
         for i in 1..=2 {
-            if let Stmt::LetBinding { value: Expr::SeqIndex { seq, .. }, .. } =
+            if let Stmt::LetBinding { value: Expr::SeqIndex { seq, .. }, .. }
+            | Stmt::LetStarBinding { value: Expr::SeqIndex { seq, .. }, .. } =
                 &body.stmts[i]
             {
                 assert!(
@@ -4799,7 +4817,9 @@ mod tests {
             other => panic!("expected Assign(a, ...) for re-bind, got {:?}", other),
         }
         match &body.stmts[4] {
-            Stmt::LetBinding { name, .. } => assert_eq!(name, "b"),
+            Stmt::LetBinding { name, .. } | Stmt::LetStarBinding { name, .. } => {
+                assert_eq!(name, "b")
+            }
             other => panic!("expected LetBinding(b, ...) for first-sighting, got {:?}", other),
         }
         assert!(
@@ -7180,7 +7200,11 @@ b = "y"
         let b = main_body(&m);
         // stmts[0] binds `name`; stmts[1] binds `y` to the heredoc.
         let value = match &b.stmts[1] {
-            Stmt::LetBinding { name, value, .. } if name == "y" => value,
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. }
+                if name == "y" =>
+            {
+                value
+            }
             other => panic!("expected LetBinding y, got {:?}", other),
         };
         match value {
@@ -7802,7 +7826,11 @@ b = "y"
         let m = lower("x = 1\ny = defined?(x)\n");
         let b = main_body(&m);
         let value = match &b.stmts[1] {
-            Stmt::LetBinding { name, value, .. } if name == "y" => value,
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. }
+                if name == "y" =>
+            {
+                value
+            }
             other => panic!("expected LetBinding y, got {:?}", other),
         };
         match value {
@@ -8567,6 +8595,7 @@ b = "y"
             .iter()
             .find_map(|s| match s {
                 Stmt::LetBinding { name: n, value: Expr::MapLit { entries, .. }, .. }
+                | Stmt::LetStarBinding { name: n, value: Expr::MapLit { entries, .. }, .. }
                     if n == "h" =>
                 {
                     Some(entries)
@@ -8635,6 +8664,7 @@ b = "y"
             .iter()
             .find_map(|s| match s {
                 Stmt::LetBinding { name: n, value: Expr::MapLit { entries, .. }, .. }
+                | Stmt::LetStarBinding { name: n, value: Expr::MapLit { entries, .. }, .. }
                     if n == "h" =>
                 {
                     Some(entries)

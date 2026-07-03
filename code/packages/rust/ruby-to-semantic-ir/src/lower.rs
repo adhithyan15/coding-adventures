@@ -397,6 +397,62 @@ fn block_references_any_name(block: &Block, names: &HashSet<String>) -> bool {
     false
 }
 
+/// Phase FC — restore **sequential** (`let*`) semantics for Ruby local
+/// assignments whose RHS reads an earlier local in the same block.
+///
+/// Ruby evaluates statements top-to-bottom, so `a = 5; x = a` binds `x` to
+/// `a`'s value — assignments are sequential.  The frontend, however, lowers
+/// each first-sighting `name = value` to a **parallel** [`Stmt::LetBinding`],
+/// and the SIR validator treats a *run* of consecutive `LetBinding`s as one
+/// parallel-`let` group: every RHS is evaluated in the scope BEFORE any of the
+/// run's names are bound (see `validator::check_stmt_seq`).  That makes
+/// `[LetBinding(a); LetBinding(x = a)]` reject the read of `a`
+/// (`var-ref ... unknown name 'a'`) — a real bug: `x = a`, `y = h["k"]`, and
+/// any `newvar = <expr using an earlier local>` fail to compile.
+///
+/// This post-pass walks a block's statements and rewrites a `LetBinding` to a
+/// [`Stmt::LetStarBinding`] (identical fields) exactly when its `value` reads a
+/// name already bound by an EARLIER statement in the block.  `LetStarBinding`
+/// is sequential — the validator adds its name immediately and it *breaks the
+/// parallel run* — so the reference resolves.  Independent bindings (the common
+/// case, e.g. `i = 0; sum = 0`) keep their `LetBinding` form, so nothing else
+/// changes and existing shape-tests still hold.  Both variants lower to the
+/// same target code (a sequential variable declaration) on every backend, so
+/// the rewrite is behaviour-preserving.
+fn sequentialize_let_bindings(stmts: &mut [Stmt]) {
+    let mut bound: HashSet<String> = HashSet::new();
+    for s in stmts.iter_mut() {
+        // Decide before mutating: does THIS `LetBinding` read an earlier local?
+        let convert = matches!(
+            s,
+            Stmt::LetBinding { value, .. } if expr_references_any_name(value, &bound)
+        );
+        if convert {
+            // Swap the variant in place, preserving every field.  The dummy is
+            // overwritten on the very next line, so it is never observed.
+            let taken = std::mem::replace(
+                s,
+                Stmt::ExprStmt {
+                    expr: Expr::NilLit { span: Span::synthetic() },
+                    span: Span::synthetic(),
+                },
+            );
+            if let Stmt::LetBinding { name, sir_type, value, span } = taken {
+                *s = Stmt::LetStarBinding { name, sir_type, value, span };
+            }
+        }
+        // Record the name this statement binds, so later statements see it.
+        match s {
+            Stmt::LetBinding { name, .. }
+            | Stmt::LetStarBinding { name, .. }
+            | Stmt::Assign { name, .. } => {
+                bound.insert(name.clone());
+            }
+            _ => {}
+        }
+    }
+}
+
 /// Phase 19a (FC) — if `value` is a verbatim regex-literal lexeme
 /// (`/pattern/flags`), split it into `(pattern, flags)`; otherwise
 /// `None`.
@@ -808,6 +864,9 @@ impl Lowerer {
         }
 
         let value = value.unwrap_or(Expr::NilLit { span: self.span_of(program) });
+        // Ruby assignments are sequential: rewrite any `LetBinding` whose RHS
+        // reads an earlier local to a `LetStarBinding` (see the fn's doc).
+        sequentialize_let_bindings(&mut stmts_out);
         Ok(Block {
             stmts: stmts_out,
             value,
@@ -1394,6 +1453,8 @@ impl Lowerer {
         let value = value.unwrap_or(Expr::NilLit { span: self.span_of(node) });
         // Restore the outer scope's declared locals.
         self.declared_locals = saved_locals;
+        // Sequential-assignment fix-up (see `sequentialize_let_bindings`).
+        sequentialize_let_bindings(&mut stmts_out);
         Ok(Block {
             stmts: stmts_out,
             value,
@@ -4748,7 +4809,7 @@ impl Lowerer {
                 if n.rule_name == "rescue_clause" || n.rule_name == "ensure_clause")
         });
 
-        let (stmts_out, value): (Vec<Stmt>, Expr) = if has_exception_clauses {
+        let (mut stmts_out, value): (Vec<Stmt>, Expr) = if has_exception_clauses {
             self.features_used.insert(Feature::Exceptions);
             let try_body = self.lower_flat_statements(node)?;
             let (rescues, ensure_body) = self.lower_rescue_ensure_clauses(node)?;
@@ -4808,6 +4869,11 @@ impl Lowerer {
         self.current_params = saved_params;
         // O2 — restore the enclosing method name (usually `None`).
         self.current_method = saved_method;
+
+        // Sequential-assignment fix-up for the method body (see
+        // `sequentialize_let_bindings`) — `def f; a = 1; x = a; end` must
+        // resolve the read of `a`.
+        sequentialize_let_bindings(&mut stmts_out);
 
         // Phase Q9e — if the method body `yield`s, thread the explicit
         // trailing block parameter and rewrite each `yield` into an
@@ -6528,6 +6594,10 @@ impl Lowerer {
         self.current_params = saved_params;
         self.in_block_body = saved_in_block;
 
+        // Sequential-assignment fix-up for the block body (see
+        // `sequentialize_let_bindings`).
+        sequentialize_let_bindings(&mut stmts_out);
+
         // Assemble the block body so the RB2 yield-capture rewrite can run
         // over it as a unit.
         let mut body = Block {
@@ -6810,6 +6880,10 @@ impl Lowerer {
         // Restore outer scope.
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
+
+        // Sequential-assignment fix-up for this block body (see
+        // `sequentialize_let_bindings`).
+        sequentialize_let_bindings(&mut stmts_out);
 
         // Mint a synthetic function name (shares the same counter as
         // method_with_block-hoisted blocks).
