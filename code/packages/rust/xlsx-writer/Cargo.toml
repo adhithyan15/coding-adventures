@@ -1,0 +1,15 @@
+[package]
+name = "coding-adventures-xlsx-writer"
+version = "0.1.0"
+edition = "2021"
+description = "SpreadsheetML (.xlsx) writer — turns a simple in-memory workbook model into valid .xlsx bytes by generating the SpreadsheetML parts and packaging them via opc-writer (OOXML milestone C1)"
+license = "MIT"
+
+[dependencies]
+coding-adventures-opc-writer = { path = "../opc-writer" }
+
+[dev-dependencies]
+# The round-trip proof re-opens our output with this repo's OWN readers.
+coding-adventures-spreadsheetml = { path = "../spreadsheetml" }
+coding-adventures-xlsx-eval = { path = "../xlsx-eval" }
+spreadsheet-core = { path = "../spreadsheet-core" }
