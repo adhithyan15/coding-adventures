@@ -693,41 +693,39 @@ fn emit_function(
     dialog_nodes: &[*const LayoutNode],
     indeterminate_checkbox_nodes: &[*const LayoutNode],
 ) -> Result<String, PipelineEmitError> {
-    let mut out = String::new();
-    writeln!(out, "export function {component}({{").unwrap();
-    for s in slots {
-        writeln!(out, "  {},", to_camel_case_first_lower(&s.name)).unwrap();
-    }
-    writeln!(out, "  dispatch,").unwrap();
-    writeln!(out, "}}: {component}Props) {{").unwrap();
+    // Build the component BODY first (dialog/checkbox hooks + the JSX return),
+    // so we can destructure ONLY the slots — and `dispatch` — that the body
+    // actually references. Destructuring a prop the body never reads trips
+    // TypeScript's `noUnusedLocals` / `noUnusedParameters` (TS6133) under a
+    // strict host tsconfig (e.g. the visicalc demo's `tsc -b`). The prop stays
+    // in the `{Component}Props` interface, so callers may still pass it — it is
+    // simply not bound as an unused local. A forward-compat slot the current
+    // layout doesn't consume yet (e.g. Grid's `totalHeight`) is thus omitted
+    // from the destructure while remaining part of the public prop contract.
+    let mut body = String::new();
 
-    // UI29-1 — emit one useRef + useEffect pair per HostDialog node, in
-    // source order. The ref name is `dialogRef_<n>` where `n` is the
-    // dialog's zero-based DFS source index. The matching JSX lowering
-    // (see `emit_host_dialog_jsx`) references the same name when it
-    // resolves the ref's index via the same `dialog_nodes` lookup table.
+    // UI29-1 — one useRef + useEffect pair per HostDialog node, in source order.
+    // The ref name is `dialogRef_<n>` (n = the dialog's zero-based DFS index);
+    // the JSX lowering references the same name via the `dialog_nodes` table.
     for (idx, &ptr) in dialog_nodes.iter().enumerate() {
-        // SAFETY: `dialog_nodes` is built from the same `layout_root`
-        // we are now walking; the pointers are valid for the duration
-        // of this function call. We only dereference to read fields
-        // (props) — no aliasing concerns.
+        // SAFETY: `dialog_nodes` is built from the same `layout_root` we are now
+        // walking; the pointers are valid for this call. We only read fields.
         let node = unsafe { &*ptr };
-        out.push_str(&emit_host_dialog_hooks(node, idx)?);
+        body.push_str(&emit_host_dialog_hooks(node, idx)?);
     }
 
-    // UI29-2-FU — one useRef + useEffect pair per HostCheckbox with
-    // a bound `indeterminate:` slot. The effect runs the imperative
-    // `el.indeterminate = !!<slot>` assignment that the DOM property
-    // (not an HTML attribute) requires.
+    // UI29-2-FU — one useRef + useEffect pair per HostCheckbox with a bound
+    // `indeterminate:` slot (the DOM-property assignment an HTML attribute
+    // can't express).
     for (idx, &ptr) in indeterminate_checkbox_nodes.iter().enumerate() {
-        // SAFETY: same lifetime argument as the dialog loop above —
-        // pointers come from the same `layout_root` borrow.
+        // SAFETY: same lifetime argument as the dialog loop above — pointers
+        // come from the same `layout_root` borrow.
         let node = unsafe { &*ptr };
-        out.push_str(&emit_host_checkbox_indeterminate_hooks(node, idx)?);
+        body.push_str(&emit_host_checkbox_indeterminate_hooks(node, idx)?);
     }
 
-    writeln!(out, "  return (").unwrap();
-    out.push_str(&emit_jsx_tree(
+    writeln!(body, "  return (").unwrap();
+    body.push_str(&emit_jsx_tree(
         layout_root,
         4,
         part_styles,
@@ -736,13 +734,56 @@ fn emit_function(
         emits,
         None,
     )?);
-    writeln!(out, "  );").unwrap();
+    writeln!(body, "  );").unwrap();
+
+    // Emit the signature, destructuring only the props the body references.
+    let mut out = String::new();
+    writeln!(out, "export function {component}({{").unwrap();
+    for s in slots {
+        let ident = to_camel_case_first_lower(&s.name);
+        if body_references_identifier(&body, &ident) {
+            writeln!(out, "  {ident},").unwrap();
+        }
+    }
+    // `dispatch` is always destructured last (UI24 §3.3) — it is the component's
+    // required event sink and part of the stable host contract, so we keep it
+    // unconditionally even for a component whose current layout wires no emits.
+    writeln!(out, "  dispatch,").unwrap();
+    writeln!(out, "}}: {component}Props) {{").unwrap();
+    out.push_str(&body);
     writeln!(out, "}}").unwrap();
-    // Suppress unused-variable warnings the compiler would emit for slots
-    // that the simple layout tree does not yet reference. A real layout will
-    // reference them through child JSX in follow-up PRs.
-    let _ = slots;
     Ok(out)
+}
+
+/// True if `ident` occurs in `body` as a standalone JavaScript identifier —
+/// i.e. not as a substring of a longer identifier. Used to decide whether a
+/// generated component actually reads a destructured prop, so unread props can
+/// be dropped from the destructure (they'd otherwise trip TS6133 under a strict
+/// host tsconfig). A plain `body.contains(ident)` would wrongly match `total`
+/// inside `totalHeight`, so we bound both ends on non-identifier characters.
+fn body_references_identifier(body: &str, ident: &str) -> bool {
+    if ident.is_empty() {
+        return false;
+    }
+    let bytes = body.as_bytes();
+    let n = ident.len();
+    let mut from = 0;
+    while let Some(rel) = body[from..].find(ident) {
+        let start = from + rel;
+        let end = start + n;
+        let before_ok = start == 0 || !is_js_ident_char(bytes[start - 1]);
+        let after_ok = end >= bytes.len() || !is_js_ident_char(bytes[end]);
+        if before_ok && after_ok {
+            return true;
+        }
+        from = start + 1;
+    }
+    false
+}
+
+/// Whether `b` may appear inside a JavaScript identifier (`[A-Za-z0-9_$]`).
+fn is_js_ident_char(b: u8) -> bool {
+    b.is_ascii_alphanumeric() || b == b'_' || b == b'$'
 }
 
 // =====================================================================
@@ -4352,7 +4393,7 @@ mod tests {
 
     /// UI24 §10 row 4 — `test_dispatch_destructured_last`
     #[test]
-    fn dispatch_is_last_in_destructuring() {
+    fn dispatch_is_last_and_unused_slots_dropped() {
         let m = component(
             "Grid",
             vec![
@@ -4365,13 +4406,41 @@ mod tests {
             ],
             vec![],
         );
-        let result = from_pipeline(&m, &single_box_layout("Grid"), &empty_style("Grid")).unwrap();
-        // The destructuring block must list dispatch after every slot.
+        // A layout that references ONLY `total-rows` (a Text leaf bound to it),
+        // never `column-headers`.
+        let layout = LayoutDef {
+            component_name: "Grid".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("total-rows".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let result = from_pipeline(&m, &layout, &empty_style("Grid")).unwrap();
+        // The referenced slot is destructured, and `dispatch` still comes last.
+        let total_rows_at = result
+            .output
+            .find("totalRows,")
+            .expect("a referenced slot must be destructured");
         let dispatch_at = result.output.find("dispatch,").expect("dispatch present");
-        let total_rows_at = result.output.find("totalRows,").expect("totalRows present");
         assert!(
             total_rows_at < dispatch_at,
             "dispatch must be the last destructured field, but came before totalRows"
+        );
+        // The UNreferenced slot is dropped from the destructure (it would
+        // otherwise trip TypeScript's noUnusedLocals / TS6133)...
+        assert!(
+            !result.output.contains("columnHeaders,"),
+            "an unreferenced slot must be omitted from the destructure"
+        );
+        // ...but it stays in the props interface, so callers may still pass it.
+        assert!(
+            result.output.contains("columnHeaders"),
+            "an unreferenced slot must remain in the props interface"
         );
     }
 

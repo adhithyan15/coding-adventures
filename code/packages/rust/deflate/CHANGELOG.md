@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0 — 2026-07-02
+
+### Changed (breaking wire format)
+
+- **`compress` now emits a standard RFC 1951 raw DEFLATE stream** instead of the previous non-standard custom container. The old format prepended a 4-byte original-length field and an explicit `(symbol, code_length)` table to a private bit stream — bytes no other tool could read. `compress` now produces a single **fixed-Huffman block** (BTYPE=01) using the pre-defined RFC 1951 §3.2.6 code tables, so the output is decodable by any conforming inflater (`inflate` here, `zlib`, `gzip`, `unzip`, browsers). Verified in both directions: our `inflate` reads Python-`zlib` output, and Python-`zlib` reads our `compress` output.
+- **`decompress` is now an alias for `inflate`.** The custom-format decoder (with its unchecked indexing, back-reference-offset underflow, and no output cap) is deleted; `decompress` forwards to the hardened, bomb-capped `inflate`, which reads stored/fixed/dynamic blocks. No caller outside this crate used `compress`/`decompress`.
+- LZSS window widened from 4096 to the full RFC 1951 **32768** bytes for better matching.
+
+### Removed
+
+- The custom-format machinery: `build_canonical_codes`, `reverse_code_map`, `unpack_bits`, `BitBuilder::write_bit_string`, and the `HuffmanTree`-based encoder.
+- The **`huffman-tree` path dependency** — no longer used now that `compress` uses the fixed (pre-defined) code tables.
+
+### Notes
+
+- Fixed-Huffman is standard and correct for every input but not the smallest encoding. Dynamic-Huffman **encoding** (BTYPE=10, better ratios) is a future optimisation and needs length-limited Huffman trees; the decoder already reads dynamic blocks.
+
 ## 0.2.1 — 2026-07-02
 
 ### Fixed

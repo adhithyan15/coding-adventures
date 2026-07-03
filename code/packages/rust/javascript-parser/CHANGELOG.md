@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.24.0] - 2026-07-02
+
+### Added — CLOC12.159 PR2: bridge `new X(args)` → `NewExpression` (closes gap-160)
+
+The typed-AST bridge now converts the `new` operator instead of declining it to
+`UnsupportedSyntax` (which dragged the whole file to WHITESPACE_ONLY). `new`
+appears in **two** grammar productions, and both are handled:
+
+- **argumented** `new X(args)` parses as `member_expression = "new"
+  member_expression arguments` — `convert_member_expression` now builds a
+  `NewExpression { callee, arguments }` as the base and folds any trailing
+  `.NAME` / `[expr]` suffix onto it (so `new X().y` and `new X()[k]` convert
+  correctly);
+- **bare** `new X` parses as `new_expression = "new" new_expression` —
+  `convert_new_expression` builds a `NewExpression` with an **empty** argument
+  list (semantically identical to `new X()`).
+
+Arguments reuse `convert_arguments`, so a spread argument (`new X(...a)`) still
+declines gracefully (`SpreadElement` is a later slice). `new.target` still
+declines (`NewTarget`, Phase 3). 7 new bridge tests (identifier / args / member
+callee / bare / member-access-on-new / nested `new new X()` / spread-declines)
+plus a closurec e2e diff fixture (`tests/diff/simple-new-expression/`) proving
+`log(new Widget(1 + 2))` round-trips the construction while the argument folds
+to `3`.
+
 ## [0.23.0] - 2026-07-02
 
 ### Added — CLOC12.158 PR2: bridge `++` / `--` → `UpdateExpression` (closes gap-159)

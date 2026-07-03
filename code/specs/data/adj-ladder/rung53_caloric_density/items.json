@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 53 \u2014 enteral-feed caloric density from four stated quantities (a NEW panel: nutrition / enteral-feeding). From carbohydrate, protein and fat calories plus a body weight compute the caloric density ((carb_calories+protein_calories+fat_calories)/body_weight), the total calories (carb_calories+protein_calories+fat_calories), or the carb-plus-protein partial sum (carb_calories+protein_calories). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, SUM-OF-THREE OVER ONE (a+b+c)/d, the first on the ladder to divide a three-term sum by a single quantity (distinct from rung-37 ratio-of-two-sums (a+b)/(c+d) and rung-43 sum-of-three-products) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via + and / \u2014 no constant leaks, and neither the total calories, the carb-plus-protein partial sum, nor any caloric-density figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: ADDING the weight into the calorie total instead of dividing by it, and breaking the grouping so only the fat term is divided (a+b+c/d, not (a+b+c)/d). The core confusion tested is dividing a grouped three-term sum by a single quantity.",
+  "items": [
+    {
+      "id": "r53cal-01",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 200 kcal from carbohydrate, 100 kcal from protein and 120 kcal from fat, for a patient weighing 20 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(200)\nobserve protein_calories(100)\nobserve fat_calories(120)\nobserve body_weight(20)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 420,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 306.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r53cal-02",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 200 kcal from carbohydrate, 100 kcal from protein and 120 kcal from fat, for a patient weighing 20 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(200)\nobserve protein_calories(100)\nobserve fat_calories(120)\nobserve body_weight(20)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 420,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 306.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r53cal-03",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 200 kcal from carbohydrate, 100 kcal from protein and 120 kcal from fat, for a patient weighing 20 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(200)\nobserve protein_calories(100)\nobserve fat_calories(120)\nobserve body_weight(20)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 21.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 420,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 300,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 440,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 306.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r53cal-04",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 300 kcal from carbohydrate, 150 kcal from protein and 200 kcal from fat, for a patient weighing 25 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(300)\nobserve protein_calories(150)\nobserve fat_calories(200)\nobserve body_weight(25)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 650,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 675,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 458.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r53cal-05",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 300 kcal from carbohydrate, 150 kcal from protein and 200 kcal from fat, for a patient weighing 25 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(300)\nobserve protein_calories(150)\nobserve fat_calories(200)\nobserve body_weight(25)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 675,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 458.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 650,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r53cal-06",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 300 kcal from carbohydrate, 150 kcal from protein and 200 kcal from fat, for a patient weighing 25 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(300)\nobserve protein_calories(150)\nobserve fat_calories(200)\nobserve body_weight(25)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 26.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 650,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 675,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 458.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r53cal-07",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 240 kcal from carbohydrate, 160 kcal from protein and 180 kcal from fat, for a patient weighing 40 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(240)\nobserve protein_calories(160)\nobserve fat_calories(180)\nobserve body_weight(40)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 580,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14.5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 620,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 404.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r53cal-08",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 240 kcal from carbohydrate, 160 kcal from protein and 180 kcal from fat, for a patient weighing 40 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(240)\nobserve protein_calories(160)\nobserve fat_calories(180)\nobserve body_weight(40)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 580,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 620,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 404.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r53cal-09",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 240 kcal from carbohydrate, 160 kcal from protein and 180 kcal from fat, for a patient weighing 40 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(240)\nobserve protein_calories(160)\nobserve fat_calories(180)\nobserve body_weight(40)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 580,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 620,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 400,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 404.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r53cal-10",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 180 kcal from carbohydrate, 90 kcal from protein and 150 kcal from fat, for a patient weighing 30 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(180)\nobserve protein_calories(90)\nobserve fat_calories(150)\nobserve body_weight(30)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 420,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 275.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 14.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r53cal-11",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 180 kcal from carbohydrate, 90 kcal from protein and 150 kcal from fat, for a patient weighing 30 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(180)\nobserve protein_calories(90)\nobserve fat_calories(150)\nobserve body_weight(30)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 420,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r53cal-12",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 180 kcal from carbohydrate, 90 kcal from protein and 150 kcal from fat, for a patient weighing 30 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(180)\nobserve protein_calories(90)\nobserve fat_calories(150)\nobserve body_weight(30)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 14.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 420,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 450,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r53cal-13",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 400 kcal from carbohydrate, 200 kcal from protein and 300 kcal from fat, for a patient weighing 45 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(400)\nobserve protein_calories(200)\nobserve fat_calories(300)\nobserve body_weight(45)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 900,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 945,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 606.6666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r53cal-14",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 400 kcal from carbohydrate, 200 kcal from protein and 300 kcal from fat, for a patient weighing 45 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(400)\nobserve protein_calories(200)\nobserve fat_calories(300)\nobserve body_weight(45)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 600,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 945,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 900,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 606.6666666666666,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r53cal-15",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 400 kcal from carbohydrate, 200 kcal from protein and 300 kcal from fat, for a patient weighing 45 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(400)\nobserve protein_calories(200)\nobserve fat_calories(300)\nobserve body_weight(45)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 900,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 945,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 606.6666666666666,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 600,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r53cal-16",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 150 kcal from carbohydrate, 120 kcal from protein and 90 kcal from fat, for a patient weighing 18 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(150)\nobserve protein_calories(120)\nobserve fat_calories(90)\nobserve body_weight(18)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 378,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r53cal-17",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 150 kcal from carbohydrate, 120 kcal from protein and 90 kcal from fat, for a patient weighing 18 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(150)\nobserve protein_calories(120)\nobserve fat_calories(90)\nobserve body_weight(18)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 378,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r53cal-18",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 150 kcal from carbohydrate, 120 kcal from protein and 90 kcal from fat, for a patient weighing 18 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(150)\nobserve protein_calories(120)\nobserve fat_calories(90)\nobserve body_weight(18)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 360,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 270,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 378,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 275.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r53cal-19",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 360 kcal from carbohydrate, 140 kcal from protein and 220 kcal from fat, for a patient weighing 36 kg. What is the caloric density (the total calories over the patient's weight)?",
+      "program": "observe carb_calories(360)\nobserve protein_calories(140)\nobserve fat_calories(220)\nobserve body_weight(36)\nlet answer = (carb_calories + protein_calories + fat_calories) / body_weight\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 756,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 506.1111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r53cal-20",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 360 kcal from carbohydrate, 140 kcal from protein and 220 kcal from fat, for a patient weighing 36 kg. What is the the total calories (carbohydrate plus protein plus fat)?",
+      "program": "observe carb_calories(360)\nobserve protein_calories(140)\nobserve fat_calories(220)\nobserve body_weight(36)\nlet answer = carb_calories + protein_calories + fat_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 756,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 506.1111111111111,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 720,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r53cal-21",
+      "qtype": "caloric_density",
+      "stem": "A tube feed supplies 360 kcal from carbohydrate, 140 kcal from protein and 220 kcal from fat, for a patient weighing 36 kg. What is the the carbohydrate-plus-protein calories (one partial sum, before adding fat)?",
+      "program": "observe carb_calories(360)\nobserve protein_calories(140)\nobserve fat_calories(220)\nobserve body_weight(36)\nlet answer = carb_calories + protein_calories\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 500,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 720,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 756,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 506.1111111111111,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}

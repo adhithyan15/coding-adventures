@@ -58,7 +58,7 @@ use coding_adventures_javascript_ast::{
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
-        MemberExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
+        MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
         PropertyKey, PropertyKind, StringLiteral, TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
         UndefinedLiteral, UpdateExpression, UpdateOperator,
@@ -1845,11 +1845,19 @@ fn convert_new_expression(node: &GrammarASTNode) -> Result<Expression, BridgeErr
             .ok_or_else(|| internal(node, "new_expression: expected 1 child"))?;
         return convert_expression(child);
     }
-    // "new X" — NewExpression, Phase 2.
-    Err(BridgeError::UnsupportedSyntax {
-        rule: "NewExpression".to_string(),
-        location: loc(node),
-    })
+    // `"new" new_expression` — the BARE `new X` form (no argument parens). It is
+    // semantically identical to `new X()`, so we build a `NewExpression` with an
+    // EMPTY argument list; the emitter prints the canonical `new X()`. (The
+    // *argumented* `new X(args)` form is parsed as a `member_expression`, not a
+    // `new_expression`, and is converted in `convert_member_expression`.)
+    let callee_node =
+        sole_node(node).ok_or_else(|| internal(node, "new_expression: expected callee after `new`"))?;
+    let callee = convert_expression(callee_node)?;
+    Ok(Expression::NewExpression(NewExpression {
+        cv: None,
+        callee: Box::new(callee),
+        arguments: Vec::new(),
+    }))
 }
 
 // -------------------------------------------------------------------------
@@ -2060,10 +2068,17 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
         });
     }
 
-    // `new` expression — Phase 2.
-    if node.children.iter().any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "new")) {
+    // `new.target` — a meta-property, Phase 3. (The argumented `new X(args)`
+    // form is converted below by the base-initialisation; only the
+    // `"new" DOT "target"` meta-property is still declined here.)
+    if has_token(node, "new")
+        && node
+            .children
+            .iter()
+            .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.value == "target"))
+    {
         return Err(BridgeError::UnsupportedSyntax {
-            rule: "NewExpression".to_string(),
+            rule: "NewTarget".to_string(),
             location: loc(node),
         });
     }
@@ -2099,13 +2114,57 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
     // the rest of the chain.
     let children = &node.children;
 
-    // The base is the first child — always the primary_expression Node.
-    let mut base = match children.first() {
-        Some(ASTNodeOrToken::Node(n)) => convert_expression(n)?,
-        _ => return Err(internal(node, "member_expression: expected primary base")),
+    // The base is either a primary_expression (`a`, `a.b`, `a[k]` …) or the
+    // argumented `new` form `"new" member_expression arguments` (`new X(a,b)`).
+    // We compute the starting `base` and the index `i` where the suffix chain
+    // (`.NAME` / `[expr]`) begins, then the shared loop below folds any suffix
+    // (so `new X().y` and `new X()[k]` fold correctly).
+    let (mut base, mut i) = if matches!(
+        children.first(),
+        Some(ASTNodeOrToken::Token(t)) if t.value == "new"
+    ) {
+        // children: [Token("new"), Node(member_expression callee),
+        //            Node(arguments), <optional .NAME / [expr] suffixes>].
+        // The callee is the first Node child; the argument list is the first
+        // `arguments`-rule Node. Construct the `NewExpression` and resume the
+        // suffix walk just after the arguments node.
+        let callee_node = children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            _ => None,
+        });
+        let args_idx = children.iter().position(
+            |c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "arguments"),
+        );
+        match (callee_node, args_idx) {
+            (Some(callee_node), Some(args_idx)) => {
+                let callee = convert_expression(callee_node)?;
+                let args_node = match &children[args_idx] {
+                    ASTNodeOrToken::Node(n) => n,
+                    _ => unreachable!("args_idx points at a Node by construction"),
+                };
+                let arguments = convert_arguments(args_node)?;
+                let new_expr = Expression::NewExpression(NewExpression {
+                    cv: None,
+                    callee: Box::new(callee),
+                    arguments,
+                });
+                (new_expr, args_idx + 1)
+            }
+            _ => {
+                return Err(internal(
+                    node,
+                    "member_expression: `new` form missing callee or arguments",
+                ))
+            }
+        }
+    } else {
+        // A plain primary base — always the first child Node.
+        let base = match children.first() {
+            Some(ASTNodeOrToken::Node(n)) => convert_expression(n)?,
+            _ => return Err(internal(node, "member_expression: expected primary base")),
+        };
+        (base, 1)
     };
-
-    let mut i = 1;
     while i < children.len() {
         match &children[i] {
             // `.NAME` — non-computed (dot) property access.
@@ -4014,5 +4073,97 @@ mod tests {
     #[test]
     fn bare_operand_still_passes_through() {
         assert!(matches!(sole_expr("a;"), Expression::Identifier(i) if i.name == "a"));
+    }
+
+    // ---- NewExpression (CLOC12.159 PR2, closes gap-160) ----------------
+
+    /// `new X()` bridges to a `NewExpression` with the identifier callee and an
+    /// empty argument list — no longer declined to `UnsupportedSyntax`.
+    #[test]
+    fn new_identifier_no_args() {
+        match sole_expr("new X();") {
+            Expression::NewExpression(n) => {
+                assert!(matches!(&*n.callee, Expression::Identifier(i) if i.name == "X"));
+                assert!(n.arguments.is_empty());
+            }
+            other => panic!("expected NewExpression, got {other:?}"),
+        }
+    }
+
+    /// `new X(1, 2)` carries both arguments through in order.
+    #[test]
+    fn new_with_args() {
+        match sole_expr("new X(1, 2);") {
+            Expression::NewExpression(n) => {
+                assert!(matches!(&*n.callee, Expression::Identifier(i) if i.name == "X"));
+                assert_eq!(n.arguments.len(), 2);
+                assert!(matches!(&n.arguments[0], Expression::NumericLiteral(l) if l.value == 1.0));
+                assert!(matches!(&n.arguments[1], Expression::NumericLiteral(l) if l.value == 2.0));
+            }
+            other => panic!("expected NewExpression, got {other:?}"),
+        }
+    }
+
+    /// A member-chain callee is preserved: `new a.b(c)` constructs via `a.b`.
+    #[test]
+    fn new_member_callee() {
+        match sole_expr("new a.b(c);") {
+            Expression::NewExpression(n) => {
+                assert!(matches!(&*n.callee, Expression::MemberExpression(_)));
+                assert_eq!(n.arguments.len(), 1);
+            }
+            other => panic!("expected NewExpression, got {other:?}"),
+        }
+    }
+
+    /// A bare `new X` (no parens) is the same program as `new X()` — it bridges
+    /// to a `NewExpression` with an EMPTY argument list (never dropped).
+    #[test]
+    fn bare_new_no_parens() {
+        match sole_expr("new X;") {
+            Expression::NewExpression(n) => {
+                assert!(matches!(&*n.callee, Expression::Identifier(i) if i.name == "X"));
+                assert!(n.arguments.is_empty());
+            }
+            other => panic!("expected NewExpression, got {other:?}"),
+        }
+    }
+
+    /// `new X().y` — a member access on the construction result. The argumented
+    /// `new` is the member object and the `.y` suffix folds onto it.
+    #[test]
+    fn new_then_member_access() {
+        match sole_expr("new X().y;") {
+            Expression::MemberExpression(m) => {
+                assert!(matches!(&*m.object, Expression::NewExpression(_)));
+                assert!(matches!(&*m.property, Expression::Identifier(i) if i.name == "y"));
+                assert!(!m.computed);
+            }
+            other => panic!("expected MemberExpression over a NewExpression, got {other:?}"),
+        }
+    }
+
+    /// `new` nests: `new new X()` constructs with the result of an inner
+    /// construction — both bridge to `NewExpression` (never declined).
+    #[test]
+    fn nested_new() {
+        match sole_expr("new new X();") {
+            Expression::NewExpression(outer) => {
+                assert!(matches!(&*outer.callee, Expression::NewExpression(_)));
+            }
+            other => panic!("expected nested NewExpression, got {other:?}"),
+        }
+    }
+
+    /// A spread argument is still declined (SpreadElement is a later slice), so
+    /// `new X(...a)` gracefully falls back rather than dropping the spread.
+    #[test]
+    fn new_with_spread_arg_declines() {
+        // The whole file falls back to WHITESPACE_ONLY; `bridge` returns the raw
+        // `Result`, so assert the decline directly (rather than `bridge_ok`).
+        assert!(
+            bridge("new X(...a);").is_err(),
+            "spread argument in `new` should decline (SpreadElement not yet supported)"
+        );
     }
 }

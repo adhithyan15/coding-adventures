@@ -90,6 +90,7 @@ SELF_CONTAINED_RUNGS = (
     "rung50_insulin_correction",
     "rung51_dispensing_quantity",
     "rung52_alveolar_ventilation",
+    "rung53_caloric_density",
 )
 
 
