@@ -1421,6 +1421,7 @@ impl Lowerer {
     /// | `expression_stmt`                    | the bare expression                |
     /// | `method_call` / `method_call_no_paren` | the call's result                |
     /// | `if_statement` / `unless_statement`  | an [`Expr::If`] (branches recurse) |
+    /// | `case_statement` (`case/when`, `case/in`) | a chained [`Expr::If`] (arms recurse) |
     /// | anything else (assignment, `while`…) | `None` — the node stays a `Stmt`   |
     ///
     /// Returning `None` tells the caller to route the node through
@@ -1454,6 +1455,12 @@ impl Lowerer {
             }
             "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
             "if_statement" | "unless_statement" => self.lower_if_or_unless(inner)?,
+            // A `case` (both `case/when` value-matching and `case/in` pattern
+            // matching) already lowers to a chained `Expr::If` whose arms are
+            // built with `lower_clause_statements` — so promoting it here makes
+            // a method that ends in a `case` return the matched arm's value
+            // (recursing through the same helper), instead of `nil`.
+            "case_statement" => self.lower_case_statement(inner)?,
             _ => return Ok(None),
         };
         Ok(Some(value))
