@@ -1,0 +1,13 @@
+[package]
+name = "cfb-writer"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch, zero-dependency writer for the OLE2 / Compound File Binary Format ([MS-CFB]) — produces valid .xls/.doc/.ppt containers. The inverse of the `cfb` reader."
+license = "MIT"
+
+[dependencies]
+# No dependencies — pure std, from-scratch binary emitter.
+
+[dev-dependencies]
+# The reader, used to prove our output round-trips byte-for-byte.
+cfb = { path = "../cfb" }
