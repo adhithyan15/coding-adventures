@@ -391,6 +391,7 @@ fn app_package_emits_multi_backend_artifacts_from_component_dependency() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: false,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should build EngramApp: {e}"));
 
@@ -578,6 +579,7 @@ fn app_package_emits_native_project_shells() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: true,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
 
@@ -611,6 +613,7 @@ fn native_project_shells_expose_engram_host_contract() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: true,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should emit EngramApp project shell: {e}"));
     }

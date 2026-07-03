@@ -154,6 +154,7 @@ fn deck_stats_package_emitters_all_accept_deck_selector_controls() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: false,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should build DeckStatsPanel: {e}"));
 

@@ -129,6 +129,13 @@
           "description": "Also emit the selected backend's runnable project shell alongside the package artifacts",
           "type": "boolean",
           "required": false
+        },
+        {
+          "id": "theme",
+          "long": "theme",
+          "description": "Theme selector for style resolution, e.g. 'light' or 'dark'. Reads each component's <Component>.<theme>.msl (falling back to the bare <Component>.msl). Omitted → theme-agnostic (historical dark default). The style analogue of --variant.",
+          "type": "string",
+          "required": false
         }
       ],
       "arguments": [

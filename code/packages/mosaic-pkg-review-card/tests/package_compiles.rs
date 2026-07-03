@@ -165,6 +165,7 @@ fn review_card_package_emitters_all_accept_nested_rating_controls() {
             output_root: tmp.path().to_path_buf(),
             backend,
             emit_project: false,
+            theme: None,
         })
         .unwrap_or_else(|e| panic!("{backend:?} should build ReviewCard: {e}"));
 

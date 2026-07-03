@@ -1,5 +1,30 @@
 # Changelog
 
+## [Unreleased] - theme axis for style resolution
+
+`BuildOptions` gains a `theme: Option<String>` field — the style (`.msl`)
+analogue of the UI30 layout `variant` axis. When `Some("light")`, each
+component's style resolves from `<Component>.light.msl` (falling back to the
+bare `<Component>.msl`, then the alphabetically-first stylesheet). `None`
+preserves the historical theme-agnostic resolution (bare, else
+alphabetically-first — the implicit dark default).
+
+Before this, `resolve_style_path` was theme-blind: it picked the bare `.msl`
+or the alphabetically-first `<Component>.*.msl`, so `<Component>.dark.msl`
+always beat `<Component>.light.msl` and any authored light stylesheet was
+**dead code, never emitted**. The theme flows through `compile_one_component`,
+`emit_project_shell`, and the dependency-style collection chain, so app styles,
+component styles, and nested package-dependency styles all honour the selected
+theme. `mosaic-compile pkg` exposes it as `--theme <name>`.
+
+`build_package` validates `opts.theme` as a safe path segment (non-empty ASCII
+alphanumeric / `_` / `-`) before any I/O, since the theme flows into a
+stylesheet filename joined onto `src/`. The check lives in the library (not just
+the `mosaic-compile` CLI) so programmatic callers can't traverse out of `src/`.
+
+**Breaking:** `BuildOptions` now has a required `theme` field. All in-tree
+constructors are updated (`None` = prior behaviour).
+
 ## [Unreleased] - package reference aware artifact builds
 
 `build_package` now resolves `pkg::P::C` layout references before style
