@@ -100,6 +100,7 @@ SELF_CONTAINED_RUNGS = (
     "rung60_apheresis_net_rate",
     "rung61_polysomnography_apnea_rate",
     "rung62_urodynamics_average_flow",
+    "rung63_lacrimal_tear_clearance",
 )
 
 

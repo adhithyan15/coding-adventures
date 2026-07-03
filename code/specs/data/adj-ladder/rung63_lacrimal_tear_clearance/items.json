@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 63 \u2014 tear clearance index from four stated quantities (a NEW panel: ophthalmology / lacrimal). From a basal and a reflex tear production (their sum is the total production) and a drainage capacity reduced by a blockage (their difference is the net drainage), compute the clearance ((basal_tears+reflex_tears)/(drain_capacity-blockage)), the total production (basal_tears+reflex_tears), or the net drainage (drain_capacity-blockage). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, SUM OVER A DIFFERENCE (a+b)/(c-d), the first on the ladder to divide a sum by a difference (distinct from rung-59 product-over-difference (a*b)/(c-d) and rung-32 difference-over-difference (a-b)/(c-d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via /, +, and - \u2014 no constant leaks, and neither the total production, the net drainage, nor any clearance figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: SUMMING the denominator ((a+b)/(c+d), a wrong net drainage) and DIFFERENCING the numerator ((a-b)/(c-d), a wrong total). The core confusion tested is that (a+b)/(c-d) is not (a+b)/(c+d) and not (a-b)/(c-d).",
+  "items": [
+    {
+      "id": "r63tear-01",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 60 units of basal secretion and 20 of reflex secretion draining through a capacity of 50 reduced by a 10 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(60)\nobserve reflex_tears(20)\nobserve drain_capacity(50)\nobserve blockage(10)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r63tear-02",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 60 units of basal secretion and 20 of reflex secretion draining through a capacity of 50 reduced by a 10 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(60)\nobserve reflex_tears(20)\nobserve drain_capacity(50)\nobserve blockage(10)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r63tear-03",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 60 units of basal secretion and 20 of reflex secretion draining through a capacity of 50 reduced by a 10 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(60)\nobserve reflex_tears(20)\nobserve drain_capacity(50)\nobserve blockage(10)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.3333333333333333,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r63tear-04",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 80 units of basal secretion and 40 of reflex secretion draining through a capacity of 60 reduced by a 20 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(80)\nobserve reflex_tears(40)\nobserve drain_capacity(60)\nobserve blockage(20)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r63tear-05",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 80 units of basal secretion and 40 of reflex secretion draining through a capacity of 60 reduced by a 20 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(80)\nobserve reflex_tears(40)\nobserve drain_capacity(60)\nobserve blockage(20)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r63tear-06",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 80 units of basal secretion and 40 of reflex secretion draining through a capacity of 60 reduced by a 20 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(80)\nobserve reflex_tears(40)\nobserve drain_capacity(60)\nobserve blockage(20)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 1.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r63tear-07",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 90 units of basal secretion and 30 of reflex secretion draining through a capacity of 40 reduced by a 10 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(90)\nobserve reflex_tears(30)\nobserve drain_capacity(40)\nobserve blockage(10)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r63tear-08",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 90 units of basal secretion and 30 of reflex secretion draining through a capacity of 40 reduced by a 10 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(90)\nobserve reflex_tears(30)\nobserve drain_capacity(40)\nobserve blockage(10)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r63tear-09",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 90 units of basal secretion and 30 of reflex secretion draining through a capacity of 40 reduced by a 10 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(90)\nobserve reflex_tears(30)\nobserve drain_capacity(40)\nobserve blockage(10)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 2.4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r63tear-10",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 70 units of basal secretion and 50 of reflex secretion draining through a capacity of 80 reduced by a 40 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(70)\nobserve reflex_tears(50)\nobserve drain_capacity(80)\nobserve blockage(40)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 3.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r63tear-11",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 70 units of basal secretion and 50 of reflex secretion draining through a capacity of 80 reduced by a 40 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(70)\nobserve reflex_tears(50)\nobserve drain_capacity(80)\nobserve blockage(40)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r63tear-12",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 70 units of basal secretion and 50 of reflex secretion draining through a capacity of 80 reduced by a 40 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(70)\nobserve reflex_tears(50)\nobserve drain_capacity(80)\nobserve blockage(40)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r63tear-13",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 100 units of basal secretion and 20 of reflex secretion draining through a capacity of 30 reduced by a 10 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(100)\nobserve reflex_tears(20)\nobserve drain_capacity(30)\nobserve blockage(10)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r63tear-14",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 100 units of basal secretion and 20 of reflex secretion draining through a capacity of 30 reduced by a 10 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(100)\nobserve reflex_tears(20)\nobserve drain_capacity(30)\nobserve blockage(10)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 20,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 4.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r63tear-15",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 100 units of basal secretion and 20 of reflex secretion draining through a capacity of 30 reduced by a 10 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(100)\nobserve reflex_tears(20)\nobserve drain_capacity(30)\nobserve blockage(10)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 3.0,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 20,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r63tear-16",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 50 units of basal secretion and 30 of reflex secretion draining through a capacity of 70 reduced by a 30 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(50)\nobserve reflex_tears(30)\nobserve drain_capacity(70)\nobserve blockage(30)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r63tear-17",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 50 units of basal secretion and 30 of reflex secretion draining through a capacity of 70 reduced by a 30 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(50)\nobserve reflex_tears(30)\nobserve drain_capacity(70)\nobserve blockage(30)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r63tear-18",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 50 units of basal secretion and 30 of reflex secretion draining through a capacity of 70 reduced by a 30 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(50)\nobserve reflex_tears(30)\nobserve drain_capacity(70)\nobserve blockage(30)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 80,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 0.8,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 0.5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r63tear-19",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 120 units of basal secretion and 40 of reflex secretion draining through a capacity of 90 reduced by a 50 blockage. What is the tear clearance index (total production over the net drainage)?",
+      "program": "observe basal_tears(120)\nobserve reflex_tears(40)\nobserve drain_capacity(90)\nobserve blockage(50)\nlet answer = (basal_tears + reflex_tears) / (drain_capacity - blockage)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r63tear-20",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 120 units of basal secretion and 40 of reflex secretion draining through a capacity of 90 reduced by a 50 blockage. What is the the total tear production (basal plus reflex secretion)?",
+      "program": "observe basal_tears(120)\nobserve reflex_tears(40)\nobserve drain_capacity(90)\nobserve blockage(50)\nlet answer = basal_tears + reflex_tears\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 2.0,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 160,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r63tear-21",
+      "qtype": "lacrimal_tear_clearance",
+      "stem": "A tear study measures 120 units of basal secretion and 40 of reflex secretion draining through a capacity of 90 reduced by a 50 blockage. What is the the net drainage capacity (drainage minus blockage)?",
+      "program": "observe basal_tears(120)\nobserve reflex_tears(40)\nobserve drain_capacity(90)\nobserve blockage(50)\nlet answer = drain_capacity - blockage\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 4.0,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 160,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 1.1428571428571428,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 2.0,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
