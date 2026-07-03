@@ -71,7 +71,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
-    BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression,
+    BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement,
     Declaration, EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit,
     ForOfStatement,
     ForStatement,
@@ -1244,6 +1244,12 @@ fn dce_expression(expr: &Expression, st: &mut DceState) -> Expression {
                 },
             })
         }
+        // `...arg` — kept (the spread's iterable may have side effects);
+        // recurse into the argument.
+        Expression::SpreadElement(s) => Expression::SpreadElement(SpreadElement {
+            cv: s.cv.clone(),
+            argument: Box::new(dce_expression(&s.argument, st)),
+        }),
         Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
             cv: m.cv.clone(),
             object: Box::new(dce_expression(&m.object, st)),

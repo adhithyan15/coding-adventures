@@ -84,6 +84,16 @@ emitter grow a need for them — each behind its own `CLOC12.NN` slice:
   paren-free (`` a`x`.length ``) while a looser tag wraps (`` (a,b)`x` ``). Node
   + `closure-emitter` + all pass traversals land in one atomic PR; the
   bridge-enable + conformance port follow (gap-162).
+- `SpreadElement` (CLOC12.162) — a spread `...arg`: the `...` prefix that
+  unpacks an iterable into a call/`new` argument list (`f(...a)`) or an
+  array-literal element (`[...a]`). `SpreadElement { argument: Box<Expression> }`.
+  Not a free-standing expression (a bare `...x` is a syntax error), but modelled
+  as an `Expression` variant so it slots into the existing `Vec<Expression>`
+  argument/element lists without a parallel enum, and every walker that recurses
+  those `Vec`s reaches `argument` for free. It tags at `PREC_ASSIGNMENT`,
+  matching the assignment-position list slots it lives in. Node +
+  `closure-emitter` + all pass traversals land in one atomic PR; the
+  bridge-enable + conformance port follow (gap-163).
 
 ## What's coming (follow-up PRs)
 

@@ -1026,6 +1026,8 @@ fn collect_all_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
                 collect_all_idents_expr(e, out);
             }
         }
+        // `...arg` — recurse into the spread argument to collect its idents.
+        Expression::SpreadElement(s) => collect_all_idents_expr(&s.argument, out),
     }
 }
 
@@ -1337,6 +1339,8 @@ fn rewrite_uses_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 rewrite_uses_expr(e, map);
             }
         }
+        // `...arg` — recurse into the spread argument to rewrite renamed uses in it.
+        Expression::SpreadElement(s) => rewrite_uses_expr(&mut s.argument, map),
     }
 }
 

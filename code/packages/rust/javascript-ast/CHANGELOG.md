@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [0.21.0] - 2026-07-03
+
+### Added — CLOC12.162: `Expression::SpreadElement` (`...arg`)
+
+New `SpreadElement { cv, argument: Box<Expression> }` variant of `Expression`
+modelling a spread `...arg` — the `...` prefix that unpacks an iterable into a
+call/`new` argument list (`f(...a)`) or an array-literal element (`[...a]`). It
+is not a free-standing expression (a bare `...x` is a syntax error); it is
+modelled as an `Expression` variant so it slots into the existing
+`Vec<Expression>` argument/element lists without a parallel enum, and every
+existing AST walker that recurses those `Vec`s reaches `argument` for free.
+Re-exported from the crate root. Atomic node PR (PR1): the node +
+`closure-emitter` emit + all nine downstream pass match-arms land in one commit
+so the workspace never breaks. The bridge conversion (grammar-AST → typed-AST)
+and the conformance port follow in PR2/PR3.
+
+
 ## [0.20.0] - 2026-07-02
 
 ### Added — CLOC12.161: `Expression::TaggedTemplateExpression` (`` tag`...` ``)

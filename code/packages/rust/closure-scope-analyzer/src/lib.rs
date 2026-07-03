@@ -941,6 +941,8 @@ fn walk_expression(
                 walk_expression(e, ctx, analysis, pending);
             }
         }
+        // `...arg` — recurse into the spread argument to resolve references in it.
+        Expression::SpreadElement(s) => walk_expression(&s.argument, ctx, analysis, pending),
     }
 }
 

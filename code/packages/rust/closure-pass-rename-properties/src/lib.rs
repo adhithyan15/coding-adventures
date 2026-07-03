@@ -1254,6 +1254,8 @@ fn classify_expr(expr: &Expression, cls: &mut Classify) {
                 classify_expr(e, cls);
             }
         }
+        // `...arg` — recurse into the spread argument to classify accesses in it.
+        Expression::SpreadElement(s) => classify_expr(&s.argument, cls),
     }
 }
 
@@ -1519,6 +1521,8 @@ fn rewrite_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 rewrite_expr(e, map);
             }
         }
+        // `...arg` — recurse into the spread argument to rewrite accesses in it.
+        Expression::SpreadElement(s) => rewrite_expr(&mut s.argument, map),
     }
 }
 

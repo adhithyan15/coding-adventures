@@ -506,6 +506,8 @@ fn expr_node_count(expr: &Expression) -> usize {
                 + t.quasi.quasis.len()
                 + t.quasi.expressions.iter().map(expr_node_count).sum::<usize>()
         }
+        // `...arg` — the spread weighs exactly its single inner argument.
+        Expression::SpreadElement(s) => expr_node_count(&s.argument),
     }
 }
 
@@ -838,6 +840,8 @@ fn collect_binding_idents_expr(expr: &Expression, out: &mut HashSet<String>) {
         // A tagged template introduces no boundary bindings either (the tag is
         // a callee, the quasi a template) — mirror the template arm.
         Expression::TaggedTemplateExpression(_) => {}
+        // `...arg` — recurse into the spread argument to collect its bindings.
+        Expression::SpreadElement(s) => collect_binding_idents_expr(&s.argument, out),
     }
 }
 
@@ -1136,6 +1140,8 @@ fn tally_expr(expr: &Expression, cand: &InlineCandidate, t: &mut Tally) {
                 tally_expr(e, cand, t);
             }
         }
+        // `...arg` — recurse into the spread argument to tally candidate uses.
+        Expression::SpreadElement(s) => tally_expr(&s.argument, cand, t),
     }
 }
 
@@ -1440,6 +1446,8 @@ fn inline_in_expr(expr: &mut Expression, cand: &InlineCandidate) -> bool {
                 changed |= inline_in_expr(e, cand);
             }
         }
+        // `...arg` — recurse into the spread argument to inline candidate calls.
+        Expression::SpreadElement(s) => changed |= inline_in_expr(&mut s.argument, cand),
     }
     changed
 }
@@ -1595,6 +1603,8 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                 substitute(e, map);
             }
         }
+        // `...arg` — recurse into the spread argument to substitute through it.
+        Expression::SpreadElement(s) => substitute(&mut s.argument, map),
     }
 }
 
@@ -1974,6 +1984,8 @@ fn expr_collect_mutated_params(
                 expr_collect_mutated_params(e, params, out);
             }
         }
+        // `...arg` — recurse into the spread argument to find mutated params.
+        Expression::SpreadElement(s) => expr_collect_mutated_params(&s.argument, params, out),
         Expression::Identifier(_)
         | Expression::NumericLiteral(_)
         | Expression::StringLiteral(_)
@@ -3444,6 +3456,8 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
                 rename_in_expr(e, map);
             }
         }
+        // `...arg` — recurse into the spread argument to alpha-rename through it.
+        Expression::SpreadElement(s) => rename_in_expr(&mut s.argument, map),
     }
 }
 

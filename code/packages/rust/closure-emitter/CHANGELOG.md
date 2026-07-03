@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.26.0] - 2026-07-03
+
+### Added — CLOC12.162: emit `SpreadElement` (`...arg`)
+
+New `emit_spread` prints `...` immediately followed by the argument at
+`PREC_ASSIGNMENT` (no interior space). The argument grammar is an
+`AssignmentExpression`, so everything at or above assignment strength prints
+bare (`...a`, `...a.b`, `...f()`, `...a?b:c`, `...a=b`) while a looser
+**sequence** argument is wrapped — `...(a,b)` — because a bare `...a,b` would
+spread only `a` and leave `,b` as a second list slot (a miscompile). The node
+tags at `PREC_ASSIGNMENT`, matching the assignment-position list slots it lives
+in (`f(...a)`, `[...a]`), so it is never spuriously parenthesised there. 6 new
+unit tests (sole/interleaved call arg, array element, `new` arg, sequence-arg
+wrap, conditional-arg bare). This is CLOC12.162 PR1 (the atomic node); the emit
+is exercised by hand-built AST, and the bridge-enable is PR2.
+
+
 ## [0.25.1] - 2026-07-03
 
 ### Added — CLOC12.161 PR3: CodePrinter tagged-template conformance port
