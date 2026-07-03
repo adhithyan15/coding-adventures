@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Wired the generated SwiftUI macOS Engram shell to handle Anki import/export
+  `hostIntent` payloads with AppKit file panels and the shared `engram-capi`
+  APKG import/export functions, with an explicit unsupported result on
+  non-macOS SwiftUI targets until Mosaic has an async document-picker bridge.
 - Wired the generated Qt Engram shell to handle Anki import/export
   `hostIntent` payloads with Qt file dialogs and the shared `engram-capi` APKG
   import/export functions.
