@@ -2,6 +2,19 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.234.1] - 2026-07-03
+
+### Added — CLOC12.161 PR2: tagged-template end-to-end fixture
+
+New `tests/diff/simple-tagged-template/` e2e diff fixture proving a tagged
+template `` tag`abc` `` now flows through the full SIMPLE pipeline (gap-162
+closed in `javascript-parser` 0.26.0). Input `log(tag`abc`, 1 + 2);` →
+`log(tag`abc`,3);`: the tagged template round-trips AND the sibling `1 + 2`
+folds to `3` — the fold proves the whole file ran through SIMPLE rather than
+falling back to WHITESPACE_ONLY (which a bridge decline would have forced,
+leaving `1 + 2` unfolded). Driver: `tests/diff_simple_tagged_template.rs`.
+
+
 ## [0.234.0] - 2026-06-30
 
 ### Fixed — deep-grouping parser DoS no longer aborts the process

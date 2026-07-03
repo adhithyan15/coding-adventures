@@ -1861,14 +1861,28 @@ still declines the tagged-template form (gap-162), so closurec falls back to
 WHITESPACE_ONLY on `` tag`...` `` for now. PR2 (bridge-enable) and PR3
 (conformance port) follow.
 
-### gap-162 — bridge declines tagged templates (`TaggedTemplateExpression`) — **OPEN**
+### gap-162 — bridge declines tagged templates (`TaggedTemplateExpression`) — **RESOLVED (javascript-parser 0.26.0, CLOC12.161 PR2)**
 
-The `javascript-parser` bridge does not yet convert the grammar's
-`tagged_template_expression` (a `member_expression`/`call_expression`-position
-production of the form `<tag> <template_literal>`) into the new
-`Expression::TaggedTemplateExpression` node; it declines to `UnsupportedSyntax`,
-dropping the whole file to WHITESPACE_ONLY. The atomic node PR (CLOC12.161 PR1)
-lands the node + emit + pass traversals; the **PR2 bridge-enable** — the fix for
-this gap — will build the node from the grammar's tag + template-literal
-children (the template child reusing the existing `template_literal` conversion
-from CLOC12.155), gated by a closurec e2e diff fixture.
+The `javascript-parser` bridge declined a `template_literal` node appearing as a
+suffix on a base expression (`<tag> <template_literal>`), returning
+`UnsupportedSyntax` and dropping the whole file to WHITESPACE_ONLY. The atomic
+node PR (CLOC12.161 PR1, #7495) landed the node + emit + pass traversals.
+
+**Fix (CLOC12.161 PR2):** `convert_member_expression`'s suffix walk now converts
+a trailing `template_literal` into `Expression::TaggedTemplateExpression` — the
+accumulated `base` becomes the `tag`, and the template becomes the `quasi` via
+the existing `convert_template_literal` (CLOC12.155, reused unchanged). Because
+the wrap continues the suffix walk, chained forms like `` a`x`.length `` and
+`` a`x`() `` flow through naturally. 4 bridge tests (identifier tag, member-chain
+tag, member-access-on-tagged chaining, and a guard that an *untagged* template
+still bridges to a bare `TemplateLiteral`), plus a closurec e2e diff fixture
+(`tests/diff/simple-tagged-template/`) proving `log(tag`abc`, 1 + 2)` →
+`log(tag`abc`,3)`: the tag round-trips while the sibling `1 + 2` folds to `3`,
+proving the whole file ran through SIMPLE rather than WHITESPACE_ONLY.
+
+**Scope:** substitution templates `` `a${x}b` `` still do not parse in the
+grammar (`convert_template_literal` handles the single-`TEMPLATE_NO_SUB`-token
+form only), so the tagged form is enabled **no-substitution** — matching the
+template bridge's scope. When the grammar learns `${…}`, both the plain and
+tagged template converters grow the substitution branch together; the AST node
+already models it.

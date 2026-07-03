@@ -59,7 +59,8 @@ use coding_adventures_javascript_ast::{
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
         LogicalOperator,
         MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Property,
-        PropertyKey, PropertyKind, SequenceExpression, StringLiteral, TemplateElement, TemplateLiteral,
+        PropertyKey, PropertyKind, SequenceExpression, StringLiteral, TaggedTemplateExpression,
+        TemplateElement, TemplateLiteral,
         UnaryExpression, UnaryOperator,
         UndefinedLiteral, UpdateExpression, UpdateOperator,
     },
@@ -2231,12 +2232,20 @@ fn convert_member_expression(node: &GrammarASTNode) -> Result<Expression, Bridge
                     }
                 }
             }
-            // A tagged-template suffix on a member base is Phase 2.
+            // `` <base>`...` `` — a tagged template: the accumulated `base`
+            // becomes the tag, and the `template_literal` becomes the quasi.
+            // Reuse `convert_template_literal` (CLOC12.155) for the quasi — a
+            // tagged template is structurally "an expression applied to a
+            // template", so nothing new is parsed here. Wrapping continues the
+            // suffix walk, so `` a`x`.length `` and `` a`x`() `` chain naturally.
             ASTNodeOrToken::Node(n) if n.rule_name == "template_literal" => {
-                return Err(BridgeError::UnsupportedSyntax {
-                    rule: "TaggedTemplateExpression".to_string(),
-                    location: loc(n),
+                let quasi = convert_template_literal(n)?;
+                base = Expression::TaggedTemplateExpression(TaggedTemplateExpression {
+                    cv: None,
+                    tag: Box::new(base),
+                    quasi,
                 });
+                i += 1;
             }
             // RBRACKET / NAME already consumed by their openers, and
             // any stray token is skipped defensively.
@@ -2786,6 +2795,104 @@ mod tests {
         let json = serde_json::to_string(&p).expect("serialize");
         assert!(json.contains("TemplateLiteral"), "initializer should bridge to a TemplateLiteral; got {json}");
         assert!(json.contains("hello"));
+    }
+
+    /// `` tag`abc` `` — a tagged template with an identifier tag: the bridge
+    /// wraps the tag + template into a `TaggedTemplateExpression` (previously
+    /// `UnsupportedSyntax`, gap-162).
+    #[test]
+    fn tagged_template_identifier_tag() {
+        let p = bridge_ok("tag`abc`;");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => match &es.expression {
+                Expression::TaggedTemplateExpression(t) => {
+                    match &*t.tag {
+                        Expression::Identifier(id) => assert_eq!(id.name, "tag"),
+                        other => panic!("expected identifier tag, got {other:?}"),
+                    }
+                    assert_eq!(t.quasi.quasis.len(), 1, "no-sub quasi");
+                    assert_eq!(t.quasi.quasis[0].raw, "abc");
+                    assert!(t.quasi.expressions.is_empty());
+                }
+                other => panic!("expected TaggedTemplateExpression, got {other:?}"),
+            },
+            _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// `` String.raw`abc` `` — a member-chain tag on a no-substitution template.
+    /// The tag bridges to a `MemberExpression`; the quasi is a single tail
+    /// element. (Substitution templates `` `a${x}b` `` do not parse in the
+    /// grammar yet — see `convert_template_literal` — so the tagged form is
+    /// exercised no-substitution here, matching the template bridge's scope.)
+    #[test]
+    fn tagged_template_member_tag() {
+        let p = bridge_ok("String.raw`abc`;");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => match &es.expression {
+                Expression::TaggedTemplateExpression(t) => {
+                    assert!(
+                        matches!(&*t.tag, Expression::MemberExpression(_)),
+                        "String.raw is a member-chain tag; got {:?}",
+                        t.tag
+                    );
+                    assert_eq!(t.quasi.quasis.len(), 1, "single no-sub quasi");
+                    assert_eq!(t.quasi.quasis[0].raw, "abc");
+                    assert!(t.quasi.expressions.is_empty());
+                }
+                other => panic!("expected TaggedTemplateExpression, got {other:?}"),
+            },
+            _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// `` a`x`.length `` — a member access on a tagged template chains: the
+    /// tagged template is the object of the outer member access.
+    #[test]
+    fn tagged_template_member_access_chains() {
+        let p = bridge_ok("a`x`.length;");
+        let json = serde_json::to_string(&p).expect("serialize");
+        assert!(
+            json.contains("TaggedTemplateExpression"),
+            "member-on-tagged should keep the TaggedTemplateExpression; got {json}"
+        );
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => match &es.expression {
+                // Outer node is the `.length` member access whose object is the
+                // tagged template.
+                Expression::MemberExpression(m) => assert!(
+                    matches!(&*m.object, Expression::TaggedTemplateExpression(_)),
+                    "member object should be the tagged template; got {:?}",
+                    m.object
+                ),
+                other => panic!("expected outer MemberExpression, got {other:?}"),
+            },
+            _ => panic!("expected ExpressionStatement"),
+        }
+    }
+
+    /// A plain no-substitution template with NO tag still bridges to a bare
+    /// `TemplateLiteral` (the tagged-template path does not capture untagged
+    /// templates).
+    #[test]
+    fn untagged_template_still_bare() {
+        let p = bridge_ok("`abc`;");
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es)
+            )) => assert!(
+                matches!(&es.expression, Expression::TemplateLiteral(_)),
+                "untagged template must stay a bare TemplateLiteral; got {:?}",
+                es.expression
+            ),
+            _ => panic!("expected ExpressionStatement"),
+        }
     }
 
     #[test]
