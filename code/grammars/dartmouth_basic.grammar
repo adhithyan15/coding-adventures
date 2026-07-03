@@ -279,7 +279,7 @@ restore_stmt = "RESTORE" ;
 
 dim_stmt = "DIM" dim_decl { COMMA dim_decl } ;
 
-dim_decl = NAME LPAREN NUMBER RPAREN ;
+dim_decl = NAME LPAREN NUMBER { COMMA NUMBER } RPAREN ;
 
 # =============================================================================
 # DEF — user-defined function
@@ -309,7 +309,7 @@ def_stmt = "DEF" USER_FN LPAREN NAME RPAREN EQ expr ;
 # `A(I)` could match the scalar form (`NAME`) and leave `(I)` unparsed.
 # =============================================================================
 
-variable = NAME LPAREN expr RPAREN
+variable = NAME LPAREN expr { COMMA expr } RPAREN
          | NAME
          ;
 

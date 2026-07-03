@@ -2,6 +2,19 @@
 
 All notable changes to this crate will be documented in this file.
 
+## [0.3.0] — 2026-07-02 — BA-DIM-2D: multi-dimensional array subscripts
+
+### Changed
+
+- **Grammar** (`code/grammars/dartmouth_basic.grammar`): two rules gain a
+  comma-separated repetition so multi-dimensional arrays parse:
+  - `dim_decl = NAME LPAREN NUMBER { COMMA NUMBER } RPAREN` — `DIM A(m,n)`
+  - `variable = NAME LPAREN expr { COMMA expr } RPAREN | NAME` — `A(i,j)`
+- Regenerated `src/_grammar.rs` from the updated grammar via
+  `grammar-tools generate-rust-compiled-grammars dartmouth_basic`.  A scalar
+  `NAME` and a 1-D `A(i)` still parse exactly as before (the repetition matches
+  zero extra subscripts).
+
 ## [0.2.0] — 2026-06-27
 
 ### Added

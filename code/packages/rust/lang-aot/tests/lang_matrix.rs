@@ -1977,6 +1977,25 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // Dartmouth BASIC — *two-dimensional real arrays* (LANG-FULL BA-DIM-2D,
+    // enabler **E5**).  `DIM A(1,2)` declares a 2×3 matrix (0-based inclusive:
+    // rows `A(0..1, …)`, cols `A(…, 0..2)`), lowered to a **single** flat
+    // `alloc_array` of `(1+1)*(2+1) = 6` `f64` elements.  A subscript `A(i,j)`
+    // folds through the row-major strides recorded at `DIM` — `stride = [3, 1]`
+    // — to the flat 0-based index `i*3 + j` (a `const 3` + `mul` + `add`), so no
+    // new IIR op and no backend change: it runs on the same E5 `alloc_array`/
+    // `array_set`/`array_get` substrate every backend already supports.  Stores
+    // `A(0,0)=40` (flat 0) and `A(1,2)=2` (flat 5, the last cell — proving the
+    // row stride), then `PRINT A(0,0) + A(1,2)` reads both back ⇒ prints 42.
+    // Straight-line (no loop), so — like the BA3 1-D array cell — the JVM
+    // loop+print StackMapTable follow-up doesn't apply and all 7 backends run.
+    Prog {
+        lang: Language::DartmouthBasic,
+        ext: "bas",
+        src: "10 DIM A(1,2)\n20 LET A(0,0) = 40\n30 LET A(1,2) = 2\n40 PRINT A(0,0) + A(1,2)\n50 END\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6 + BA7). The
     // `DATA` pool is materialised once at the top of `main` as an `array<f64>`
     // (the same E5 array ops BA3 uses) plus an `__basic_data_ptr` register seeded to 0;
