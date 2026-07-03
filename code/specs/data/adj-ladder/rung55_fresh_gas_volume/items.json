@@ -1,0 +1,698 @@
+{
+  "description": "ADJ-LADDER rung 55 \u2014 anesthesia fresh-gas volume from four stated quantities (a NEW panel: anesthesia / fresh-gas-delivery). From two gas-source flows (oxygen, air) and two case phases (induction, maintenance) compute the total fresh gas ((oxygen_flow+air_flow)*(induction_minutes+maintenance_minutes)), the combined flow (oxygen_flow+air_flow), or the total time (induction_minutes+maintenance_minutes). Each item is a compute_dimensioned program (observe the four quantities, let answer = formula); the ADJ engine carries the arithmetic \u2014 a NEW shape, PRODUCT OF TWO SUMS (a+b)*(c+d), the first on the ladder to multiply a sum by another sum (distinct from rung-48 sum-times-difference (a+b)*(c-d) and rung-37 ratio-of-two-sums (a+b)/(c+d)) \u2014 and the harness matches the scalar to the printed options. Contamination-safe: every index is built only from the four observed quantities via + and * \u2014 no constant leaks, and neither the combined flow, the total time, nor any total-gas figure ever appears as a literal (each is computed) \u2014 and the observed quantities carry digit-free identifiers so no numeral hides inside a variable name. The five options are a family over the same four quantities, so the distractors are exactly the slips students make: ADDING the two sums instead of multiplying them, and breaking the grouping so the flow multiplies only the induction phase ((a+b)*c+d, not (a+b)*(c+d)). The core confusion tested is multiplying two grouped sums.",
+  "items": [
+    {
+      "id": "r55gas-01",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 2 L/min of oxygen and 3 L/min of air, for a 10-minute induction and a 20-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(2)\nobserve air_flow(3)\nobserve induction_minutes(10)\nobserve maintenance_minutes(20)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 70,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r55gas-02",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 2 L/min of oxygen and 3 L/min of air, for a 10-minute induction and a 20-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(2)\nobserve air_flow(3)\nobserve induction_minutes(10)\nobserve maintenance_minutes(20)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 70,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r55gas-03",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 2 L/min of oxygen and 3 L/min of air, for a 10-minute induction and a 20-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(2)\nobserve air_flow(3)\nobserve induction_minutes(10)\nobserve maintenance_minutes(20)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 70,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r55gas-04",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 1 L/min of oxygen and 4 L/min of air, for a 15-minute induction and a 25-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(1)\nobserve air_flow(4)\nobserve induction_minutes(15)\nobserve maintenance_minutes(25)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r55gas-05",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 1 L/min of oxygen and 4 L/min of air, for a 15-minute induction and a 25-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(1)\nobserve air_flow(4)\nobserve induction_minutes(15)\nobserve maintenance_minutes(25)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 100,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 5,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r55gas-06",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 1 L/min of oxygen and 4 L/min of air, for a 15-minute induction and a 25-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(1)\nobserve air_flow(4)\nobserve induction_minutes(15)\nobserve maintenance_minutes(25)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 100,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r55gas-07",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 3 L/min of oxygen and 2 L/min of air, for a 8-minute induction and a 32-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(3)\nobserve air_flow(2)\nobserve induction_minutes(8)\nobserve maintenance_minutes(32)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r55gas-08",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 3 L/min of oxygen and 2 L/min of air, for a 8-minute induction and a 32-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(3)\nobserve air_flow(2)\nobserve induction_minutes(8)\nobserve maintenance_minutes(32)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r55gas-09",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 3 L/min of oxygen and 2 L/min of air, for a 8-minute induction and a 32-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(3)\nobserve air_flow(2)\nobserve induction_minutes(8)\nobserve maintenance_minutes(32)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 200,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 45,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 40,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 72,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r55gas-10",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 2 L/min of oxygen and 2 L/min of air, for a 12-minute induction and a 18-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(2)\nobserve air_flow(2)\nobserve induction_minutes(12)\nobserve maintenance_minutes(18)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 66,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 120,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r55gas-11",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 2 L/min of oxygen and 2 L/min of air, for a 12-minute induction and a 18-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(2)\nobserve air_flow(2)\nobserve induction_minutes(12)\nobserve maintenance_minutes(18)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 66,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r55gas-12",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 2 L/min of oxygen and 2 L/min of air, for a 12-minute induction and a 18-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(2)\nobserve air_flow(2)\nobserve induction_minutes(12)\nobserve maintenance_minutes(18)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 120,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 4,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 34,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 66,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r55gas-13",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 4 L/min of oxygen and 1 L/min of air, for a 20-minute induction and a 10-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(4)\nobserve air_flow(1)\nobserve induction_minutes(20)\nobserve maintenance_minutes(10)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r55gas-14",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 4 L/min of oxygen and 1 L/min of air, for a 20-minute induction and a 10-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(4)\nobserve air_flow(1)\nobserve induction_minutes(20)\nobserve maintenance_minutes(10)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r55gas-15",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 4 L/min of oxygen and 1 L/min of air, for a 20-minute induction and a 10-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(4)\nobserve air_flow(1)\nobserve induction_minutes(20)\nobserve maintenance_minutes(10)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 150,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 5,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 35,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 110,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 30,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r55gas-16",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 1 L/min of oxygen and 2 L/min of air, for a 25-minute induction and a 35-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(1)\nobserve air_flow(2)\nobserve induction_minutes(25)\nobserve maintenance_minutes(35)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 63,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    },
+    {
+      "id": "r55gas-17",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 1 L/min of oxygen and 2 L/min of air, for a 25-minute induction and a 35-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(1)\nobserve air_flow(2)\nobserve induction_minutes(25)\nobserve maintenance_minutes(35)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 63,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "B"
+    },
+    {
+      "id": "r55gas-18",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 1 L/min of oxygen and 2 L/min of air, for a 25-minute induction and a 35-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(1)\nobserve air_flow(2)\nobserve induction_minutes(25)\nobserve maintenance_minutes(35)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 3,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 60,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 63,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 110,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "C"
+    },
+    {
+      "id": "r55gas-19",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 3 L/min of oxygen and 3 L/min of air, for a 9-minute induction and a 21-minute maintenance phase. What is the total fresh gas delivered (the combined flow times the total case time)?",
+      "program": "observe oxygen_flow(3)\nobserve air_flow(3)\nobserve induction_minutes(9)\nobserve maintenance_minutes(21)\nlet answer = (oxygen_flow + air_flow) * (induction_minutes + maintenance_minutes)\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "D"
+    },
+    {
+      "id": "r55gas-20",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 3 L/min of oxygen and 3 L/min of air, for a 9-minute induction and a 21-minute maintenance phase. What is the the combined fresh-gas flow (oxygen plus air)?",
+      "program": "observe oxygen_flow(3)\nobserve air_flow(3)\nobserve induction_minutes(9)\nobserve maintenance_minutes(21)\nlet answer = oxygen_flow + air_flow\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 75,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 6,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "E"
+    },
+    {
+      "id": "r55gas-21",
+      "qtype": "fresh_gas_volume",
+      "stem": "An anesthesia machine runs 3 L/min of oxygen and 3 L/min of air, for a 9-minute induction and a 21-minute maintenance phase. What is the the total case time (induction plus maintenance minutes)?",
+      "program": "observe oxygen_flow(3)\nobserve air_flow(3)\nobserve induction_minutes(9)\nobserve maintenance_minutes(21)\nlet answer = induction_minutes + maintenance_minutes\n? answer\n",
+      "answer_from": {
+        "type": "compute_dimensioned",
+        "name": "answer"
+      },
+      "options": {
+        "A": {
+          "value": 30,
+          "unit": "scalar"
+        },
+        "B": {
+          "value": 180,
+          "unit": "scalar"
+        },
+        "C": {
+          "value": 6,
+          "unit": "scalar"
+        },
+        "D": {
+          "value": 36,
+          "unit": "scalar"
+        },
+        "E": {
+          "value": 75,
+          "unit": "scalar"
+        }
+      },
+      "gold_letter": "A"
+    }
+  ]
+}
