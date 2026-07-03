@@ -1,0 +1,266 @@
+// CardBrowser.light.msl - light card-browser theme.
+
+style CardBrowser {
+  part card-browser {
+    background    : "#f8fafc" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 8 ;
+    padding       : 14 ;
+  }
+
+  part browser-title {
+    color          : "#0f172a" ;
+    font-size      : 20 ;
+    font-weight    : 800 ;
+    padding-bottom : 10 ;
+  }
+
+  part browser-search-row {
+    padding-bottom : 10 ;
+  }
+
+  part query-column {
+    padding : 2 ;
+  }
+
+  part query-label {
+    color       : "#1e40af" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part filter-column {
+    padding : 2 ;
+  }
+
+  part filter-label {
+    color       : "#155e75" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part filter-toggle-button {
+    background    : "#cffafe" ;
+    border-width  : 1 ;
+    border-color  : "#a5f3fc" ;
+    border-radius : 6 ;
+    color         : "#155e75" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part filter-options-list {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#a5f3fc" ;
+    border-radius : 6 ;
+    padding       : 4 ;
+  }
+
+  part filter-option-button {
+    background    : "#cffafe" ;
+    border-width  : 1 ;
+    border-color  : "#a5f3fc" ;
+    border-radius : 6 ;
+    color         : "#155e75" ;
+    padding       : 6 ;
+  }
+
+  part search-button {
+    background    : "#dbeafe" ;
+    border-width  : 1 ;
+    border-color  : "#93c5fd" ;
+    border-radius : 6 ;
+    color         : "#1e40af" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part results-label {
+    color       : "#5b21b6" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part results-summary {
+    color          : "#334155" ;
+    font-size      : 14 ;
+    padding-bottom : 8 ;
+  }
+
+  part browser-actions {
+    padding-top : 10 ;
+  }
+
+  part browser-flag-row {
+    padding-top    : 10 ;
+    padding-bottom : 2 ;
+  }
+
+  part flag-picker-column {
+    padding : 2 ;
+  }
+
+  part flag-label {
+    color       : "#92400e" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part selected-flag-label {
+    color       : "#92400e" ;
+    font-size   : 12 ;
+    font-weight : 700 ;
+    padding     : 8 ;
+  }
+
+  part browser-tag-row {
+    padding-top    : 10 ;
+    padding-bottom : 2 ;
+  }
+
+  part tag-edit-column {
+    padding : 2 ;
+  }
+
+  part tag-edit-label {
+    color       : "#166534" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part tag-edit-input {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part add-tag-button {
+    background    : "#dcfce7" ;
+    border-width  : 1 ;
+    border-color  : "#86efac" ;
+    border-radius : 6 ;
+    color         : "#166534" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part remove-tag-button {
+    background    : "#fee2e2" ;
+    border-width  : 1 ;
+    border-color  : "#fca5a5" ;
+    border-radius : 6 ;
+    color         : "#991b1b" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part custom-study-row {
+    background     : "#ffffff" ;
+    border-width   : 1 ;
+    border-color   : "#cbd5e1" ;
+    border-radius  : 6 ;
+    padding        : 10 ;
+    padding-top    : 10 ;
+    padding-bottom : 10 ;
+  }
+
+  part custom-study-limit-column {
+    padding : 2 ;
+  }
+
+  part custom-study-label {
+    color       : "#a21caf" ;
+    font-size   : 11 ;
+    font-weight : 800 ;
+  }
+
+  part custom-study-limit-label {
+    color       : "#475569" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part custom-study-limit-input {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#cbd5e1" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part custom-study-reschedule-column {
+    padding : 8 ;
+  }
+
+  part custom-study-reschedule-checkbox {
+    color       : "#334155" ;
+    font-size   : 12 ;
+    font-weight : 700 ;
+  }
+
+  part rebuild-filtered-deck-button {
+    background    : "#ede9fe" ;
+    border-width  : 1 ;
+    border-color  : "#c4b5fd" ;
+    border-radius : 6 ;
+    color         : "#5b21b6" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part empty-filtered-deck-button {
+    background    : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#cbd5e1" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part open-button {
+    background    : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#cbd5e1" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part edit-button {
+    background    : "#ccfbf1" ;
+    border-width  : 1 ;
+    border-color  : "#5eead4" ;
+    border-radius : 6 ;
+    color         : "#115e59" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part suspend-button {
+    background    : "#ffedd5" ;
+    border-width  : 1 ;
+    border-color  : "#fdba74" ;
+    border-radius : 6 ;
+    color         : "#92400e" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part mark-button {
+    background    : "#ffe4e6" ;
+    border-width  : 1 ;
+    border-color  : "#fda4af" ;
+    border-radius : 6 ;
+    color         : "#9f1239" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+}

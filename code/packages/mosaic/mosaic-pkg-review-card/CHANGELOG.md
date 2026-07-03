@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added a light-theme stylesheet (`ReviewCard.light.msl`) mirroring the dark theme's structure with a light palette. Selected at build time via `mosaic-compile pkg --theme light` (the style analogue of the layout `--variant`).
+
 - Composed `ReviewCard` from the reusable `mosaic-pkg-rating-controls`
   package instead of owning the answer grading button row directly.
 - Switched multi-backend smoke coverage to the package artifact builder so

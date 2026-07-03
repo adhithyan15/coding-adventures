@@ -1,0 +1,216 @@
+// NoteEditor.light.msl - light note editor theme.
+
+style NoteEditor {
+  part note-editor {
+    background    : "#f8fafc" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 8 ;
+    padding       : 14 ;
+  }
+
+  part editor-title {
+    color          : "#0f172a" ;
+    font-size      : 20 ;
+    font-weight    : 800 ;
+    padding-bottom : 10 ;
+  }
+
+  part note-metadata {
+    padding-bottom : 12 ;
+  }
+
+  part note-id-meta {
+    padding : 8 ;
+  }
+
+  part note-type-meta {
+    padding : 8 ;
+  }
+
+  part deck-meta {
+    padding : 8 ;
+  }
+
+  part note-id-label {
+    color       : "#1e40af" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-type-label {
+    color       : "#1e40af" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part deck-label {
+    color       : "#1e40af" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-id-value {
+    color       : "#334155" ;
+    font-size   : 14 ;
+    font-weight : 600 ;
+  }
+
+  part note-type-value {
+    color       : "#334155" ;
+    font-size   : 14 ;
+    font-weight : 600 ;
+  }
+
+  part deck-value {
+    color       : "#334155" ;
+    font-size   : 14 ;
+    font-weight : 600 ;
+  }
+
+  part note-choice-row {
+    padding-bottom : 12 ;
+  }
+
+  part note-editor-note-type-list-column {
+    padding : 2 ;
+  }
+
+  part note-editor-deck-list-column {
+    padding : 2 ;
+  }
+
+  part note-editor-note-type-options-label {
+    color       : "#1e40af" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-editor-deck-options-label {
+    color       : "#1e40af" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-editor-note-type-list {
+    padding-top : 6 ;
+  }
+
+  part note-editor-deck-list {
+    padding-top : 6 ;
+  }
+
+  part note-editor-note-type-option {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part note-editor-deck-option {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part editor-body {
+    padding-bottom : 12 ;
+  }
+
+  part field-list-column {
+    padding : 2 ;
+  }
+
+  part fields-label {
+    color       : "#5b21b6" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part note-field-list {
+    padding-top : 6 ;
+  }
+
+  part note-field-option {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part focused-field-column {
+    padding : 2 ;
+  }
+
+  part selected-field-label {
+    color       : "#166534" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part selected-field-input {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part tags-label {
+    color       : "#92400e" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+    padding-top : 8 ;
+  }
+
+  part tags-input {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    padding       : 8 ;
+  }
+
+  part editor-actions {
+    padding-top : 2 ;
+  }
+
+  part save-button {
+    background    : "#ccfbf1" ;
+    border-width  : 1 ;
+    border-color  : "#99f6e4" ;
+    border-radius : 6 ;
+    color         : "#115e59" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part delete-button {
+    background    : "#ffe4e6" ;
+    border-width  : 1 ;
+    border-color  : "#fecdd3" ;
+    border-radius : 6 ;
+    color         : "#9f1239" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+
+  part cancel-button {
+    background    : "#f1f5f9" ;
+    border-width  : 1 ;
+    border-color  : "#cbd5e1" ;
+    border-radius : 6 ;
+    color         : "#0f172a" ;
+    font-weight   : 700 ;
+    padding       : 8 ;
+  }
+}

@@ -1,0 +1,83 @@
+// SessionProgress.light.msl - light review-session counter theme.
+
+style SessionProgress {
+  part progress-strip {
+    background    : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#e2e8f0" ;
+    border-radius : 8 ;
+    padding       : 12 ;
+  }
+
+  part metric-current {
+    background    : "#ccfbf1" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part metric-remaining {
+    background    : "#ede9fe" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part metric-correct {
+    background    : "#dcfce7" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part metric-total {
+    background    : "#fef3c7" ;
+    border-radius : 6 ;
+    padding       : 10 ;
+  }
+
+  part current-label {
+    color       : "#115e59" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part remaining-label {
+    color       : "#5b21b6" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part correct-label {
+    color       : "#166534" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part total-label {
+    color       : "#92400e" ;
+    font-size   : 11 ;
+    font-weight : 700 ;
+  }
+
+  part current-value {
+    color       : "#115e59" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+
+  part remaining-value {
+    color       : "#5b21b6" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+
+  part correct-value {
+    color       : "#166534" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+
+  part total-value {
+    color       : "#92400e" ;
+    font-size   : 20 ;
+    font-weight : 800 ;
+  }
+}

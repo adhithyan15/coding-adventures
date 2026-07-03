@@ -15,6 +15,7 @@
   `EngramApp.touch` artifacts. Verified across all nine backends
   (react/html/webcomponent/swiftui/qt/flutter/compose/xaml); the emitted React
   differs from desktop only in the two `flexDirection: row → column` containers.
+- Added a light-theme stylesheet (`EngramApp.light.msl`) mirroring the dark theme's structure with a light palette. Selected at build time via `mosaic-compile pkg --theme light` (the style analogue of the layout `--variant`).
 - Wired the generated HTML, WebComponent, and React Engram web hosts to handle
   Anki import/export `hostIntent` payloads with browser file input/download
   helpers and the `engram-wasm` APKG byte API, surfacing `hostResult` errors
