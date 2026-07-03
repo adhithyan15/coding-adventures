@@ -2,6 +2,40 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## [0.6.1] - 2026-07-02
+
+### Fixed (FC — implicit return of a trailing `if`/`unless` from a method body)
+
+A Ruby method returns the value of its **last evaluated expression**, and
+`if`/`unless` are expressions. The frontend, however, only promoted a bare
+`expression_stmt`/`method_call` tail into the SIR `Block.value` slot — a body
+ending in a conditional left the `if` as a discarded statement and set
+`value = NilLit`. Every backend faithfully reproduced this, so a method like
+`def bigger(a, b); if a > b then a else b end; end` returned `nil` on Python,
+JavaScript, Go, and Rust alike (verified end to end: `puts bigger(10, 7)`
+printed a blank line before the fix, `10` after).
+
+- **Shared `lower_tail_value` helper.** The tail-promotion decision (previously
+  duplicated inline in `lower_program`, `lower_clause_statements`, and
+  `lower_def_statement`) is now one helper with a documented promotion table.
+  It promotes `expression_stmt`, `method_call`/`method_call_no_paren`, and now
+  **`if_statement`/`unless_statement`**; everything else (assignments, `while`,
+  …) returns `None` and stays a `Stmt`.
+- **Method and branch bodies fixed.** `lower_def_statement` and
+  `lower_clause_statements` route their tail through the helper, so a `def`
+  whose body ends in a conditional returns the branch value, and an `if` branch
+  that itself ends in an `if` promotes **recursively** (nested tail conditionals
+  each carry their value).
+- **Top-level unchanged.** A script's top-level value is not language-visible,
+  so `lower_program` keeps a bare trailing `if` as a statement (its pinned
+  behavior is intentional); only method/branch implicit returns changed.
+- **Still deferred:** implicit return of a trailing `case` or `begin`/`rescue`,
+  and of a block/lambda's tail conditional (follow-up milestones).
+- Five new unit tests (tail `if`, tail `unless`, leading-stmts-then-tail-`if`,
+  recursive nested tail `if`, validator pass); all downstream backend suites
+  (Python/TypeScript/JavaScript/Go/Rust — including the native compile-and-run
+  execution proofs) pass unchanged.
+
 ## [0.6.0] - 2026-07-01
 
 (Cargo manifest minor bump 0.5.0 → 0.6.0.)

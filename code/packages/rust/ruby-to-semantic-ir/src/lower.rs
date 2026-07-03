@@ -1378,27 +1378,18 @@ impl Lowerer {
                 column: s.start_column.unwrap_or(0),
             })?;
             let is_tail = i == last_idx;
-            let kind = inner.rule_name.as_str();
-            if is_tail && matches!(kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
-                let v = match kind {
-                    "expression_stmt" => {
-                        let expr_node = self.first_node_child(inner).ok_or_else(|| {
-                            RubyLowerError {
-                                message: "expression_stmt had no expression child".to_string(),
-                                line: inner.start_line.unwrap_or(0),
-                                column: inner.start_column.unwrap_or(0),
-                            }
-                        })?;
-                        self.lower_expression(expr_node)?
-                    }
-                    "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
-                    _ => unreachable!(),
-                };
-                value = Some(v);
-            } else {
-                // Phase 6r — multi-stmt fan-out for `multi_assignment`.
-                stmts_out.extend(self.lower_statement_inner_multi(inner)?);
+            // Phase FC — the branch's last value-producing statement becomes
+            // the branch `Block`'s implicit-return `value`; see
+            // [`Self::lower_tail_value`] for the promotion table (which now
+            // includes a trailing `if`/`unless`).
+            if is_tail {
+                if let Some(v) = self.lower_tail_value(inner)? {
+                    value = Some(v);
+                    continue;
+                }
             }
+            // Phase 6r — multi-stmt fan-out for `multi_assignment`.
+            stmts_out.extend(self.lower_statement_inner_multi(inner)?);
         }
         let value = value.unwrap_or(Expr::NilLit { span: self.span_of(node) });
         // Restore the outer scope's declared locals.
@@ -1408,6 +1399,64 @@ impl Lowerer {
             value,
             span: self.span_of(node),
         })
+    }
+
+    /// Phase FC — implicit-return tail promotion.
+    ///
+    /// In Ruby, the *value* of a method (or `if`/`unless` branch) body is
+    /// its **last evaluated expression** — there is no explicit `return`.
+    /// `def f; a + b; end` returns `a + b`; `def f; if c then a else b end;
+    /// end` returns whichever branch ran.  The SIR [`Block`] carries that
+    /// value in its dedicated `value` slot (kept distinct from the
+    /// side-effecting `stmts`), and every backend emits `value` as the
+    /// block's implicit return.  A tail statement therefore has to be
+    /// *promoted* out of `stmts` and into `value` — but only if it is a
+    /// form that actually produces a usable value.
+    ///
+    /// This helper is that decision, shared by every body-lowering site so
+    /// the rule stays identical everywhere:
+    ///
+    /// | tail `statement`'s inner rule        | promoted value                     |
+    /// |--------------------------------------|------------------------------------|
+    /// | `expression_stmt`                    | the bare expression                |
+    /// | `method_call` / `method_call_no_paren` | the call's result                |
+    /// | `if_statement` / `unless_statement`  | an [`Expr::If`] (branches recurse) |
+    /// | anything else (assignment, `while`…) | `None` — the node stays a `Stmt`   |
+    ///
+    /// Returning `None` tells the caller to route the node through
+    /// [`Self::lower_statement_inner_multi`] as an ordinary statement: its
+    /// value (if any) is unobservable in Ruby — a trailing `while`, for
+    /// instance, evaluates to `nil`, so it stays a `Stmt` and the block's
+    /// `value` falls back to `NilLit`.
+    ///
+    /// **Recursion.** [`Self::lower_if_or_unless`] builds each branch with
+    /// [`Self::lower_clause_statements`], which itself calls this helper.  So
+    /// a tail `if` whose branch *also* ends in an `if` promotes all the way
+    /// down — arbitrarily nested tail conditionals each carry their value,
+    /// with no special-casing.
+    ///
+    /// Note: this is used for method bodies and branch bodies, where Ruby's
+    /// implicit return is observable.  A *script's* top-level value is not
+    /// language-visible, so [`Self::lower_program`] keeps a bare trailing
+    /// `if` as a `Stmt` (see its own promotion list).
+    fn lower_tail_value(
+        &mut self,
+        inner: &GrammarASTNode,
+    ) -> Result<Option<Expr>, RubyLowerError> {
+        let value = match inner.rule_name.as_str() {
+            "expression_stmt" => {
+                let expr_node = self.first_node_child(inner).ok_or_else(|| RubyLowerError {
+                    message: "expression_stmt had no expression child".to_string(),
+                    line: inner.start_line.unwrap_or(0),
+                    column: inner.start_column.unwrap_or(0),
+                })?;
+                self.lower_expression(expr_node)?
+            }
+            "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
+            "if_statement" | "unless_statement" => self.lower_if_or_unless(inner)?,
+            _ => return Ok(None),
+        };
+        Ok(Some(value))
     }
 
     // -------------------------------------------------------------------
@@ -4723,30 +4772,21 @@ impl Lowerer {
                         }
                     })?;
                     let is_tail = i == last_idx;
-                    let kind = inner.rule_name.as_str();
-                    if is_tail && matches!(kind, "expression_stmt" | "method_call" | "method_call_no_paren") {
-                        let v = match kind {
-                            "expression_stmt" => {
-                                let expr_node =
-                                    self.first_node_child(inner).ok_or_else(|| {
-                                        RubyLowerError {
-                                            message:
-                                                "expression_stmt had no expression child"
-                                                    .to_string(),
-                                            line: inner.start_line.unwrap_or(0),
-                                            column: inner.start_column.unwrap_or(0),
-                                        }
-                                    })?;
-                                self.lower_expression(expr_node)?
-                            }
-                            "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
-                            _ => unreachable!(),
-                        };
-                        value = Some(v);
-                    } else {
-                        // Phase 6r — multi-stmt fan-out for `multi_assignment`.
-                        stmts_out.extend(self.lower_statement_inner_multi(inner)?);
+                    // Phase FC — Ruby methods have no explicit `return`: the
+                    // body's value is its last evaluated expression.  Promote
+                    // that tail into the `Block`'s `value` slot so the backends
+                    // emit it as the implicit return.  A trailing `if`/`unless`
+                    // now promotes too (via [`Self::lower_tail_value`]), so a
+                    // method whose body ends in a conditional returns the
+                    // branch value instead of `nil`.
+                    if is_tail {
+                        if let Some(v) = self.lower_tail_value(inner)? {
+                            value = Some(v);
+                            continue;
+                        }
                     }
+                    // Phase 6r — multi-stmt fan-out for `multi_assignment`.
+                    stmts_out.extend(self.lower_statement_inner_multi(inner)?);
                 }
             }
             (

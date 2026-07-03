@@ -624,6 +624,117 @@ mod tests {
         assert!(m.exports.iter().any(|e| e.name == "main"));
     }
 
+    // ─────────────────────────────────────────────────────────────────
+    // Phase FC — implicit return of a trailing `if`/`unless` from a
+    // method body.  Ruby has no explicit `return`: a method's value is
+    // its last evaluated expression, and `if`/`unless` ARE expressions.
+    // Before this fix a body ending in a conditional promoted nothing to
+    // the block `value`, so the method returned `nil` on every backend.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// Fetch the body `Block` of a lowered top-level `def` by name.
+    fn fn_body<'a>(m: &'a semantic_ir::Module, name: &str) -> &'a semantic_ir::Block {
+        &m.functions
+            .iter()
+            .find(|f| f.name == name)
+            .unwrap_or_else(|| panic!("expected `{}` function", name))
+            .body
+    }
+
+    #[test]
+    fn def_body_ending_in_if_returns_the_if_expr() {
+        // `bigger` ends in an `if/else` — the whole conditional is the
+        // method's return value, so it must land in `body.value` (NOT be
+        // dropped as a bare tail statement leaving `value = nil`).
+        let m = lower("def bigger(a, b)\n  if a > b\n    a\n  else\n    b\n  end\nend\n");
+        let body = fn_body(&m, "bigger");
+        match &body.value {
+            Expr::If { then_branch, else_branch, .. } => {
+                // Each branch's own tail promotes to a VarRef value.
+                assert!(
+                    matches!(&then_branch.value, Expr::VarRef { name, .. } if name == "a"),
+                    "then-branch value should be `a`, got {:?}",
+                    then_branch.value
+                );
+                assert!(
+                    matches!(&else_branch.value, Expr::VarRef { name, .. } if name == "b"),
+                    "else-branch value should be `b`, got {:?}",
+                    else_branch.value
+                );
+            }
+            other => panic!("expected body.value = Expr::If, got {:?}", other),
+        }
+        // The conditional was promoted, so it is NOT also left dangling as
+        // a discarded statement in the body.
+        assert!(
+            !body
+                .stmts
+                .iter()
+                .any(|s| matches!(s, Stmt::ExprStmt { expr: Expr::If { .. }, .. })),
+            "the tail `if` must be promoted to value, not duplicated as a stmt"
+        );
+    }
+
+    #[test]
+    fn def_body_ending_in_unless_returns_the_if_expr() {
+        // `unless c` lowers to `if !c` — still promoted to the body value.
+        let m = lower("def pick(a, b)\n  unless a\n    b\n  else\n    a\n  end\nend\n");
+        let body = fn_body(&m, "pick");
+        match &body.value {
+            Expr::If { cond, .. } => assert!(
+                matches!(&**cond, Expr::BuiltinCall { name, .. } if name == "not"),
+                "`unless` cond should be wrapped in `not`, got {:?}",
+                cond
+            ),
+            other => panic!("expected body.value = Expr::If, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn def_body_leading_stmts_then_tail_if_are_both_kept() {
+        // Statements BEFORE the tail conditional stay in `stmts`; only the
+        // final `if` is promoted to `value`.
+        let m = lower(
+            "def f(a)\n  x = a + 1\n  if x > 0\n    x\n  else\n    0\n  end\nend\n",
+        );
+        let body = fn_body(&m, "f");
+        assert!(
+            !body.stmts.is_empty(),
+            "the `x = a + 1` binding must remain a statement"
+        );
+        assert!(
+            matches!(&body.value, Expr::If { .. }),
+            "the tail `if` must be the body value, got {:?}",
+            body.value
+        );
+    }
+
+    #[test]
+    fn nested_tail_if_promotes_recursively() {
+        // The else-branch itself ends in an `if`; that inner conditional
+        // must promote to the else-branch's value (recursion through
+        // `lower_clause_statements` → `lower_tail_value`).
+        let m = lower(
+            "def grade(n)\n  if n > 90\n    1\n  else\n    if n > 80\n      2\n    else\n      3\n    end\n  end\nend\n",
+        );
+        let body = fn_body(&m, "grade");
+        let Expr::If { else_branch, .. } = &body.value else {
+            panic!("expected body.value = Expr::If, got {:?}", body.value);
+        };
+        assert!(
+            matches!(&else_branch.value, Expr::If { .. }),
+            "the nested tail `if` must promote to the else-branch value, got {:?}",
+            else_branch.value
+        );
+    }
+
+    #[test]
+    fn def_body_tail_if_module_passes_sir_validator() {
+        let m = lower("def bigger(a, b)\n  if a > b\n    a\n  else\n    b\n  end\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator rejected our output: {:?}", result);
+    }
+
     #[test]
     fn def_rest_param_lowers_to_kind_rest() {
         // M3: `def f(*r); end` → one Param whose kind is Rest (previously the
