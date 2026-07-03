@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.26.1] - 2026-07-03
+
+### Added — CLOC12.162 PR3: CodePrinter spread conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_spread_test.rs`
+(registered as the `upstream_code_printer_spread` `[[test]]` target) porting the
+Closure Compiler `CodePrinterTest` spread (`...arg`) printing cases against
+`emit_spread`. 10 active `#[test]`s, **0 `#[ignore]`** — spread call arguments
+(sole `f(...a)`, interleaved `f(a,...b,c)`, two adjacent `f(...a,...b)`, member
+argument `f(...a.b)`), array elements (sole `[...a]`, interleaved `[1,...a,2]`),
+`new` arguments (`new F(...a)`, interleaved `new F(a,...b)`), and the
+`PREC_ASSIGNMENT` precedence cases (sequence argument wraps `f(...(a,b))`,
+conditional argument stays bare `f(...a?b:c)`). Inputs are hand-constructed
+typed AST; the bridge conversion of the spread form is exercised separately
+(CLOC12.162 PR2, gap-163, in `javascript-parser`). ATTRIBUTION.md updated.
+
 ## [0.26.0] - 2026-07-03
 
 ### Added — CLOC12.162: emit `SpreadElement` (`...arg`)

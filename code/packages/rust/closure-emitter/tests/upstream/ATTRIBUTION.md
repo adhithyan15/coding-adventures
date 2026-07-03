@@ -108,6 +108,22 @@ under the Apache License, Version 2.0:
       conversion of the comma operator (CLOC12.160 PR2, gap-161) is exercised
       separately in `javascript-parser`.
 
+- `code_printer_spread_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the spread `...arg` printing cases — bare argument/element positions and
+      the assignment-position wrap)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_spread` + the `PREC_ASSIGNMENT` classification that landed
+      with `Expression::SpreadElement` (CLOC12.162). 10 active `#[test]`s and
+      **0 `#[ignore]`** — the covered shapes: spread call arguments (sole
+      `f(...a)`, interleaved `f(a,...b,c)`, two adjacent `f(...a,...b)`, member
+      argument `f(...a.b)`), array elements (sole `[...a]`, interleaved
+      `[1,...a,2]`), `new` arguments (`new F(...a)`, interleaved
+      `new F(a,...b)`), and the precedence cases (sequence argument wraps
+      `f(...(a,b))`, conditional argument stays bare `f(...a?b:c)`). Inputs are
+      hand-constructed AST; the bridge conversion of the spread form
+      (CLOC12.162 PR2, gap-163) is exercised separately in `javascript-parser`.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in
