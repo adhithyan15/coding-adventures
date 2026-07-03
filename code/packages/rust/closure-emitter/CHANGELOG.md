@@ -2,6 +2,22 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.24.1] - 2026-07-02
+
+### Added — CLOC12.160 PR3: CodePrinter comma-operator conformance port
+
+New upstream-cited test file `tests/upstream/code_printer_sequence_test.rs`
+(registered as the `upstream_code_printer_sequence` `[[test]]` target) porting
+the Closure Compiler `CodePrinterTest` comma-operator (`a, b, c`) printing cases
+against `emit_sequence`. 9 active `#[test]`s, **0 `#[ignore]`** — the two bare
+positions (statement `a,b,c`, computed-member key `a[b,c]`) and the wrapped
+positions (sole/multi call argument `f((a,b),c)`, array element `[(a,b),c]`,
+assignment RHS `x=(a,b)`, conditional branch `x?(a,b):c`, unary operand
+`!(a,b)`). Inputs are hand-constructed typed AST; the bridge conversion of the
+comma operator (PR2, gap-161) is exercised separately in `javascript-parser`.
+Test-only change — no library behaviour change. This completes the CLOC12.160
+`SequenceExpression` three-PR arc (node+emit → bridge → conformance).
+
 ## [0.24.0] - 2026-07-02
 
 ### Added — CLOC12.160: emit `SequenceExpression` (the comma operator)
