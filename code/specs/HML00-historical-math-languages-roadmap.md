@@ -168,6 +168,10 @@ sequence of one-PR items run through the autonomous loop (§8).
   `symbolic-vm` term rewriting + `cas-pattern-matching` + `cas-simplify`.
 - **Wave 4 — APL.** Iconic historical array language; glyph-token lexer + array
   primitives (reduce/scan/outer) on `array-runtime` (GPU-accelerated).
+  *(Kickoff: see [`MA05`](MA05-apl-language.md) — the design item fixing
+  language scope, the function/operator grammar shape, and a substrate gap
+  (`array-runtime` needs generalized reduce/scan/outer-product kernels
+  first, tracked as item AR-2) before the lexer/parser/runtime land.)*
 - **Wave 5 — Reduce, Derive, Maple (subset).** More symbolic CAS on the shared
   engine (Derive is small and historically charming).
 - **Wave 6 — J, K/Q, Scilab, IDL.** More array languages, each a frontend on
