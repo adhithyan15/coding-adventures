@@ -1647,6 +1647,49 @@ function GrammarLexer.new(source, grammar)
         layout_keyword_set[lk] = true
     end
 
+    -- F10: declarative lexer mode transitions. The table is pure data
+    -- (parsed by grammar_tools); the lexer interprets it after every emitted
+    -- token (see :_apply_transitions) to switch the active mode -- enabling
+    -- context-sensitive lexing (e.g. JavaScript regex-vs-division) WITHOUT a
+    -- hand-written on-token callback. Empty table => behavior identical to
+    -- F04 (every step below is inert).
+    local transitions = grammar.transitions or {}
+
+    -- The mode the lexer starts in. Defaults to "default". If a grammar names
+    -- a mode with no matching group, fall back to "default" so tokenization
+    -- never crashes on a malformed compiled artifact (the validator rejects
+    -- this upstream; this is defence in depth).
+    local start_mode = grammar.start_mode
+    if not start_mode or start_mode == ""
+        or not (group_patterns[start_mode] or start_mode == "default")
+    then
+        start_mode = "default"
+    end
+
+    -- A group reached via `set-mode` is a FLAT MODE that inherits the default
+    -- group's patterns (its own patterns win on priority); a group reached
+    -- only via `push` stays EXCLUSIVE (F04 nested-region semantics). `push`
+    -- wins the classification when a group is both. Derived once from the
+    -- table so :_try_match_token_in_group can fall through to the default
+    -- patterns for flat modes.
+    local set_mode_targets = {}
+    local push_targets = {}
+    for _, rule in ipairs(transitions) do
+        for _, action in ipairs(rule.actions) do
+            if action.kind == "set_mode" and action.target then
+                set_mode_targets[action.target] = true
+            elseif action.kind == "push" and action.target then
+                push_targets[action.target] = true
+            end
+        end
+    end
+    local inheriting_modes = {}
+    for m in pairs(set_mode_targets) do
+        if m ~= "default" and not push_targets[m] then
+            inheriting_modes[m] = true
+        end
+    end
+
     return setmetatable({
         _source              = source,
         _grammar             = grammar,
@@ -1666,7 +1709,10 @@ function GrammarLexer.new(source, grammar)
         _bracket_depths      = { paren = 0, bracket = 0, brace = 0 },
         _last_emitted_token  = nil,
         _group_patterns      = group_patterns,
-        _group_stack         = { "default" },
+        _group_stack         = { start_mode },
+        _start_mode          = start_mode,
+        _transitions         = transitions,
+        _inheriting_modes    = inheriting_modes,
         _on_token            = nil,
         _skip_enabled        = true,
         _alias_map           = alias_map,
@@ -1764,6 +1810,23 @@ function GrammarLexer:_try_match_token_in_group(group_name)
         pats = self._patterns
     end
 
+    -- F10: a flat mode (a `set-mode` target) inherits the default group's
+    -- patterns. Its own patterns take priority (tried first); the rest fall
+    -- through via a new list appending the default patterns -- `pats` itself
+    -- is never mutated, since it is the same table stored in
+    -- `self._group_patterns` and reused across calls. Nested `push` regions
+    -- are NOT in `_inheriting_modes` and so stay exclusive (F04/XML).
+    if group_name ~= "default" and self._inheriting_modes[group_name] then
+        local merged = {}
+        for _, p in ipairs(pats) do
+            merged[#merged + 1] = p
+        end
+        for _, p in ipairs(self._group_patterns["default"]) do
+            merged[#merged + 1] = p
+        end
+        pats = merged
+    end
+
     for _, p in ipairs(pats) do
         local s, e = remaining:find(p.pattern)
         if s == 1 then
@@ -1839,6 +1902,86 @@ end
 -- @return Token|nil
 function GrammarLexer:_try_match_token()
     return self:_try_match_token_in_group("default")
+end
+
+-- -- F10: declarative mode transitions ---------------------------------------
+
+--- Return the grammar token NAME used to match transition rules (F10).
+--
+-- Token identity in a .tokens grammar is UPPER_SNAKE (NAME, SLASH, RPAREN,
+-- KEYWORD, ...). Promoted keywords are tagged TokenType.Keyword but their
+-- `type_name` holds the uppercased keyword text (e.g. "RETURN"), not the
+-- literal "KEYWORD" -- so keywords are special-cased here to match the
+-- transition table's `on KEYWORD="return"` syntax. Every other token's
+-- `type_name` is already the correct UPPER_SNAKE grammar key.
+-- @param tok Token
+-- @return string
+function GrammarLexer:_transition_key(tok)
+    if tok.type == TokenType.Keyword then
+        return "KEYWORD"
+    end
+    return tok.type_name
+end
+
+--- Apply the declarative mode-transition table after `tok` is emitted (F10).
+--
+-- The first rule whose trigger token-name, optional `in MODE` guard, and
+-- optional keyword-value guard all match wins; its actions mutate the
+-- active-mode register (top of `_group_stack`) and/or the skip flag:
+--   - set_mode  -- replace the active mode in place (flat toggle, no depth
+--                  change). This is how JS regex-vs-division position is tracked.
+--   - push/pop  -- F04 nested-region save/restore (templates).
+--   - enable_skip/disable_skip -- toggle skip processing.
+--
+-- No-op when the table is empty (behavior identical to F04).
+-- @param tok Token
+function GrammarLexer:_apply_transitions(tok)
+    if #self._transitions == 0 then
+        return
+    end
+    local key = self:_transition_key(tok)
+    local active = self._group_stack[#self._group_stack] or "default"
+
+    local matched_actions = nil
+    for _, rule in ipairs(self._transitions) do
+        local key_matches = false
+        for _, on_token in ipairs(rule.on_tokens) do
+            if on_token == key then
+                key_matches = true
+                break
+            end
+        end
+        if key_matches
+            and (rule.in_mode == nil or rule.in_mode == active)
+            and (rule.on_value == nil or rule.on_value == tok.value)
+        then
+            matched_actions = rule.actions
+            break
+        end
+    end
+
+    if not matched_actions then
+        return
+    end
+    for _, action in ipairs(matched_actions) do
+        if action.kind == "set_mode" then
+            if #self._group_stack > 0 and action.target ~= nil then
+                self._group_stack[#self._group_stack] = action.target
+            end
+        elseif action.kind == "push" then
+            if action.target ~= nil then
+                self._group_stack[#self._group_stack + 1] = action.target
+            end
+        elseif action.kind == "pop" then
+            if #self._group_stack > 1 then
+                self._group_stack[#self._group_stack] = nil
+            end
+        elseif action.kind == "enable_skip" then
+            self._skip_enabled = true
+        elseif action.kind == "disable_skip" then
+            self._skip_enabled = false
+        end
+    end
 end
 
 --- Tokenize the source using the grammar's token definitions.
@@ -1950,7 +2093,16 @@ function GrammarLexer:_tokenize_standard()
                     if ctx._skip_enabled ~= nil then
                         self._skip_enabled = ctx._skip_enabled
                     end
+
+                    -- F10: the declarative table is the default; a registered
+                    -- callback runs first (above) and the table refines, so
+                    -- the resulting mode governs the NEXT token match.
+                    self:_apply_transitions(tok)
                 else
+                    -- F10: consult the declarative table so the new mode
+                    -- governs the NEXT match. No-op when the grammar has no
+                    -- transitions.
+                    self:_apply_transitions(tok)
                     tokens[#tokens + 1] = tok
                     self._last_emitted_token = tok
                 end
@@ -1971,7 +2123,7 @@ function GrammarLexer:_tokenize_standard()
     )
 
     -- Reset group stack and skip state for reuse
-    self._group_stack = { "default" }
+    self._group_stack = { self._start_mode }
     self._skip_enabled = true
 
     return tokens

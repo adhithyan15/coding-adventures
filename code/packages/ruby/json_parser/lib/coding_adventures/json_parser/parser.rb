@@ -60,7 +60,7 @@ module CodingAdventures
     #               json_parser/
     #                 parser.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    JSON_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "json.grammar")
+    JSON_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "json", "json.grammar")
 
     # Parse a string of JSON text into a generic AST.
     #

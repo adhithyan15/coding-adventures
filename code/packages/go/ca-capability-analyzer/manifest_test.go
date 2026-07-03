@@ -83,7 +83,7 @@ func TestLoadManifest_SingleCapability(t *testing.T) {
 			{
 				"category": "fs",
 				"action": "read",
-				"target": "../../grammars/json.tokens",
+				"target": "../../grammars/json/json.tokens",
 				"justification": "Reads grammar file."
 			}
 		],
@@ -96,7 +96,7 @@ func TestLoadManifest_SingleCapability(t *testing.T) {
 	}
 
 	// The exact capability as declared.
-	exactKey := CapabilityString("fs:read:../../grammars/json.tokens")
+	exactKey := CapabilityString("fs:read:../../grammars/json/json.tokens")
 	if !m[exactKey] {
 		t.Errorf("expected %q in declared set, got %v", exactKey, m)
 	}

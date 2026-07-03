@@ -6,13 +6,13 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/excel.grammar",
+      "target": "../../grammars/excel/excel.grammar",
       "justification": "Reads the Excel parser grammar definition at runtime."
     },
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/excel.tokens",
+      "target": "../../grammars/excel/excel.tokens",
       "justification": "Indirectly reads the Excel token grammar through the lexer dependency."
     }
   ],

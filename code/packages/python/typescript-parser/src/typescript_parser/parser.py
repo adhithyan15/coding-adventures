@@ -98,7 +98,7 @@ def _resolve_grammar_path(version: str | None) -> Path:
             recognized TypeScript version.
     """
     if not version:
-        return _GRAMMAR_ROOT / "typescript.grammar"
+        return _GRAMMAR_ROOT / "typescript" / "typescript.grammar"
     if version not in _VALID_VERSIONS:
         raise ValueError(
             f"Unknown TypeScript version {version!r}. "

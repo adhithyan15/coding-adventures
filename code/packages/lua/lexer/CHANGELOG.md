@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- F10 declarative lexer mode transitions (see `code/specs/F10-declarative-lexer-modes.md`):
+  `GrammarLexer` now reads `TokenGrammar.start_mode`/`.transitions` and interprets them
+  after every emitted token via `:_apply_transitions`, enabling context-sensitive lexing
+  (e.g. JavaScript regex-vs-division) without a hand-written `on_token` callback
+  Flat modes (`set-mode` targets) fall through to the default group's patterns in
+  `:_try_match_token_in_group`; nested `push` regions stay exclusive (unchanged F04 behavior)
+  Grammars with no `start_mode:`/`transitions:` are byte-identical in behavior to before
+  (empty table short-circuits `:_apply_transitions`)
+
 ## [0.2.0] - 2026-04-04
 
 ### Added

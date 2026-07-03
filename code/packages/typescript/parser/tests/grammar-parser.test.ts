@@ -62,7 +62,7 @@ let grammar: ParserGrammar;
 
 beforeAll(() => {
   /** Load the python.grammar file and parse it into a ParserGrammar. */
-  const grammarPath = join(GRAMMARS_DIR, "python.grammar");
+  const grammarPath = join(GRAMMARS_DIR, "python", "python.grammar");
   const grammarText = readFileSync(grammarPath, "utf-8");
   grammar = parseParserGrammar(grammarText);
 });

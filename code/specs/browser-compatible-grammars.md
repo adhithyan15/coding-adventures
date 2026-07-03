@@ -39,7 +39,7 @@ import { parseTokenGrammar } from "@coding-adventures/grammar-tools";
 import { grammarTokenize } from "@coding-adventures/lexer";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const TOKENS_PATH = join(__dirname, "../../../../grammars/sql.tokens");
+const TOKENS_PATH = join(__dirname, "../../../../grammars/sql/sql.tokens");
 
 export function tokenizeSQL(source: string): Token[] {
   const text = readFileSync(TOKENS_PATH, "utf-8");
@@ -69,7 +69,7 @@ import { parseParserGrammar } from "@coding-adventures/grammar-tools";
 import { GrammarParser } from "@coding-adventures/parser";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const GRAMMAR_PATH = join(__dirname, "../../../../grammars/sql.grammar");
+const GRAMMAR_PATH = join(__dirname, "../../../../grammars/sql/sql.grammar");
 
 export function parseSQL(source: string): ASTNode {
   const tokens = tokenizeSQL(source);

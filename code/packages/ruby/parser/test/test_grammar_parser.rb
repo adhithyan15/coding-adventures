@@ -249,13 +249,13 @@ class TestGrammarParser < Minitest::Test
   GRAMMARS_DIR = File.join(__dir__, "..", "..", "..", "..", "..", "grammars")
 
   def starlark_grammar_obj
-    path = File.join(GRAMMARS_DIR, "starlark.grammar")
+    path = File.join(GRAMMARS_DIR, "starlark", "starlark.grammar")
     skip("starlark.grammar not found") unless File.exist?(path)
     GT.parse_parser_grammar(File.read(path))
   end
 
   def starlark_tokens_obj
-    path = File.join(GRAMMARS_DIR, "starlark.tokens")
+    path = File.join(GRAMMARS_DIR, "starlark", "starlark.tokens")
     skip("starlark.tokens not found") unless File.exist?(path)
     GT.parse_token_grammar(File.read(path))
   end

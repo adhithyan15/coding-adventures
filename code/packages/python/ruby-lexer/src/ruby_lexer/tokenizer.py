@@ -77,7 +77,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-RUBY_TOKENS_PATH = GRAMMAR_DIR / "ruby.tokens"
+RUBY_TOKENS_PATH = GRAMMAR_DIR / "ruby" / "ruby.tokens"
 
 
 def create_ruby_lexer(source: str) -> GrammarLexer:

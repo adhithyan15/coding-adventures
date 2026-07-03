@@ -6,13 +6,13 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/brainfuck.tokens",
+      "target": "../../../grammars/brainfuck/brainfuck.tokens",
       "justification": "Reads Brainfuck token grammar file to configure the lexer at initialization time."
     },
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/brainfuck.grammar",
+      "target": "../../../grammars/brainfuck/brainfuck.grammar",
       "justification": "Reads Brainfuck parser grammar file to configure the parser at initialization time."
     }
   ],

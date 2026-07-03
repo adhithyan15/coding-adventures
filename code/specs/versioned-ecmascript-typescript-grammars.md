@@ -24,9 +24,12 @@ By giving each version its own grammar, we can:
 
 ### Relationship to existing grammars
 
-The current `javascript.tokens`, `javascript.grammar`, `typescript.tokens`, and
-`typescript.grammar` in `code/grammars/` are toy subsets (variable declarations and basic
-arithmetic). This spec supersedes them. The new versioned files live in subdirectories.
+The current `code/grammars/javascript/javascript.tokens`,
+`code/grammars/javascript/javascript.grammar`,
+`code/grammars/typescript/typescript.tokens`, and
+`code/grammars/typescript/typescript.grammar` are toy subsets (variable declarations and basic
+arithmetic). This spec supersedes them. The new versioned files live in the
+`ecmascript/` and `typescript/` subdirectories.
 
 ---
 

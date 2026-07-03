@@ -97,7 +97,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-BF_TOKENS_PATH = GRAMMAR_DIR / "brainfuck.tokens"
+BF_TOKENS_PATH = GRAMMAR_DIR / "brainfuck" / "brainfuck.tokens"
 
 
 def create_brainfuck_lexer(source: str) -> GrammarLexer:

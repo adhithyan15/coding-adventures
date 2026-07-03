@@ -125,7 +125,7 @@ sub _resolve_tokens_path {
     my ($class, $version) = @_;
     my $grammars = _grammars_dir();
 
-    return File::Spec->catfile($grammars, 'typescript.tokens')
+    return File::Spec->catfile($grammars, 'typescript', 'typescript.tokens')
         unless $version;
 
     die "CodingAdventures::TypescriptLexer: unknown TypeScript version '$version'. "

@@ -48,7 +48,7 @@ module CodingAdventures
     #               mosaic_lexer/
     #                 tokenizer.rb  <-- we are here (__dir__)
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    MOSAIC_TOKENS_PATH = File.join(GRAMMAR_DIR, "mosaic.tokens")
+    MOSAIC_TOKENS_PATH = File.join(GRAMMAR_DIR, "mosaic", "mosaic.tokens")
 
     # Tokenize a string of Mosaic source into an array of Token objects.
     #

@@ -158,7 +158,7 @@ local function get_grammar()
     -- Navigate: 6 levels up from this file's directory → code/ root.
     local script_dir   = get_script_dir()
     local repo_root    = up(script_dir, 6)
-    local grammar_path = repo_root .. "/grammars/json.grammar"
+    local grammar_path = repo_root .. "/grammars/json/json.grammar"
 
     local f, open_err = io.open(grammar_path, "r")
     if not f then

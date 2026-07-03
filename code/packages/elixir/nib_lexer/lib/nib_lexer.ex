@@ -13,7 +13,7 @@ defmodule CodingAdventures.NibLexer do
           {:ok, TokenGrammar.t()} | {:error, String.t()}
   def create_nib_lexer(grammars_dir \\ nil) do
     dir = grammars_dir || @default_grammars_dir
-    tokens_path = Path.join(dir, "nib.tokens")
+    tokens_path = Path.join([dir, "nib", "nib.tokens"])
 
     case File.read(tokens_path) do
       {:ok, text} ->

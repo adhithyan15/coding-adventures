@@ -9,7 +9,7 @@ import type { Token } from "@coding-adventures/lexer";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const NIB_GRAMMAR_PATH = join(GRAMMARS_DIR, "nib.grammar");
+const NIB_GRAMMAR_PATH = join(GRAMMARS_DIR, "nib", "nib.grammar");
 
 export interface ParseNibOptions extends TokenizeNibOptions {}
 

@@ -81,7 +81,7 @@ func getGrammarPath() string {
 	// Navigate up 3 levels to code/, then down to grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "sql.grammar")
+	return filepath.Join(root, "sql", "sql.grammar")
 }
 
 // CreateSQLParser tokenizes the SQL text using the SQL lexer, then loads the

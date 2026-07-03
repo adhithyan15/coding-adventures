@@ -12,8 +12,8 @@ defmodule GrammarTools.CLITest do
 
   describe "validate_command/2 with valid files" do
     test "succeeds on json.tokens + json.grammar" do
-      tokens = Path.join(@grammars_dir, "json.tokens")
-      grammar = Path.join(@grammars_dir, "json.grammar")
+      tokens = Path.join([@grammars_dir, "json", "json.tokens"])
+      grammar = Path.join([@grammars_dir, "json", "json.grammar"])
 
       if File.exists?(tokens) and File.exists?(grammar) do
         assert CLI.validate_command(tokens, grammar) == 0
@@ -21,8 +21,8 @@ defmodule GrammarTools.CLITest do
     end
 
     test "succeeds on lisp.tokens + lisp.grammar" do
-      tokens = Path.join(@grammars_dir, "lisp.tokens")
-      grammar = Path.join(@grammars_dir, "lisp.grammar")
+      tokens = Path.join([@grammars_dir, "lisp", "lisp.tokens"])
+      grammar = Path.join([@grammars_dir, "lisp", "lisp.grammar"])
 
       if File.exists?(tokens) and File.exists?(grammar) do
         assert CLI.validate_command(tokens, grammar) == 0
@@ -39,7 +39,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "halts on missing grammar file" do
-      tokens = Path.join(@grammars_dir, "json.tokens")
+      tokens = Path.join([@grammars_dir, "json", "json.tokens"])
 
       if File.exists?(tokens) do
         assert catch_exit(CLI.validate_command(tokens, "/nonexistent/file.grammar")) == 1
@@ -53,7 +53,7 @@ defmodule GrammarTools.CLITest do
 
   describe "validate_tokens_only/1 with valid file" do
     test "succeeds on json.tokens" do
-      tokens = Path.join(@grammars_dir, "json.tokens")
+      tokens = Path.join([@grammars_dir, "json", "json.tokens"])
 
       if File.exists?(tokens) do
         assert CLI.validate_tokens_only(tokens) == 0
@@ -61,7 +61,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "succeeds on python.tokens" do
-      tokens = Path.join(@grammars_dir, "python.tokens")
+      tokens = Path.join([@grammars_dir, "python", "python.tokens"])
 
       if File.exists?(tokens) do
         assert CLI.validate_tokens_only(tokens) == 0
@@ -93,7 +93,7 @@ defmodule GrammarTools.CLITest do
 
   describe "validate_grammar_only/1 with valid file" do
     test "succeeds on json.grammar" do
-      grammar = Path.join(@grammars_dir, "json.grammar")
+      grammar = Path.join([@grammars_dir, "json", "json.grammar"])
 
       if File.exists?(grammar) do
         assert CLI.validate_grammar_only(grammar) == 0
@@ -101,7 +101,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "succeeds on lisp.grammar" do
-      grammar = Path.join(@grammars_dir, "lisp.grammar")
+      grammar = Path.join([@grammars_dir, "lisp", "lisp.grammar"])
 
       if File.exists?(grammar) do
         assert CLI.validate_grammar_only(grammar) == 0
@@ -155,7 +155,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "returns 0 for valid json.tokens" do
-      tokens = Path.join(@grammars_dir, "json.tokens")
+      tokens = Path.join([@grammars_dir, "json", "json.tokens"])
 
       if File.exists?(tokens) do
         assert CLI.compile_tokens_command(tokens, nil) == 0
@@ -163,7 +163,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "writes output file when path given" do
-      tokens = Path.join(@grammars_dir, "json.tokens")
+      tokens = Path.join([@grammars_dir, "json", "json.tokens"])
 
       if File.exists?(tokens) do
         out = Path.join(System.tmp_dir!(), "test_json_tokens.ex")
@@ -186,7 +186,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "returns 0 for valid json.grammar" do
-      grammar = Path.join(@grammars_dir, "json.grammar")
+      grammar = Path.join([@grammars_dir, "json", "json.grammar"])
 
       if File.exists?(grammar) do
         assert CLI.compile_grammar_command(grammar, nil) == 0
@@ -194,7 +194,7 @@ defmodule GrammarTools.CLITest do
     end
 
     test "writes output file when path given" do
-      grammar = Path.join(@grammars_dir, "json.grammar")
+      grammar = Path.join([@grammars_dir, "json", "json.grammar"])
 
       if File.exists?(grammar) do
         out = Path.join(System.tmp_dir!(), "test_json_grammar.ex")

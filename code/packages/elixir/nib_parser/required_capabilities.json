@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/nib.grammar",
+      "target": "../../grammars/nib/nib.grammar",
       "justification": "Reads the shared Nib parser grammar to configure the grammar-driven parser."
     }
   ],

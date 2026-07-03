@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/dartmouth_basic.grammar",
+      "target": "../../../grammars/dartmouth_basic/dartmouth_basic.grammar",
       "justification": "Reads parser grammar definition file to build parse tables at initialization time."
     }
   ],

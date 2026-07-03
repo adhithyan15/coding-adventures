@@ -59,7 +59,7 @@ GRAMMARS_DIR = Path(__file__).parent.parent.parent.parent.parent / "grammars"
 @pytest.fixture
 def grammar():  # noqa: ANN201
     """Load the python.grammar file and parse it into a ParserGrammar."""
-    grammar_path = GRAMMARS_DIR / "python.grammar"
+    grammar_path = GRAMMARS_DIR / "python" / "python.grammar"
     return parse_parser_grammar(grammar_path.read_text())
 
 
@@ -813,7 +813,7 @@ class TestStarlarkPipeline:
     @pytest.fixture()
     def starlark_grammar(self):  # noqa: ANN201
         """Load the starlark.grammar file."""
-        grammar_path = GRAMMARS_DIR / "starlark.grammar"
+        grammar_path = GRAMMARS_DIR / "starlark" / "starlark.grammar"
         if not grammar_path.exists():
             pytest.skip("starlark.grammar not found")
         return parse_parser_grammar(grammar_path.read_text())
@@ -822,7 +822,7 @@ class TestStarlarkPipeline:
     def starlark_tokens(self):  # noqa: ANN201
         """Load the starlark.tokens file."""
         from grammar_tools import parse_token_grammar
-        tokens_path = GRAMMARS_DIR / "starlark.tokens"
+        tokens_path = GRAMMARS_DIR / "starlark" / "starlark.tokens"
         if not tokens_path.exists():
             pytest.skip("starlark.tokens not found")
         return parse_token_grammar(tokens_path.read_text())

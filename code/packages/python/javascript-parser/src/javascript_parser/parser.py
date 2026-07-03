@@ -94,7 +94,7 @@ def _resolve_grammar_path(version: str | None) -> Path:
             recognized ECMAScript version.
     """
     if not version:
-        return _GRAMMAR_ROOT / "javascript.grammar"
+        return _GRAMMAR_ROOT / "javascript" / "javascript.grammar"
     if version not in _VALID_VERSIONS:
         raise ValueError(
             f"Unknown ECMAScript version {version!r}. "

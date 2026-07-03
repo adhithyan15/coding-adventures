@@ -53,7 +53,7 @@ module CodingAdventures
     # Navigate up 6 levels from lib/coding_adventures/lattice_lexer/
     # to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    LATTICE_TOKENS_PATH = File.join(GRAMMAR_DIR, "lattice.tokens")
+    LATTICE_TOKENS_PATH = File.join(GRAMMAR_DIR, "lattice", "lattice.tokens")
 
     # Tokenize Lattice source text and return an array of Token objects.
     #

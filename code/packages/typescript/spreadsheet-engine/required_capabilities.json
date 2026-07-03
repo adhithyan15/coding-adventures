@@ -6,13 +6,13 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/excel.grammar",
+      "target": "../../grammars/excel/excel.grammar",
       "justification": "The default Excel/CAS adapter parses formulas via @coding-adventures/excel-parser, which reads the Excel grammar definition at runtime."
     },
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/excel.tokens",
+      "target": "../../grammars/excel/excel.tokens",
       "justification": "The Excel lexer (pulled in by excel-parser) reads the Excel token grammar at runtime."
     }
   ],

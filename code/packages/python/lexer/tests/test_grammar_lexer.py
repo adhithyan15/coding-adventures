@@ -43,7 +43,7 @@ def python_grammar() -> TokenGrammar:
     This is the same grammar file that would be used in production —
     we are testing with real data, not synthetic test fixtures.
     """
-    tokens_path = GRAMMARS_DIR / "python.tokens"
+    tokens_path = GRAMMARS_DIR / "python" / "python.tokens"
     assert tokens_path.exists(), f"Grammar file not found: {tokens_path}"
     return parse_token_grammar(tokens_path.read_text())
 
@@ -1127,7 +1127,7 @@ class TestStarlarkLexer:
     @pytest.fixture()
     def starlark_grammar(self) -> TokenGrammar:
         """Load the starlark.tokens grammar file."""
-        tokens_path = GRAMMARS_DIR / "starlark.tokens"
+        tokens_path = GRAMMARS_DIR / "starlark" / "starlark.tokens"
         if not tokens_path.exists():
             pytest.skip("starlark.tokens not found")
         return parse_token_grammar(tokens_path.read_text())

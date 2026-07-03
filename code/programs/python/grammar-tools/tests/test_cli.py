@@ -32,14 +32,14 @@ GRAMMARS_DIR = ROOT / "code" / "grammars"
 
 class TestValidateCommand:
     def test_succeeds_on_json_pair(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
-        grammar = GRAMMARS_DIR / "json.grammar"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if tokens.exists() and grammar.exists():
             assert validate_command(str(tokens), str(grammar)) == 0
 
     def test_succeeds_on_lisp_pair(self) -> None:
-        tokens = GRAMMARS_DIR / "lisp.tokens"
-        grammar = GRAMMARS_DIR / "lisp.grammar"
+        tokens = GRAMMARS_DIR / "lisp" / "lisp.tokens"
+        grammar = GRAMMARS_DIR / "lisp" / "lisp.grammar"
         if tokens.exists() and grammar.exists():
             assert validate_command(str(tokens), str(grammar)) == 0
 
@@ -47,7 +47,7 @@ class TestValidateCommand:
         assert validate_command("/nonexistent/x.tokens", "any.grammar") == 1
 
     def test_returns_1_on_missing_grammar(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if tokens.exists():
             assert validate_command(str(tokens), "/nonexistent/x.grammar") == 1
 
@@ -59,12 +59,12 @@ class TestValidateCommand:
 
 class TestValidateTokensOnly:
     def test_succeeds_on_json_tokens(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if tokens.exists():
             assert validate_tokens_only(str(tokens)) == 0
 
     def test_succeeds_on_python_tokens(self) -> None:
-        tokens = GRAMMARS_DIR / "python.tokens"
+        tokens = GRAMMARS_DIR / "python" / "python.tokens"
         if tokens.exists():
             assert validate_tokens_only(str(tokens)) == 0
 
@@ -91,7 +91,7 @@ class TestValidateTokensOnly:
 
 class TestValidateGrammarOnly:
     def test_succeeds_on_json_grammar(self) -> None:
-        grammar = GRAMMARS_DIR / "json.grammar"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if grammar.exists():
             assert validate_grammar_only(str(grammar)) == 0
 
@@ -118,18 +118,18 @@ class TestDispatch:
         assert dispatch("validate-grammar", []) == 2
 
     def test_validate_dispatches_correctly(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
-        grammar = GRAMMARS_DIR / "json.grammar"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if tokens.exists() and grammar.exists():
             assert dispatch("validate", [str(tokens), str(grammar)]) == 0
 
     def test_validate_tokens_dispatches_correctly(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if tokens.exists():
             assert dispatch("validate-tokens", [str(tokens)]) == 0
 
     def test_validate_grammar_dispatches_correctly(self) -> None:
-        grammar = GRAMMARS_DIR / "json.grammar"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if grammar.exists():
             assert dispatch("validate-grammar", [str(grammar)]) == 0
 
@@ -140,12 +140,12 @@ class TestDispatch:
         assert dispatch("compile-grammar", []) == 2
 
     def test_compile_tokens_dispatches_correctly(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if tokens.exists():
             assert dispatch("compile-tokens", [str(tokens)]) == 0
 
     def test_compile_grammar_dispatches_correctly(self) -> None:
-        grammar = GRAMMARS_DIR / "json.grammar"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if grammar.exists():
             assert dispatch("compile-grammar", [str(grammar)]) == 0
 
@@ -157,7 +157,7 @@ class TestDispatch:
 
 class TestCompileTokensCommand:
     def test_returns_0_on_valid_tokens(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if tokens.exists():
             assert compile_tokens_command(str(tokens), None) == 0
 
@@ -165,7 +165,7 @@ class TestCompileTokensCommand:
         assert compile_tokens_command("/nonexistent/x.tokens", None) == 1
 
     def test_writes_output_file_when_path_given(self) -> None:
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if not tokens.exists():
             return
         with tempfile.NamedTemporaryFile(
@@ -184,7 +184,7 @@ class TestCompileTokensCommand:
 
     def test_generated_code_is_executable(self) -> None:
         """The generated Python code can be exec'd without errors."""
-        tokens = GRAMMARS_DIR / "json.tokens"
+        tokens = GRAMMARS_DIR / "json" / "json.tokens"
         if not tokens.exists():
             return
         with tempfile.NamedTemporaryFile(
@@ -208,7 +208,7 @@ class TestCompileTokensCommand:
 
 class TestCompileGrammarCommand:
     def test_returns_0_on_valid_grammar(self) -> None:
-        grammar = GRAMMARS_DIR / "json.grammar"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if grammar.exists():
             assert compile_grammar_command(str(grammar), None) == 0
 
@@ -216,7 +216,7 @@ class TestCompileGrammarCommand:
         assert compile_grammar_command("/nonexistent/x.grammar", None) == 1
 
     def test_writes_output_file_when_path_given(self) -> None:
-        grammar = GRAMMARS_DIR / "json.grammar"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if not grammar.exists():
             return
         with tempfile.NamedTemporaryFile(
@@ -235,7 +235,7 @@ class TestCompileGrammarCommand:
 
     def test_generated_code_is_executable(self) -> None:
         """The generated Python code can be exec'd without errors."""
-        grammar = GRAMMARS_DIR / "json.grammar"
+        grammar = GRAMMARS_DIR / "json" / "json.grammar"
         if not grammar.exists():
             return
         with tempfile.NamedTemporaryFile(

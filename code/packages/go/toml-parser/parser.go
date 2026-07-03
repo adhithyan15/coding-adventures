@@ -89,7 +89,7 @@ func getGrammarPath() string {
 	// Navigate up 3 levels to code/, then down to grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "toml.grammar")
+	return filepath.Join(root, "toml", "toml.grammar")
 }
 
 // CreateTOMLParser tokenizes the TOML text using the TOML lexer, then loads

@@ -128,7 +128,7 @@ from lang_parser import ASTNode, GrammarParser
 # installed in development mode (-e) or used in-place.
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-DARTMOUTH_BASIC_GRAMMAR_PATH = GRAMMAR_DIR / "dartmouth_basic.grammar"
+DARTMOUTH_BASIC_GRAMMAR_PATH = GRAMMAR_DIR / "dartmouth_basic" / "dartmouth_basic.grammar"
 
 
 def create_dartmouth_basic_parser(source: str) -> GrammarParser:

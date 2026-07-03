@@ -73,7 +73,7 @@ func getGrammarPath() string {
 	// then down into grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "sql.tokens")
+	return filepath.Join(root, "sql", "sql.tokens")
 }
 
 // CreateSQLLexer loads the SQL token grammar and returns a configured

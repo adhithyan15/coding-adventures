@@ -67,7 +67,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-CSS_TOKENS_PATH = GRAMMAR_DIR / "css.tokens"
+CSS_TOKENS_PATH = GRAMMAR_DIR / "css" / "css.tokens"
 
 
 def create_css_lexer(source: str) -> GrammarLexer:

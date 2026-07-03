@@ -216,7 +216,7 @@ defmodule CodingAdventures.DartmouthBasicParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "dartmouth_basic.grammar")
+    grammar_path = Path.join([@grammars_dir, "dartmouth_basic", "dartmouth_basic.grammar"])
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end

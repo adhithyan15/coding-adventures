@@ -65,7 +65,7 @@ module CodingAdventures
     #
     # So from __dir__ we go up 6 levels to reach code/, then into grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    STARLARK_TOKENS_PATH = File.join(GRAMMAR_DIR, "starlark.tokens")
+    STARLARK_TOKENS_PATH = File.join(GRAMMAR_DIR, "starlark", "starlark.tokens")
 
     # Tokenize a string of Starlark source code into an array of Token objects.
     #

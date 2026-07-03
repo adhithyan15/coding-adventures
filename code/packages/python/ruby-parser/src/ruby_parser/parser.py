@@ -61,7 +61,7 @@ from ruby_lexer import tokenize_ruby
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-RUBY_GRAMMAR_PATH = GRAMMAR_DIR / "ruby.grammar"
+RUBY_GRAMMAR_PATH = GRAMMAR_DIR / "ruby" / "ruby.grammar"
 
 
 def create_ruby_parser(source: str) -> GrammarParser:

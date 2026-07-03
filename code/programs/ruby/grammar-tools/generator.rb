@@ -300,7 +300,7 @@ module GrammarToolsProgram
     end
 
     def compile_python_tokens(grammar)
-      tokens = @grammars.join("#{grammar}.tokens")
+      tokens = @grammars.join(grammar, "#{grammar}.tokens")
       pkg_dir = "#{grammar.tr('-', '_')}_lexer"
       out_dir = @packages.join("python", "#{grammar}-lexer", "src", pkg_dir)
       return unless out_dir.directory?
@@ -314,7 +314,7 @@ module GrammarToolsProgram
     end
 
     def compile_python_grammar(grammar)
-      grammar_file = @grammars.join("#{grammar}.grammar")
+      grammar_file = @grammars.join(grammar, "#{grammar}.grammar")
       pkg_dir = "#{grammar.tr('-', '_')}_parser"
       out_dir = @packages.join("python", "#{grammar}-parser", "src", pkg_dir)
       return unless out_dir.directory?
@@ -328,7 +328,7 @@ module GrammarToolsProgram
     end
 
     def compile_go_tokens(grammar, force: false)
-      tokens = @grammars.join("#{grammar}.tokens")
+      tokens = @grammars.join(grammar, "#{grammar}.tokens")
       pkg_dir = "#{grammar}-lexer"
       out_dir = @packages.join("go", pkg_dir)
       return unless out_dir.directory?
@@ -339,7 +339,7 @@ module GrammarToolsProgram
     end
 
     def compile_go_grammar(grammar, force: false)
-      grammar_file = @grammars.join("#{grammar}.grammar")
+      grammar_file = @grammars.join(grammar, "#{grammar}.grammar")
       pkg_dir = "#{grammar}-parser"
       out_dir = @packages.join("go", pkg_dir)
       return unless out_dir.directory?
@@ -350,19 +350,19 @@ module GrammarToolsProgram
     end
 
     def compile_ruby_tokens(grammar)
-      source = @grammars.join("#{grammar}.tokens")
+      source = @grammars.join(grammar, "#{grammar}.tokens")
       pkg_dir = "#{grammar.tr('-', '_')}_lexer"
       compile_ruby_token_file(source, pkg_dir, "_grammar.rb")
     end
 
     def compile_ruby_grammar(grammar)
-      source = @grammars.join("#{grammar}.grammar")
+      source = @grammars.join(grammar, "#{grammar}.grammar")
       pkg_dir = "#{grammar.tr('-', '_')}_parser"
       compile_ruby_parser_file(source, pkg_dir, "_grammar.rb")
     end
 
     def compile_typescript_tokens(grammar)
-      tokens = @grammars.join("#{grammar}.tokens")
+      tokens = @grammars.join(grammar, "#{grammar}.tokens")
       out_dir = @packages.join("typescript", "#{grammar}-lexer", "src")
       return unless out_dir.directory?
 
@@ -375,7 +375,7 @@ module GrammarToolsProgram
     end
 
     def compile_typescript_grammar(grammar)
-      grammar_file = @grammars.join("#{grammar}.grammar")
+      grammar_file = @grammars.join(grammar, "#{grammar}.grammar")
       out_dir = @packages.join("typescript", "#{grammar}-parser", "src")
       return unless out_dir.directory?
 
@@ -388,7 +388,7 @@ module GrammarToolsProgram
     end
 
     def compile_rust_tokens(grammar, tokens_name: nil, force: false)
-      tokens_file = @grammars.join("#{tokens_name || grammar}.tokens")
+      tokens_file = @grammars.join(grammar, "#{tokens_name || grammar}.tokens")
       out_dir = @packages.join("rust", "#{grammar}-lexer", "src")
       return unless out_dir.directory?
 
@@ -398,7 +398,7 @@ module GrammarToolsProgram
     end
 
     def compile_rust_grammar(grammar, force: false)
-      grammar_file = @grammars.join("#{grammar}.grammar")
+      grammar_file = @grammars.join(grammar, "#{grammar}.grammar")
       out_dir = @packages.join("rust", "#{grammar}-parser", "src")
       return unless out_dir.directory?
 

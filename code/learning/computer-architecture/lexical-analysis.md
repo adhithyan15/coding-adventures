@@ -334,8 +334,9 @@ Use case:       Reference/teaching    Multi-language support
 The `.tokens` file format is a declarative way to define the tokens of a
 programming language. It is parsed by the `grammar_tools` package.
 
-**Location:** `code/grammars/` -- contains `python.tokens`, `ruby.tokens`,
-`javascript.tokens`, `typescript.tokens`
+**Location:** `code/grammars/` -- one directory per language, e.g.
+`python/python.tokens`, `ruby/ruby.tokens`, `javascript/javascript.tokens`,
+`typescript/typescript.tokens`
 
 ### Format
 
@@ -526,10 +527,10 @@ be defined before their two-character counterparts.
 
 ```
 code/grammars/
-  python.tokens         -- Python token definitions
-  ruby.tokens           -- Ruby token definitions
-  javascript.tokens     -- JavaScript token definitions
-  typescript.tokens     -- TypeScript token definitions
+  python/python.tokens             -- Python token definitions
+  ruby/ruby.tokens                 -- Ruby token definitions
+  javascript/javascript.tokens     -- JavaScript token definitions
+  typescript/typescript.tokens     -- TypeScript token definitions
 ```
 
 ### Language-specific lexer packages

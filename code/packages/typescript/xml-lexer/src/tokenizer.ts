@@ -87,7 +87,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const XML_TOKENS_PATH = join(GRAMMARS_DIR, "xml.tokens");
+const XML_TOKENS_PATH = join(GRAMMARS_DIR, "xml", "xml.tokens");
 
 // ---------------------------------------------------------------------------
 // XML On-Token Callback

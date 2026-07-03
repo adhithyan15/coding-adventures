@@ -95,7 +95,7 @@ from lexer import GrammarLexer, Token
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-SQL_TOKENS_PATH = GRAMMAR_DIR / "sql.tokens"
+SQL_TOKENS_PATH = GRAMMAR_DIR / "sql" / "sql.tokens"
 
 
 def create_sql_lexer(source: str) -> GrammarLexer:

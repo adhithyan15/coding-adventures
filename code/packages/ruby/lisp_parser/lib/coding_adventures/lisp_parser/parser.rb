@@ -33,7 +33,7 @@ require "coding_adventures_lisp_lexer"
 module CodingAdventures
   module LispParser
     GRAMMAR_DIR       = File.expand_path("../../../../../../grammars", __dir__)
-    LISP_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "lisp.grammar")
+    LISP_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "lisp", "lisp.grammar")
 
     # Parse Lisp source code into a generic AST.
     #

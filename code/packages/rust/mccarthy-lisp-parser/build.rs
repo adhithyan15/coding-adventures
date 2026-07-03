@@ -24,7 +24,7 @@ fn main() {
         .join("..")
         .join("..")
         .join("grammars")
-        .join("mccarthy_lisp.grammar");
+        .join("mccarthy_lisp").join("mccarthy_lisp.grammar");
     let grammar_path = grammar_path.canonicalize().unwrap_or_else(|e| {
         panic!("Failed to resolve mccarthy_lisp.grammar path {grammar_path:?}: {e}")
     });

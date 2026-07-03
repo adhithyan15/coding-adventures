@@ -91,7 +91,7 @@ from toml_lexer import tokenize_toml
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-TOML_GRAMMAR_PATH = GRAMMAR_DIR / "toml.grammar"
+TOML_GRAMMAR_PATH = GRAMMAR_DIR / "toml" / "toml.grammar"
 
 
 def create_toml_parser(source: str) -> GrammarParser:

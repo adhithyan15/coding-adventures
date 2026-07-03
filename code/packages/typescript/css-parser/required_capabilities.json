@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/css.grammar",
+      "target": "../../grammars/css/css.grammar",
       "justification": "Reads parser grammar definition file to configure the grammar-driven parser."
     }
   ],

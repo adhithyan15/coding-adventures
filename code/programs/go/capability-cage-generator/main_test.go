@@ -50,7 +50,7 @@ func TestIsWildcardTarget_Wildcard(t *testing.T) {
 }
 
 func TestIsWildcardTarget_NotWildcard(t *testing.T) {
-	cases := []string{"../../../grammars/sql.tokens", "/absolute/path.txt", "./relative.txt", ""}
+	cases := []string{"../../../grammars/sql/sql.tokens", "/absolute/path.txt", "./relative.txt", ""}
 	for _, c := range cases {
 		if isWildcardTarget(c) {
 			t.Errorf("expected isWildcardTarget(%q) = false, got true", c)
@@ -251,7 +251,7 @@ func TestGenerateSource_WithFSRead(t *testing.T) {
 			{
 				Category:      "fs",
 				Action:        "read",
-				Target:        "code/grammars/verilog.tokens",
+				Target:        "code/grammars/verilog/verilog.tokens",
 				Justification: "Reads Verilog token grammar file at startup.",
 			},
 		},
@@ -279,7 +279,7 @@ func TestGenerateSource_WithFSRead(t *testing.T) {
 		t.Error("expected File field of type *_FileCapabilities on Operation[T]")
 	}
 	// Must check against exact declared path.
-	if !strings.Contains(src, `"code/grammars/verilog.tokens"`) {
+	if !strings.Contains(src, `"code/grammars/verilog/verilog.tokens"`) {
 		t.Error("expected declared path in ReadFile allowed check")
 	}
 	// Must return capability violation error for unknown paths.
@@ -301,7 +301,7 @@ func TestGenerateSource_WithRelativeFSRead(t *testing.T) {
 			{
 				Category:      "fs",
 				Action:        "read",
-				Target:        "../../grammars/sql.tokens",
+				Target:        "../../grammars/sql/sql.tokens",
 				Justification: "Reads SQL token grammar file at startup.",
 			},
 		},
@@ -327,7 +327,7 @@ func TestGenerateSource_WithRelativeFSRead(t *testing.T) {
 		t.Error("expected runtime.Caller(0) in generated path resolution")
 	}
 	// The relative path should appear in the filepath.Join call (to navigate to the target).
-	if !strings.Contains(src, `"../../grammars/sql.tokens"`) {
+	if !strings.Contains(src, `"../../grammars/sql/sql.tokens"`) {
 		t.Error("expected relative path ../../grammars/sql.tokens in filepath.Join call")
 	}
 	// Must use exact equality (_allowedPath_0()), not suffix matching.
@@ -376,8 +376,8 @@ func TestGenerateSource_MultipleTargetsSameAction(t *testing.T) {
 	mf := &manifestJSON{
 		Package: "go/vhdl-lexer",
 		Capabilities: []capabilityJSON{
-			{Category: "fs", Action: "read", Target: "code/grammars/vhdl.tokens"},
-			{Category: "fs", Action: "read", Target: "code/grammars/vhdl.grammar"},
+			{Category: "fs", Action: "read", Target: "code/grammars/vhdl/vhdl.tokens"},
+			{Category: "fs", Action: "read", Target: "code/grammars/vhdl/vhdl.grammar"},
 		},
 	}
 
@@ -387,10 +387,10 @@ func TestGenerateSource_MultipleTargetsSameAction(t *testing.T) {
 	}
 
 	// Both paths should appear in the allowed map.
-	if !strings.Contains(src, `"code/grammars/vhdl.tokens"`) {
+	if !strings.Contains(src, `"code/grammars/vhdl/vhdl.tokens"`) {
 		t.Error("expected vhdl.tokens in allowed paths")
 	}
-	if !strings.Contains(src, `"code/grammars/vhdl.grammar"`) {
+	if !strings.Contains(src, `"code/grammars/vhdl/vhdl.grammar"`) {
 		t.Error("expected vhdl.grammar in allowed paths")
 	}
 	// Should only have one ReadFile method (merged).
@@ -775,7 +775,7 @@ func TestProcessManifest_WritesGenCapabilities(t *testing.T) {
 			{
 				"category": "fs",
 				"action": "read",
-				"target": "code/grammars/verilog.tokens",
+				"target": "code/grammars/verilog/verilog.tokens",
 				"justification": "Reads token grammar files."
 			}
 		],

@@ -88,7 +88,7 @@ from lisp_lexer import tokenize_lisp
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LISP_GRAMMAR_PATH = GRAMMAR_DIR / "lisp.grammar"
+LISP_GRAMMAR_PATH = GRAMMAR_DIR / "lisp" / "lisp.grammar"
 
 
 def create_lisp_parser(source: str) -> GrammarParser:

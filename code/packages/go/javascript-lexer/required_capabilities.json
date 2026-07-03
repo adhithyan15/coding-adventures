@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/javascript.tokens",
+      "target": "../../../grammars/javascript/javascript.tokens",
       "justification": "Generic JavaScript token grammar (no version specified)."
     },
     {

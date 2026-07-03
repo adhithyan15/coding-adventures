@@ -58,7 +58,7 @@ import { tokenizePython } from "@coding-adventures/python-lexer";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const PYTHON_GRAMMAR_PATH = join(GRAMMARS_DIR, "python.grammar");
+const PYTHON_GRAMMAR_PATH = join(GRAMMARS_DIR, "python", "python.grammar");
 
 /**
  * Parse Python source code and return an AST.

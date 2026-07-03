@@ -6,7 +6,7 @@ require "coding_adventures_lexer"
 module CodingAdventures
   module ExcelLexer
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    EXCEL_TOKENS_PATH = File.join(GRAMMAR_DIR, "excel.tokens")
+    EXCEL_TOKENS_PATH = File.join(GRAMMAR_DIR, "excel", "excel.tokens")
 
     def self.next_non_space_char(ctx)
       offset = 1

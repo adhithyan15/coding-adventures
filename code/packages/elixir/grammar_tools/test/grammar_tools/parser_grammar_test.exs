@@ -107,7 +107,7 @@ defmodule CodingAdventures.GrammarTools.ParserGrammarTest do
         Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
         |> Path.expand()
 
-      json_grammar = File.read!(Path.join(grammar_dir, "json.grammar"))
+      json_grammar = File.read!(Path.join([grammar_dir, "json", "json.grammar"]))
       {:ok, grammar} = ParserGrammar.parse(json_grammar)
 
       rule_names = Enum.map(grammar.rules, & &1.name)

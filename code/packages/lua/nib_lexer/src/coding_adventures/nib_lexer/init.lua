@@ -29,7 +29,7 @@ local function get_grammar()
         return grammar_cache
     end
 
-    local tokens_path = up(get_script_dir(), 6) .. "/grammars/nib.tokens"
+    local tokens_path = up(get_script_dir(), 6) .. "/grammars/nib/nib.tokens"
     local file, open_err = io.open(tokens_path, "r")
     if not file then
         error("nib_lexer: cannot open grammar file: " .. tokens_path .. " (" .. (open_err or "unknown error") .. ")")

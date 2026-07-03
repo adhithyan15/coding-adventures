@@ -122,7 +122,7 @@ from lang_parser import ASTNode, GrammarParser
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-CSS_GRAMMAR_PATH = GRAMMAR_DIR / "css.grammar"
+CSS_GRAMMAR_PATH = GRAMMAR_DIR / "css" / "css.grammar"
 
 
 def create_css_parser(source: str) -> GrammarParser:

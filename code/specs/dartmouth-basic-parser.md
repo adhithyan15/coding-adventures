@@ -571,7 +571,7 @@ defp get_grammar do
 end
 
 defp load_grammar do
-  path = Path.join([@grammars_dir, "dartmouth_basic.grammar"])
+  path = Path.join([@grammars_dir, "dartmouth_basic", "dartmouth_basic.grammar"])
   {:ok, grammar} = ParserGrammar.parse(File.read!(path))
   grammar
 end

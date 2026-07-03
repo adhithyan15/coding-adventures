@@ -61,7 +61,7 @@ module CodingAdventures
       #
       # So 6 levels up from __dir__ lands at code/.
       GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-      BF_TOKENS_PATH = File.join(GRAMMAR_DIR, "brainfuck.tokens")
+      BF_TOKENS_PATH = File.join(GRAMMAR_DIR, "brainfuck", "brainfuck.tokens")
 
       # Tokenize a Brainfuck source string into an array of Token objects.
       #

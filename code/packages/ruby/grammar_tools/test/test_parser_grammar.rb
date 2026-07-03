@@ -218,7 +218,7 @@ class TestParserGrammar < Minitest::Test
   # -----------------------------------------------------------------------
 
   def test_parse_real_python_grammar
-    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python.grammar")
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python", "python.grammar")
     skip("python.grammar not found") unless File.exist?(path)
     source = File.read(path)
     grammar = GT.parse_parser_grammar(source)
@@ -227,7 +227,7 @@ class TestParserGrammar < Minitest::Test
   end
 
   def test_parse_real_ruby_grammar
-    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "ruby.grammar")
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "ruby", "ruby.grammar")
     skip("ruby.grammar not found") unless File.exist?(path)
     source = File.read(path)
     grammar = GT.parse_parser_grammar(source)

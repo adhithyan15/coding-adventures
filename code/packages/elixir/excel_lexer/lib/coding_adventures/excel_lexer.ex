@@ -74,7 +74,7 @@ defmodule CodingAdventures.ExcelLexer do
   end
 
   def create_lexer do
-    tokens_path = Path.join(@grammars_dir, "excel.tokens")
+    tokens_path = Path.join([@grammars_dir, "excel", "excel.tokens"])
     {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
 
     definitions =

@@ -48,7 +48,7 @@ module CodingAdventures
       # lib/coding_adventures/brainfuck/ reaches code/, then into
       # grammars/.
       GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-      BF_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "brainfuck.grammar")
+      BF_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "brainfuck", "brainfuck.grammar")
 
       # Parse a Brainfuck source string into an Abstract Syntax Tree.
       #

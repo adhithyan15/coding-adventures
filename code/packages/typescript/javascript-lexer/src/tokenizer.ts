@@ -108,12 +108,12 @@ const VALID_ES_VERSIONS = new Set([
  *   // => ".../code/grammars/ecmascript/es2015.tokens"
  *
  *   resolveTokensPath()
- *   // => ".../code/grammars/javascript.tokens"
+ *   // => ".../code/grammars/javascript/javascript.tokens"
  */
 function resolveTokensPath(version?: string): string {
   if (!version) {
     // Generic grammar — same behaviour as v0.1.x.
-    return join(GRAMMARS_DIR, "javascript.tokens");
+    return join(GRAMMARS_DIR, "javascript", "javascript.tokens");
   }
 
   if (!VALID_ES_VERSIONS.has(version)) {

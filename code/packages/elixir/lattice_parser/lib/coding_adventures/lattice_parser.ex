@@ -119,7 +119,7 @@ defmodule CodingAdventures.LatticeParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "lattice.grammar")
+    grammar_path = Path.join([@grammars_dir, "lattice", "lattice.grammar"])
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end

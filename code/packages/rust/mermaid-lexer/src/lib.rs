@@ -6,7 +6,7 @@ use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
 use lexer::token::Token;
 
-const TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid.tokens");
+const TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/mermaid.tokens");
 
 pub fn create_mermaid_lexer(source: &str) -> GrammarLexer<'_> {
     let grammar = parse_token_grammar(TOKEN_GRAMMAR_SOURCE)

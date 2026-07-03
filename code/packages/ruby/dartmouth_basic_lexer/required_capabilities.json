@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/dartmouth_basic.tokens",
+      "target": "../../grammars/dartmouth_basic/dartmouth_basic.tokens",
       "justification": "Reads the Dartmouth BASIC token grammar to build the lexer DFA at initialization time."
     }
   ],

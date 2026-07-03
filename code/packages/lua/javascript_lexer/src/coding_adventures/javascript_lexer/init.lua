@@ -178,7 +178,7 @@ local function resolve_tokens_path(version)
 
     -- Generic (no version specified) — use the unified grammar.
     if not version or version == "" then
-        return repo_root .. "/grammars/javascript.tokens"
+        return repo_root .. "/grammars/javascript/javascript.tokens"
     end
 
     -- Validate the version string before building the path.

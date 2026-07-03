@@ -39,7 +39,7 @@ from logic_engine import (
 from prolog_lexer import tokenize_prolog
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog.grammar"
+PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "prolog.grammar"
 
 
 @dataclass(frozen=True, slots=True)

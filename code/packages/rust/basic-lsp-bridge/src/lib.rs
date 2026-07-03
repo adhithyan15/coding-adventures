@@ -17,11 +17,11 @@ use grammar_lsp_bridge::{LanguageSpec, LspSemanticTokenType};
 
 /// Embedded contents of `code/grammars/dartmouth_basic.tokens`.
 const BASIC_TOKENS_SOURCE: &str =
-    include_str!("../../../../grammars/dartmouth_basic.tokens");
+    include_str!("../../../../grammars/dartmouth_basic/dartmouth_basic.tokens");
 
 /// Embedded contents of `code/grammars/dartmouth_basic.grammar`.
 const BASIC_GRAMMAR_SOURCE: &str =
-    include_str!("../../../../grammars/dartmouth_basic.grammar");
+    include_str!("../../../../grammars/dartmouth_basic/dartmouth_basic.grammar");
 
 // ===========================================================================
 // Token kind map — BASIC token names → LSP semantic token types

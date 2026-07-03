@@ -144,7 +144,7 @@ sub _grammar_path {
     # 'legacy' loads the old minimal python.tokens (no indentation mode,
     # simple patterns compatible with all regex engines).
     if ($version eq 'legacy') {
-        return File::Spec->catfile( _grammars_dir(), 'python.tokens' );
+        return File::Spec->catfile( _grammars_dir(), 'python', 'python.tokens' );
     }
     return File::Spec->catfile( _grammars_dir(), 'python', "python${version}.tokens" );
 }

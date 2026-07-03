@@ -6,13 +6,13 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/*.tokens",
+      "target": "../../grammars/*/*.tokens",
       "justification": "Reads grammar files during testing to validate cross-language grammar consistency."
     },
     {
       "category": "fs",
       "action": "read",
-      "target": "../../grammars/*.grammar",
+      "target": "../../grammars/*/*.grammar",
       "justification": "Reads grammar files during testing to validate cross-language grammar consistency."
     }
   ],

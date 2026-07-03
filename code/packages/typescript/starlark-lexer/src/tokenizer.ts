@@ -72,7 +72,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const STARLARK_TOKENS_PATH = join(GRAMMARS_DIR, "starlark.tokens");
+const STARLARK_TOKENS_PATH = join(GRAMMARS_DIR, "starlark", "starlark.tokens");
 
 /**
  * Tokenize Starlark source code and return an array of tokens.

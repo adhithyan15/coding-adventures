@@ -70,7 +70,7 @@ from lang_parser import ASTNode, GrammarParser
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-JSON_GRAMMAR_PATH = GRAMMAR_DIR / "json.grammar"
+JSON_GRAMMAR_PATH = GRAMMAR_DIR / "json" / "json.grammar"
 
 
 def create_json_parser(source: str) -> GrammarParser:

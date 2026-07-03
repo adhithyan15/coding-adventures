@@ -1009,7 +1009,7 @@ All errors carry file path, line number, and column from the originating token.
 ## Package Structure
 
 ```
-code/grammars/
+code/grammars/mosaic/
   mosaic.tokens                         # Token definitions
   mosaic.grammar                        # Parser grammar
 

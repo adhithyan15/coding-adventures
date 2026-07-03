@@ -34,7 +34,7 @@ require "coding_adventures_css_lexer"
 module CodingAdventures
   module CssParser
     GRAMMAR_DIR      = File.expand_path("../../../../../../grammars", __dir__)
-    CSS_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "css.grammar")
+    CSS_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "css", "css.grammar")
 
     # Parse CSS source code into a generic AST.
     #

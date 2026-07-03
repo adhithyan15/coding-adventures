@@ -16,7 +16,7 @@ func grammarRoot() string {
 }
 
 func getGrammarPath() string {
-	return filepath.Join(grammarRoot(), "lisp.grammar")
+	return filepath.Join(grammarRoot(), "lisp", "lisp.grammar")
 }
 
 // CreateLispParser constructs a GrammarParser configured for Lisp source.

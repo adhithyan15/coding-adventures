@@ -48,7 +48,7 @@ module CodingAdventures
     #   code/                                     <- ../../../../../..
     #   grammars/                                 <- ../../../../../../grammars
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    JS_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "javascript.grammar")
+    JS_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "javascript", "javascript.grammar")
     COMPILED_GRAMMAR_DIR = __dir__
 
     # All valid ECMAScript grammar versions supported by the versioned grammar
@@ -70,7 +70,7 @@ module CodingAdventures
     # @raise [ArgumentError] if version is not in VALID_VERSIONS
     def self.resolve_grammar_path(version)
       if version.nil? || version.empty?
-        File.join(GRAMMAR_DIR, "javascript.grammar")
+        File.join(GRAMMAR_DIR, "javascript", "javascript.grammar")
       elsif VALID_VERSIONS.include?(version)
         File.join(GRAMMAR_DIR, "ecmascript", "#{version}.grammar")
       else

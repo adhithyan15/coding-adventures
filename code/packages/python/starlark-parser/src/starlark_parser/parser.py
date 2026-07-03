@@ -78,7 +78,7 @@ from starlark_lexer import tokenize_starlark
 # ---------------------------------------------------------------------------
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-STARLARK_GRAMMAR_PATH = GRAMMAR_DIR / "starlark.grammar"
+STARLARK_GRAMMAR_PATH = GRAMMAR_DIR / "starlark" / "starlark.grammar"
 
 
 def create_starlark_parser(source: str) -> GrammarParser:

@@ -102,7 +102,7 @@ defmodule CodingAdventures.Brainfuck.Lexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join(@grammars_dir, "brainfuck.tokens")
+    tokens_path = Path.join([@grammars_dir, "brainfuck", "brainfuck.tokens"])
     {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
     grammar
   end

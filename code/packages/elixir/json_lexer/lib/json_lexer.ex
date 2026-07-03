@@ -48,7 +48,7 @@ defmodule CodingAdventures.JsonLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join(@grammars_dir, "json.tokens")
+    tokens_path = Path.join([@grammars_dir, "json", "json.tokens"])
     {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
     grammar
   end

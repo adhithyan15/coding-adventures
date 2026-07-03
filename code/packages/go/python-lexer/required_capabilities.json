@@ -6,7 +6,7 @@
     {
       "category": "fs",
       "action": "read",
-      "target": "../../../grammars/python.tokens",
+      "target": "../../../grammars/python/python.tokens",
       "justification": "Reads the legacy minimal Python token grammar (backward compatibility)."
     },
     {

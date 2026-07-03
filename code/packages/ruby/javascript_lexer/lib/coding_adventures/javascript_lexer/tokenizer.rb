@@ -61,7 +61,7 @@ module CodingAdventures
     COMPILED_GRAMMAR_DIR = __dir__
 
     # The generic javascript.tokens file (no version qualifier).
-    JS_TOKENS_PATH = File.join(GRAMMAR_DIR, "javascript.tokens")
+    JS_TOKENS_PATH = File.join(GRAMMAR_DIR, "javascript", "javascript.tokens")
 
     # All valid ECMAScript grammar versions supported by the versioned grammar
     # files in code/grammars/ecmascript/.  Covers ES1 through ES2025.
@@ -84,7 +84,7 @@ module CodingAdventures
     # @raise [ArgumentError] if version is not in VALID_VERSIONS
     def self.resolve_tokens_path(version)
       if version.nil? || version.empty?
-        File.join(GRAMMAR_DIR, "javascript.tokens")
+        File.join(GRAMMAR_DIR, "javascript", "javascript.tokens")
       elsif VALID_VERSIONS.include?(version)
         File.join(GRAMMAR_DIR, "ecmascript", "#{version}.tokens")
       else

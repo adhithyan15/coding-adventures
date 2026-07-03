@@ -34,7 +34,7 @@ fn main() {
         .join("..")
         .join("..")
         .join("grammars")
-        .join("mccarthy_lisp.tokens");
+        .join("mccarthy_lisp").join("mccarthy_lisp.tokens");
     let grammar_path = grammar_path.canonicalize().unwrap_or_else(|e| {
         panic!("Failed to resolve mccarthy_lisp.tokens path {grammar_path:?}: {e}")
     });

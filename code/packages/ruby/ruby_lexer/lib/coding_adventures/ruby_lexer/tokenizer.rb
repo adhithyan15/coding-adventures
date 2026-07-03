@@ -34,7 +34,7 @@ require "coding_adventures_lexer"
 module CodingAdventures
   module RubyLexer
     GRAMMAR_DIR       = File.expand_path("../../../../../../grammars", __dir__)
-    RUBY_TOKENS_PATH  = File.join(GRAMMAR_DIR, "ruby.tokens")
+    RUBY_TOKENS_PATH  = File.join(GRAMMAR_DIR, "ruby", "ruby.tokens")
     COMPILED_TOKENS_PATH = File.expand_path("_grammar.rb", __dir__)
 
     def self.token_grammar

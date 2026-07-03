@@ -30,7 +30,7 @@ require "coding_adventures_ruby_lexer"
 module CodingAdventures
   module RubyParser
     GRAMMAR_DIR        = File.expand_path("../../../../../../grammars", __dir__)
-    RUBY_GRAMMAR_PATH  = File.join(GRAMMAR_DIR, "ruby.grammar")
+    RUBY_GRAMMAR_PATH  = File.join(GRAMMAR_DIR, "ruby", "ruby.grammar")
     COMPILED_GRAMMAR_PATH = File.expand_path("_grammar.rb", __dir__)
 
     def self.parser_grammar

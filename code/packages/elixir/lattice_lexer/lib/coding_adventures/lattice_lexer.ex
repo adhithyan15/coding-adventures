@@ -140,7 +140,7 @@ defmodule CodingAdventures.LatticeLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join(@grammars_dir, "lattice.tokens")
+    tokens_path = Path.join([@grammars_dir, "lattice", "lattice.tokens"])
     content = File.read!(tokens_path)
     # The lattice.tokens file contains an `errors:` section at the end
     # (for malformed strings / URLs). The Elixir TokenGrammar parser does not

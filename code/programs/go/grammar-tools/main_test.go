@@ -30,16 +30,16 @@ func grammarFile(t *testing.T, name string) string {
 // ----------------------------------------------------------------------------
 
 func TestValidateCommandSucceedsOnJSON(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
-	grammar := grammarFile(t, "json.grammar")
+	tokens := grammarFile(t, "json/json.tokens")
+	grammar := grammarFile(t, "json/json.grammar")
 	if code := validateCommand(tokens, grammar); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
 }
 
 func TestValidateCommandSucceedsOnLisp(t *testing.T) {
-	tokens := grammarFile(t, "lisp.tokens")
-	grammar := grammarFile(t, "lisp.grammar")
+	tokens := grammarFile(t, "lisp/lisp.tokens")
+	grammar := grammarFile(t, "lisp/lisp.grammar")
 	if code := validateCommand(tokens, grammar); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
@@ -52,7 +52,7 @@ func TestValidateCommandMissingTokens(t *testing.T) {
 }
 
 func TestValidateCommandMissingGrammar(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
+	tokens := grammarFile(t, "json/json.tokens")
 	if code := validateCommand(tokens, "/nonexistent/x.grammar"); code != 1 {
 		t.Errorf("expected exit 1, got %d", code)
 	}
@@ -63,7 +63,7 @@ func TestValidateCommandMissingGrammar(t *testing.T) {
 // ----------------------------------------------------------------------------
 
 func TestValidateTokensOnlySucceeds(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
+	tokens := grammarFile(t, "json/json.tokens")
 	if code := validateTokensOnly(tokens); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
@@ -80,7 +80,7 @@ func TestValidateTokensOnlyMissingFile(t *testing.T) {
 // ----------------------------------------------------------------------------
 
 func TestValidateGrammarOnlySucceeds(t *testing.T) {
-	grammar := grammarFile(t, "json.grammar")
+	grammar := grammarFile(t, "json/json.grammar")
 	if code := validateGrammarOnly(grammar); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
@@ -121,8 +121,8 @@ func TestDispatchValidateGrammarNoFilesReturns2(t *testing.T) {
 }
 
 func TestDispatchValidateDispatches(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
-	grammar := grammarFile(t, "json.grammar")
+	tokens := grammarFile(t, "json/json.tokens")
+	grammar := grammarFile(t, "json/json.grammar")
 	if code := dispatch("validate", []string{tokens, grammar}, "", "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
@@ -133,7 +133,7 @@ func TestDispatchValidateDispatches(t *testing.T) {
 // ----------------------------------------------------------------------------
 
 func TestCompileTokensCommandSucceeds(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
+	tokens := grammarFile(t, "json/json.tokens")
 	if code := compileTokensCommand(tokens, "", "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
@@ -146,7 +146,7 @@ func TestCompileTokensCommandMissingFile(t *testing.T) {
 }
 
 func TestCompileTokensCommandWritesFile(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
+	tokens := grammarFile(t, "json/json.tokens")
 	out := filepath.Join(t.TempDir(), "json_tokens.go")
 	if code := compileTokensCommand(tokens, out, "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
@@ -169,7 +169,7 @@ func TestCompileTokensCommandWritesFile(t *testing.T) {
 // ----------------------------------------------------------------------------
 
 func TestCompileGrammarCommandSucceeds(t *testing.T) {
-	grammar := grammarFile(t, "json.grammar")
+	grammar := grammarFile(t, "json/json.grammar")
 	if code := compileGrammarCommand(grammar, "", "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
@@ -182,7 +182,7 @@ func TestCompileGrammarCommandMissingFile(t *testing.T) {
 }
 
 func TestCompileGrammarCommandWritesFile(t *testing.T) {
-	grammar := grammarFile(t, "json.grammar")
+	grammar := grammarFile(t, "json/json.grammar")
 	out := filepath.Join(t.TempDir(), "json_parser.go")
 	if code := compileGrammarCommand(grammar, out, "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
@@ -217,14 +217,14 @@ func TestDispatchCompileGrammarNoFilesReturns2(t *testing.T) {
 }
 
 func TestDispatchCompileTokensDispatches(t *testing.T) {
-	tokens := grammarFile(t, "json.tokens")
+	tokens := grammarFile(t, "json/json.tokens")
 	if code := dispatch("compile-tokens", []string{tokens}, "", "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}
 }
 
 func TestDispatchCompileGrammarDispatches(t *testing.T) {
-	grammar := grammarFile(t, "json.grammar")
+	grammar := grammarFile(t, "json/json.grammar")
 	if code := dispatch("compile-grammar", []string{grammar}, "", "generated", false); code != 0 {
 		t.Errorf("expected exit 0, got %d", code)
 	}

@@ -90,7 +90,7 @@ func getParserGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "brainfuck.grammar")
+	return filepath.Join(root, "brainfuck", "brainfuck.grammar")
 }
 
 // CreateBrainfuckParser tokenizes the Brainfuck source text using

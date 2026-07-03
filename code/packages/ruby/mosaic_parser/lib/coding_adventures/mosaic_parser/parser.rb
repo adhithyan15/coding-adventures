@@ -39,7 +39,7 @@ module CodingAdventures
     # Path to mosaic.grammar, computed relative to this file.
     # Navigate up from lib/coding_adventures/mosaic_parser/ to code/grammars/.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    MOSAIC_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "mosaic.grammar")
+    MOSAIC_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "mosaic", "mosaic.grammar")
 
     # Parse a string of Mosaic source into a generic AST.
     #

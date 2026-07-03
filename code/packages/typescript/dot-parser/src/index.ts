@@ -22,8 +22,8 @@ import {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const DOT_TOKENS_PATH = join(GRAMMARS_DIR, "dot.tokens");
-const DOT_GRAMMAR_PATH = join(GRAMMARS_DIR, "dot.grammar");
+const DOT_TOKENS_PATH = join(GRAMMARS_DIR, "dot", "dot.tokens");
+const DOT_GRAMMAR_PATH = join(GRAMMARS_DIR, "dot", "dot.grammar");
 
 export interface DotAttribute {
   key: string;

@@ -28,7 +28,7 @@ import type { Token } from "@coding-adventures/lexer";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const RUBY_TOKENS_PATH = join(GRAMMARS_DIR, "ruby.tokens");
+const RUBY_TOKENS_PATH = join(GRAMMARS_DIR, "ruby", "ruby.tokens");
 
 /**
  * Tokenize Ruby source code and return an array of tokens.

@@ -15,11 +15,11 @@ use grammar_lsp_bridge::{LanguageSpec, LspSemanticTokenType};
 
 /// Embedded contents of `code/grammars/nib.tokens`.
 const NIB_TOKENS_SOURCE: &str =
-    include_str!("../../../../grammars/nib.tokens");
+    include_str!("../../../../grammars/nib/nib.tokens");
 
 /// Embedded contents of `code/grammars/nib.grammar`.
 const NIB_GRAMMAR_SOURCE: &str =
-    include_str!("../../../../grammars/nib.grammar");
+    include_str!("../../../../grammars/nib/nib.grammar");
 
 // ===========================================================================
 // Token kind map

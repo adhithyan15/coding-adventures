@@ -92,7 +92,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const JSON_TOKENS_PATH = join(GRAMMARS_DIR, "json.tokens");
+const JSON_TOKENS_PATH = join(GRAMMARS_DIR, "json", "json.tokens");
 
 /**
  * Tokenize JSON text and return an array of tokens.

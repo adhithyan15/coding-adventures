@@ -71,7 +71,7 @@ func getGrammarPath() string {
 	// Navigate up 3 levels to code/, then down to grammars/
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "json.grammar")
+	return filepath.Join(root, "json", "json.grammar")
 }
 
 // CreateJSONParser tokenizes the JSON text using the JSON lexer, then loads

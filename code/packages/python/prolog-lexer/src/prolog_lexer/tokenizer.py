@@ -13,7 +13,7 @@ from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-PROLOG_TOKENS_PATH = GRAMMAR_DIR / "prolog.tokens"
+PROLOG_TOKENS_PATH = GRAMMAR_DIR / "prolog" / "prolog.tokens"
 
 
 def create_prolog_lexer(source: str) -> GrammarLexer:

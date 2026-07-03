@@ -480,7 +480,7 @@ use coding_adventures_capability_cage::{Manifest, Capability, Category, Action};
 pub fn package_manifest() -> Manifest {
     Manifest::new(vec![
         Capability::new(Category::Fs, Action::Read,
-            "../../grammars/json.tokens",
+            "../../grammars/json/json.tokens",
             "Reads token grammar definition file to build the lexer DFA.")
             .unwrap(),
     ]).unwrap()
@@ -634,11 +634,11 @@ Both the Go and Rust libraries import a JSON file
   ],
   "checks": [
     { "category": "fs", "action": "read",
-      "target": "./grammars/json.tokens", "expect": "ok" },
+      "target": "./grammars/json/json.tokens", "expect": "ok" },
     { "category": "fs", "action": "read",
       "target": "./grammars/sub/json.tokens", "expect": "deny" },
     { "category": "fs", "action": "write",
-      "target": "./grammars/json.tokens", "expect": "deny" }
+      "target": "./grammars/json/json.tokens", "expect": "deny" }
   ]
 }
 ```

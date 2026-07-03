@@ -692,7 +692,9 @@ fn build_versioned_family_target(
 
     let generic_input = match spec.generic_stem {
         Some(stem) => {
-            let input_path = grammars_dir.join(format!("{}.{}", stem, kind.input_extension()));
+            let input_path = grammars_dir
+                .join(stem)
+                .join(format!("{}.{}", stem, kind.input_extension()));
             if !input_path.exists() {
                 return Err(format!(
                     "Expected generic grammar file '{}' for family '{}'.",
@@ -823,8 +825,9 @@ fn find_rust_compile_targets(
             }
             None => {
                 let grammar_name = rust_grammar_name_for_package(&package_name, kind);
-                let input_path =
-                    grammars_dir.join(format!("{}.{}", grammar_name, kind.input_extension()));
+                let input_path = grammars_dir
+                    .join(&grammar_name)
+                    .join(format!("{}.{}", grammar_name, kind.input_extension()));
                 if !input_path.exists() {
                     continue;
                 }
@@ -1205,8 +1208,10 @@ mod tests {
 
     fn grammar_path(name: &str) -> String {
         let root = find_root();
+        let stem = name.split('.').next().unwrap_or(name);
         root.join("code")
             .join("grammars")
+            .join(stem)
             .join(name)
             .to_string_lossy()
             .to_string()

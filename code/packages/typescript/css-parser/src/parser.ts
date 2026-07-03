@@ -9,7 +9,7 @@ import type { ASTNode } from "@coding-adventures/parser";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const CSS_GRAMMAR_PATH = join(GRAMMARS_DIR, "css.grammar");
+const CSS_GRAMMAR_PATH = join(GRAMMARS_DIR, "css", "css.grammar");
 
 export function createCssParser(source: string): GrammarParser {
   const tokens = tokenizeCss(source);

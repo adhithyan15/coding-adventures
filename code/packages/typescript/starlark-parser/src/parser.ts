@@ -94,7 +94,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   + grammars  = .../code/grammars/
  */
 const GRAMMARS_DIR = join(__dirname, "..", "..", "..", "..", "grammars");
-const STARLARK_GRAMMAR_PATH = join(GRAMMARS_DIR, "starlark.grammar");
+const STARLARK_GRAMMAR_PATH = join(GRAMMARS_DIR, "starlark", "starlark.grammar");
 
 /**
  * Parse Starlark source code and return an AST.

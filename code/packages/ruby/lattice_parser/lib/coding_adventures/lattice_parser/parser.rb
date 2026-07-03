@@ -44,7 +44,7 @@ module CodingAdventures
   module LatticeParser
     # Path to the grammar file, relative to this file.
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    LATTICE_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "lattice.grammar")
+    LATTICE_GRAMMAR_PATH = File.join(GRAMMAR_DIR, "lattice", "lattice.grammar")
 
     # Parse Lattice source text and return an AST.
     #

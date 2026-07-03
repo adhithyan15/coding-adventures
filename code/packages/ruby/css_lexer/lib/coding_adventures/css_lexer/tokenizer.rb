@@ -48,7 +48,7 @@ module CodingAdventures
     #     coding_adventures/css_lexer/
     #       tokenizer.rb                      <-- __dir__
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    CSS_TOKENS_PATH = File.join(GRAMMAR_DIR, "css.tokens")
+    CSS_TOKENS_PATH = File.join(GRAMMAR_DIR, "css", "css.tokens")
 
     # Create a GrammarLexer configured for CSS text.
     #

@@ -141,7 +141,7 @@ sub _resolve_tokens_path {
     my ($class, $version) = @_;
     my $grammars = _grammars_dir();
 
-    return File::Spec->catfile($grammars, 'javascript.tokens')
+    return File::Spec->catfile($grammars, 'javascript', 'javascript.tokens')
         unless $version;
 
     die "CodingAdventures::JavascriptLexer: unknown ECMAScript version '$version'. "

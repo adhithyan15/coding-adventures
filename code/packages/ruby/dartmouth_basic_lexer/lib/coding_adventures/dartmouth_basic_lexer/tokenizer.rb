@@ -172,7 +172,7 @@ module CodingAdventures
     #   code/                    ← then into grammars/
     #
     GRAMMAR_DIR = File.expand_path("../../../../../../grammars", __dir__)
-    DARTMOUTH_BASIC_TOKENS_PATH = File.join(GRAMMAR_DIR, "dartmouth_basic.tokens")
+    DARTMOUTH_BASIC_TOKENS_PATH = File.join(GRAMMAR_DIR, "dartmouth_basic", "dartmouth_basic.tokens")
 
     # ----------------------------------------------------------------
     # tokenize(source) — The Main Entry Point

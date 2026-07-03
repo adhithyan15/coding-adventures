@@ -71,7 +71,7 @@ defmodule CodingAdventures.ExcelParser do
   end
 
   def create_parser do
-    grammar_path = Path.join(@grammars_dir, "excel.grammar")
+    grammar_path = Path.join([@grammars_dir, "excel", "excel.grammar"])
     {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
     grammar
   end

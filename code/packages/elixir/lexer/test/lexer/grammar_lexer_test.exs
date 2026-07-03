@@ -24,7 +24,7 @@ defmodule CodingAdventures.Lexer.GrammarLexerTest do
       Path.join([__DIR__, "..", "..", "..", "..", "..", "grammars"])
       |> Path.expand()
 
-    {:ok, g} = TokenGrammar.parse(File.read!(Path.join(grammar_dir, "json.tokens")))
+    {:ok, g} = TokenGrammar.parse(File.read!(Path.join([grammar_dir, "json", "json.tokens"])))
     g
   end
 

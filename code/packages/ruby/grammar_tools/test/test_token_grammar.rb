@@ -194,7 +194,7 @@ class TestTokenGrammar < Minitest::Test
   # -----------------------------------------------------------------------
 
   def test_parse_real_python_tokens
-    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python.tokens")
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "python", "python.tokens")
     skip("python.tokens not found") unless File.exist?(path)
     source = File.read(path)
     grammar = GT.parse_token_grammar(source)
@@ -424,7 +424,7 @@ class TestTokenGrammar < Minitest::Test
   # -----------------------------------------------------------------------
 
   def test_parse_real_starlark_tokens
-    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "starlark.tokens")
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "starlark", "starlark.tokens")
     skip("starlark.tokens not found") unless File.exist?(path)
     source = File.read(path)
     grammar = GT.parse_token_grammar(source)
@@ -439,7 +439,7 @@ class TestTokenGrammar < Minitest::Test
   # -----------------------------------------------------------------------
 
   def test_parse_real_ruby_tokens
-    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "ruby.tokens")
+    path = File.join(__dir__, "..", "..", "..", "..", "..", "grammars", "ruby", "ruby.tokens")
     skip("ruby.tokens not found") unless File.exist?(path)
     source = File.read(path)
     grammar = GT.parse_token_grammar(source)

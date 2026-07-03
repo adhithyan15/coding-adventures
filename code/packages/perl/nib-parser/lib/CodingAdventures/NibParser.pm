@@ -21,7 +21,7 @@ sub _grammars_dir {
 
 sub parse {
     my ($class, $source) = @_;
-    my $grammar_path = File::Spec->catfile(_grammars_dir(), 'nib.grammar');
+    my $grammar_path = File::Spec->catfile(_grammars_dir(), 'nib', 'nib.grammar');
     open my $fh, '<', $grammar_path
         or die "CodingAdventures::NibParser: cannot open '$grammar_path': $!";
     my $content = do { local $/; <$fh> };

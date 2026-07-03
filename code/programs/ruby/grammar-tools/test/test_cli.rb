@@ -31,15 +31,15 @@ load File.expand_path("../main.rb", __dir__)
 
 class TestValidateCommand < Minitest::Test
   def test_succeeds_on_json_pair
-    tokens  = GRAMMARS_DIR / "json.tokens"
-    grammar = GRAMMARS_DIR / "json.grammar"
+    tokens  = GRAMMARS_DIR / "json" / "json.tokens"
+    grammar = GRAMMARS_DIR / "json" / "json.grammar"
     return skip unless tokens.exist? && grammar.exist?
     assert_equal 0, validate_command(tokens.to_s, grammar.to_s)
   end
 
   def test_succeeds_on_lisp_pair
-    tokens  = GRAMMARS_DIR / "lisp.tokens"
-    grammar = GRAMMARS_DIR / "lisp.grammar"
+    tokens  = GRAMMARS_DIR / "lisp" / "lisp.tokens"
+    grammar = GRAMMARS_DIR / "lisp" / "lisp.grammar"
     return skip unless tokens.exist? && grammar.exist?
     assert_equal 0, validate_command(tokens.to_s, grammar.to_s)
   end
@@ -49,7 +49,7 @@ class TestValidateCommand < Minitest::Test
   end
 
   def test_returns_1_on_missing_grammar
-    tokens = GRAMMARS_DIR / "json.tokens"
+    tokens = GRAMMARS_DIR / "json" / "json.tokens"
     return skip unless tokens.exist?
     assert_equal 1, validate_command(tokens.to_s, "/nonexistent/x.grammar")
   end
@@ -57,7 +57,7 @@ end
 
 class TestValidateTokensOnly < Minitest::Test
   def test_succeeds_on_json_tokens
-    tokens = GRAMMARS_DIR / "json.tokens"
+    tokens = GRAMMARS_DIR / "json" / "json.tokens"
     return skip unless tokens.exist?
     assert_equal 0, validate_tokens_only(tokens.to_s)
   end
@@ -69,7 +69,7 @@ end
 
 class TestValidateGrammarOnly < Minitest::Test
   def test_succeeds_on_json_grammar
-    grammar = GRAMMARS_DIR / "json.grammar"
+    grammar = GRAMMARS_DIR / "json" / "json.grammar"
     return skip unless grammar.exist?
     assert_equal 0, validate_grammar_only(grammar.to_s)
   end
@@ -97,20 +97,20 @@ class TestDispatch < Minitest::Test
   end
 
   def test_validate_dispatches_correctly
-    tokens  = GRAMMARS_DIR / "json.tokens"
-    grammar = GRAMMARS_DIR / "json.grammar"
+    tokens  = GRAMMARS_DIR / "json" / "json.tokens"
+    grammar = GRAMMARS_DIR / "json" / "json.grammar"
     return skip unless tokens.exist? && grammar.exist?
     assert_equal 0, dispatch("validate", [tokens.to_s, grammar.to_s])
   end
 
   def test_validate_tokens_dispatches_correctly
-    tokens = GRAMMARS_DIR / "json.tokens"
+    tokens = GRAMMARS_DIR / "json" / "json.tokens"
     return skip unless tokens.exist?
     assert_equal 0, dispatch("validate-tokens", [tokens.to_s])
   end
 
   def test_validate_grammar_dispatches_correctly
-    grammar = GRAMMARS_DIR / "json.grammar"
+    grammar = GRAMMARS_DIR / "json" / "json.grammar"
     return skip unless grammar.exist?
     assert_equal 0, dispatch("validate-grammar", [grammar.to_s])
   end

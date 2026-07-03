@@ -121,7 +121,7 @@ func getGrammarPath() string {
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
 
-	return filepath.Join(root, "dartmouth_basic.grammar")
+	return filepath.Join(root, "dartmouth_basic", "dartmouth_basic.grammar")
 }
 
 // CreateDartmouthBasicParser tokenizes the BASIC source text using the Dartmouth

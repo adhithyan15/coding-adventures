@@ -11,7 +11,7 @@ from lexer import Token
 from excel_lexer import tokenize_excel_formula
 
 GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-EXCEL_GRAMMAR_PATH = GRAMMAR_DIR / "excel.grammar"
+EXCEL_GRAMMAR_PATH = GRAMMAR_DIR / "excel" / "excel.grammar"
 
 
 def _previous_significant_token(tokens: list[Token], index: int) -> Token | None:

@@ -58,7 +58,7 @@ func getGrammarPath() string {
 	_, filename, _, _ := runtime.Caller(0)
 	parent := filepath.Dir(filename)
 	root := filepath.Join(parent, "..", "..", "..", "grammars")
-	return filepath.Join(root, "mosaic.tokens")
+	return filepath.Join(root, "mosaic", "mosaic.tokens")
 }
 
 // CreateLexer loads the Mosaic token grammar and returns a configured
