@@ -854,4 +854,5 @@ members = [
     "spreadsheet-capi",
     "spreadsheet-wasm",
     "xlsx-eval",
+    "xls",
 ]
