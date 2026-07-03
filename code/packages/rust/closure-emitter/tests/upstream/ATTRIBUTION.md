@@ -58,6 +58,23 @@ under the Apache License, Version 2.0:
       newline-aware; it and `raw_preserves_leading_and_trailing_newline` are
       now active.
 
+- `code_printer_update_test.rs`
+    - upstream: `test/com/google/javascript/jscomp/CodePrinterTest.java`
+      (the update-operator `++` / `--` printing cases — prefix/postfix ×
+      increment/decrement, precedence wraps, and the token-fusion seams)
+    - tracked commit: see `UPSTREAM_SHA`
+    - Isolates `emit_update` + the `PREC_UNARY` classification and the
+      `+`/`-` token-fusion seams that landed with
+      `Expression::UpdateExpression` (CLOC12.158). 14 active `#[test]`s and
+      **0 `#[ignore]`** — the emitter conforms to every covered shape
+      (prefix/postfix increment/decrement, member operand, bare under
+      `!` / `typeof`, member-object and exponent-base precedence wraps
+      `(x++).y` / `(++x)**2`, and the fusion seams `a- --b` / `a+ ++b` /
+      `x++ +y` / `x-- -y` plus the non-fusing `x++*y`). Inputs are
+      hand-constructed AST; the bridge conversion of `++`/`--`
+      (CLOC12.158 PR2, gap-159) is exercised separately in
+      `javascript-parser`.
+
 ## Translation notes
 
 Fourth port under CLOC12 (after `closure-pass-constant-fold` in

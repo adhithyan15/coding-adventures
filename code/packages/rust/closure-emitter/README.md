@@ -121,6 +121,12 @@ test-port convention. Each file isolates one printing area:
   `#[test]`s, no `#[ignore]` (gap-158 resolved in CLOC12.157 — the emitter is
   now newline-aware). Run with
   `cargo test --test upstream_code_printer_template`.
+- `code_printer_update_test.rs` — update-operator (`++` / `--`) printing:
+  prefix/postfix increment/decrement, a member operand (`a.b++`), bare printing
+  under `!` / `typeof`, the `PREC_UNARY` precedence wraps (`(x++).y`,
+  `(++x)**2`), and the token-fusion seams (`a- --b`, `a+ ++b`, `x++ +y`,
+  `x-- -y`, plus the non-fusing `x++*y`). 14 active `#[test]`s, no `#[ignore]`.
+  Run with `cargo test --test upstream_code_printer_update`.
 
 ## Dependency whitelist
 
