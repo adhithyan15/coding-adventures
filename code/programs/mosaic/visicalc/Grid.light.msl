@@ -1,9 +1,17 @@
 // Grid.light.msl — light theme for the spreadsheet grid (VC1.5).
 //
 // Companion to Grid.dark.msl. Identical structure — same sub-parts
-// (sheet, sheet/cell, sheet/header-cell, sheet/header-row,
-// sheet/data-row), same state blocks (selected, editing, even,
-// odd) — only the palette flips for a light system theme.
+// (sheet, cell, header-cell, header-row, data-row), same state blocks
+// (selected, editing, even, odd) — only the palette flips for a light
+// system theme.
+//
+// NB: an earlier cut of this file named the parts `sheet/cell`,
+// `sheet/header-cell`, … — the legacy monolithic-Grid naming removed in
+// U29-X1. Those names match no part in the mosaic-pkg-grid composition, so
+// the emitter produced UNSTYLED light cells (no borders → no gridlines). The
+// dark stylesheet always used the flat names (`cell`, `header-cell`, …); the
+// light one now matches. This only ever surfaced once the web switcher
+// actually rendered the light theme — before that, the light .msl was dead code.
 //
 // Palette mapping rationale (dark → light):
 //
@@ -34,7 +42,7 @@ style Grid {
   }
 
   // Body cells. The `border-*` triplet draws the gridlines.
-  part sheet/cell {
+  part cell {
     border-width: 1px ;
     border-style: solid ;
     border-color: #c8c8c8 ;
@@ -57,7 +65,7 @@ style Grid {
   }
 
   // Column-header cells.
-  part sheet/header-cell {
+  part header-cell {
     background:  #f3f3f3 ;
     color:       #555555 ;
     font-weight: normal ;
@@ -70,12 +78,12 @@ style Grid {
     height:      24px ;
   }
 
-  part sheet/header-row {
+  part header-row {
     height: 24px ;
   }
 
   // Body data rows: alternating zebra-stripe on light tones.
-  part sheet/data-row {
+  part data-row {
     height: 22px ;
 
     state even {
