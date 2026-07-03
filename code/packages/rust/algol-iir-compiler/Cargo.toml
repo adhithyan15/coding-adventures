@@ -1,8 +1,8 @@
 [package]
 name = "algol-iir-compiler"
-version = "0.25.0"
+version = "0.26.0"
 edition = "2021"
-description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.25.0 (AL-multidim-3D): 3-D integer arrays proven — `integer array M[lo1:hi1, lo2:hi2, lo3:hi3]` exercises the N-dimensional stride product (stride[0]=size[1]*size[2]); v0.24.0 (AL-multidim-real): f64 multidim array elements proven; v0.23.0 (AL-multidim): N-dimensional integer arrays via row-major flat index; ArrayDim per-dim lower/stride slots; all 7 backends via single alloc_array."
+description = "ALGOL 60 scalar frontend for the LANG VM Rust chain, lowering parsed ALGOL into interpreter_ir::IIRModule. v0.26.0 (AL-multidim-bounds): multidim arrays with arbitrary/negative per-dimension lower bounds proven — `(sub − lower)` subtraction composes with row-major strides; v0.25.0 (AL-multidim-3D): 3-D integer arrays proven; v0.24.0 (AL-multidim-real): f64 multidim array elements proven; v0.23.0 (AL-multidim): N-dimensional integer arrays via row-major flat index."
 
 [dependencies]
 coding-adventures-algol-parser = { path = "../algol-parser" }
