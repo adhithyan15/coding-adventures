@@ -2458,6 +2458,70 @@ contributes 1000000 from answer == 60 to correct
     }
 
     #[test]
+    fn native_latex_subscripts_bind_as_distinct_variables() {
+        // `x_i` / `x_1` / `V_{max}` — a subscript names a DISTINCT variable, not a computation.
+        // The adapter mangles the subscript into a flat `base_sub` identifier that binds to a
+        // matching `observe`. Letter subscripts: x_i + x_j with x_i=5, x_j=8 → 13 (two distinct
+        // observed quantities, NOT `x*(i+j)`).
+        let letters = crate::compile_and_decide(
+            "observe x_i(5)\n\
+             observe x_j(8)\n\
+             let answer = latex \"$x_i + x_j$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 13 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(letters.ranked[0].posterior > 0.99, "{letters:?}");
+        // Braced multi-letter subscripts: c_{max} - c_{min} with c_max=100, c_min=30 → 70. The
+        // `{max}` / `{min}` juxtaposition chains flatten back into the words `max`/`min`. (The base
+        // is lowercase because the ADJ surface lexer — separately from this adapter — requires
+        // `observe` identifiers to start lowercase; the mangled `c_max` binds to `observe c_max`.)
+        let words = crate::compile_and_decide(
+            "observe c_max(100)\n\
+             observe c_min(30)\n\
+             let answer = latex \"$c_{max} - c_{min}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 70 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(words.ranked[0].posterior > 0.99, "{words:?}");
+        // Numeric subscripts name enumerated variables: x_1 * x_2 with x_1=6, x_2=7 → 42.
+        let digits = crate::compile_and_decide(
+            "observe x_1(6)\n\
+             observe x_2(7)\n\
+             let answer = latex \"$x_1 * x_2$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 42 to correct\n\
+             ? correct\n",
+        )
+        .unwrap();
+        assert!(digits.ranked[0].posterior > 0.99, "{digits:?}");
+    }
+
+    #[test]
+    fn native_latex_deep_juxtaposed_subscript_does_not_overflow() {
+        // A braced subscript of thousands of juxtaposed letters (`x_{aaaa…a}`) parses to a deep
+        // left-associative `Bin(Mul)` spine that the latex parser's `MAX_DEPTH` does NOT bound
+        // (juxtaposition is built in a loop). The subscript flattener MUST walk that spine
+        // iteratively — a naive recursion would overflow the thread stack (an uncatchable abort /
+        // DoS). This program must lower without panicking: the giant `x_aaaa…` identifier simply
+        // never matches an `observe`, so `answer` binds nothing and the guarded contribution stays
+        // dormant — compilation completes, which is the point (no stack overflow).
+        let deep = "a".repeat(20_000);
+        let src = format!(
+            "observe x_a(1)\n\
+             let answer = latex \"$x_{{{deep}}}$\"\n\
+             prior 0.10 for correct\n\
+             contributes 1000000 from answer == 1 to correct\n\
+             ? correct\n"
+        );
+        // Either outcome is acceptable — the guarantee is that it returns instead of aborting.
+        let _ = compile(&src);
+    }
+
+    #[test]
     fn native_latex_symbolic_root_degree_is_rejected() {
         // `\sqrt[k]{x}` — a symbolic degree has no numeric value, so the reciprocal
         // exponent `1/k` cannot be formed. It must be rejected, not silently

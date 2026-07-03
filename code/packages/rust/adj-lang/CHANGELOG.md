@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.39.0] - 2026-07-02 — subscripted variables (`x_i`, `x_1`, `V_{max}`) bind as distinct names in `latex "…"`
+
+### Added
+
+- `latex "x_i"`, `x_1`, `V_{max}` and any other **subscripted variable** now lower to a single flat
+  identifier `base_sub` (`x_i` → `x_i`, `x_1` → `x_1`, `V_{max}` → `V_max`) that binds to a matching
+  `observe`. A subscript does not compute — `x_1` and `x_2` are two DISTINCT observed quantities, and
+  `V_{max}` / `C_{peak}` are named readings, not `V` times something — so mangling the subscript into a
+  name (rather than treating `x_i` as `x·i`) is what a model means. A single-letter/number subscript is
+  a `Symbol`/`Number`; a BRACED multi-letter subscript `{max}` arrives from the frontend as a
+  juxtaposition chain of single-letter `Symbol`s, which the new `subscript_ident_part` helper flattens
+  back into the word. An arithmetic subscript (`x_{i+1}`) the helper cannot name is an explicit
+  `UnsupportedLatexMath` — never a silent mis-binding. (The mangled name must be a legal `observe`
+  identifier: the ADJ surface lexer requires a lowercase start, so a `V_{max}` reading binds when
+  declared `observe v_max(…)`; the adapter mangling itself is case-preserving.) Pure adapter
+  recognition — no engine, AST, or lowering change.
+
 ## [0.38.0] - 2026-07-02 — accent-wrapped operands (`\hat{x}`, `\bar{x}`, …) compute transparently in `latex "…"`
 
 ### Added
