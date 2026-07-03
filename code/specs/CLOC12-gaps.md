@@ -1886,3 +1886,60 @@ form only), so the tagged form is enabled **no-substitution** — matching the
 template bridge's scope. When the grammar learns `${…}`, both the plain and
 tagged template converters grow the substitution branch together; the AST node
 already models it.
+
+## CLOC12.162 — `SpreadElement` (`...arg`): atomic node + emit + passes (PR1)
+
+Adds `Expression::SpreadElement { cv, argument: Box<Expression> }` to
+`javascript-ast` (0.21.0) — the JS **spread** `...arg`: the `...` prefix that
+unpacks an iterable into a call/`new` argument list (`f(...a)`, `new F(...a)`)
+or an array-literal element (`[1, ...rest, 2]`). Unlike every other
+`Expression` variant a spread is **not a free-standing expression** — bare
+`...x` is a syntax error, and the grammar only admits it in argument/element
+position. It is nonetheless modelled as an `Expression` variant so it slots
+directly into the `Vec<Expression>` argument/element lists that
+`CallExpression`, `NewExpression`, and `ArrayExpression` already carry: no
+parallel "argument-or-spread" enum is introduced, and every AST walker that
+already recurses those `Vec`s reaches the spread's inner `argument` for free.
+(Object-spread `{...o}` is a *property*, a separate later slice; this node is
+the call/array/`new` spread.)
+
+`closure-emitter` (0.26.0) `emit_spread` prints the three literal `.`
+characters then the `argument` at `PREC_ASSIGNMENT`, with no interior space
+(`...a`, never `... a`). That precedence is the crux: the argument grammar is
+an `AssignmentExpression`, so everything at or above assignment strength prints
+bare (`...a`, `...a.b`, `...f()`, `...a?b:c`, `...a=b`), while the one looser
+form — a **sequence** — is wrapped (`...(a,b)`), because a bare `...a,b` would
+spread only `a` and leave `,b` as a second list slot (a miscompile). The node
+itself tags at `PREC_ASSIGNMENT` in `expr_prec`, matching the
+assignment-position list slots it lives in (`f(...a)`, `[...a]`) so it is never
+spuriously parenthesised there; it is never emitted as a sub-operand of another
+operator (that would be invalid JS), so no other context observes the tag. No
+new emit-site precedence surgery was needed.
+
+All nine downstream pass/analysis crates get a `SpreadElement` match arm
+recursing into `argument` (the transforms rebuild the node; `fold-control-flow`'s
+exhaustive `expression_cv` accessor gains its arm) — all in one atomic commit so
+the workspace never has a broken exhaustive `match`.
+
+6 new emitter unit tests (sole call arg `f(...a)`, interleaved
+`f(a,...b,c)`, array element `[1,...a,2]`, `new` arg `new F(...a)`, the
+sequence-arg wrap `f(...(a,b))`, and the conditional-arg bare `f(...a?b:c)`
+showing no over-wrap). No behaviour change for existing inputs — the bridge
+still declines spread (gap-163), so closurec falls back to WHITESPACE_ONLY on
+`...` for now. PR2 (bridge-enable) and PR3 (conformance port) follow.
+
+### gap-163 — bridge declines spread (`SpreadElement`) — **OPEN (planned: javascript-parser PR2)**
+
+The `javascript-parser` bridge does not yet convert a `...` spread appearing in
+a call/`new` argument list or an array element into
+`Expression::SpreadElement`; it returns `UnsupportedSyntax` and drops the whole
+file to WHITESPACE_ONLY. The atomic node PR (CLOC12.162 PR1) lands the node +
+emit + pass traversals so the typed AST and every downstream pass can already
+represent and print a spread.
+
+**Planned fix (CLOC12.162 PR2):** the argument/element converters recognise a
+`spread_element` grammar node and wrap the converted inner expression as
+`SpreadElement`, mirroring the anticipation already noted for `new X(...a)` in
+gap-160. A closurec e2e diff fixture will prove a spread call round-trips while
+a foldable sibling operand still folds — proving the file ran through SIMPLE
+rather than WHITESPACE_ONLY.

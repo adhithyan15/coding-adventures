@@ -91,7 +91,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
-    BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression,
+    BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement,
     Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
@@ -561,6 +561,13 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 },
             })
         }
+        // `...arg` — fold within the spread argument (it may hold a foldable
+        // subexpression); the spread itself is structural, never a constant, and
+        // is not dropped (its iterable may carry side effects).
+        Expression::SpreadElement(s) => Expression::SpreadElement(SpreadElement {
+            cv: s.cv.clone(),
+            argument: Box::new(fold_expression(&s.argument, st)),
+        }),
         Expression::MemberExpression(m) => fold_member(m, st),
         Expression::ArrayExpression(a) => Expression::ArrayExpression(ArrayExpression {
             cv: a.cv.clone(),

@@ -56,7 +56,7 @@ use coding_adventures_closure_pass_pipeline::{
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
-    AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression,
+    AssignmentTarget, BinaryExpression, BindingTarget, BlockStatement, CallExpression, NewExpression, SequenceExpression, SpreadElement,
     ConditionalExpression, Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ForInStatement, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, Identifier, IfStatement,
@@ -276,6 +276,7 @@ fn expression_cv(expr: &Expression) -> Option<String> {
         NewExpression(e) => e.cv.clone(),
         SequenceExpression(e) => e.cv.clone(),
         TaggedTemplateExpression(e) => e.cv.clone(),
+        SpreadElement(e) => e.cv.clone(),
         MemberExpression(e) => e.cv.clone(),
         ArrayExpression(e) => e.cv.clone(),
         ObjectExpression(e) => e.cv.clone(),
@@ -1424,6 +1425,11 @@ fn fold_expression(expr: &Expression, st: &mut FoldState) -> Expression {
                 },
             })
         }
+        // `...arg` — recurse into the spread argument; the spread is kept.
+        Expression::SpreadElement(s) => Expression::SpreadElement(SpreadElement {
+            cv: s.cv.clone(),
+            argument: Box::new(fold_expression(&s.argument, st)),
+        }),
         Expression::MemberExpression(m) => Expression::MemberExpression(MemberExpression {
             cv: m.cv.clone(),
             object: Box::new(fold_expression(&m.object, st)),

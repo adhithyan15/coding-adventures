@@ -61,6 +61,7 @@ pub enum Expression {
     NewExpression(NewExpression),
     SequenceExpression(SequenceExpression),
     TaggedTemplateExpression(TaggedTemplateExpression),
+    SpreadElement(SpreadElement),
 }
 
 // ---------------------------------------------------------------------
@@ -453,6 +454,42 @@ pub struct SequenceExpression {
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub cv: Option<CvId>,
     pub expressions: Vec<Expression>,
+}
+
+/// A **spread element** `...arg` — the `...` prefix that unpacks an iterable
+/// (or, in an object literal, an object's own enumerable properties) into the
+/// surrounding list. Three positions accept one:
+///
+/// ```text
+///   f(...args)        spread a call/`new` argument list
+///   [1, ...rest, 2]   spread an array-literal element
+///   {...defaults}     spread object properties (object-spread)
+/// ```
+///
+/// Unlike every other `Expression` variant, a `SpreadElement` is **not a
+/// free-standing expression**: `...x` is a syntax error on its own, and the
+/// grammar only permits it as an *argument* (call / `new`) or an *element*
+/// (array literal). We nonetheless model it as an `Expression` variant so it
+/// can slot directly into the existing `Vec<Expression>` argument/element
+/// lists that `CallExpression`, `NewExpression`, and `ArrayExpression` already
+/// carry — no parallel "argument-or-spread" enum is needed, and every AST
+/// walker that already recurses those `Vec`s reaches the spread's inner
+/// `argument` for free.
+///
+/// **Precedence.** The `argument` is an `AssignmentExpression` in the grammar,
+/// so the emitter prints it at assignment precedence: a plain `...a`, a
+/// conditional `...a?b:c`, or an assignment `...a=b` all print bare, while a
+/// looser **sequence** argument is the one case that must be parenthesised —
+/// `...(a,b)` — because a bare `...a,b` would spread only `a` and leave `,b`
+/// as a sibling list element. The spread node itself is tagged at assignment
+/// precedence too, which matches the assignment-position list slots it lives
+/// in (`f(...a)`, `[...a]`) so it is never spuriously wrapped there.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SpreadElement {
+    #[serde(skip_serializing_if = "Option::is_none", default)]
+    pub cv: Option<CvId>,
+    pub argument: Box<Expression>,
 }
 
 /// `obj.prop` or `obj[key]`. `computed = false` ↔ `obj.prop` (the

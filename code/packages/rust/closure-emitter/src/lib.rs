@@ -78,7 +78,7 @@ use coding_adventures_javascript_ast::{
     Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
     SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
     UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement,
-    TaggedTemplateExpression,
+    TaggedTemplateExpression, SpreadElement,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -1136,6 +1136,7 @@ impl<'a> Emitter<'a> {
             Expression::ArrowFunctionExpression(a) => self.emit_arrow_function_expression(a),
             Expression::TemplateLiteral(t) => self.emit_template_literal(t),
             Expression::TaggedTemplateExpression(t) => self.emit_tagged_template(t),
+            Expression::SpreadElement(s) => self.emit_spread(s),
         }
         if needs_parens {
             self.write_str(")");
@@ -1541,6 +1542,22 @@ impl<'a> Emitter<'a> {
             }
             self.emit_expression_inner(e, PREC_ASSIGNMENT);
         }
+    }
+
+    /// Emit a `SpreadElement` — the `...arg` unpack prefix.
+    ///
+    /// The three literal `.` characters print with no interior space, then the
+    /// argument follows at `PREC_ASSIGNMENT`. That precedence is the crux: the
+    /// argument grammar is an `AssignmentExpression`, so everything at or above
+    /// assignment strength prints bare (`...a`, `...a.b`, `...f()`, `...a?b:c`,
+    /// `...a=b`), while the one looser form — a **sequence** — is wrapped:
+    /// `...(a,b)`. A bare `...a,b` would parse as *two* list slots (spread `a`,
+    /// then plain `b`), a miscompile, so the parens are mandatory. There is no
+    /// space between `...` and the argument (`...a`, never `... a`).
+    fn emit_spread(&mut self, s: &SpreadElement) {
+        self.maybe_map(&s.cv);
+        self.write_str("...");
+        self.emit_expression_inner(&s.argument, PREC_ASSIGNMENT);
     }
 
     fn emit_member(&mut self, m: &MemberExpression) {
@@ -1966,6 +1983,14 @@ fn expr_prec(e: &Expression) -> u8 {
         // left-associative like a call and can be a member/call base
         // (`` a`x`.length ``, `` a`x`() ``), so it tags at `PREC_PRIMARY`.
         Expression::TaggedTemplateExpression(_) => PREC_PRIMARY,
+        // A spread `...arg` is not a free-standing operand — it only appears in
+        // the assignment-position argument/element lists (`f(...a)`, `[...a]`),
+        // which `emit_call` / `emit_new` / `emit_array` all print at
+        // `PREC_ASSIGNMENT`. Tagging the spread there keeps it unwrapped in
+        // those slots (`...a` never becomes the miscompile `(...a)`). It is
+        // never emitted as a sub-operand of another operator (that would be
+        // invalid JS), so no other context can observe this precedence.
+        Expression::SpreadElement(_) => PREC_ASSIGNMENT,
         // `true`/`false` are emitted as `!0`/`!1` (see `emit_boolean`), which
         // are UnaryExpressions — precedence `PREC_UNARY`, NOT primary. Tagging
         // them here is what makes `emit_expression_inner` parenthesise them in
@@ -4725,5 +4750,70 @@ mod tests {
         let tag = seq(vec![ident("a"), ident("b")]);
         let e = tagged(tag, raw_template(vec![tquasi("x", true)], vec![]));
         assert_eq!(emit_expr(e), "(a,b)`x`;");
+    }
+
+    // ---- SpreadElement (CLOC12.162) ------------------------------------
+
+    fn spread(argument: Expression) -> Expression {
+        Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(argument) })
+    }
+
+    /// `f(...a)` — a spread as the sole call argument prints bare, with no
+    /// space between `...` and the argument.
+    #[test]
+    fn spread_as_sole_call_arg() {
+        let e = call(ident("f"), vec![spread(ident("a"))]);
+        assert_eq!(emit_expr(e), "f(...a);");
+    }
+
+    /// `f(a,...b,c)` — a spread interleaved with plain arguments keeps its
+    /// position and the surrounding arity.
+    #[test]
+    fn spread_preserves_call_arity() {
+        let e = call(ident("f"), vec![ident("a"), spread(ident("b")), ident("c")]);
+        assert_eq!(emit_expr(e), "f(a,...b,c);");
+    }
+
+    /// `[1,...a,2]` — a spread as an array-literal element prints bare between
+    /// its siblings.
+    #[test]
+    fn spread_as_array_element() {
+        let e = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(num(1.0)), Some(spread(ident("a"))), Some(num(2.0))],
+        });
+        assert_eq!(emit_expr(e), "[1,...a,2];");
+    }
+
+    /// `new F(...a)` — a spread flows into a `new` argument list exactly as a
+    /// call argument does (`emit_new` always prints the argument parens).
+    #[test]
+    fn spread_as_new_argument() {
+        let e = new_expr(ident("F"), vec![spread(ident("a"))]);
+        assert_eq!(emit_expr(e), "new F(...a);");
+    }
+
+    /// `f(...(a,b))` — a **sequence** spread argument is the one form that must
+    /// wrap: a bare `...a,b` would spread only `a` and leave `,b` as a second
+    /// list slot. This is the crux of the assignment-precedence tag.
+    #[test]
+    fn spread_sequence_argument_is_wrapped() {
+        let e = call(ident("f"), vec![spread(seq(vec![ident("a"), ident("b")]))]);
+        assert_eq!(emit_expr(e), "f(...(a,b));");
+    }
+
+    /// `f(...a?b:c)` — a conditional argument binds tighter than the sequence
+    /// floor, so it prints bare (spread's operand grammar is an
+    /// `AssignmentExpression`, which subsumes the conditional): no over-wrap.
+    #[test]
+    fn spread_conditional_argument_is_bare() {
+        let cond = Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(ident("a")),
+            consequent: Box::new(ident("b")),
+            alternate: Box::new(ident("c")),
+        });
+        let e = call(ident("f"), vec![spread(cond)]);
+        assert_eq!(emit_expr(e), "f(...a?b:c);");
     }
 }
