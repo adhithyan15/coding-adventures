@@ -353,6 +353,7 @@ members = [
     "spreadsheetml",
     "wordprocessingml",
     "presentationml",
+    "docx-writer",
     "arm1-gatelevel",
     "arm1-simulator",
     "immutable-list",
